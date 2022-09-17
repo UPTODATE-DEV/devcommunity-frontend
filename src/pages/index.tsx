@@ -24,7 +24,7 @@ const Home: NextPage = () => {
 
       <Menu />
       {/* Content */}
-      <Box sx={{ bgcolor: "background.paper" }}>
+      <Box sx={{ bgcolor: "background.paper", display: { xs: "none", md: "block" } }}>
         <Container sx={{ px: { xs: 2, md: 4 }, mx: "auto" }}>
           <Grid container>
             <Grid

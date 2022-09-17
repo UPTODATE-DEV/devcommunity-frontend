@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
+import Tooltip from "@mui/material/Tooltip";
 
 const PostCard = () => {
   return (
@@ -68,32 +69,44 @@ const PostCard = () => {
             alignItems="center"
             sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, px: 1, borderRadius: 52 }}
           >
-            <IconButton>
-              <ThumbUpSharpIcon color="info" fontSize="small" />
-            </IconButton>
-            <IconButton>
-              <VolunteerActivismSharpIcon color="secondary" fontSize="small" />
-            </IconButton>
-            <IconButton>
-              <FavoriteSharpIcon color="error" fontSize="small" />
-            </IconButton>
-            <IconButton>
-              <LightbulbSharpIcon color="warning" fontSize="small" />
-            </IconButton>
-            <IconButton>
-              <Typography variant="caption" color="text.primary" fontWeight={700}>
-                219
-              </Typography>
-            </IconButton>
+            <Tooltip title="I like" placement="bottom" arrow>
+              <IconButton>
+                <ThumbUpSharpIcon color="info" fontSize="small" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="I support" placement="bottom" arrow>
+              <IconButton>
+                <VolunteerActivismSharpIcon color="secondary" fontSize="small" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="I love" placement="bottom" arrow>
+              <IconButton>
+                <FavoriteSharpIcon color="error" fontSize="small" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Instructive" placement="bottom" arrow>
+              <IconButton>
+                <LightbulbSharpIcon color="warning" fontSize="small" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="See all reactions" placement="bottom" arrow>
+              <IconButton>
+                <Typography variant="caption" color="text.primary" fontWeight={700}>
+                  219
+                </Typography>
+              </IconButton>
+            </Tooltip>
           </Stack>
           <Stack
             direction="row"
             alignItems="center"
             sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
           >
-            <IconButton>
-              <BookmarkAddSharpIcon fontSize="small" />
-            </IconButton>
+            <Tooltip title="Add to my bookmarks" placement="bottom" arrow>
+              <IconButton>
+                <BookmarkAddSharpIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
           </Stack>
         </Stack>
       </Grid>

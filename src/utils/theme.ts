@@ -4,18 +4,23 @@ export const theme = (mode: "light" | "dark") =>
   createTheme({
     palette: {
       mode: mode,
+      background: {
+        paper: mode === "light" ? "#ffffff" : "#000f21",
+        default: "#000f21",
+      },
       primary: {
-        main: "#1A237E",
+        main: "#0179bb",
       },
       secondary: {
-        main: "#F48FB1",
+        main: "#e18e11",
+        light: "#fcf3e6",
       },
       accent: {
         main: "#5B759F",
       },
     },
     typography: {
-      fontFamily: ["Raleway", "sans-serif"].join(","),
+      fontFamily: ["Roboto", "sans-serif"].join(","),
     },
   });
 

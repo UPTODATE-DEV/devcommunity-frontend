@@ -10,6 +10,11 @@ import { useRouter } from "next/router";
 
 const CallToAction = () => {
   const { push } = useRouter();
+
+  const handleRegister = () => {
+    push("/auth/register");
+  };
+
   return (
     <Box
       id="call-to-action"
@@ -49,10 +54,10 @@ const CallToAction = () => {
               color="primary"
               disableElevation
               endIcon={<ArrowForwardIcon />}
-              onClick={() => console.log("Hello")}
+              onClick={handleRegister}
               sx={{ px: 6, py: 1, borderRadius: 50 }}
             >
-              Sign Up
+              Register
             </Button>
           </div>
         </Stack>

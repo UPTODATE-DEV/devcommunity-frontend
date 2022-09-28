@@ -12,7 +12,7 @@ import TagSharpIcon from "@mui/icons-material/TagSharp";
 import HomeSharpIcon from "@mui/icons-material/HomeSharp";
 import ManageAccounts from "@mui/icons-material/ManageAccountsSharp";
 import Divider from "@mui/material/Divider";
-import PostCard from "@/components/PostCard";
+import PostCard from "@/components/posts/PostCard";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 

@@ -13,12 +13,13 @@ import CallToAction from "@/components/middle/CallToAction";
 import RightSideBar from "@/components/sideBars/RightSideBar";
 import MainContainer from "@/layouts/MainContainer";
 import PostList from "@/components/posts/PostsList";
+import AddPost from "@/components/middle/AddPost";
 
 const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Updev community</title>
+        <title>Posts | Updev community</title>
         <meta name="description" content="Updev community" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -26,7 +27,8 @@ const Home: NextPage = () => {
       <Menu />
       {/* Content */}
       <MainContainer>
-        <CallToAction />
+        <AddPost />
+        <Divider />
         <PostList />
       </MainContainer>
     </>
@@ -34,8 +36,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-{
-  /* <CallToAction />
-              <MainContainer /> */
-}

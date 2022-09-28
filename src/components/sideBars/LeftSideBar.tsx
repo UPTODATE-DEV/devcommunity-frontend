@@ -17,11 +17,15 @@ import Face5SharpIcon from "@mui/icons-material/Face5Sharp";
 import StarsSharpIcon from "@mui/icons-material/StarsSharp";
 import LiveHelpSharpIcon from "@mui/icons-material/LiveHelpSharp";
 import InsertEmoticonSharpIcon from "@mui/icons-material/InsertEmoticonSharp";
+import { useRouter } from "next/router";
 
 const LeftSideBar = () => {
+  const { route, push } = useRouter();
+  const matches = (path: string): boolean => `/${route.split("/")[1]}` === path;
+
   const main = [
-    { path: "/s", icon: <HomeSharpIcon />, label: "Home" },
-    { path: "/", icon: <HistoryEduIcon />, label: "Posts" },
+    { path: "/", icon: <HomeSharpIcon />, label: "Home" },
+    { path: "/posts", icon: <HistoryEduIcon />, label: "Posts" },
     { path: "/questions", icon: <QuestionAnswer />, label: "Questions" },
     { path: "/tags", icon: <TagSharpIcon />, label: "Tags" },
   ];
@@ -40,13 +44,13 @@ const LeftSideBar = () => {
     <>
       <List>
         {main.map(({ path, icon, label }) => (
-          <ListItemButton key={path} selected={path === "/"} onClick={() => console.log("Click")}>
-            <ListItemIcon sx={{ mr: -1, color: path === "/" ? "primary.main" : "text.primary" }}>{icon}</ListItemIcon>
+          <ListItemButton key={path} selected={matches(path)} onClick={() => push(path)}>
+            <ListItemIcon sx={{ mr: -1, color: matches(path) ? "primary.main" : "text.primary" }}>{icon}</ListItemIcon>
             <ListItemText
               primary={label}
               primaryTypographyProps={{
-                color: path === "/" ? "primary.main" : "text.primary",
-                fontWeight: path === "/" ? 700 : 400,
+                color: matches(path) ? "primary.main" : "text.primary",
+                fontWeight: matches(path) ? 700 : 400,
               }}
             />
           </ListItemButton>
@@ -55,13 +59,13 @@ const LeftSideBar = () => {
       <Divider />
       <List>
         {top.map(({ path, icon, label }) => (
-          <ListItemButton key={path} selected={path === "/"} onClick={() => console.log("Click")}>
-            <ListItemIcon sx={{ mr: -1, color: path === "/" ? "primary.main" : "text.primary" }}>{icon}</ListItemIcon>
+          <ListItemButton key={path} selected={matches(path)} onClick={() => console.log("Click")}>
+            <ListItemIcon sx={{ mr: -1, color: matches(path) ? "primary.main" : "text.primary" }}>{icon}</ListItemIcon>
             <ListItemText
               primary={label}
               primaryTypographyProps={{
-                color: path === "/" ? "primary.main" : "text.primary",
-                fontWeight: path === "/" ? 700 : 400,
+                color: matches(path) ? "primary.main" : "text.primary",
+                fontWeight: matches(path) ? 700 : 400,
               }}
             />
           </ListItemButton>
@@ -70,13 +74,13 @@ const LeftSideBar = () => {
       <Divider />
       <List>
         {params.map(({ path, icon, label }) => (
-          <ListItemButton key={path} selected={path === "/"} onClick={() => console.log("Click")}>
-            <ListItemIcon sx={{ mr: -1, color: path === "/" ? "primary.main" : "text.primary" }}>{icon}</ListItemIcon>
+          <ListItemButton key={path} selected={matches(path)} onClick={() => console.log("Click")}>
+            <ListItemIcon sx={{ mr: -1, color: matches(path) ? "primary.main" : "text.primary" }}>{icon}</ListItemIcon>
             <ListItemText
               primary={label}
               primaryTypographyProps={{
-                color: path === "/" ? "primary.main" : "text.primary",
-                fontWeight: path === "/" ? 700 : 400,
+                color: matches(path) ? "primary.main" : "text.primary",
+                fontWeight: matches(path) ? 700 : 400,
               }}
             />
           </ListItemButton>

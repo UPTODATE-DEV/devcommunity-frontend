@@ -10,10 +10,18 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import Tooltip from "@mui/material/Tooltip";
+import CommentIcon from "@mui/icons-material/Comment";
+import { useRouter } from "next/router";
 
 const PostCard = () => {
+  const { push } = useRouter();
+
+  const handleViewPost = () => {
+    push("/posts/uniquely-identifying-objects-in-javascript");
+  };
+
   return (
-    <Grid container sx={{ cursor: "pointer" }}>
+    <Grid container sx={{ cursor: "pointer" }} onClick={handleViewPost}>
       <Grid item md={1.2}>
         <Avatar alt="Luccin Masirika" src="/avatar.jpg" />
       </Grid>
@@ -97,16 +105,27 @@ const PostCard = () => {
               </IconButton>
             </Tooltip>
           </Stack>
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
-          >
-            <Tooltip title="Add to my bookmarks" placement="bottom" arrow>
+          <Stack direction="row" spacing={2}>
+            <Stack direction="row" spacing={1} alignItems="center">
               <IconButton>
-                <BookmarkAddSharpIcon fontSize="small" />
+                <CommentIcon />
               </IconButton>
-            </Tooltip>
+              <Typography variant="caption" color="text.secondary" fontWeight={700}>
+                17
+              </Typography>
+            </Stack>
+
+            <Stack
+              direction="row"
+              alignItems="center"
+              sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
+            >
+              <Tooltip title="Save post" placement="bottom" arrow>
+                <IconButton>
+                  <BookmarkAddSharpIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            </Stack>
           </Stack>
         </Stack>
       </Grid>

@@ -9,8 +9,19 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import ListItemButton from "@mui/material/ListItemButton";
 import Button from "@mui/material/Button";
+import { useRouter } from "next/router";
 
 const RightSideBar = () => {
+  const { push } = useRouter();
+
+  const handleViewQuestion = () => {
+    push("/questions/uniquely-identifying-objects-in-javascript");
+  };
+
+  const handleViewPost = () => {
+    push("/posts/uniquely-identifying-objects-in-javascript");
+  };
+
   const data = [
     {
       id: 1,
@@ -55,9 +66,11 @@ const RightSideBar = () => {
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
         {data.map((item) => (
           <React.Fragment key={item.id}>
-            <ListItemButton alignItems="flex-start">
+            <ListItemButton alignItems="flex-start" onClick={handleViewPost}>
               <ListItemAvatar>
-                <Avatar alt="Luccin Masirika" src={item.image} />
+                <Avatar alt="Remy Sharp" src="https://source.unsplash.com/random/200x200?sig=1310">
+                  L
+                </Avatar>
               </ListItemAvatar>
               <ListItemText
                 primary={item.title}
@@ -86,9 +99,11 @@ const RightSideBar = () => {
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
         {data.map((item) => (
           <React.Fragment key={item.id}>
-            <ListItemButton alignItems="flex-start">
+            <ListItemButton alignItems="flex-start" onClick={handleViewQuestion}>
               <ListItemAvatar>
-                <Avatar alt="Luccin Masirika" src={item.image} />
+                <Avatar alt="Remy Sharp" src="https://source.unsplash.com/random/200x200?sig=131015">
+                  L
+                </Avatar>
               </ListItemAvatar>
               <ListItemText
                 primary={item.title}

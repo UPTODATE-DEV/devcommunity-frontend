@@ -1,21 +1,41 @@
-import { Typography } from "@mui/material";
-import type { NextPage } from "next";
-import Head from "next/head";
 import Menu from "@/components/menu/Menu";
-import Stack from "@mui/material/Stack";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import LeftSideBar from "@/components/sideBars/LeftSideBar";
-import Divider from "@mui/material/Divider";
-import Box from "@mui/material/Box";
-import CallToAction from "@/components/middle/CallToAction";
-import RightSideBar from "@/components/sideBars/RightSideBar";
+import AddPost from "@/components/posts/AddPost";
+import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
-import PostList from "@/components/posts/PostsList";
-import AddPost from "@/components/middle/AddPost";
+import { withSessionSsr } from "@/lib/withSession";
+import Divider from "@mui/material/Divider";
+import type { NextPage } from "next";
+import { GetServerSideProps } from "next";
+import Head from "next/head";
+import React from "react";
+import { getRequest } from "@/lib/api";
+import dynamic from "next/dynamic";
+import { PostsListSkeleton } from "@/components/posts/Skeleton";
+import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 
-const Home: NextPage = () => {
+const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
+  ssr: false,
+  loading: () => <CallToActionSkeleton />,
+});
+const PostList = dynamic(import("@/components/posts/PostsList"), { ssr: false, loading: () => <PostsListSkeleton /> });
+
+const Home: NextPage<{ session: Session }> = ({ session }) => {
+  const setSession = useStore((state) => state.setSession);
+  const setPosts = useStore((state) => state.setPosts);
+
+  React.useEffect(() => {
+    const getPosts = async () => {
+      const posts = await getRequest({ endpoint: "/posts" });
+      if (!posts.error) {
+        setPosts(posts.data);
+      }
+    };
+
+    getPosts();
+
+    setSession(session);
+  }, []);
+
   return (
     <>
       <Head>
@@ -25,14 +45,23 @@ const Home: NextPage = () => {
       </Head>
 
       <Menu />
-      {/* Content */}
       <MainContainer>
-        <AddPost />
+        {session?.user ? <AddPost /> : <CallToAction />}
         <Divider />
         <PostList />
       </MainContainer>
     </>
   );
 };
+
+export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
+  const { req } = context;
+
+  return {
+    props: {
+      session: req?.session?.user || null,
+    },
+  };
+});
 
 export default Home;

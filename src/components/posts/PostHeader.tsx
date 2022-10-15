@@ -2,8 +2,10 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import React from "react";
+import dayjs from "dayjs";
 
-const PostHeader = () => {
+const PostHeader: React.FC<{ data: Post }> = ({ data }) => {
+  console.log(data.author);
   return (
     <Stack
       sx={{
@@ -33,10 +35,10 @@ const PostHeader = () => {
         spacing={2}
       >
         <Typography variant="body2" color="#d8d8d8">
-          Luccin Masirika
+          {data?.author?.firstName} {data?.author?.lastName}
         </Typography>
         <Typography variant="body2" color="#d8d8d8">
-          12 juin 2022
+          {dayjs(data?.publishedOn).format("MMM DD, YYYY")}
         </Typography>
       </Stack>
     </Stack>

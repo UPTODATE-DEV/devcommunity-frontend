@@ -1,20 +1,46 @@
-import { Typography } from "@mui/material";
-import type { NextPage } from "next";
-import Head from "next/head";
 import Menu from "@/components/menu/Menu";
-import Stack from "@mui/material/Stack";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import LeftSideBar from "@/components/sideBars/LeftSideBar";
-import Divider from "@mui/material/Divider";
-import Box from "@mui/material/Box";
-import CallToAction from "@/components/middle/CallToAction";
-import RightSideBar from "@/components/sideBars/RightSideBar";
-import MainContainer from "@/layouts/MainContainer";
+import AddPost from "@/components/posts/AddPost";
 import PostList from "@/components/posts/PostsList";
+import useStore from "@/hooks/useStore";
+import MainContainer from "@/layouts/MainContainer";
+import { withSessionSsr } from "@/lib/withSession";
+import Divider from "@mui/material/Divider";
+import type { NextPage } from "next";
+import { GetServerSideProps } from "next";
+import Head from "next/head";
+import * as React from "react";
+import { getRequest } from "@/lib/api";
+import Stack from "@mui/material/Stack";
+import dynamic from "next/dynamic";
+import { CallToActionSkeleton, HomeFeedSkeleton } from "@/components/middle/Skeleton";
 
-const Home: NextPage = () => {
+const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
+  ssr: false,
+  loading: () => <CallToActionSkeleton />,
+});
+const HomeFeed = dynamic(import("@/components/middle/HomeFeed"), {
+  ssr: false,
+  loading: () => <HomeFeedSkeleton />,
+});
+
+const Home: NextPage<{ session: Session }> = ({ session }) => {
+  const setSession = useStore((state) => state.setSession);
+  const setPosts = useStore((state) => state.setPosts);
+  const posts = useStore((state) => state.posts);
+
+  React.useEffect(() => {
+    const getPosts = async () => {
+      const posts = await getRequest({ endpoint: "/posts" });
+      if (!posts.error) {
+        setPosts(posts.data);
+      }
+    };
+
+    getPosts();
+
+    setSession(session);
+  }, []);
+
   return (
     <>
       <Head>
@@ -22,20 +48,24 @@ const Home: NextPage = () => {
         <meta name="description" content="Updev community" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <Menu />
-      {/* Content */}
       <MainContainer>
-        <CallToAction />
-        <PostList />
+        {!session?.user && <CallToAction />}
+        <Divider />
+        <HomeFeed />
       </MainContainer>
     </>
   );
 };
 
-export default Home;
+export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
+  const { req } = context;
 
-{
-  /* <CallToAction />
-              <MainContainer /> */
-}
+  return {
+    props: {
+      session: req?.session?.user || null,
+    },
+  };
+});
+
+export default Home;

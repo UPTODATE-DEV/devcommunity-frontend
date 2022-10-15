@@ -4,11 +4,20 @@ import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import LeftSideBar from "@/components/sideBars/LeftSideBar";
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
 import CallToAction from "@/components/middle/CallToAction";
-import RightSideBar from "@/components/sideBars/RightSideBar";
+import dynamic from "next/dynamic";
+import { LeftBarSkeleton, RightBarSkeleton } from "@/components/sideBars/Skeleton";
+
+const RightSideBar = dynamic(import("@/components/sideBars/RightSideBar"), {
+  ssr: false,
+  loading: () => <RightBarSkeleton />,
+});
+const LeftSideBar = dynamic(import("@/components/sideBars/LeftSideBar"), {
+  ssr: false,
+  loading: () => <LeftBarSkeleton />,
+});
 
 const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
   return (

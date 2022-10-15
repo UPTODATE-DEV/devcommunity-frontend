@@ -53,7 +53,6 @@ const CallToAction = () => {
               variant="contained"
               color="primary"
               disableElevation
-              endIcon={<ArrowForwardIcon />}
               onClick={handleRegister}
               sx={{ px: 6, py: 1, borderRadius: 50 }}
             >

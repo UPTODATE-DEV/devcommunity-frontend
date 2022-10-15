@@ -2,19 +2,21 @@ import React from "react";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
-import Box from "@mui/material/Box";
+import CommentIcon from "@mui/icons-material/Comment";
 import Grid from "@mui/material/Grid";
-import PostAddIcon from "@mui/icons-material/PostAdd";
 import IconButton from "@mui/material/IconButton";
 
-const AddPost = () => {
+const QuestionComment = () => {
   return (
     <Stack spacing={2} sx={{ py: 2 }}>
+      <Typography variant="h6" color="text.primary">
+        Comments (0)
+      </Typography>
       <Grid container>
         <Grid item xs={12} md={1.2}>
-          <Box sx={{ width: 40, height: 40, borderRadius: "50%", overflow: "hidden", position: "relative" }}>
+          <Stack sx={{ width: 40, height: 40, borderRadius: "50%", overflow: "hidden", position: "relative" }}>
             <Image src="/avatar.jpg" layout="fill" objectFit="cover" alt="Avatar" />
-          </Box>
+          </Stack>
         </Grid>
         <Grid item xs={12} md={10.8}>
           <Stack
@@ -31,10 +33,10 @@ const AddPost = () => {
             }}
           >
             <Typography variant="caption" color="text.secondary">
-              Click to start writing a post...
+              Live a comment...
             </Typography>
             <IconButton>
-              <PostAddIcon fontSize="small" />
+              <CommentIcon fontSize="small" />
             </IconButton>
           </Stack>
         </Grid>
@@ -43,4 +45,4 @@ const AddPost = () => {
   );
 };
 
-export default AddPost;
+export default QuestionComment;

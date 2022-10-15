@@ -26,12 +26,14 @@ const Register = () => {
   const router = useRouter();
 
   const [state, setState] = React.useState({
+    firstName: "",
     email: "",
+    lastName: "",
     password: "",
   });
   const [loading, setLoading] = React.useState(false);
 
-  const { email, password } = state;
+  const { email, password, firstName, lastName } = state;
 
   const handleChange = (event: { target: { value: string; name: string } }) => {
     setState({ ...state, [event.target.name]: event.target.value });
@@ -41,12 +43,16 @@ const Register = () => {
     router.push("/");
   };
 
-  const onLogin = async () => {
+  const resetForm = () => {
+    setState({ email: "", password: "", firstName: "", lastName: "" });
+  };
+
+  const onRegister = async () => {
     setLoading(true);
     try {
       const res = await axios.post(
-        "/api/login",
-        { email, password },
+        "/api/register",
+        { email, password, firstName, lastName },
         {
           headers: {
             Accept: "application/json",
@@ -54,9 +60,9 @@ const Register = () => {
           },
         }
       );
-      toast.success("Login successful!");
-      router.push("/");
-      setState({ email: "", password: "" });
+      toast.success("Registration successful!");
+      router.push("/auth/confirmation");
+      resetForm();
       return { data: res.data };
     } catch (e: any) {
       setLoading(false);
@@ -83,24 +89,22 @@ const Register = () => {
                 <Input
                   label="First Name"
                   icon={<MailIcon />}
-                  placeholder="Entrer votre adresse mail"
+                  placeholder="Enter your first name"
                   handleChange={handleChange}
-                  name="email"
-                  type="email"
+                  name="firstName"
                 />
                 <Input
                   label="Last Name"
                   icon={<MailIcon />}
-                  placeholder="Entrer votre adresse mail"
+                  placeholder="Enter your last name"
                   handleChange={handleChange}
-                  name="email"
-                  type="email"
+                  name="lastName"
                 />
               </Stack>
               <Input
                 label="Email"
                 icon={<MailIcon />}
-                placeholder="Entrer votre adresse mail"
+                placeholder="Enter your email"
                 handleChange={handleChange}
                 name="email"
                 type="email"
@@ -108,14 +112,14 @@ const Register = () => {
               <Input
                 label="Mot de passe"
                 icon={<LockIcon />}
-                placeholder="Entrer votre mot de passe"
+                placeholder="Enter your password"
                 handleChange={handleChange}
                 name="password"
                 type="password"
                 isPassword
               />
 
-              <LoadingButton size="small" onClick={onLogin} loading={loading} variant="contained" sx={{ py: 1 }}>
+              <LoadingButton size="small" onClick={onRegister} loading={loading} variant="contained" sx={{ py: 1 }}>
                 Register
               </LoadingButton>
               <Typography variant="body2" sx={{ color: "text.secondary" }}>

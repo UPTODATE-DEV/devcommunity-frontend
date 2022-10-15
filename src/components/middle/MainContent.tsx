@@ -15,6 +15,7 @@ import Divider from "@mui/material/Divider";
 import PostCard from "@/components/posts/PostCard";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import useStore from "@/hooks/useStore";
 
 const MainContent = () => {
   const [tab, setTab] = React.useState("0");
@@ -37,7 +38,7 @@ const MainContent = () => {
     },
   ];
 
-  const posts = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
+  const posts = useStore((state) => state.posts);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
@@ -65,10 +66,10 @@ const MainContent = () => {
       {tabs.map((fac, i) => (
         <TabPanel sx={{ p: 0 }} value={i.toString()} key={i}>
           <Stack spacing={5}>
-            {posts.map((item) => (
+            {posts.map((item, index) => (
               <React.Fragment key={item.id}>
-                <PostCard />
-                {posts.length !== item.id && <Divider />}
+                <PostCard data={item} />
+                {posts.length !== index && <Divider />}
               </React.Fragment>
             ))}
           </Stack>

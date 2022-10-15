@@ -20,7 +20,9 @@
       "@/pages/*": ["pages/*"],
       "@/utils/*": ["utils/*"],
       "@/types/*": ["types/*"],
-      "@/layouts/*": ["layouts/*"]
+      "@/layouts/*": ["layouts/*"],
+      "@/lib/*": ["lib/*"],
+      "@/hooks/*": ["hooks/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

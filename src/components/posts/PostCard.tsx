@@ -11,36 +11,45 @@ import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import Tooltip from "@mui/material/Tooltip";
 import CommentIcon from "@mui/icons-material/Comment";
+import ReactMarkdown from "react-markdown";
 import { useRouter } from "next/router";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
+import "dayjs/locale/fr";
+import { FILES_BASE_URL } from "config/url";
 
-const PostCard = () => {
+const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   const { push } = useRouter();
 
   const handleViewPost = () => {
-    push("/posts/uniquely-identifying-objects-in-javascript");
+    push(`/posts/${data?.slug}`);
   };
 
   return (
-    <Grid container sx={{ cursor: "pointer" }} onClick={handleViewPost}>
+    <Grid container sx={{ cursor: "pointer" }}>
       <Grid item md={1.2}>
-        <Avatar alt="Luccin Masirika" src="/avatar.jpg" />
+        <Avatar alt={`${data?.author?.firstName} ${data?.author?.lastName}`} src={data?.author?.avatar?.url}>
+          {data?.author?.firstName.charAt(0)}
+        </Avatar>
       </Grid>
       <Grid item md={10.8}>
         <Stack direction="row" spacing={1}>
           <Typography variant="caption" color="text.primary" gutterBottom fontWeight={700}>
-            Luccin Masirika
+            {data?.author?.firstName} {data?.author?.lastName}
           </Typography>
           <Typography variant="caption" color="text.secondary" gutterBottom fontWeight={700}>
             -
           </Typography>
           <Typography variant="caption" gutterBottom color="text.secondary">
-            4 days ago
+            {dayjs(data?.publishedOn).fromNow()}
           </Typography>
         </Stack>
         <Typography
           gutterBottom
           fontWeight={700}
           color="text.primary"
+          onClick={handleViewPost}
           sx={{
             display: "-webkit-box!important",
             WebkitLineClamp: 2,
@@ -48,9 +57,12 @@ const PostCard = () => {
             overflow: "hidden",
             textOverflow: "ellipse",
             whiteSpace: "normal",
+            "&:hover": {
+              color: "primary.main",
+            },
           }}
         >
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptates, laboriosam.
+          {data?.title}
         </Typography>
         <Typography
           gutterBottom
@@ -65,12 +77,16 @@ const PostCard = () => {
             whiteSpace: "normal",
           }}
         >
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam ipsam omnis corrupti sapiente necessitatibus
-          nostrum quod cumque earum totam obcaecati impedit tempora assumenda sint id repellendus, non cum dolorum enim!
+          <ReactMarkdown>{data?.content}</ReactMarkdown>
         </Typography>
-        <Stack sx={{ width: 1, height: 240, position: "relative", borderRadius: 2, overflow: "hidden", my: 2 }}>
-          <Image src="/post.jpg" alt="Post" layout="fill" objectFit="cover" />
-        </Stack>
+        {data?.article.image && (
+          <Stack
+            sx={{ width: 1, height: 240, position: "relative", borderRadius: 2, overflow: "hidden", my: 2 }}
+            onClick={handleViewPost}
+          >
+            <Image src={FILES_BASE_URL + data?.article?.image?.url} alt="Post" layout="fill" objectFit="cover" />
+          </Stack>
+        )}
         <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between" sx={{ mt: 1 }}>
           <Stack
             direction="row"

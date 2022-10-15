@@ -5,11 +5,11 @@ import PostContent from "@/components/posts/PostContent";
 import PostComment from "./PostComment";
 import Divider from "@mui/material/Divider";
 
-const Post = () => {
+const Post: React.FC<{ data: Post }> = ({ data }) => {
   return (
     <Stack spacing={4}>
-      <PostHeader />
-      <PostContent />
+      <PostHeader data={data} />
+      <PostContent title={data?.title} content={data?.content} />
       <Divider />
       <PostComment />
       <Divider />

@@ -1,9 +1,8 @@
-import withDarkMode from "next-dark-mode";
 import { theme } from "@/utils/theme";
-import type { AppProps } from "next/app";
-import { useDarkMode } from "next-dark-mode";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
+import withDarkMode, { useDarkMode } from "next-dark-mode";
+import type { AppProps } from "next/app";
 import NextNprogress from "nextjs-progressbar";
 import "../styles/globals.css";
 

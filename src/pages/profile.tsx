@@ -13,19 +13,17 @@ import { getRequest } from "@/lib/api";
 import Stack from "@mui/material/Stack";
 import dynamic from "next/dynamic";
 import { CallToActionSkeleton, HomeFeedSkeleton } from "@/components/middle/Skeleton";
+import { ProfileSkeleton } from "@/components/menu/Skeleton";
 
-const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
+const Profile = dynamic(() => import("@/components/profile/Profile"), {
   ssr: false,
-  loading: () => <CallToActionSkeleton />,
-});
-const HomeFeed = dynamic(import("@/components/middle/HomeFeed"), {
-  ssr: false,
-  loading: () => <HomeFeedSkeleton />,
+  loading: () => <ProfileSkeleton />,
 });
 
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
   const setPosts = useStore((state) => state.setPosts);
+  const posts = useStore((state) => state.posts);
 
   React.useEffect(() => {
     const getPosts = async () => {
@@ -49,9 +47,7 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
       </Head>
       <Menu />
       <MainContainer>
-        {!session?.user && <CallToAction />}
-        <Divider />
-        <HomeFeed />
+        <Profile />
       </MainContainer>
     </>
   );

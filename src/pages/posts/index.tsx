@@ -1,23 +1,27 @@
 import Menu from "@/components/menu/Menu";
-import AddPost from "@/components/posts/AddPost";
+import { CallToActionSkeleton } from "@/components/middle/Skeleton";
+import { QuestionsListSkeleton } from "@/components/questions/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
+import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
 import Divider from "@mui/material/Divider";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import React from "react";
-import { getRequest } from "@/lib/api";
-import dynamic from "next/dynamic";
-import { PostsListSkeleton } from "@/components/posts/Skeleton";
-import { CallToActionSkeleton } from "@/components/middle/Skeleton";
+
+const AddQuestion = dynamic(import("@/components/questions/AddQuestion"), { ssr: false, loading: () => null });
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
   loading: () => <CallToActionSkeleton />,
 });
-const PostList = dynamic(import("@/components/posts/PostsList"), { ssr: false, loading: () => <PostsListSkeleton /> });
+const QuestionsList = dynamic(import("@/components/questions/QuestionsList"), {
+  ssr: false,
+  loading: () => <QuestionsListSkeleton />,
+});
 
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
@@ -46,9 +50,9 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
 
       <Menu />
       <MainContainer>
-        {session?.user ? <AddPost /> : <CallToAction />}
+        {session?.user ? <AddQuestion /> : <CallToAction />}
         <Divider />
-        <PostList />
+        <QuestionsList />
       </MainContainer>
     </>
   );

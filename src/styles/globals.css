@@ -35,3 +35,20 @@ a {
     background: black;
   }
 }
+
+.content img,
+.content iframe {
+  max-width: 100%;
+}
+
+.content pre {
+  background-color: rgba(0, 0, 0, 0.2);
+  max-width: 100%;
+  overflow: auto;
+  padding: 12px;
+  border-radius: 4px;
+}
+
+.content a {
+  text-decoration: underline;
+}

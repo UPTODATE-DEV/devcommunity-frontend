@@ -21,8 +21,8 @@ const LeftSideBar = dynamic(import("@/components/sideBars/LeftSideBar"), {
 
 const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
   return (
-    <Box sx={{ bgcolor: "background.paper", display: { xs: "none", md: "block" } }}>
-      <Container sx={{ px: { xs: 2, md: 4 }, mx: "auto" }}>
+    <Box sx={{ bgcolor: "background.paper" }}>
+      <Container sx={{ mx: "auto" }}>
         <Grid container>
           <Grid
             item
@@ -33,6 +33,7 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
               top: 0,
               height: "100vh",
               overflow: "auto",
+              display: { xs: "none", md: "flex" },
               borderRight: (theme) => `1px solid ${theme.palette.divider}`,
             }}
           >
@@ -40,8 +41,8 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
               <LeftSideBar />
             </Paper>
           </Grid>
-          <Grid item md={6}>
-            <Stack sx={{ mt: 10, px: 2 }} spacing={2}>
+          <Grid item md={6} sx={{ width: 1 }}>
+            <Stack sx={{ mt: 10, px: { xs: 0, md: 2 } }} spacing={2}>
               {children}
             </Stack>
           </Grid>
@@ -49,7 +50,14 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
             item
             md={4}
             className="hide-scrollbar"
-            sx={{ position: "sticky", top: 0, height: "100vh", overflow: "auto" }}
+            sx={{
+              position: "sticky",
+              top: 0,
+              height: "100vh",
+              overflow: "auto",
+              width: 1,
+              display: { xs: "none", md: "flex" },
+            }}
           >
             <Paper variant="outlined" sx={{ position: "relative", top: 80 }}>
               <RightSideBar />

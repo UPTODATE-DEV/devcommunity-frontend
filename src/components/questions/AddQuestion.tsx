@@ -7,12 +7,27 @@ import Grid from "@mui/material/Grid";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
+import { useRouter } from "next/router";
+import useStore from "@/hooks/useStore";
 
 const AddQuestion: React.FC = () => {
+  const user = useStore((state) => state.session?.user);
+  const { push } = useRouter();
+  const handleGoToAddPage = () => {
+    push("/posts/add");
+  };
+
   return (
-    <Stack spacing={2} direction="row" justifyContent="center" alignItems="center" sx={{ py: 2 }}>
-      <Avatar alt="Remy Sharp" src="/avatar.avif">
-        L
+    <Stack
+      onClick={handleGoToAddPage}
+      spacing={2}
+      direction="row"
+      justifyContent="center"
+      alignItems="center"
+      sx={{ py: 2 }}
+    >
+      <Avatar alt={`${user?.firstName} ${user?.lastName}`} src={user?.avatar?.url}>
+        {user?.firstName.charAt(0)}
       </Avatar>
       <Stack
         alignItems="center"
@@ -28,7 +43,7 @@ const AddQuestion: React.FC = () => {
         }}
       >
         <Typography variant="caption" color="text.secondary">
-          Click to start asking a question...
+          Click to start asking a post...
         </Typography>
         <IconButton>
           <PostAddIcon fontSize="small" />

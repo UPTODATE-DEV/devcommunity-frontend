@@ -1,18 +1,15 @@
-import { withIronSessionApiRoute } from 'iron-session/next';
-import { sessionOptions } from '@/lib/session';
-import { postLocalRequest } from '@/lib/api';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { withIronSessionApiRoute } from "iron-session/next";
+import { sessionOptions } from "@/lib/session";
+import { postLocalRequest } from "@/lib/api";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export default withIronSessionApiRoute(loginRoute, sessionOptions);
 
 async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
-  const { email, password } = await req.body;
+  const { token } = await req.body;
 
   try {
-    const response = await postLocalRequest({
-      endpoint: '/auth/login',
-      data: { email, password },
-    });
+    const response = await postLocalRequest({ endpoint: "/auth/google/login/" + token });
 
     const { jwt, user } = response.data as Session;
 
@@ -22,7 +19,7 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
       isLoggedIn: jwt ? true : false,
     };
     await req.session.save();
-    return res.json({ data: response.data });
+    return res.json(response.data);
   } catch (error: any) {
     res.status(500).json(error.response?.data);
   }

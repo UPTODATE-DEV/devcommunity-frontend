@@ -10,7 +10,13 @@ import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import * as React from "react";
-import AddPostForm from "@/components/posts/AddPostForm";
+import dynamic from "next/dynamic";
+import { PostsFormSkeleton } from "@/components/posts/Skeleton";
+
+const AddQuestionForm = dynamic(() => import("@/components/questions/AddQuestionForm"), {
+  ssr: false,
+  loading: () => <PostsFormSkeleton />,
+});
 
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
@@ -22,13 +28,13 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
   return (
     <>
       <Head>
-        <title>Add post | Updev community</title>
+        <title>Add a post | Updev community</title>
         <meta name="description" content="Updev community" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Menu />
       <MainContainer>
-        <AddPostForm />
+        <AddQuestionForm />
       </MainContainer>
     </>
   );

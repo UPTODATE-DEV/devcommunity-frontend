@@ -1,31 +1,50 @@
 import Menu from "@/components/menu/Menu";
-import Post from "@/components/posts/Post";
-import Question from "@/components/questions/Question";
+import CallToAction from "@/components/middle/CallToAction";
+import { HomeFeedSkeleton } from "@/components/middle/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
-import type { GetServerSideProps, NextPage } from "next";
+import Divider from "@mui/material/Divider";
+import type { NextPage } from "next";
+import { GetServerSideProps } from "next";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import React from "react";
 
-const Home: NextPage<{ session: Session; post: Post }> = ({ session, post }) => {
+const BookmarkFeed = dynamic(import("@/components/bookmarks/BookmarkFeed"), {
+  ssr: false,
+  loading: () => <HomeFeedSkeleton />,
+});
+
+const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
+  const setBookmarks = useStore((state) => state.setBookmarks);
 
   React.useEffect(() => {
+    const getBookmarks = async () => {
+      const posts = await getRequest({ endpoint: `/posts/bookmarks/${session.user?.id}` });
+      if (!posts.error) {
+        setBookmarks(posts.data);
+      }
+    };
+
+    getBookmarks();
+
     setSession(session);
   }, []);
 
   return (
     <>
       <Head>
-        <title>{post?.title}</title>
+        <title>My bookmarks | Updev community</title>
         <meta name="description" content="Updev community" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <Menu />
       <MainContainer>
-        <Question data={post} />
+        <BookmarkFeed />
       </MainContainer>
     </>
   );
@@ -33,12 +52,10 @@ const Home: NextPage<{ session: Session; post: Post }> = ({ session, post }) => 
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
   const { req } = context;
-  const post = await getRequest({ endpoint: `/posts/${context.params?.slug}` });
 
   return {
     props: {
       session: req?.session?.user || null,
-      post: post.data,
     },
   };
 });

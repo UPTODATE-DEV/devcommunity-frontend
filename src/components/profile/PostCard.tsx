@@ -11,6 +11,8 @@ import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import Tooltip from "@mui/material/Tooltip";
 import CommentIcon from "@mui/icons-material/Comment";
+import Fab from "@mui/material/Fab";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -176,62 +178,10 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
           justifyContent="space-between"
           sx={{ mt: 1 }}
         >
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{
-              border: (theme) => `1px solid ${theme.palette.divider}`,
-              borderRadius: 52,
-              transition: "all 0.5s ease",
-            }}
-          >
-            {!userReaction ? (
-              <>
-                <Like />
-                <Love />
-                <Useful />
-              </>
-            ) : (
-              <>
-                {userReaction === "LIKE" && <Like />}
-                {userReaction === "LOVE" && <Love />}
-                {userReaction === "USEFUL" && <Useful />}
-              </>
-            )}
-            <Tooltip title="See all reactions" placement="bottom" arrow>
-              <IconButton>
-                <Typography variant="caption" color="text.primary" fontWeight={700}>
-                  {data.article?.reactions?.length}
-                </Typography>
-              </IconButton>
-            </Tooltip>
-          </Stack>
-          <Stack direction="row" spacing={2}>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <IconButton>
-                <CommentIcon />
-              </IconButton>
-              <Typography variant="caption" color="text.secondary" fontWeight={700}>
-                {data?.comments?.length || 0}
-              </Typography>
-            </Stack>
-
-            <Stack
-              direction="row"
-              alignItems="center"
-              sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
-            >
-              <Tooltip title="Save post" placement="bottom" arrow>
-                <IconButton onClick={onAddToBookmarks}>
-                  {data?.bookmarks?.find((el) => el.user !== user?.id) ? (
-                    <BookmarkRemoveIcon color="secondary" fontSize="small" />
-                  ) : (
-                    <BookmarkAddSharpIcon fontSize="small" />
-                  )}
-                </IconButton>
-              </Tooltip>
-            </Stack>
-          </Stack>
+          <Fab variant="extended" size="small" color="error" sx={{ px: 2 }}>
+            <DeleteIcon sx={{ mr: 1 }} />
+            Delete
+          </Fab>
         </Stack>
       </Grid>
     </Grid>

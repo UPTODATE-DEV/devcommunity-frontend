@@ -130,11 +130,11 @@ const Login = () => {
                     </Typography>
                   </Link>
                 </Stack>
-                <LoadingButton size="small" onClick={googleLogout} loading={loading} variant="contained" sx={{ py: 1 }}>
+                <LoadingButton size="small" onClick={onLogin} loading={loading} variant="contained" sx={{ py: 1 }}>
                   Login
                 </LoadingButton>
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  Don't have an account?{" "}
+                  {`Don't have an account? `}
                   <Link href="/auth/register" passHref>
                     <Typography
                       variant="body2"

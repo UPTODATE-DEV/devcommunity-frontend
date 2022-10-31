@@ -10,9 +10,17 @@ const QuestionContent: React.FC<{ title: string; content: string }> = ({ title, 
         {title}
       </Typography>
 
-      <Typography color="text.secondary" component="div" fontSize={18} gutterBottom sx={{ lineHeight: 1.7 }}>
-        <ReactMarkdown>{content}</ReactMarkdown>
-      </Typography>
+      <Typography
+        color="text.secondary"
+        component="div"
+        fontSize={18}
+        className="content"
+        gutterBottom
+        sx={{ lineHeight: 1.7 }}
+        dangerouslySetInnerHTML={{
+          __html: content,
+        }}
+      />
     </Stack>
   );
 };

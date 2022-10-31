@@ -7,6 +7,14 @@ import Stack from "@mui/material/Stack";
 import Image from "next/image";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useRouter } from "next/router";
+import { useGoogleLogin, GoogleOAuthProvider, GoogleLogin, googleLogout } from "@react-oauth/google";
+import { ProfileSkeleton } from "../menu/Skeleton";
+import dynamic from "next/dynamic";
+
+const Auth = dynamic(() => import("@/components/menu/Auth"), {
+  ssr: false,
+  loading: () => <ProfileSkeleton />,
+});
 
 const CallToAction = () => {
   const { push } = useRouter();
@@ -48,17 +56,9 @@ const CallToAction = () => {
           <Typography color="#d8d8d8">
             Connect with fellow developers and gain access to tools that will help you build a profitable SaaS 🚀
           </Typography>
-          <div>
-            <Button
-              variant="contained"
-              color="primary"
-              disableElevation
-              onClick={handleRegister}
-              sx={{ px: 6, py: 1, borderRadius: 50 }}
-            >
-              Register
-            </Button>
-          </div>
+          <Stack sx={{ width: { xs: 1, md: 250 } }}>
+            <Auth />
+          </Stack>
         </Stack>
       </Container>
     </Box>

@@ -1,9 +1,9 @@
 import Menu from "@/components/menu/Menu";
 import CallToAction from "@/components/middle/CallToAction";
-import Search from "@/components/tags/Search";
-import { TagsSkeleton } from "@/components/tags/Skeleton";
+import { HomeFeedSkeleton } from "@/components/middle/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
+import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
 import Divider from "@mui/material/Divider";
 import type { NextPage } from "next";
@@ -12,19 +12,32 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import React from "react";
 
-const Tags = dynamic(import("@/components/tags/TagsList"), { ssr: false, loading: () => <TagsSkeleton /> });
+const HomeFeed = dynamic(import("@/components/middle/HomeFeed"), {
+  ssr: false,
+  loading: () => <HomeFeedSkeleton />,
+});
 
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
+  const setPosts = useStore((state) => state.setPosts);
 
   React.useEffect(() => {
+    const getPosts = async () => {
+      const posts = await getRequest({ endpoint: "/posts/tag/Cardano" });
+      if (!posts.error) {
+        setPosts(posts.data);
+      }
+    };
+
+    getPosts();
+
     setSession(session);
   }, []);
 
   return (
     <>
       <Head>
-        <title>Top Users | Updev community</title>
+        <title>Cardano | Updev community</title>
         <meta name="description" content="Updev community" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -32,7 +45,8 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
       <Menu />
       <MainContainer>
         {!session?.user && <CallToAction />}
-        <h1>[...]</h1>
+        <Divider />
+        <HomeFeed />
       </MainContainer>
     </>
   );

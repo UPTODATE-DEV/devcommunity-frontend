@@ -13,7 +13,7 @@ const TagsList = () => {
     <Box sx={{ pb: 4 }}>
       <Grid container spacing={2}>
         {tags.map((el, i) => (
-          <Grid item xs={4} key={i}>
+          <Grid item xs={6} sm={3} md={4} key={i}>
             <Tag label={el.name} />
           </Grid>
         ))}

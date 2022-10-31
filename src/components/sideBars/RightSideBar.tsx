@@ -10,52 +10,29 @@ import Stack from "@mui/material/Stack";
 import ListItemButton from "@mui/material/ListItemButton";
 import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
+import useStore from "@/hooks/useStore";
+import { getRequest } from "@/lib/api";
 
 const RightSideBar = () => {
   const { push } = useRouter();
 
-  const handleViewQuestion = () => {
-    push("/questions/uniquely-identifying-objects-in-javascript");
+  const handleViewPost = (path: string) => {
+    push(path);
   };
 
-  const handleViewPost = () => {
-    push("/posts/uniquely-identifying-objects-in-javascript");
-  };
+  const setTopPosts = useStore((state) => state.setTopPosts);
+  const posts = useStore((state) => state.topPosts);
 
-  const data = [
-    {
-      id: 1,
-      name: "Luccin Masirika",
-      title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      image: "/avatar.jpg",
-    },
-    {
-      id: 2,
-      name: "Luccin Masirika",
-      title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      image: "/avatar.jpg",
-    },
-    {
-      id: 3,
-      name: "Luccin Masirika",
-      title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      image: "/avatar.jpg",
-    },
-    {
-      id: 4,
-      name: "Luccin Masirika",
-      title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      image: "/avatar.jpg",
-    },
-  ];
+  React.useEffect(() => {
+    const getPosts = async () => {
+      const posts = await getRequest({ endpoint: "/posts/top/posts" });
+      if (!posts.error) {
+        setTopPosts(posts.data);
+      }
+    };
+
+    getPosts();
+  }, []);
 
   return (
     <Stack>
@@ -63,31 +40,47 @@ const RightSideBar = () => {
         Top posts of the Week
       </Typography>
       <Divider />
-      <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-        {data.map((item) => (
+      <List sx={{ width: { xs: "100%", md: 350 }, bgcolor: "background.paper" }}>
+        {posts?.topArticlesOfTheWeek.map((item, i) => (
           <React.Fragment key={item.id}>
-            <ListItemButton alignItems="flex-start" onClick={handleViewPost}>
+            <ListItemButton alignItems="flex-start" onClick={() => handleViewPost(`/articles/${item.slug}`)}>
               <ListItemAvatar>
-                <Avatar alt="Remy Sharp" src="https://source.unsplash.com/random/200x200?sig=1310">
-                  L
+                <Avatar alt={`${item.author.firstName} ${item.author.lastName}`} src={`${item.author.profile?.avatar}`}>
+                  {item.author.firstName.charAt(0)}
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={item.title}
+                primary={`${item.title.substring(0, 58)}  ${item.title.length > 58 ? "..." : ""}`}
                 primaryTypographyProps={{
                   fontWeight: 700,
                 }}
                 secondary={
-                  <React.Fragment>
+                  <Stack sx={{ width: 1 }}>
                     <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
-                      By {item.name}
+                      By {`${item.author.firstName} ${item.author.lastName}`}
                     </Typography>
-                    {` — ${item.description.substring(0, 60)}...`}
-                  </React.Fragment>
+                    <Typography
+                      gutterBottom
+                      color="text.secondary"
+                      fontSize={14}
+                      sx={{
+                        display: "-webkit-box!important",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                        textOverflow: "ellipse",
+                        whiteSpace: "normal",
+                      }}
+                      component="div"
+                      dangerouslySetInnerHTML={{
+                        __html: item.content,
+                      }}
+                    />
+                  </Stack>
                 }
               />
             </ListItemButton>
-            {data.length !== item.id && <Divider variant="inset" component="li" />}
+            {i < 2 && <Divider variant="inset" component="li" />}
           </React.Fragment>
         ))}
       </List>
@@ -97,12 +90,12 @@ const RightSideBar = () => {
       </Typography>
       <Divider />
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-        {data.map((item) => (
+        {posts?.topQuestionsOfTheWeek?.map((item, i) => (
           <React.Fragment key={item.id}>
-            <ListItemButton alignItems="flex-start" onClick={handleViewQuestion}>
+            <ListItemButton alignItems="flex-start" onClick={() => handleViewPost(`/posts/${item.slug}`)}>
               <ListItemAvatar>
-                <Avatar alt="Remy Sharp" src="https://source.unsplash.com/random/200x200?sig=131015">
-                  L
+                <Avatar alt={`${item.author.firstName} ${item.author.lastName}`} src={`${item.author.profile?.avatar}`}>
+                  {item.author.firstName.charAt(0)}
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -113,14 +106,14 @@ const RightSideBar = () => {
                 secondary={
                   <React.Fragment>
                     <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
-                      By {item.name}
+                      By {`${item.author.firstName} ${item.author.lastName}`}
                     </Typography>
-                    {` — 1230 likes`}
+                    {` — ${item.question?.reactions.filter((el) => el.type === "LIKE").length} likes`}
                   </React.Fragment>
                 }
               />
             </ListItemButton>
-            {data.length !== item.id && <Divider variant="inset" component="li" />}
+            {i < 2 && <Divider variant="inset" component="li" />}
           </React.Fragment>
         ))}
       </List>

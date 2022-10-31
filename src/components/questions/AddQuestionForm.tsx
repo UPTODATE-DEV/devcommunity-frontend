@@ -20,10 +20,7 @@ import { RichTextEditor } from "@mantine/rte";
 import { FILES_BASE_URL } from "config/url";
 import { useRouter } from "next/router";
 
-const initialValue = "<p>Type your post <b>cotent</b> here</p>";
-
-const AddPostForm = () => {
-  const [value, onChange] = useState(initialValue);
+const AddQuestionForm = () => {
   const [loading, setLoading] = React.useState(false);
   const user = useStore((state) => state.session?.user);
   const [image, setImage] = React.useState("");
@@ -36,19 +33,19 @@ const AddPostForm = () => {
 
   const { push } = useRouter();
 
-  const handleImageChange = async (e: any) => {
-    setPreview(URL.createObjectURL(e.target.files[0]));
+  // const handleImageChange = async (e: any) => {
+  //   setPreview(URL.createObjectURL(e.target.files[0]));
 
-    const formData = new FormData();
-    formData.append("file", e.target.files[0], e.target.files[0].name);
-    const response = await postRequest({ endpoint: "/files/upload", data: formData });
-    if (response.error) {
-      toast.error(response.error?.message);
-    }
-    if (response.data) {
-      setImage(response.data?.id);
-    }
-  };
+  //   const formData = new FormData();
+  //   formData.append("file", e.target.files[0], e.target.files[0].name);
+  //   const response = await postRequest({ endpoint: "/files/upload", data: formData });
+  //   if (response.error) {
+  //     toast.error(response.error?.message);
+  //   }
+  //   if (response.data) {
+  //     setImage(response.data?.id);
+  //   }
+  // };
 
   const handleImageUpload = React.useCallback(async (file: File): Promise<string> => {
     const formData = new FormData();
@@ -70,7 +67,7 @@ const AddPostForm = () => {
     toast.info("In process...");
     const response = await postRequest({
       endpoint: "/posts",
-      data: { ...post, image, author: user?.id, type: "ARTICLE" },
+      data: { ...post, author: user?.id, type: "QUESTION" },
     });
     if (response.error) {
       setLoading(false);
@@ -79,7 +76,7 @@ const AddPostForm = () => {
     if (response.data) {
       setLoading(false);
       toast.success("Post created successfully");
-      push(`/articles/${response.data?.slug}`);
+      push(`/posts/${response.data?.slug}`);
     }
   };
 
@@ -90,8 +87,8 @@ const AddPostForm = () => {
   }, [preview]);
 
   return (
-    <Stack spacing={2} sx={{ py: 1, pb: 4 }}>
-      <Stack
+    <Stack spacing={2} sx={{ py: 1, pb: 4, minHeight: "100vh" }}>
+      {/* <Stack
         justifyContent="center"
         alignItems="center"
         component="label"
@@ -108,11 +105,18 @@ const AddPostForm = () => {
       >
         <input hidden accept="image/*" onChange={handleImageChange} type="file" />
         {preview ? (
-          <Image src={preview} alt="Updev cmmunity" layout="fill" objectFit="cover" />
+          <Image src={preview} layout="fill" objectFit="cover" />
         ) : (
           <AddPhotoAlternateIcon color="primary" sx={{ fontSize: 140, opacity: 0.1 }} />
         )}
-      </Stack>
+      </Stack> */}
+      <TextField
+        name="title"
+        variant="filled"
+        placeholder="Post title..."
+        onChange={handleChange}
+        sx={{ "&.MuiTextField-root > .MuiFilledInput-root": { px: 2, pb: 1 } }}
+      />
       <Autocomplete
         multiple
         id="tags-filled"
@@ -135,13 +139,7 @@ const AddPostForm = () => {
           />
         )}
       />
-      <TextField
-        name="title"
-        variant="filled"
-        placeholder="Post title..."
-        onChange={handleChange}
-        sx={{ "&.MuiTextField-root > .MuiFilledInput-root": { px: 2, pb: 1 } }}
-      />
+
       <RichTextEditor
         value={post.content}
         onChange={(value) => setPost((state) => ({ ...state, content: value }))}
@@ -175,4 +173,4 @@ const tags = [
   { title: "Flutter", year: 1994 },
 ];
 
-export default AddPostForm;
+export default AddQuestionForm;

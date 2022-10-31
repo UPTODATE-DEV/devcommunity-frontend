@@ -8,7 +8,6 @@ import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import React from "react";
 
-import Question from "@/components/questions/Question";
 const Home: NextPage<{ session: Session; post: Post }> = ({ session, post }) => {
   const setSession = useStore((state) => state.setSession);
 
@@ -25,7 +24,7 @@ const Home: NextPage<{ session: Session; post: Post }> = ({ session, post }) => 
       </Head>
       <Menu />
       <MainContainer>
-        <Question data={post} />
+        <Post data={post} />
       </MainContainer>
     </>
   );

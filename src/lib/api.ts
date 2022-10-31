@@ -75,6 +75,20 @@ export const patchRequest = async ({ endpoint, token, data }: AxiosRequest) => {
   }
 };
 
+export const deleteRequest = async ({ endpoint, token }: AxiosRequest) => {
+  try {
+    const res = await axios.delete(`${baseUrl + endpoint}`, {
+      headers: {
+        Accept: "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : null),
+      },
+    });
+    return { data: res.data };
+  } catch (e: any) {
+    return { error: e.response?.data };
+  }
+};
+
 export const postLocalRequest = async ({ endpoint, token, data }: AxiosRequest) => {
   const res = await axios.post(`${baseUrl + endpoint}`, data, {
     headers: {

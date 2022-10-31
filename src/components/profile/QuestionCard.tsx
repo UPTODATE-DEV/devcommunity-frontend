@@ -17,6 +17,8 @@ import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import ReactMarkdown from "react-markdown";
+import Fab from "@mui/material/Fab";
+import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
@@ -133,74 +135,18 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
           }}
         />
 
-        <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between" sx={{ mt: 1 }}>
-          <Stack direction="row" spacing={2}>
-            <Stack
-              direction="row"
-              alignItems="center"
-              sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, px: 1, borderRadius: 52 }}
-            >
-              <Tooltip title="I like" placement="bottom" arrow>
-                <IconButton onClick={() => onReact("LIKE")}>
-                  <ThumbUpSharpIcon color="info" fontSize="small" />
-                </IconButton>
-              </Tooltip>
-
-              <Tooltip title="See all reactions" placement="bottom" arrow>
-                <IconButton>
-                  <Typography variant="caption" color="text.primary" fontWeight={700}>
-                    {data?.question?.reactions?.filter((el) => el.type === "LIKE").length}
-                  </Typography>
-                </IconButton>
-              </Tooltip>
-            </Stack>
-
-            <Stack
-              direction="row"
-              alignItems="center"
-              sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, px: 1, borderRadius: 52 }}
-            >
-              <Tooltip title="I like" placement="bottom" arrow>
-                <IconButton onClick={() => onReact("DISLIKE")}>
-                  <ThumbDownOffAltIcon color="error" fontSize="small" />
-                </IconButton>
-              </Tooltip>
-
-              <Tooltip title="See all reactions" placement="bottom" arrow>
-                <IconButton>
-                  <Typography variant="caption" color="text.primary" fontWeight={700}>
-                    {data?.question?.reactions?.filter((el) => el.type === "DISLIKE").length}
-                  </Typography>
-                </IconButton>
-              </Tooltip>
-            </Stack>
-          </Stack>
-          <Stack direction="row" spacing={2}>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <IconButton>
-                <QuestionAnswerIcon />
-              </IconButton>
-              <Typography variant="caption" color="text.secondary" fontWeight={700}>
-                {data?.comments?.length || 0}
-              </Typography>
-            </Stack>
-
-            <Stack
-              direction="row"
-              alignItems="center"
-              sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
-            >
-              <Tooltip title="Save post" placement="bottom" arrow>
-                <IconButton onClick={onAddToBookmarks}>
-                  {data?.bookmarks?.find((el) => el.user !== user?.id) ? (
-                    <BookmarkRemoveIcon color="secondary" fontSize="small" />
-                  ) : (
-                    <BookmarkAddSharpIcon fontSize="small" />
-                  )}
-                </IconButton>
-              </Tooltip>
-            </Stack>
-          </Stack>
+        <Stack
+          direction="row"
+          flexWrap="wrap"
+          spacing={1}
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ mt: 1 }}
+        >
+          <Fab variant="extended" size="small" color="error" sx={{ px: 2 }}>
+            <DeleteIcon sx={{ mr: 1 }} />
+            Delete
+          </Fab>
         </Stack>
       </Grid>
     </Grid>

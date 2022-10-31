@@ -2,6 +2,7 @@ import React from "react";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import ReactMarkdown from "react-markdown";
+import { Prism } from "@mantine/prism";
 
 const PostContent: React.FC<{ title: string; content: string }> = ({ title, content }) => {
   return (
@@ -10,9 +11,17 @@ const PostContent: React.FC<{ title: string; content: string }> = ({ title, cont
         {title}
       </Typography>
 
-      <Typography color="text.secondary" component="div" fontSize={18} gutterBottom sx={{ lineHeight: 1.7 }}>
-        <ReactMarkdown>{content}</ReactMarkdown>
-      </Typography>
+      <Typography
+        color="text.secondary"
+        component="div"
+        fontSize={18}
+        className="content"
+        gutterBottom
+        sx={{ lineHeight: 1.7 }}
+        dangerouslySetInnerHTML={{
+          __html: content,
+        }}
+      />
     </Stack>
   );
 };

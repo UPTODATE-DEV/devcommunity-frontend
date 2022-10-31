@@ -3,9 +3,9 @@ import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import React from "react";
 import dayjs from "dayjs";
+import { FILES_BASE_URL } from "config/url";
 
 const PostHeader: React.FC<{ data: Post }> = ({ data }) => {
-  console.log(data.author);
   return (
     <Stack
       sx={{
@@ -17,7 +17,7 @@ const PostHeader: React.FC<{ data: Post }> = ({ data }) => {
         borderTopRightRadius: 6,
       }}
     >
-      <Image src="/post.jpg" alt="Post" layout="fill" objectFit="cover" />
+      <Image src={FILES_BASE_URL + data?.article?.image?.url} alt="Post" layout="fill" objectFit="cover" />
       <Stack
         sx={{
           px: 2,

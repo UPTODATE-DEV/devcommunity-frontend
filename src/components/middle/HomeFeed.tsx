@@ -16,7 +16,7 @@ const HomeFeed = () => {
   const posts = useStore((state) => state.posts);
   return (
     <Stack spacing={5}>
-      {posts.map((item, i) => (
+      {posts?.map((item, i) => (
         <React.Fragment key={item.id}>
           {item.type === "ARTICLE" ? <PostCard data={item} /> : <QuestionCard data={item} />}
           {posts.length !== i && <Divider />}

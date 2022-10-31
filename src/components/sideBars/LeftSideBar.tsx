@@ -29,17 +29,17 @@ const LeftSideBar = () => {
 
   const main = [
     { path: "/", icon: <HomeSharpIcon />, label: "Home" },
-    { path: "/posts", icon: <HistoryEduIcon />, label: "Posts" },
-    { path: "/questions", icon: <QuestionAnswer />, label: "Questions" },
+    { path: "/articles", icon: <HistoryEduIcon />, label: "Articles" },
+    { path: "/posts", icon: <QuestionAnswer />, label: "Posts" },
     { path: "/tags", icon: <TagSharpIcon />, label: "Tags" },
     { path: "/cardano", icon: <BlurOnIcon />, label: "Cardano" },
     { path: "/top-users", icon: <InsertEmoticonSharpIcon />, label: "Top users" },
   ];
 
   const params = [
-    { path: "/bookmark", icon: <BookmarkSharpIcon />, label: "My bookmarks" },
-    { path: "/settings", icon: <SettingsSharpIcon />, label: "Settings" },
-    { path: "/account", icon: <ManageAccounts />, label: "My account" },
+    { path: "/bookmarks", icon: <BookmarkSharpIcon />, label: "Bookmarks" },
+    // { path: "/settings", icon: <SettingsSharpIcon />, label: "Settings" },
+    { path: "/profile", icon: <ManageAccounts />, label: "My account" },
   ];
 
   return (
@@ -64,7 +64,7 @@ const LeftSideBar = () => {
           <Divider />
           <List>
             {params.map(({ path, icon, label }) => (
-              <ListItemButton key={path} selected={matches(path)} onClick={() => console.log("Click")}>
+              <ListItemButton key={path} selected={matches(path)} onClick={() => push(path)}>
                 <ListItemIcon sx={{ mr: -1, color: matches(path) ? "primary.main" : "text.primary" }}>
                   {icon}
                 </ListItemIcon>

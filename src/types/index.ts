@@ -1,5 +1,8 @@
 type Sex = "M" | "F";
 type AccountStatus = "ACTIVE" | "DELETED" | "PENDING" | "DISABLED";
+type ArticleReactionType = "LIKE" | "LOVE" | "USEFUL";
+type QuestionReactionType = "LIKE" | "DISLIKE";
+type Role = "ADMIN" | "AUTHOR" | "USER";
 
 interface Session {
   isLoggedIn: boolean;
@@ -33,6 +36,14 @@ interface Post {
   type: "QUESTION" | "ARTICLE";
   article: Article;
   question: Question;
+  comments: PostComment[];
+  bookmarks: Bookmarks[];
+}
+
+interface PostComment {
+  id: string;
+  content: string;
+  author: User;
 }
 
 interface Profile {
@@ -75,10 +86,44 @@ interface File {
 interface Article {
   id: string;
   image: File;
+  reactions: ArticleReaction[];
+}
+
+interface ArticleReaction {
+  id: string;
+  article: string;
+  user: User;
+  type: ArticleReactionType;
 }
 
 interface Question {
   id: string;
+  reactions: QuestionsReaction[];
 }
 
-type Role = "ADMIN" | "AUTHOR" | "USER";
+interface QuestionsReaction {
+  id: string;
+  question: string;
+  user: User;
+  type: QuestionReactionType;
+}
+
+interface TopUsers {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  avatar?: string;
+  totalReactions: number;
+}
+
+interface Bookmarks {
+  id: string;
+  post: Post;
+  user: string;
+}
+
+interface TopPosts {
+  topQuestionsOfTheWeek: Post[];
+  topArticlesOfTheWeek: Post[];
+}

@@ -2,8 +2,10 @@ import React from "react";
 import Stack from "@mui/material/Stack";
 import PostHeader from "@/components/posts/PostHeader";
 import PostContent from "@/components/posts/PostContent";
-import PostComment from "./PostComment";
 import Divider from "@mui/material/Divider";
+import dynamic from "next/dynamic";
+
+const PostComment = dynamic(import("@/components/posts/PostComment"), { ssr: false, loading: () => null });
 
 const Post: React.FC<{ data: Post }> = ({ data }) => {
   return (
@@ -11,7 +13,7 @@ const Post: React.FC<{ data: Post }> = ({ data }) => {
       <PostHeader data={data} />
       <PostContent title={data?.title} content={data?.content} />
       <Divider />
-      <PostComment />
+      <PostComment data={data} />
       <Divider />
     </Stack>
   );

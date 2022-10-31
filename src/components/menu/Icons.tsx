@@ -45,12 +45,14 @@ const Icons = () => {
 
   return (
     <Stack direction="row" alignItems="center" spacing={1}>
-      <IconButton onClick={toggleMode}>
+      <IconButton sx={{ display: { xs: "none", md: "flex" } }} onClick={toggleMode}>
         {darkModeActive ? <DarkModeIcon /> : <LightModeIcon color="warning" />}
       </IconButton>
-      <IconButton onClick={toggleFullscreen}>{fullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}</IconButton>
+      <IconButton sx={{ display: { xs: "none", md: "flex" } }} onClick={toggleFullscreen}>
+        {fullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+      </IconButton>
       {user && (
-        <IconButton aria-label="cart">
+        <IconButton aria-label="cart" onClick={() => push("/notifications")}>
           <StyledBadge badgeContent={4} color="secondary">
             <NotificationsIcon />
           </StyledBadge>

@@ -127,3 +127,5 @@ interface TopPosts {
   topQuestionsOfTheWeek: Post[];
   topArticlesOfTheWeek: Post[];
 }
+
+interface Test {}

@@ -16,9 +16,11 @@ import { toast } from "react-toastify";
 import useStore from "@/hooks/useStore";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import { RichTextEditor } from "@mantine/rte";
+import RichTextEditor from '@/components/common/RichTextEditor'
 import { FILES_BASE_URL } from "config/url";
 import { useRouter } from "next/router";
+
+const initialValue = "<p>Type your <b>content</b> here</p>";
 
 const AddQuestionForm = () => {
   const [loading, setLoading] = React.useState(false);
@@ -27,7 +29,7 @@ const AddQuestionForm = () => {
   const [preview, setPreview] = React.useState("");
   const [post, setPost] = React.useState<{ title: string; content: string; tags: string[] | null }>({
     title: "",
-    content: "",
+    content: initialValue,
     tags: null,
   });
 
@@ -154,7 +156,13 @@ const AddQuestionForm = () => {
         ]}
       />
       <div>
-        <Fab variant="extended" disabled={loading} color="primary" sx={{ px: 4 }} onClick={onSubmit}>
+        <Fab
+          variant="extended"
+          disabled={!post.title || !post.content || !post.tags?.length || loading}
+          color="primary"
+          sx={{ px: 4 }}
+          onClick={onSubmit}
+        >
           <SaveIcon sx={{ mr: 1 }} />
           {loading ? "Loading..." : "Save"}
         </Fab>

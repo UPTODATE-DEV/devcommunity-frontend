@@ -120,7 +120,7 @@ interface TopUsers {
 interface Bookmarks {
   id: string;
   post: Post;
-  user: string;
+  userId: string;
 }
 
 interface TopPosts {
@@ -128,4 +128,13 @@ interface TopPosts {
   topArticlesOfTheWeek: Post[];
 }
 
-interface Test {}
+interface Notifications {
+  id: string;
+  createdAt: Date;
+  notificationToUser: User;
+  notificationFromUser: User;
+  type: "COMMENT" | "REPLY" | "LIKE" | "DISLIKE" | "BOOKMARK" | "SHARE" | "FOLLOW" | "LOVE" | "USEFUL";
+  post: Post;
+  comment: Comment;
+  read: boolean;
+}

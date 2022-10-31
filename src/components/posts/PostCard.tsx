@@ -74,7 +74,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
 
   const Like = () => (
     <Tooltip title="I LIKE" placement="bottom" arrow>
-      <IconButton onClick={() => onReact("LIKE")}>
+      <IconButton onClick={() => onReact("LIKE")} disabled={!user?.id}>
         <ThumbUpSharpIcon color="info" fontSize="small" />
       </IconButton>
     </Tooltip>
@@ -82,7 +82,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
 
   const Useful = () => (
     <Tooltip title="USEFUL" placement="bottom" arrow>
-      <IconButton onClick={() => onReact("USEFUL")}>
+      <IconButton onClick={() => onReact("USEFUL")} disabled={!user?.id}>
         <LightbulbSharpIcon color="warning" fontSize="small" />
       </IconButton>
     </Tooltip>
@@ -90,7 +90,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
 
   const Love = () => (
     <Tooltip title="I LOVE" placement="bottom" arrow>
-      <IconButton onClick={() => onReact("LOVE")}>
+      <IconButton onClick={() => onReact("LOVE")} disabled={!user?.id}>
         <FavoriteSharpIcon color="error" fontSize="small" />
       </IconButton>
     </Tooltip>
@@ -223,7 +223,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
             >
               <Tooltip title="Save post" placement="bottom" arrow>
                 <IconButton onClick={onAddToBookmarks}>
-                  {data?.bookmarks?.find((el) => el.user !== user?.id) ? (
+                  {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
                     <BookmarkRemoveIcon color="secondary" fontSize="small" />
                   ) : (
                     <BookmarkAddSharpIcon fontSize="small" />

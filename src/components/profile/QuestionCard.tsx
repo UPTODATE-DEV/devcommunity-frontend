@@ -1,83 +1,23 @@
-import BookmarkAddSharpIcon from "@mui/icons-material/BookmarkAddSharp";
-import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
-import LightbulbSharpIcon from "@mui/icons-material/LightbulbSharp";
-import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
-import VolunteerActivismSharpIcon from "@mui/icons-material/VolunteerActivismSharp";
+import useStore from "@/hooks/useStore";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Button } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Image from "next/image";
-import Tooltip from "@mui/material/Tooltip";
-import CommentIcon from "@mui/icons-material/Comment";
-import { useRouter } from "next/router";
-import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
-import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
-import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
-import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
-import ReactMarkdown from "react-markdown";
-import Fab from "@mui/material/Fab";
-import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-dayjs.extend(relativeTime);
 import "dayjs/locale/fr";
-import { FILES_BASE_URL } from "config/url";
-import { patchRequest } from "@/lib/api";
+import relativeTime from "dayjs/plugin/relativeTime";
+import { useRouter } from "next/router";
 import React from "react";
-import useStore from "@/hooks/useStore";
-import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
+dayjs.extend(relativeTime);
 
-const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
-  const user = useStore((state) => state.session?.user);
+const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }> = ({ data, handleDeletePost }) => {
   const { push } = useRouter();
-  const { setPosts, posts } = useStore((state) => state);
-  const [userReaction, setUserReaction] = React.useState<QuestionReactionType | undefined>();
 
   const handleViewQuestion = () => {
     push(`/posts/${data.slug}`);
   };
-
-  const onReact = async (type: QuestionReactionType) => {
-    const post = await patchRequest({ endpoint: `/posts/${data?.id}/reactions/${type}/${user?.id}/question` });
-    // update posts
-    const updatedPosts = posts.map((el) => {
-      if (el.id === post.data?.id) {
-        return post.data;
-      }
-      return el;
-    });
-
-    setPosts(updatedPosts as Post[]);
-  };
-
-  // on add to bookmarks
-  const onAddToBookmarks = async () => {
-    const post = await patchRequest({ endpoint: `/posts/${data?.id}/bookmarks/${user?.id}` });
-    // update posts
-    const updatedPosts = posts.map((el) => {
-      if (el.id === post.data?.id) {
-        return post.data;
-      }
-      return el;
-    });
-
-    setPosts(updatedPosts as Post[]);
-  };
-
-  React.useEffect(() => {
-    if (user) {
-      const reaction = data?.question?.reactions?.find((reaction) => {
-        return reaction?.user?.id === user?.id;
-      });
-      if (reaction) {
-        setUserReaction(reaction.type);
-      } else {
-        setUserReaction(undefined);
-      }
-    }
-  }, [data?.article?.reactions, user]);
 
   return (
     <Grid container sx={{ cursor: "pointer" }}>
@@ -143,10 +83,16 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
           justifyContent="space-between"
           sx={{ mt: 1 }}
         >
-          <Fab variant="extended" size="small" color="error" sx={{ px: 2 }}>
-            <DeleteIcon sx={{ mr: 1 }} />
+          <Button
+            size="small"
+            variant="outlined"
+            color="error"
+            sx={{ px: 2 }}
+            onClick={() => handleDeletePost(data?.id)}
+            startIcon={<DeleteIcon />}
+          >
             Delete
-          </Fab>
+          </Button>
         </Stack>
       </Grid>
     </Grid>

@@ -141,7 +141,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
               sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, px: 1, borderRadius: 52 }}
             >
               <Tooltip title="I like" placement="bottom" arrow>
-                <IconButton onClick={() => onReact("LIKE")}>
+                <IconButton onClick={() => onReact("LIKE")} disabled={!user?.id}>
                   <ThumbUpSharpIcon color="info" fontSize="small" />
                 </IconButton>
               </Tooltip>
@@ -161,7 +161,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
               sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, px: 1, borderRadius: 52 }}
             >
               <Tooltip title="I like" placement="bottom" arrow>
-                <IconButton onClick={() => onReact("DISLIKE")}>
+                <IconButton onClick={() => onReact("DISLIKE")} disabled={!user?.id}>
                   <ThumbDownOffAltIcon color="error" fontSize="small" />
                 </IconButton>
               </Tooltip>
@@ -192,7 +192,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
             >
               <Tooltip title="Save post" placement="bottom" arrow>
                 <IconButton onClick={onAddToBookmarks}>
-                  {data?.bookmarks?.find((el) => el.user !== user?.id) ? (
+                  {data?.bookmarks?.find((el) => el.userId !== user?.id) ? (
                     <BookmarkRemoveIcon color="secondary" fontSize="small" />
                   ) : (
                     <BookmarkAddSharpIcon fontSize="small" />

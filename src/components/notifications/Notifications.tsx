@@ -8,31 +8,59 @@ import Divider from "@mui/material/Divider";
 import useStore from "@/hooks/useStore";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import { useRouter } from "next/router";
+import { alpha } from "@mui/material";
+import { patchRequest } from "@/lib/api";
+import { toast } from "react-toastify";
 
 const Notifications = () => {
-  const topUsers = useStore((state) => state.topUsers);
+  const notifications = useStore((state) => state.notifications);
+  const { push } = useRouter();
+
+  const handleReadNotification = async (notification: Notifications) => {
+    const post = notification.post;
+    const response = await patchRequest({ endpoint: `/notifications/${notification.id}` });
+    if (response.error) {
+      toast.error(response.error?.message);
+    }
+    push(`${post.type === "ARTICLE" ? "/articles" : "/posts"}/${post.slug}`);
+  };
 
   return (
     <Stack spacing={2} sx={{ py: 2 }}>
+      <Typography variant="h6" color="text.primary">
+        Notifications
+      </Typography>
+      <Divider variant="inset" />
       <List>
-        {topUsers.map((el, i) => (
+        {notifications.map((el, i) => (
           <React.Fragment key={i}>
-            <ListItemButton>
+            <ListItemButton
+              onClick={() => handleReadNotification(el)}
+              sx={{ bgcolor: !el.read ? (theme) => alpha(theme.palette.primary.main, 0.1) : "inherit", my: 0.2 }}
+            >
               <ListItemAvatar>
-                <Avatar src={el?.avatar} alt={`${el.firstName} ${el.lastName}`}>
-                  {el.firstName.charAt(0)}
+                <Avatar
+                  src={el?.notificationFromUser?.profile?.avatar?.url}
+                  alt={`${el?.notificationFromUser.firstName} ${el?.notificationFromUser.lastName}`}
+                >
+                  {el.notificationFromUser.firstName.charAt(0)}
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
                 primary={
                   <React.Fragment>
                     <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
-                      {`${el.firstName} ${el.lastName}`}
+                      {`${el?.notificationFromUser.firstName} ${el?.notificationFromUser.lastName}`}
                     </Typography>{" "}
-                    a réagit à votre post
+                    {el.type === "COMMENT" && "a commenté votre post"}
+                    {el.type === "DISLIKE" && "a réagit votre post"}
+                    {el.type === "LIKE" && "a réagit votre post"}
+                    {el.type === "LOVE" && "a réagit votre post"}
+                    {el.type === "USEFUL" && "a réagit votre post"}
                   </React.Fragment>
                 }
-                secondary="Holisticly reintermediate fully tested niche markets through robust innovation"
+                secondary={el.post.title}
                 primaryTypographyProps={{
                   fontWeight: 700,
                   color: "text.primary",

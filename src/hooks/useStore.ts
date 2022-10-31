@@ -16,6 +16,8 @@ interface Store {
   setTopPosts: (topPosts: TopPosts) => void;
   openMobileMenu: boolean;
   setOpenMobileMenu: (open: boolean) => void;
+  notifications: Notifications[] | [];
+  setNotifications: (notifications: Notifications[]) => void;
 }
 
 const useStore = create<Store>()(
@@ -52,6 +54,10 @@ const useStore = create<Store>()(
       openMobileMenu: false,
       setOpenMobileMenu: (openMobileMenu: boolean) => {
         return set((state) => ({ ...state, openMobileMenu }));
+      },
+      notifications: [],
+      setNotifications: (notifications: Notifications[]) => {
+        return set((state) => ({ ...state, notifications }));
       },
     }))
   )

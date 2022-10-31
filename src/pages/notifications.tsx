@@ -1,12 +1,9 @@
 import Menu from "@/components/menu/Menu";
 import CallToAction from "@/components/middle/CallToAction";
-import Search from "@/components/tags/Search";
-import { TagsSkeleton } from "@/components/tags/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
-import Divider from "@mui/material/Divider";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
@@ -17,17 +14,17 @@ const Notifications = dynamic(import("@/components/notifications/Notifications")
 
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
-  const setTopUsers = useStore((state) => state.setTopUsers);
+  const setNotifications = useStore((state) => state.setNotifications);
 
   React.useEffect(() => {
-    const getTopUsers = async () => {
-      const authors = await getRequest({ endpoint: "/posts/top/authors" });
-      if (!authors.error) {
-        setTopUsers(authors.data);
+    const getNotifications = async () => {
+      const notifications = await getRequest({ endpoint: `/notifications/${session.user?.id}` });
+      if (!notifications.error) {
+        setNotifications(notifications.data);
       }
     };
 
-    getTopUsers();
+    getNotifications();
 
     setSession(session);
   }, []);

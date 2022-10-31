@@ -1,102 +1,25 @@
-import BookmarkAddSharpIcon from "@mui/icons-material/BookmarkAddSharp";
-import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
-import LightbulbSharpIcon from "@mui/icons-material/LightbulbSharp";
-import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
-import VolunteerActivismSharpIcon from "@mui/icons-material/VolunteerActivismSharp";
+import useStore from "@/hooks/useStore";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Button } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Image from "next/image";
-import Tooltip from "@mui/material/Tooltip";
-import CommentIcon from "@mui/icons-material/Comment";
-import Fab from "@mui/material/Fab";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useRouter } from "next/router";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-dayjs.extend(relativeTime);
-import "dayjs/locale/fr";
 import { FILES_BASE_URL } from "config/url";
-import useStore from "@/hooks/useStore";
+import dayjs from "dayjs";
+import "dayjs/locale/fr";
+import relativeTime from "dayjs/plugin/relativeTime";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import React from "react";
-import { patchRequest, postRequest } from "@/lib/api";
-import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
+dayjs.extend(relativeTime);
 
-const PostCard: React.FC<{ data: Post }> = ({ data }) => {
-  const user = useStore((state) => state.session?.user);
-  const { setPosts, posts } = useStore((state) => state);
+const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }> = ({ data, handleDeletePost }) => {
   const { push } = useRouter();
-  const [userReaction, setUserReaction] = React.useState<ArticleReactionType | undefined>();
 
   const handleViewPost = () => {
     push(`/articles/${data?.slug}`);
   };
-
-  const onReact = async (type: string) => {
-    const post = await patchRequest({ endpoint: `/posts/${data?.id}/reactions/${type}/${user?.id}/article` });
-    // update posts
-    const updatedPosts = posts.map((el) => {
-      if (el.id === post.data?.id) {
-        return post.data;
-      }
-      return el;
-    });
-
-    setPosts(updatedPosts as Post[]);
-  };
-
-  // on add to bookmarks
-  const onAddToBookmarks = async () => {
-    const post = await patchRequest({ endpoint: `/posts/${data?.id}/bookmarks/${user?.id}` });
-    // update posts
-    const updatedPosts = posts.map((el) => {
-      if (el.id === post.data?.id) {
-        return post.data;
-      }
-      return el;
-    });
-
-    setPosts(updatedPosts as Post[]);
-  };
-
-  React.useEffect(() => {
-    if (user) {
-      const reaction = data?.article?.reactions?.find((reaction) => {
-        return reaction?.user?.id === user?.id;
-      });
-      if (reaction) {
-        setUserReaction(reaction.type);
-      } else {
-        setUserReaction(undefined);
-      }
-    }
-  }, [data?.article?.reactions, user]);
-
-  const Like = () => (
-    <Tooltip title="I LIKE" placement="bottom" arrow>
-      <IconButton onClick={() => onReact("LIKE")}>
-        <ThumbUpSharpIcon color="info" fontSize="small" />
-      </IconButton>
-    </Tooltip>
-  );
-
-  const Useful = () => (
-    <Tooltip title="USEFUL" placement="bottom" arrow>
-      <IconButton onClick={() => onReact("USEFUL")}>
-        <LightbulbSharpIcon color="warning" fontSize="small" />
-      </IconButton>
-    </Tooltip>
-  );
-
-  const Love = () => (
-    <Tooltip title="I LOVE" placement="bottom" arrow>
-      <IconButton onClick={() => onReact("LOVE")}>
-        <FavoriteSharpIcon color="error" fontSize="small" />
-      </IconButton>
-    </Tooltip>
-  );
 
   return (
     <Grid container>
@@ -178,10 +101,16 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
           justifyContent="space-between"
           sx={{ mt: 1 }}
         >
-          <Fab variant="extended" size="small" color="error" sx={{ px: 2 }}>
-            <DeleteIcon sx={{ mr: 1 }} />
+          <Button
+            size="small"
+            variant="outlined"
+            color="error"
+            sx={{ px: 2 }}
+            onClick={() => handleDeletePost(data?.id)}
+            startIcon={<DeleteIcon />}
+          >
             Delete
-          </Fab>
+          </Button>
         </Stack>
       </Grid>
     </Grid>

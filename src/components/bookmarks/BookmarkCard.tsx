@@ -1,6 +1,7 @@
 import useStore from "@/hooks/useStore";
 import { patchRequest } from "@/lib/api";
 import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
+import { Button } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Fab from "@mui/material/Fab";
 import Grid from "@mui/material/Grid";
@@ -95,10 +96,16 @@ const BookmarkCard: React.FC<{ data: Post }> = ({ data }) => {
           justifyContent="space-between"
           sx={{ mt: 1 }}
         >
-          <Fab variant="extended" size="small" color="primary" sx={{ px: 2 }} onClick={onRemoveFromBookmarks}>
-            <BookmarkRemoveIcon sx={{ mr: 1 }} />
+          <Button
+            size="small"
+            variant="outlined"
+            color="primary"
+            sx={{ px: 2 }}
+            onClick={onRemoveFromBookmarks}
+            startIcon={<BookmarkRemoveIcon />}
+          >
             Remove
-          </Fab>
+          </Button>
         </Stack>
       </Grid>
     </Grid>

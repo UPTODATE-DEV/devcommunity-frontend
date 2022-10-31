@@ -25,6 +25,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { toast } from "react-toastify";
 import Fab from "@mui/material/Fab";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 
 const ProfileTabs = () => {
   const [tab, setTab] = React.useState("0");
@@ -61,6 +62,16 @@ const ProfileTabs = () => {
     }
     if (response.data) {
       setComments((state) => state.filter((el) => el.id !== id));
+    }
+  };
+
+  const handleDeletePost = async (id: string) => {
+    const response = await deleteRequest({ endpoint: `/posts/${id}` });
+    if (response.error) {
+      toast.error(response.error?.message);
+    }
+    if (response.data) {
+      setPosts(posts.filter((el) => el.id !== response.data?.id) as Post[]);
     }
   };
 
@@ -109,7 +120,7 @@ const ProfileTabs = () => {
             .filter((el) => el.type === "QUESTION")
             .map((item, index) => (
               <React.Fragment key={item.id}>
-                <QuestionCard data={item} />
+                <QuestionCard handleDeletePost={handleDeletePost} data={item} />
                 {posts.length !== index && <Divider />}
               </React.Fragment>
             ))}
@@ -124,7 +135,7 @@ const ProfileTabs = () => {
             .filter((el) => el.type === "ARTICLE")
             .map((item, index) => (
               <React.Fragment key={item.id}>
-                <PostCard data={item} />
+                <PostCard handleDeletePost={handleDeletePost} data={item} />
                 {posts.length !== index && <Divider />}
               </React.Fragment>
             ))}
@@ -154,24 +165,28 @@ const ProfileTabs = () => {
                       __html: el.content,
                     }}
                   />
-                  <Stack
-                    direction="row"
-                    flexWrap="wrap"
-                    spacing={1}
-                    alignItems="center"
-                    justifyContent="space-between"
-                    sx={{ mt: 1 }}
-                  >
-                    <Fab
-                      variant="extended"
+                  <Stack direction="row" flexWrap="wrap" spacing={1} alignItems="center" sx={{ mt: 1 }}>
+                    <Button
                       size="small"
+                      variant="outlined"
+                      color="primary"
+                      sx={{ px: 2 }}
+                      onClick={() => handleDeleteComment(el.id)}
+                      startIcon={<RemoveRedEyeIcon />}
+                    >
+                      Go to post
+                    </Button>
+
+                    <Button
+                      size="small"
+                      variant="outlined"
                       color="error"
                       sx={{ px: 2 }}
                       onClick={() => handleDeleteComment(el.id)}
+                      startIcon={<DeleteIcon />}
                     >
-                      <DeleteIcon sx={{ mr: 1 }} />
                       Delete
-                    </Fab>
+                    </Button>
                   </Stack>
                 </Stack>
               </Stack>

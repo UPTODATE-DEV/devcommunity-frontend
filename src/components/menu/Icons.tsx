@@ -12,6 +12,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import Badge, { BadgeProps } from "@mui/material/Badge";
 import { styled } from "@mui/material/styles";
 import useStore from "@/hooks/useStore";
+import { getRequest } from "@/lib/api";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -29,6 +30,8 @@ const Icons = () => {
   const user = useStore((state) => state.session?.user);
   const { push } = useRouter();
 
+  const { setNotifications, notifications } = useStore((state) => state);
+
   const toggleMode = () => {
     darkModeActive ? switchToLightMode() : switchToDarkMode();
   };
@@ -43,6 +46,17 @@ const Icons = () => {
     }
   };
 
+  React.useEffect(() => {
+    const getNotifications = async () => {
+      const notifications = await getRequest({ endpoint: `/notifications/${user?.id}` });
+      if (!notifications.error) {
+        setNotifications(notifications.data);
+      }
+    };
+
+    getNotifications();
+  }, []);
+
   return (
     <Stack direction="row" alignItems="center" spacing={1}>
       <IconButton sx={{ display: { xs: "none", md: "flex" } }} onClick={toggleMode}>
@@ -53,7 +67,7 @@ const Icons = () => {
       </IconButton>
       {user && (
         <IconButton aria-label="cart" onClick={() => push("/notifications")}>
-          <StyledBadge badgeContent={4} color="secondary">
+          <StyledBadge badgeContent={notifications.filter((el) => el.read === false).length} max={99} color="secondary">
             <NotificationsIcon />
           </StyledBadge>
         </IconButton>

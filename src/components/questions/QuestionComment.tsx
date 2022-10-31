@@ -6,7 +6,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import { Avatar, Button, Divider } from "@mui/material";
-import { RichTextEditor, Editor } from "@mantine/rte";
+import RichTextEditor from "@/components/common/RichTextEditor";
 import { deleteRequest, getRequest, patchRequest, postRequest } from "@/lib/api";
 import { toast } from "react-toastify";
 import useStore from "@/hooks/useStore";

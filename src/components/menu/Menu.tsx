@@ -46,9 +46,8 @@ const Menu: React.FC = () => {
   const posts = useStore((state) => state.posts);
 
   const actions: SpotlightAction[] = posts?.map((_, index) => ({
-    title: `${_.title?.substring(0, 70)} ${_.title?.length > 70 ? "..." : ""}`,
-    description: `${_.content?.substring(0, 170)} ${_.content?.length > 70 ? "..." : ""}`,
-    onTrigger: () => push(`/posts/${_.slug}`),
+    title: _.title,
+    onTrigger: () => push(`/${_.type === "ARTICLE" ? "articles" : "posts"}/${_.slug}`),
   }));
 
   const toggleDrawer = () => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -58,8 +57,6 @@ const Menu: React.FC = () => {
     ) {
       return;
     }
-
-    console.log("Open", openMobileMenu);
 
     setOpenMobileMenu(true);
   };

@@ -90,7 +90,7 @@ export const deleteRequest = async ({ endpoint, token }: AxiosRequest) => {
 };
 
 export const postLocalRequest = async ({ endpoint, token, data }: AxiosRequest) => {
-  const res = await axios.post(`${baseUrl + endpoint}`, data, {
+  const res = await axios.post(`${endpoint}`, data, {
     headers: {
       Accept: "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : null),

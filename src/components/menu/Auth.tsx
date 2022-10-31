@@ -32,6 +32,7 @@ const Auth = () => {
         },
       }
     );
+    console.log("🚀 ~ file: Auth.tsx ~ line 35 ~ onLogin ~ res", res.data);
     setSession(res.data);
     reload();
   };

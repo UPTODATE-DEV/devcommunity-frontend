@@ -16,21 +16,20 @@ import { toast } from "react-toastify";
 import useStore from "@/hooks/useStore";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import { RichTextEditor } from "@mantine/rte";
 import { FILES_BASE_URL } from "config/url";
 import { useRouter } from "next/router";
+import RichTextEditor from '@/components/common/RichTextEditor'
 
 const initialValue = "<p>Type your post <b>cotent</b> here</p>";
 
 const AddPostForm = () => {
-  const [value, onChange] = useState(initialValue);
   const [loading, setLoading] = React.useState(false);
   const user = useStore((state) => state.session?.user);
   const [image, setImage] = React.useState("");
   const [preview, setPreview] = React.useState("");
   const [post, setPost] = React.useState<{ title: string; content: string; tags: string[] | null }>({
     title: "",
-    content: "",
+    content: initialValue,
     tags: null,
   });
 
@@ -97,7 +96,7 @@ const AddPostForm = () => {
         component="label"
         sx={{
           width: 1,
-          height: 160,
+          height: image ? 240 : 160,
           bgcolor: "action.hover",
           position: "relative",
           cursor: "pointer",
@@ -156,7 +155,13 @@ const AddPostForm = () => {
         ]}
       />
       <div>
-        <Fab variant="extended" disabled={loading} color="primary" sx={{ px: 4 }} onClick={onSubmit}>
+        <Fab
+          variant="extended"
+          disabled={!image || !post.title || !post.content || !post.tags?.length || loading}
+          color="primary"
+          sx={{ px: 4 }}
+          onClick={onSubmit}
+        >
           <SaveIcon sx={{ mr: 1 }} />
           {loading ? "Loading..." : "Save"}
         </Fab>

@@ -11,6 +11,9 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import dynamic from "next/dynamic";
+import LogoutIcon from "@mui/icons-material/Logout";
+import Button from "@mui/material/Button";
+import { postLocalRequest, postRequest } from "@/lib/api";
 
 const ProfileTabs = dynamic(import("@/components/profile/ProfileTabs"), { ssr: false, loading: () => null });
 
@@ -20,6 +23,11 @@ const Profile = () => {
 
   const handleGoProfile = () => {
     push("/profile");
+  };
+
+  const onLogout = async () => {
+    push("/");
+    await postLocalRequest({ endpoint: "/api/logout" });
   };
 
   return (
@@ -41,18 +49,24 @@ const Profile = () => {
             </Typography>
           </Stack>
         </Stack>
-        <Stack>
-          <IconButton>
-            <GitHubIcon />
-          </IconButton>
-          <IconButton>
-            <LinkedInIcon />
-          </IconButton>
-          <IconButton>
-            <TwitterIcon />
-          </IconButton>
+        <Stack spacing={2} alignItems="flex-end">
+          <Stack direction="row" spacing={2}>
+            <IconButton>
+              <GitHubIcon />
+            </IconButton>
+            <IconButton>
+              <LinkedInIcon />
+            </IconButton>
+            <IconButton>
+              <TwitterIcon />
+            </IconButton>
+          </Stack>
+          <Button size="small" startIcon={<LogoutIcon />} variant="outlined" onClick={onLogout}>
+            Logout
+          </Button>
         </Stack>
       </Stack>
+
       <ProfileTabs />
     </Stack>
   );

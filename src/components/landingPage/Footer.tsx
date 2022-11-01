@@ -58,7 +58,7 @@ const Footer = () => {
                     <Image src="/logo.svg" layout="fill" objectFit="contain" />
                   </Stack>
                   <Typography color="text.secondary">
-                    Bulkit is built for developers and designers. It's modular approach lets you create an original
+                    Bulkit is built for developers and designers. It is modular approach lets you create an original
                     landing page for your brand.
                   </Typography>
                 </Stack>

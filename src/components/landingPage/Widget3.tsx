@@ -8,14 +8,14 @@ import Typography from "@mui/material/Typography";
 const Widget3 = () => {
   return (
     <Container sx={{ py: 4 }}>
-      <Grid container justifyContent="center" alignItems="center">
-        <Grid item xs={12} md={6}>
+      <Grid direction={{ xs: "column-reverse", md: "row" }} container justifyContent="center" alignItems="center">
+        <Grid item xs={12} md={6} sx={{ width: 1 }}>
           <Stack sx={{ width: 1, height: 350, position: "relative" }}>
             <Image src="/widget-22-blue.png" layout="fill" objectFit="contain" />
           </Stack>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Stack sx={{ width: 0.7, mx: "auto", position: "relative" }}>
+          <Stack sx={{ width: { xs: 1, md: 0.7 }, mx: "auto", position: "relative" }}>
             <Typography variant="h4" color="text.primary">
               Track Your Tasks
             </Typography>

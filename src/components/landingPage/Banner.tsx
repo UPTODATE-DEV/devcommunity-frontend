@@ -25,8 +25,8 @@ const Banner = () => {
           </Stack>
           <Stack
             sx={{
-              width: 0.7,
-              height: { xs: 400, md: 600 },
+              width: { xs: 1, md: 0.7 },
+              height: { xs: 230, md: 600 },
               position: "relative",
             }}
           >

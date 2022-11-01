@@ -58,8 +58,8 @@ const Icons = () => {
   }, []);
 
   return (
-    <Stack direction="row" alignItems="center" spacing={1}>
-      <IconButton sx={{ display: { xs: "none", md: "flex" } }} onClick={toggleMode}>
+    <Stack direction="row" alignItems="center" spacing={{ xs: 0, md: 2 }}>
+      <IconButton onClick={toggleMode}>
         {darkModeActive ? <DarkModeIcon /> : <LightModeIcon color="warning" />}
       </IconButton>
       <IconButton sx={{ display: { xs: "none", md: "flex" } }} onClick={toggleFullscreen}>

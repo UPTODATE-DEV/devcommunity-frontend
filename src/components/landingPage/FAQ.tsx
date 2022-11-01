@@ -77,7 +77,7 @@ const FAQ: React.FC = () => {
                   id="panel1a-header"
                   sx={{ borderTop: "none" }}
                 >
-                  <Typography variant="h6" fontWeight={700}>
+                  <Typography color="text.primary" fontWeight={700}>
                     {el?.question}
                   </Typography>
                 </AccordionSummary>

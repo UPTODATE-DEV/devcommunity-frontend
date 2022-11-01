@@ -10,7 +10,7 @@ const Widget2 = () => {
     <Container sx={{ py: 4 }}>
       <Grid container justifyContent="center" alignItems="center">
         <Grid item xs={12} md={6}>
-          <Stack sx={{ width: 0.7, mx: "auto", position: "relative" }}>
+          <Stack sx={{  width: { xs: 1, md: 0.7 }, mx: "auto", position: "relative" }}>
             <Typography variant="h4" color="text.primary">
               Set Up Workflows
             </Typography>

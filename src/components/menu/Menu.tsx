@@ -90,7 +90,7 @@ const Menu: React.FC = () => {
                 <MenuIcon />
               </IconButton>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={5} md={6}>
               <SpotlightProvider
                 actions={actions}
                 searchIcon={<IconSearch size={18} />}
@@ -122,7 +122,7 @@ const Menu: React.FC = () => {
                 </Stack>
               </SpotlightProvider>
             </Grid>
-            <Grid item xs={2} md={4}>
+            <Grid item xs={3} md={4}>
               <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Icons />
                 <Stack sx={{ display: { xs: "none", md: "flex" } }}>{user ? <Profile /> : <Auth />}</Stack>

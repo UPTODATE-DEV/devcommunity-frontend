@@ -1,3 +1,4 @@
+import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import BookmarkAddSharpIcon from "@mui/icons-material/BookmarkAddSharp";
 import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
 import LightbulbSharpIcon from "@mui/icons-material/LightbulbSharp";
@@ -10,8 +11,8 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import Tooltip from "@mui/material/Tooltip";
-import CommentIcon from "@mui/icons-material/Comment";
 import { useRouter } from "next/router";
+import { TypographyStylesProvider } from "@mantine/core";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
@@ -20,7 +21,11 @@ import { FILES_BASE_URL } from "config/url";
 import useStore from "@/hooks/useStore";
 import React from "react";
 import { patchRequest, postRequest } from "@/lib/api";
-import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
+import hljs from "highlight.js";
+import { Chip } from "@mui/material";
+import TagIcon from "@mui/icons-material/Tag";
+import Link from "next/link";
+import CommentIcon from "@mui/icons-material/Comment";
 
 const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   const user = useStore((state) => state.session?.user);
@@ -59,19 +64,6 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
     setPosts(updatedPosts as Post[]);
   };
 
-  React.useEffect(() => {
-    if (user) {
-      const reaction = data?.article?.reactions?.find((reaction) => {
-        return reaction?.user?.id === user?.id;
-      });
-      if (reaction) {
-        setUserReaction(reaction.type);
-      } else {
-        setUserReaction(undefined);
-      }
-    }
-  }, [data?.article?.reactions, user]);
-
   const Like = () => (
     <Tooltip title="I LIKE" placement="bottom" arrow>
       <IconButton onClick={() => onReact("LIKE")} disabled={!user?.id}>
@@ -96,14 +88,39 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
     </Tooltip>
   );
 
+  
+  React.useEffect(() => {
+    document.querySelectorAll("pre").forEach((el) => {
+      hljs.highlightElement(el);
+    });
+  }, []);
+
+  React.useEffect(() => {
+    if (user) {
+      const reaction = data?.article?.reactions?.find((reaction) => {
+        return reaction?.user?.id === user?.id;
+      });
+      if (reaction) {
+        setUserReaction(reaction.type);
+      } else {
+        setUserReaction(undefined);
+      }
+    }
+  }, [data?.article?.reactions, user]);
+
+
   return (
     <Grid container>
-      <Grid item xs={2} md={1.2}>
-        <Avatar alt={`${data?.author?.firstName} ${data?.author?.lastName}`} src={data?.author?.avatar?.url}>
+      <Grid item xs={2} sm={1} md={2} lg={1.2}>
+        <Avatar
+          sx={{ bgcolor: "primary.main", color: "white" }}
+          alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
+          src={data?.author?.avatar?.url}
+        >
           {data?.author?.firstName.charAt(0)}
         </Avatar>
       </Grid>
-      <Grid item xs={10} md={10.8}>
+      <Grid item xs={10} sm={11} md={10} lg={10.8}>
         <Stack direction="row" spacing={1}>
           <Typography variant="caption" color="text.primary" gutterBottom fontWeight={700}>
             {data?.author?.firstName} {data?.author?.lastName}
@@ -121,12 +138,6 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
           color="text.primary"
           onClick={handleViewPost}
           sx={{
-            display: "-webkit-box!important",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            textOverflow: "ellipse",
-            whiteSpace: "normal",
             "&:hover": {
               color: "primary.main",
             },
@@ -135,23 +146,11 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
         >
           {data?.title}
         </Typography>
-        <Typography
-          gutterBottom
-          color="text.secondary"
-          fontSize={14}
-          sx={{
-            display: "-webkit-box!important",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            textOverflow: "ellipse",
-            whiteSpace: "normal",
-          }}
-          component="div"
-          dangerouslySetInnerHTML={{
-            __html: data?.content,
-          }}
-        />
+
+        <TypographyStylesProvider>
+          <div dangerouslySetInnerHTML={{ __html: `${data?.content.substring(0, 120)}...` }} />
+        </TypographyStylesProvider>
+
         {data?.article.image && (
           <Stack
             sx={{
@@ -168,6 +167,15 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
             <Image src={FILES_BASE_URL + data?.article?.image?.url} alt="Post" layout="fill" objectFit="cover" />
           </Stack>
         )}
+
+        <Grid container spacing={1} sx={{ pb: 1 }} direction="row">
+          {data?.tags?.map((el) => (
+            <Grid item xs="auto" key={el.tag.id}>
+              <Chip size="small" icon={<TagIcon fontSize="small" />} sx={{ px: 2 }} clickable label={el.tag.name} />
+            </Grid>
+          ))}
+        </Grid>
+
         <Stack
           direction="row"
           flexWrap="wrap"
@@ -208,9 +216,11 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
           </Stack>
           <Stack direction="row" spacing={2}>
             <Stack direction="row" spacing={1} alignItems="center">
-              <IconButton>
-                <CommentIcon />
-              </IconButton>
+              <Link href={`/articles/${data?.slug}/#comments`} passHref>
+                <IconButton>
+                  <CommentIcon />
+                </IconButton>
+              </Link>
               <Typography variant="caption" color="text.secondary" fontWeight={700}>
                 {data?.comments?.length || 0}
               </Typography>

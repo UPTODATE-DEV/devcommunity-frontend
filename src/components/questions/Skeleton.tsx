@@ -23,3 +23,16 @@ export function QuestionsListSkeleton() {
     </Stack>
   );
 }
+
+export function QuestionFormSkeleton() {
+  return (
+    <Stack spacing={2}>
+      <Stack spacing={2} sx={{ width: 1 }}>
+        <Skeleton variant="rectangular" width="100%" height={50} sx={{ borderRadius: 1 }} />
+        <Skeleton variant="rectangular" width="100%" height={50} sx={{ borderRadius: 1 }} />
+        <Skeleton variant="rectangular" width="100%" height={130} sx={{ borderRadius: 1 }} />
+        <Skeleton variant="rectangular" width={100} height={50} sx={{ borderRadius: 50 }} />
+      </Stack>
+    </Stack>
+  );
+}

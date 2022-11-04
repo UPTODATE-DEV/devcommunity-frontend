@@ -37,10 +37,15 @@ const Notifications = () => {
           <React.Fragment key={i}>
             <ListItemButton
               onClick={() => handleReadNotification(el)}
-              sx={{ bgcolor: !el.read ? (theme) => alpha(theme.palette.primary.main, 0.1) : "inherit", my: 0.2 }}
+              sx={{
+                borderRadius: 1,
+                bgcolor: !el.read ? (theme) => alpha(theme.palette.primary.main, 0.3) : "inherit",
+                my: 0.2,
+              }}
             >
               <ListItemAvatar>
                 <Avatar
+                  sx={{ bgcolor: "primary.main", color: "white" }}
                   src={el?.notificationFromUser?.profile?.avatar?.url}
                   alt={`${el?.notificationFromUser.firstName} ${el?.notificationFromUser.lastName}`}
                 >

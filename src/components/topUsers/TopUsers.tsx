@@ -32,7 +32,11 @@ const TopUsers = () => {
               }}
             >
               <ListItemAvatar>
-                <Avatar src={el?.avatar} alt={`${el.firstName} ${el.lastName}`}>
+                <Avatar
+                  sx={{ bgcolor: "primary.main", color: "white" }}
+                  src={el?.avatar}
+                  alt={`${el.firstName} ${el.lastName}`}
+                >
                   {el.firstName.charAt(0)}
                 </Avatar>
               </ListItemAvatar>

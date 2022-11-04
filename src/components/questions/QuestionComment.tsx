@@ -11,6 +11,7 @@ import { deleteRequest, getRequest, patchRequest, postRequest } from "@/lib/api"
 import { toast } from "react-toastify";
 import useStore from "@/hooks/useStore";
 import DeleteIcon from "@mui/icons-material/Delete";
+import hljs from "highlight.js";
 
 const initialValue = "<p>Type your <b>comment</b> here</p>";
 
@@ -51,6 +52,12 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
   };
 
   React.useEffect(() => {
+    document.querySelectorAll("pre, code").forEach((el: any) => {
+      hljs.highlightElement(el);
+    });
+  }, [comments.length]);
+
+  React.useEffect(() => {
     async function getComment() {
       const res = await getRequest({ endpoint: `/comments/${data.id}/post-comments` });
       if (res.error) {
@@ -69,7 +76,11 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
       {comments?.map((el) => (
         <React.Fragment key={el.id}>
           <Stack direction="row" spacing={2}>
-            <Avatar alt={`${el?.author?.firstName} ${el?.author?.lastName}`} src={el?.author?.avatar?.url}>
+            <Avatar
+              sx={{ bgcolor: "primary.main", color: "white" }}
+              alt={`${el?.author?.firstName} ${el?.author?.lastName}`}
+              src={el?.author?.avatar?.url}
+            >
               {el?.author?.firstName.charAt(0)}
             </Avatar>
             <Stack sx={{ position: "relative", width: 1 }}>
@@ -100,7 +111,7 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
             <RichTextEditor
               value={comment}
               controls={[
-                ["bold", "italic", "underline", "link", "code"],
+                ["bold", "italic", "underline", "link", "codeBlock"],
                 ["unorderedList", "orderedList", "sup", "sub"],
               ]}
               onChange={(value) => setComment(value)}
@@ -119,7 +130,11 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
         ) : (
           <Grid container sx={{ py: 2 }}>
             <Grid item xs={12} md={1.2}>
-              <Avatar alt={`${user?.firstName} ${user?.lastName}`} src={user?.avatar?.url}>
+              <Avatar
+                sx={{ bgcolor: "primary.main", color: "white" }}
+                alt={`${user?.firstName} ${user?.lastName}`}
+                src={user?.avatar?.url}
+              >
                 {user?.firstName.charAt(0)}
               </Avatar>
             </Grid>

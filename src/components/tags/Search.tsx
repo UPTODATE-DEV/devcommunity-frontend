@@ -18,7 +18,9 @@ const Search = () => {
     getTags();
   }, [name]);
 
-  return <InputBase value={name} placeholder="Search tags..." onChange={(e) => setName(e.target.value)} />;
+  return (
+    <InputBase sx={{ mt: 2 }} value={name} placeholder="Search tags..." onChange={(e) => setName(e.target.value)} />
+  );
 };
 
 export default Search;

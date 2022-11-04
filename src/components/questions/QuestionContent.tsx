@@ -2,25 +2,27 @@ import React from "react";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import ReactMarkdown from "react-markdown";
+import { TypographyStylesProvider } from "@mantine/core";
 
-const QuestionContent: React.FC<{ title: string; content: string }> = ({ title, content }) => {
+const QuestionContent: React.FC<{ data: Post }> = ({ data }) => {
   return (
     <Stack spacing={2}>
       <Typography variant="h4" color="text.primary" fontWeight={700} gutterBottom>
-        {title}
+        {data?.title}
       </Typography>
-
-      <Typography
-        color="text.secondary"
-        component="div"
-        fontSize={18}
-        className="content"
-        gutterBottom
-        sx={{ lineHeight: 1.7 }}
-        dangerouslySetInnerHTML={{
-          __html: content,
-        }}
-      />
+      <TypographyStylesProvider>
+        <Typography
+          color="text.secondary"
+          component="div"
+          fontSize={17}
+          className="content"
+          gutterBottom
+          sx={{ lineHeight: 1.7 }}
+          dangerouslySetInnerHTML={{
+            __html: data?.content,
+          }}
+        />
+      </TypographyStylesProvider>
     </Stack>
   );
 };

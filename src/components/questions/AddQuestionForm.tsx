@@ -16,11 +16,9 @@ import { toast } from "react-toastify";
 import useStore from "@/hooks/useStore";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import RichTextEditor from '@/components/common/RichTextEditor'
+import RichTextEditor from "@/components/common/RichTextEditor";
 import { FILES_BASE_URL } from "config/url";
 import { useRouter } from "next/router";
-
-const initialValue = "<p>Type your <b>content</b> here</p>";
 
 const AddQuestionForm = () => {
   const [loading, setLoading] = React.useState(false);
@@ -29,25 +27,11 @@ const AddQuestionForm = () => {
   const [preview, setPreview] = React.useState("");
   const [post, setPost] = React.useState<{ title: string; content: string; tags: string[] | null }>({
     title: "",
-    content: initialValue,
+    content: "",
     tags: null,
   });
 
   const { push } = useRouter();
-
-  // const handleImageChange = async (e: any) => {
-  //   setPreview(URL.createObjectURL(e.target.files[0]));
-
-  //   const formData = new FormData();
-  //   formData.append("file", e.target.files[0], e.target.files[0].name);
-  //   const response = await postRequest({ endpoint: "/files/upload", data: formData });
-  //   if (response.error) {
-  //     toast.error(response.error?.message);
-  //   }
-  //   if (response.data) {
-  //     setImage(response.data?.id);
-  //   }
-  // };
 
   const handleImageUpload = React.useCallback(async (file: File): Promise<string> => {
     const formData = new FormData();
@@ -90,28 +74,6 @@ const AddQuestionForm = () => {
 
   return (
     <Stack spacing={2} sx={{ py: 1, pb: 4, minHeight: "100vh" }}>
-      {/* <Stack
-        justifyContent="center"
-        alignItems="center"
-        component="label"
-        sx={{
-          width: 1,
-          height: 160,
-          bgcolor: "action.hover",
-          position: "relative",
-          cursor: "pointer",
-          overflow: "hidden",
-          borderTopLeftRadius: 6,
-          borderTopRightRadius: 6,
-        }}
-      >
-        <input hidden accept="image/*" onChange={handleImageChange} type="file" />
-        {preview ? (
-          <Image src={preview} layout="fill" objectFit="cover" />
-        ) : (
-          <AddPhotoAlternateIcon color="primary" sx={{ fontSize: 140, opacity: 0.1 }} />
-        )}
-      </Stack> */}
       <TextField
         name="title"
         variant="filled"
@@ -149,10 +111,11 @@ const AddQuestionForm = () => {
         onImageUpload={handleImageUpload}
         id="rte"
         controls={[
-          ["bold", "italic", "underline", "link", "code"],
-          ["unorderedList", "orderedList", "sup", "sub"],
-          ["codeBlock", "blockquote", "link"],
-          ["image", "video", "strike"],
+          ["bold", "italic", "underline", "strike", "code"],
+          ["unorderedList", "orderedList"],
+          ["h1", "h2", "h3"],
+          ["codeBlock", "blockquote"],
+          ["link", "image", "video"],
         ]}
       />
       <div>

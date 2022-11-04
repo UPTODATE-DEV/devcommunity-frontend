@@ -21,7 +21,7 @@ const LeftSideBar = () => {
   const matches = (path: string): boolean => `/${route.split("/")[1]}` === path;
 
   const main = [
-    { path: "/", icon: <HomeSharpIcon />, label: "Home" },
+    { path: "/", icon: <HomeSharpIcon />, label: "Main feed" },
     { path: "/articles", icon: <HistoryEduIcon />, label: "Articles" },
     { path: "/posts", icon: <QuestionAnswer />, label: "Posts" },
     { path: "/tags", icon: <TagSharpIcon />, label: "Tags" },

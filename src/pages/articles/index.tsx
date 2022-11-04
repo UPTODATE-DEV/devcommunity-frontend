@@ -11,6 +11,7 @@ import { getRequest } from "@/lib/api";
 import dynamic from "next/dynamic";
 import { PostsListSkeleton } from "@/components/posts/Skeleton";
 import { CallToActionSkeleton } from "@/components/middle/Skeleton";
+import hljs from "highlight.js";
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
@@ -23,6 +24,12 @@ const AddPost = dynamic(import("@/components/posts/AddPost"), { ssr: false, load
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
   const setPosts = useStore((state) => state.setPosts);
+
+  React.useEffect(() => {
+    document.querySelectorAll("pre").forEach((el) => {
+      hljs.highlightElement(el);
+    });
+  }, []);
 
   React.useEffect(() => {
     const getPosts = async () => {

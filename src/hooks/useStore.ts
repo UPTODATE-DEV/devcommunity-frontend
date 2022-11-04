@@ -14,6 +14,8 @@ interface Store {
   setBookmarks: (bookmarks: Bookmarks[]) => void;
   topPosts?: TopPosts;
   setTopPosts: (topPosts: TopPosts) => void;
+  currentPost: Post | null;
+  setCurrentPost: (post: Post) => void;
   openMobileMenu: boolean;
   setOpenMobileMenu: (open: boolean) => void;
   notifications: Notifications[] | [];
@@ -58,6 +60,10 @@ const useStore = create<Store>()(
       notifications: [],
       setNotifications: (notifications: Notifications[]) => {
         return set((state) => ({ ...state, notifications }));
+      },
+      currentPost: null,
+      setCurrentPost: (currentPost: Post) => {
+        return set((state) => ({ ...state, currentPost }));
       },
     }))
   )

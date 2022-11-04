@@ -32,7 +32,7 @@ export function PostsFormSkeleton() {
         <Skeleton variant="rectangular" width="100%" height={160} sx={{ borderRadius: 1 }} />
         <Skeleton variant="rectangular" width="100%" height={50} sx={{ borderRadius: 1 }} />
         <Skeleton variant="rectangular" width="100%" height={50} sx={{ borderRadius: 1 }} />
-        <Skeleton variant="rectangular" width="100%" height={180} sx={{ borderRadius: 1 }} />
+        <Skeleton variant="rectangular" width="100%" height={130} sx={{ borderRadius: 1 }} />
         <Skeleton variant="rectangular" width={100} height={50} sx={{ borderRadius: 50 }} />
       </Stack>
     </Stack>

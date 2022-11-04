@@ -26,7 +26,11 @@ const AddQuestion: React.FC = () => {
       alignItems="center"
       sx={{ py: 2 }}
     >
-      <Avatar alt={`${user?.firstName} ${user?.lastName}`} src={user?.avatar?.url}>
+      <Avatar
+        sx={{ bgcolor: "primary.main", color: "white" }}
+        alt={`${user?.firstName} ${user?.lastName}`}
+        src={user?.avatar?.url}
+      >
         {user?.firstName.charAt(0)}
       </Avatar>
       <Stack

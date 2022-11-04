@@ -9,8 +9,15 @@ import Head from "next/head";
 import React from "react";
 
 import Question from "@/components/questions/Question";
+import hljs from "highlight.js";
 const Home: NextPage<{ session: Session; post: Post }> = ({ session, post }) => {
   const setSession = useStore((state) => state.setSession);
+
+  React.useEffect(() => {
+    document.querySelectorAll("pre").forEach((el) => {
+      hljs.highlightElement(el);
+    });
+  }, []);
 
   React.useEffect(() => {
     setSession(session);

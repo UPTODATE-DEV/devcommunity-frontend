@@ -34,7 +34,11 @@ const Profile = () => {
     <Stack spacing={2}>
       <Stack direction="row" justifyContent="space-between">
         <Stack direction="row" spacing={1} alignItems="center" justifyContent="center">
-          <Avatar sx={{ width: 60, height: 60 }} alt={`${user?.firstName} ${user?.lastName}`} src="/avatar.avif">
+          <Avatar
+            sx={{ width: 60, height: 60, bgcolor: "primary.main", color: "white" }}
+            alt={`${user?.firstName} ${user?.lastName}`}
+            src={user?.avatar?.url}
+          >
             {user?.firstName[0]}
           </Avatar>
           <Stack>

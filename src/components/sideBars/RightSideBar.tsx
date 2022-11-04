@@ -1,18 +1,15 @@
-import React from "react";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-import ListItemButton from "@mui/material/ListItemButton";
-import Button from "@mui/material/Button";
-import { useRouter } from "next/router";
 import useStore from "@/hooks/useStore";
 import { getRequest } from "@/lib/api";
-
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+import List from "@mui/material/List";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { useRouter } from "next/router";
+import React from "react";
 const RightSideBar = () => {
   const { push } = useRouter();
 
@@ -37,7 +34,7 @@ const RightSideBar = () => {
   return (
     <Stack>
       <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
-        Top posts of the Week
+        Top articles of the Week
       </Typography>
       <Divider />
       <List sx={{ width: { xs: "100%", md: 350 }, bgcolor: "background.paper" }}>
@@ -45,37 +42,24 @@ const RightSideBar = () => {
           <React.Fragment key={item.id}>
             <ListItemButton alignItems="flex-start" onClick={() => handleViewPost(`/articles/${item.slug}`)}>
               <ListItemAvatar>
-                <Avatar alt={`${item.author.firstName} ${item.author.lastName}`} src={`${item.author.profile?.avatar}`}>
+                <Avatar
+                  sx={{ bgcolor: "primary.main", color: "white" }}
+                  alt={`${item.author.firstName} ${item.author.lastName}`}
+                  src={`${item.author.profile?.avatar}`}
+                >
                   {item.author.firstName.charAt(0)}
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={`${item.title.substring(0, 58)}  ${item.title.length > 58 ? "..." : ""}`}
+                primary={item.title}
                 primaryTypographyProps={{
                   fontWeight: 700,
                 }}
                 secondary={
-                  <Stack sx={{ width: 1 }}>
+                  <Stack sx={{ width: 1 }} component="span">
                     <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
                       By {`${item.author.firstName} ${item.author.lastName}`}
                     </Typography>
-                    <Typography
-                      gutterBottom
-                      color="text.secondary"
-                      fontSize={14}
-                      sx={{
-                        display: "-webkit-box!important",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                        textOverflow: "ellipse",
-                        whiteSpace: "normal",
-                      }}
-                      component="div"
-                      dangerouslySetInnerHTML={{
-                        __html: item.content,
-                      }}
-                    />
                   </Stack>
                 }
               />
@@ -86,7 +70,7 @@ const RightSideBar = () => {
       </List>
       <Divider />
       <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
-        Top questions of the Week
+        Top posts of the Week
       </Typography>
       <Divider />
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
@@ -94,7 +78,11 @@ const RightSideBar = () => {
           <React.Fragment key={item.id}>
             <ListItemButton alignItems="flex-start" onClick={() => handleViewPost(`/posts/${item.slug}`)}>
               <ListItemAvatar>
-                <Avatar alt={`${item.author.firstName} ${item.author.lastName}`} src={`${item.author.profile?.avatar}`}>
+                <Avatar
+                  sx={{ bgcolor: "primary.main", color: "white" }}
+                  alt={`${item.author.firstName} ${item.author.lastName}`}
+                  src={`${item.author.profile?.avatar}`}
+                >
                   {item.author.firstName.charAt(0)}
                 </Avatar>
               </ListItemAvatar>
@@ -104,12 +92,12 @@ const RightSideBar = () => {
                   fontWeight: 700,
                 }}
                 secondary={
-                  <React.Fragment>
+                  <span>
                     <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
                       By {`${item.author.firstName} ${item.author.lastName}`}
                     </Typography>
                     {` — ${item.question?.reactions.filter((el) => el.type === "LIKE").length} likes`}
-                  </React.Fragment>
+                  </span>
                 }
               />
             </ListItemButton>

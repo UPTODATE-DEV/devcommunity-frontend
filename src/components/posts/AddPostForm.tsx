@@ -18,9 +18,7 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { FILES_BASE_URL } from "config/url";
 import { useRouter } from "next/router";
-import RichTextEditor from '@/components/common/RichTextEditor'
-
-const initialValue = "<p>Type your post <b>cotent</b> here</p>";
+import RichTextEditor from "@/components/common/RichTextEditor";
 
 const AddPostForm = () => {
   const [loading, setLoading] = React.useState(false);
@@ -29,7 +27,7 @@ const AddPostForm = () => {
   const [preview, setPreview] = React.useState("");
   const [post, setPost] = React.useState<{ title: string; content: string; tags: string[] | null }>({
     title: "",
-    content: initialValue,
+    content: "",
     tags: null,
   });
 
@@ -146,6 +144,7 @@ const AddPostForm = () => {
         onChange={(value) => setPost((state) => ({ ...state, content: value }))}
         stickyOffset={70}
         onImageUpload={handleImageUpload}
+        placeholder="<p>Type your post <b>cotent</b> here</p>"
         id="rte"
         controls={[
           ["bold", "italic", "underline", "link", "code"],

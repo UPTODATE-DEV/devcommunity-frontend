@@ -1,4 +1,3 @@
-import useStore from "@/hooks/useStore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Button } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
@@ -8,9 +7,12 @@ import Typography from "@mui/material/Typography";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import relativeTime from "dayjs/plugin/relativeTime";
+import hljs from "highlight.js";
 import { useRouter } from "next/router";
 import React from "react";
 dayjs.extend(relativeTime);
+
+import { TypographyStylesProvider } from "@mantine/core";
 
 const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }> = ({ data, handleDeletePost }) => {
   const { push } = useRouter();
@@ -19,10 +21,20 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
     push(`/posts/${data.slug}`);
   };
 
+  React.useEffect(() => {
+    document.querySelectorAll("pre").forEach((el) => {
+      hljs.highlightElement(el);
+    });
+  }, []);
+
   return (
     <Grid container sx={{ cursor: "pointer" }}>
       <Grid item xs={2} md={1.2}>
-        <Avatar alt={`${data?.author?.firstName} ${data?.author?.lastName}`} src={data?.author?.avatar?.url}>
+        <Avatar
+          sx={{ bgcolor: "primary.main", color: "white" }}
+          alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
+          src={data?.author?.avatar?.url}
+        >
           {data?.author?.firstName.charAt(0)}
         </Avatar>
       </Grid>
@@ -44,36 +56,17 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
           color="text.primary"
           onClick={handleViewQuestion}
           sx={{
-            display: "-webkit-box!important",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            textOverflow: "ellipse",
-            whiteSpace: "normal",
             "&:hover": {
               color: "primary.main",
             },
+            cursor: "pointer",
           }}
         >
-          {data?.title}
+          {data?.title.substring(0, 120)}
         </Typography>
-        <Typography
-          gutterBottom
-          color="text.secondary"
-          fontSize={14}
-          sx={{
-            display: "-webkit-box!important",
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            textOverflow: "ellipse",
-            whiteSpace: "normal",
-          }}
-          component="div"
-          dangerouslySetInnerHTML={{
-            __html: data?.content,
-          }}
-        />
+        <TypographyStylesProvider>
+          <div dangerouslySetInnerHTML={{ __html: data?.content.substring(0, 120) }} />
+        </TypographyStylesProvider>
 
         <Stack
           direction="row"

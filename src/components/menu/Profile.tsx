@@ -17,15 +17,19 @@ const Profile = () => {
   return (
     <Stack direction="row" spacing={1} alignItems="center" justifyContent="center" sx={{ width: 220 }}>
       <IconButton onClick={handleGoProfile}>
-        <Avatar alt={`${user?.firstName} ${user?.lastName}`} src="/avatar.avif">
+        <Avatar
+          sx={{ bgcolor: "primary.main", color: "white" }}
+          alt={`${user?.firstName} ${user?.lastName}`}
+          src="/avatar.avif"
+        >
           {user?.firstName[0]}
         </Avatar>
       </IconButton>
-      <Stack>
-        <Typography variant="body2" color="text.primary" fontWeight={700}>
+      <Stack sx={{ width: 150, display: { xs: "none", lg: "flex" } }}>
+        <Typography variant="body2" flexWrap="nowrap" color="text.primary" fontWeight={700} sx={{ width: 1 }}>
           {user?.firstName} {user?.lastName}
         </Typography>
-        <Typography variant="caption" color="text.secondary" noWrap sx={{ width: 1 }}>
+        <Typography flexWrap="nowrap" variant="caption" color="text.secondary" noWrap sx={{ width: 1 }}>
           {user?.email}
         </Typography>
       </Stack>

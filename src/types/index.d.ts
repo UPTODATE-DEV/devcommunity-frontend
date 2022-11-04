@@ -31,7 +31,7 @@ interface Post {
   content: string;
   publishedOn: Date;
   author: User;
-  tags: Tag[];
+  tags: { tag: Tag }[];
   slug: string;
   type: "QUESTION" | "ARTICLE";
   article: Article;

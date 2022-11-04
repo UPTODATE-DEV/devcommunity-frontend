@@ -11,11 +11,11 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import * as React from "react";
 import dynamic from "next/dynamic";
-import { PostsFormSkeleton } from "@/components/posts/Skeleton";
+import { QuestionFormSkeleton } from "@/components/questions/Skeleton";
 
 const AddQuestionForm = dynamic(() => import("@/components/questions/AddQuestionForm"), {
   ssr: false,
-  loading: () => <PostsFormSkeleton />,
+  loading: () => <QuestionFormSkeleton />,
 });
 
 const Home: NextPage<{ session: Session }> = ({ session }) => {

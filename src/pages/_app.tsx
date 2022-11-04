@@ -5,8 +5,11 @@ import withDarkMode, { useDarkMode } from "next-dark-mode";
 import type { AppProps } from "next/app";
 import NextNprogress from "nextjs-progressbar";
 import "../styles/globals.css";
+import "highlight.js/styles/androidstudio.css";
 import { MantineProvider } from "@mantine/core";
 import ToastNotification from "@/components/common/Toast";
+
+import React from "react";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { darkModeActive } = useDarkMode();

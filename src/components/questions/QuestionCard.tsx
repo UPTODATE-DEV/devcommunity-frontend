@@ -80,7 +80,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   }, [data?.question?.reactions, user]);
 
   return (
-    <Grid container sx={{ cursor: "pointer" }}>
+    <Grid container>
       <Grid item xs={2} sm={1} md={2} lg={1.2}>
         <Avatar
           sx={{ bgcolor: "primary.main", color: "white" }}
@@ -111,6 +111,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
             "&:hover": {
               color: "primary.main",
             },
+            cursor: "pointer",
           }}
         >
           {data?.title}
@@ -137,7 +138,10 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
             >
               <Tooltip title="I like" placement="bottom" arrow>
                 <IconButton onClick={() => onReact("LIKE")} disabled={!user?.id}>
-                  <ThumbUpSharpIcon color={userReaction === "LIKE" ? "info" : "inherit"} fontSize="small" />
+                  <ThumbUpSharpIcon
+                    color={userReaction === "LIKE" ? "info" : "inherit"}
+                    sx={{ fontSize: { xs: 12, md: 14 } }}
+                  />
                 </IconButton>
               </Tooltip>
 
@@ -157,7 +161,11 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
             >
               <Tooltip title="I like" placement="bottom" arrow>
                 <IconButton onClick={() => onReact("DISLIKE")} disabled={!user?.id}>
-                  <ThumbDownOffAltIcon color={userReaction === "DISLIKE" ? "error" : "inherit"} fontSize="small" />
+                  <ThumbDownOffAltIcon
+                    sx={{ fontSize: { xs: 12, md: 14 } }}
+                    color={userReaction === "DISLIKE" ? "error" : "inherit"}
+                    fontSize="small"
+                  />
                 </IconButton>
               </Tooltip>
 
@@ -174,7 +182,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
             <Stack direction="row" spacing={1} alignItems="center">
               <Link href={`/posts/${data?.slug}/#comments`} passHref>
                 <IconButton>
-                  <QuestionAnswerIcon />
+                  <QuestionAnswerIcon sx={{ fontSize: { xs: 12, md: 14 } }} />
                 </IconButton>
               </Link>
               <Typography variant="caption" color="text.secondary" fontWeight={700}>
@@ -190,9 +198,9 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
               <Tooltip title="Save post" placement="bottom" arrow>
                 <IconButton onClick={onAddToBookmarks}>
                   {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
-                    <BookmarkRemoveIcon color="secondary" fontSize="small" />
+                    <BookmarkRemoveIcon color="secondary" sx={{ fontSize: { xs: 12, md: 14 } }} />
                   ) : (
-                    <BookmarkAddSharpIcon fontSize="small" />
+                    <BookmarkAddSharpIcon sx={{ fontSize: { xs: 12, md: 14 } }} />
                   )}
                 </IconButton>
               </Tooltip>

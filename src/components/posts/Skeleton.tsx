@@ -8,7 +8,7 @@ export function PostsListSkeleton() {
     <Stack spacing={2}>
       {[...Array(3)].map((_, i) => (
         <React.Fragment key={i}>
-          <Stack direction="row" spacing={2} sx={{ p: 2 }} key={i}>
+          <Stack direction="row" spacing={2} sx={{ py: 2, px: 1 }} key={i}>
             <Skeleton variant="circular" width={40} height={40} sx={{ flexShrink: 0 }} />
             <Stack spacing={2} sx={{ width: 1 }}>
               <Skeleton variant="rectangular" width={120} height={5} sx={{ borderRadius: 2 }} />

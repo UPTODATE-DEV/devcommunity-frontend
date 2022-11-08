@@ -29,37 +29,37 @@
       "type": "image/png"
     },
     {
-      "src": "/mstile-150x150.png",
+      "src": "/icons/mstile-150x150.png",
       "sizes": "150x150",
       "type": "image/png"
     },
     {
-      "src": "/safari-pinned-tab.svg",
+      "src": "/icons/safari-pinned-tab.svg",
       "sizes": "512x512",
       "type": "image/svg+xml"
     },
     {
-      "src": "/favicon.ico",
+      "src": "/icons/favicon.ico",
       "sizes": "32x32",
       "type": "image/x-icon"
     },
     {
-      "src": "/favicon.ico",
+      "src": "/icons/favicon.ico",
       "sizes": "32x32",
       "type": "image/vnd.microsoft.icon"
     },
     {
-      "src": "/favicon.ico",
+      "src": "/icons/favicon.ico",
       "sizes": "32x32",
       "type": "image/ico"
     },
     {
-      "src": "/favicon.ico",
+      "src": "/icons/favicon.ico",
       "sizes": "32x32",
       "type": "image/icon"
     },
     {
-      "src": "/favicon.ico",
+      "src": "/icons/favicon.ico",
       "sizes": "32x32",
       "type": "image/shortcut icon"
     },

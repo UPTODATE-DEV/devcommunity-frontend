@@ -21,7 +21,7 @@ const LeftSideBar = dynamic(import("@/components/sideBars/LeftSideBar"), {
 
 const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
   return (
-    <Box sx={{ bgcolor: "background.paper" }}>
+    <Box sx={{ bgcolor: "background.paper", minHeight: "100vh" }}>
       <Container sx={{ mx: "auto" }}>
         <Grid container>
           <Grid

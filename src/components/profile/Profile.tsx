@@ -13,21 +13,34 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import dynamic from "next/dynamic";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Button from "@mui/material/Button";
-import { postLocalRequest, postRequest } from "@/lib/api";
+import { postLocalRequest } from "@/lib/api";
+import { googleLogout } from "@react-oauth/google";
+
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 const ProfileTabs = dynamic(import("@/components/profile/ProfileTabs"), { ssr: false, loading: () => null });
 
 const Profile = () => {
   const user = useStore((state) => state.session?.user);
-  const { push } = useRouter();
+  const { reload } = useRouter();
+  const [open, setOpen] = React.useState(false);
 
-  const handleGoProfile = () => {
-    push("/profile");
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const onLogout = async () => {
-    push("/");
+    googleLogout();
     await postLocalRequest({ endpoint: "/api/logout" });
+    reload();
   };
 
   return (
@@ -65,13 +78,36 @@ const Profile = () => {
               <TwitterIcon />
             </IconButton>
           </Stack>
-          <Button size="small" startIcon={<LogoutIcon />} variant="outlined" onClick={onLogout}>
+          <Button size="small" color="error" startIcon={<LogoutIcon />} variant="outlined" onClick={handleClickOpen}>
             Logout
           </Button>
         </Stack>
       </Stack>
 
       <ProfileTabs />
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Logout lorem ipsum"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to logout? Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit,
+            perspiciatis. Facilis ullam voluptatum omnis maxime.{" "}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button sx={{ px: 4 }} variant="outlined" disableElevation onClick={onLogout}>
+            Agree
+          </Button>
+          <Button sx={{ px: 4 }} disableElevation variant="contained" onClick={handleClose} autoFocus>
+            Disagree
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Stack>
   );
 };

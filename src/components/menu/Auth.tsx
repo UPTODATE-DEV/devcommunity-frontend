@@ -1,59 +1,60 @@
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import { useRouter } from "next/router";
-import React from "react";
-import { useGoogleLogin, GoogleOAuthProvider, GoogleLogin, googleLogout } from "@react-oauth/google";
-import GoogleIcon from "@mui/icons-material/Google";
-import axios from "axios";
 import useStore from "@/hooks/useStore";
-import { getRequest } from "@/lib/api";
+import useStoreNoPersist from "@/hooks/useStoreNoPersist";
+import { postLocalRequest } from "@/lib/api";
+import CircularProgress from "@mui/material/CircularProgress";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const Auth = () => {
-  const { push, reload } = useRouter();
-
-  const setSession = useStore((state) => state.setSession);
-
-  const handleLogin = () => {
-    push("/auth/login");
-  };
-
-  const handleRegister = () => {
-    push("/auth/register");
-  };
+  const { reload } = useRouter();
+  const { authLoading, setAuthLoading } = useStoreNoPersist((state) => state);
 
   const onLogin = async (token?: string) => {
-    const res = await axios.post(
-      "/api/login",
-      { token },
-      {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    console.log("🚀 ~ file: Auth.tsx ~ line 35 ~ onLogin ~ res", res.data);
-    setSession(res.data);
+    setAuthLoading(true);
+    const res = await postLocalRequest({ endpoint: "/api/login", data: { token } });
+
+    if (!res.data) {
+      toast.error("Error logging in");
+      console.log(res);
+      setAuthLoading(false);
+    }
+
     reload();
   };
 
+
   return (
-    <div>
-      <GoogleOAuthProvider clientId="1028931681154-43g8plf4on002bj86k3t765cp58q4k5s.apps.googleusercontent.com">
-        <GoogleLogin
-          auto_select
-          text="continue_with"
-          theme="filled_blue"
-          shape="circle"
-          onSuccess={(credentialResponse) => {
-            onLogin(credentialResponse.credential);
-          }}
-          onError={() => {
-            console.log("Login Failed");
-          }}
-        />
-      </GoogleOAuthProvider>
-    </div>
+    <>
+      {process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID &&
+        (authLoading ? (
+          <LoadingButton
+            loading
+            variant="contained"
+            sx={{ borderRadius: 50, width: 250, height: 40 }}
+            loadingPosition="start"
+          >
+            Loading...
+          </LoadingButton>
+        ) : (
+          <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
+            <GoogleLogin
+              auto_select
+              text="continue_with"
+              theme="filled_blue"
+              shape="circle"
+              locale="en"
+              onSuccess={(credentialResponse) => {
+                onLogin(credentialResponse.credential);
+              }}
+              onError={() => {
+                console.log("Login Failed");
+              }}
+            />
+          </GoogleOAuthProvider>
+        ))}
+    </>
   );
 };
 

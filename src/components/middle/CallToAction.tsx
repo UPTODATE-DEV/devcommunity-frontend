@@ -19,10 +19,6 @@ const Auth = dynamic(() => import("@/components/menu/Auth"), {
 const CallToAction = () => {
   const { push } = useRouter();
 
-  const handleRegister = () => {
-    push("/auth/register");
-  };
-
   return (
     <Box
       id="call-to-action"
@@ -46,7 +42,7 @@ const CallToAction = () => {
         },
       }}
     >
-      <Image src="/signup.jpg" alt="Sign Up Updev Community" layout="fill" objectFit="cover" />
+      <Image src="/signup.jpg" alt="" layout="fill" objectFit="cover" />
 
       <Container sx={{ position: "relative", zIndex: 1 }}>
         <Stack spacing={2} sx={{ minHeight: 200 }} justifyContent="center">

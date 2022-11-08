@@ -1,19 +1,14 @@
 import Menu from "@/components/menu/Menu";
-import AddPost from "@/components/posts/AddPost";
-import PostList from "@/components/posts/PostsList";
+import { ProfileSkeleton } from "@/components/menu/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
+import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
-import Divider from "@mui/material/Divider";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import * as React from "react";
-import { getRequest } from "@/lib/api";
-import Stack from "@mui/material/Stack";
-import dynamic from "next/dynamic";
-import { CallToActionSkeleton, HomeFeedSkeleton } from "@/components/middle/Skeleton";
-import { ProfileSkeleton } from "@/components/menu/Skeleton";
 
 const Profile = dynamic(() => import("@/components/profile/Profile"), {
   ssr: false,
@@ -23,7 +18,6 @@ const Profile = dynamic(() => import("@/components/profile/Profile"), {
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
   const setPosts = useStore((state) => state.setPosts);
-  const posts = useStore((state) => state.posts);
 
   React.useEffect(() => {
     const getPosts = async () => {
@@ -55,6 +49,16 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
   const { req } = context;
+
+  // redirect to home if no session
+  if (!req.session?.user) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {

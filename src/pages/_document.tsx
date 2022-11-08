@@ -18,6 +18,8 @@ export default class _Document extends Document {
           <meta name="mobile-web-app-capable" content="yes" />
           <meta name="msapplication-config" content="/icons/browserconfig.xml" />
           <meta name="msapplication-tap-highlight" content="no" />
+          <meta name="msapplication-TileColor" content="#0179bb" />
+          <meta name="theme-color" content="#0179bb" />
 
           <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
           <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />

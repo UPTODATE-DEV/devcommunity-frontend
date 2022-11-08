@@ -15,8 +15,8 @@ const SEO = () => {
       <meta name="mobile-web-app-capable" content="yes" />
       <meta name="msapplication-config" content="/icons/browserconfig.xml" />
       <meta name="msapplication-TileColor" content="#0179bb" />
-      <meta name="msapplication-tap-highlight" content="no" />
       <meta name="theme-color" content="#000000" />
+      <meta name="msapplication-tap-highlight" content="no" />
     </>
   );
 };

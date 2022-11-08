@@ -73,7 +73,13 @@ const Menu: React.FC = () => {
   }, []);
 
   return (
-    <AppBar position="fixed" elevation={0} variant="outlined" color="transparent" sx={{ backdropFilter: "blur(20px)" }}>
+    <AppBar
+      position="fixed"
+      elevation={0}
+      variant="outlined"
+      color="transparent"
+      sx={{ backdropFilter: "blur(20px)", borderTop: "none", borderLeft: "none", borderRight: "none" }}
+    >
       <Container sx={{ mx: "auto" }}>
         <Mobile />
         <Toolbar>

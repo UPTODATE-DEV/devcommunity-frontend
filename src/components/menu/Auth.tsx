@@ -44,7 +44,7 @@ const Auth = () => {
               useOneTap
               text="continue_with"
               theme="filled_blue"
-              // shape="circle"
+              shape="circle"
               locale="en"
               onSuccess={(credentialResponse) => {
                 onLogin(credentialResponse.credential);

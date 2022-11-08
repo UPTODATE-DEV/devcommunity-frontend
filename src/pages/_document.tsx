@@ -10,7 +10,6 @@ export default class _Document extends Document {
     return (
       <Html>
         <Head>
-          <link rel="manifest" href="/manifest.json" />
           <meta name="application-name" content="Updev Community" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -21,6 +20,12 @@ export default class _Document extends Document {
           <meta name="msapplication-TileColor" content="#0179bb" />
           <meta name="msapplication-tap-highlight" content="no" />
           <meta name="theme-color" content="#000000" />
+
+          <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+          <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
+          <link rel="manifest" href="/manifest.json" />
+          <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#5bbad5" />
+          <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
         <body>
           <Main />

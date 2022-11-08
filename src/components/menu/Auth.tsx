@@ -24,7 +24,6 @@ const Auth = () => {
     reload();
   };
 
-
   return (
     <>
       {process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID &&
@@ -41,7 +40,6 @@ const Auth = () => {
           <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
             <GoogleLogin
               auto_select
-              useOneTap
               text="continue_with"
               theme="filled_blue"
               shape="circle"

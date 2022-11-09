@@ -30,82 +30,84 @@ const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }>
   }, []);
 
   return (
-    <Grid container>
-      <Grid item xs={2} md={1.2}>
-        <Avatar
-          sx={{ bgcolor: "primary.main", color: "white" }}
-          alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
-          src={data?.author?.avatar?.url}
-        >
-          {data?.author?.firstName.charAt(0)}
-        </Avatar>
-      </Grid>
-      <Grid item xs={10} md={10.8}>
-        <Stack direction="row" spacing={1}>
-          <Typography variant="caption" color="text.primary" gutterBottom fontWeight={700}>
-            {data?.author?.firstName} {data?.author?.lastName}
-          </Typography>
-          <Typography variant="caption" color="text.secondary" gutterBottom fontWeight={700}>
-            -
-          </Typography>
-          <Typography variant="caption" gutterBottom color="text.secondary">
-            {dayjs(data?.publishedOn).fromNow()}
-          </Typography>
-        </Stack>
-        <Typography
-          gutterBottom
-          fontWeight={700}
-          color="text.primary"
-          onClick={handleViewPost}
-          sx={{
-            "&:hover": {
-              color: "primary.main",
-            },
-            cursor: "pointer",
-          }}
-        >
-          {data?.title.substring(0, 120)}
-        </Typography>
-        <TypographyStylesProvider>
-          <div dangerouslySetInnerHTML={{ __html: data?.content.substring(0, 120) }} />
-        </TypographyStylesProvider>
-        {data?.article.image && (
-          <Stack
-            sx={{
-              width: 1,
-              height: { xs: 180, md: 240 },
-              position: "relative",
-              borderRadius: 2,
-              cursor: "pointer",
-              overflow: "hidden",
-              my: 2,
-            }}
-            onClick={handleViewPost}
+    <>
+      <Grid container>
+        <Grid item xs={2} md={1.2}>
+          <Avatar
+            sx={{ bgcolor: "primary.main", color: "white" }}
+            alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
+            src={data?.author?.avatar?.url}
           >
-            <Image src={FILES_BASE_URL + data?.article?.image?.url} alt="Post" layout="fill" objectFit="cover" />
+            {data?.author?.firstName.charAt(0)}
+          </Avatar>
+        </Grid>
+        <Grid item xs={10} md={10.8}>
+          <Stack direction="row" spacing={1}>
+            <Typography variant="caption" color="text.primary" gutterBottom fontWeight={700}>
+              {data?.author?.firstName} {data?.author?.lastName}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" gutterBottom fontWeight={700}>
+              -
+            </Typography>
+            <Typography variant="caption" gutterBottom color="text.secondary">
+              {dayjs(data?.publishedOn).fromNow()}
+            </Typography>
           </Stack>
-        )}
-        <Stack
-          direction="row"
-          flexWrap="wrap"
-          spacing={1}
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ mt: 1 }}
-        >
-          <Button
-            size="small"
-            variant="outlined"
-            color="error"
-            sx={{ px: 2 }}
-            onClick={() => handleDeletePost(data?.id)}
-            startIcon={<DeleteIcon />}
+          <Typography
+            gutterBottom
+            fontWeight={700}
+            color="text.primary"
+            onClick={handleViewPost}
+            sx={{
+              "&:hover": {
+                color: "primary.main",
+              },
+              cursor: "pointer",
+            }}
           >
-            Delete
-          </Button>
-        </Stack>
+            {data?.title.substring(0, 120)}
+          </Typography>
+          <TypographyStylesProvider>
+            <div dangerouslySetInnerHTML={{ __html: data?.content.substring(0, 120) }} />
+          </TypographyStylesProvider>
+          {data?.article.image && (
+            <Stack
+              sx={{
+                width: 1,
+                height: { xs: 180, md: 240 },
+                position: "relative",
+                borderRadius: 2,
+                cursor: "pointer",
+                overflow: "hidden",
+                my: 2,
+              }}
+              onClick={handleViewPost}
+            >
+              <Image src={FILES_BASE_URL + data?.article?.image?.url} alt="Post" layout="fill" objectFit="cover" />
+            </Stack>
+          )}
+          <Stack
+            direction="row"
+            flexWrap="wrap"
+            spacing={1}
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ mt: 1 }}
+          >
+            <Button
+              size="small"
+              variant="outlined"
+              color="error"
+              sx={{ px: 2 }}
+              onClick={() => handleDeletePost(data?.id)}
+              startIcon={<DeleteIcon />}
+            >
+              Delete
+            </Button>
+          </Stack>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
 

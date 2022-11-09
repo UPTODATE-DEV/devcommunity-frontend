@@ -13,21 +13,21 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import React from "react";
 
-const TopUsers = dynamic(import("@/components/topUsers/TopUsers"), { ssr: false, loading: () => null });
+const TopPosts = dynamic(import("@/components/topPosts/TopPosts"), { ssr: false, loading: () => null });
 
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
-  const setTopUsers = useStore((state) => state.setTopUsers);
+  const setTopPosts = useStore((state) => state.setTopPosts);
 
   React.useEffect(() => {
-    const getTopUsers = async () => {
-      const authors = await getRequest({ endpoint: "/posts/top/authors" });
+    const getTopPosts = async () => {
+      const authors = await getRequest({ endpoint: "/posts/top/posts" });
       if (!authors.error) {
-        setTopUsers(authors.data);
+        setTopPosts(authors.data);
       }
     };
 
-    getTopUsers();
+    getTopPosts();
 
     setSession(session);
   }, []);
@@ -35,7 +35,7 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
   return (
     <>
       <Head>
-        <title>Top Users | Updev community</title>
+        <title>Top Posts | Updev community</title>
         <meta name="description" content="Updev community" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -43,7 +43,7 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
       <Menu />
       <MainContainer>
         {!session?.user && <CallToAction />}
-        <TopUsers />
+        <TopPosts />
       </MainContainer>
     </>
   );

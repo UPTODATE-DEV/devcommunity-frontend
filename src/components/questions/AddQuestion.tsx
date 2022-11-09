@@ -47,7 +47,7 @@ const AddQuestion: React.FC = () => {
         }}
       >
         <Typography variant="caption" color="text.secondary">
-          Click to start asking a post...
+          Click to start a new post...
         </Typography>
         <IconButton>
           <PostAddIcon fontSize="small" />

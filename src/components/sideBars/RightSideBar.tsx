@@ -17,12 +17,12 @@ const RightSideBar = () => {
     push(path);
   };
 
-  const setTopPosts = useStore((state) => state.setTopPosts);
-  const posts = useStore((state) => state.topPosts);
+  const setTopPosts = useStore((state) => state.setTopPostsOfTheWeek);
+  const posts = useStore((state) => state.topPostsOfTheWeek);
 
   React.useEffect(() => {
     const getPosts = async () => {
-      const posts = await getRequest({ endpoint: "/posts/top/posts" });
+      const posts = await getRequest({ endpoint: "/posts/top/posts-week" });
       if (!posts.error) {
         setTopPosts(posts.data);
       }

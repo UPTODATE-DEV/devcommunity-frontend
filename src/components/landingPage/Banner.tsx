@@ -25,12 +25,13 @@ const Banner = () => {
           </Stack>
           <Stack
             sx={{
-              width: { xs: 1, md: 0.7 },
+              width: { xs: 1, md: 0.9 },
               height: { xs: 230, md: 600 },
               position: "relative",
+              boxShadow: "0px 0px 8px rgba(0,0,130,0.3)",
             }}
           >
-            <Image src="/app-18.png" layout="fill" objectFit="contain" />
+            <Image src="/images/og-image.jpg" layout="fill" objectFit="contain" />
           </Stack>
         </Stack>
       </Container>

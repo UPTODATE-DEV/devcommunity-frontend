@@ -18,15 +18,18 @@ const Value = () => {
                 <Stack sx={{ width: 90, height: 90, position: "relative" }}>
                   <Image src="/megaphone-core.svg" layout="fill" alt="Updev community" objectFit="contain" />
                 </Stack>
-                <Typography color="text.secondary">Learn how you can</Typography>
+                <Typography color="text.primary" variant="h6" textAlign="center">
+                  Learn how you can
+                </Typography>
+                <Typography color="text.secondary" textAlign="center">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus voluptatum dolorum blanditiis
+                  maiores?
+                </Typography>
                 <Stack sx={{ width: { xs: 1, md: 160 }, height: 4, bgcolor: "divider" }}></Stack>
               </Stack>
             </Grid>
           ))}
         </Grid>
-        <Stack sx={{ width: { xs: 1, md: 0.7 }, height: { xs: 300, md: 600 }, position: "relative" }}>
-          <Image src="/app-18.png" layout="fill" objectFit="contain" />
-        </Stack>
       </Stack>
     </Container>
   );

@@ -125,9 +125,9 @@ const ProfileTabs = () => {
               </React.Fragment>
             ))}
         </Stack>
-        <Stack sx={{ display: "flex", width: 1, my: 6 }} alignItems="center">
+        {/* <Stack sx={{ display: "flex", width: 1, my: 6 }} alignItems="center">
           <CircularProgress />
-        </Stack>
+        </Stack> */}
       </TabPanel>
       <TabPanel sx={{ p: 0 }} value={"1"}>
         <Stack spacing={5}>
@@ -139,9 +139,6 @@ const ProfileTabs = () => {
                 {posts.length !== index && <Divider />}
               </React.Fragment>
             ))}
-        </Stack>
-        <Stack sx={{ display: "flex", width: 1, my: 6 }} alignItems="center">
-          <CircularProgress />
         </Stack>
       </TabPanel>
       <TabPanel sx={{ p: 0 }} value={"2"}>
@@ -193,9 +190,6 @@ const ProfileTabs = () => {
               <Divider />
             </React.Fragment>
           ))}
-        </Stack>
-        <Stack sx={{ display: "flex", width: 1, my: 6 }} alignItems="center">
-          <CircularProgress />
         </Stack>
       </TabPanel>
     </TabContext>

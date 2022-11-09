@@ -14,30 +14,49 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import React from "react";
 import { toast } from "react-toastify";
 dayjs.extend(relativeTime);
+import { CallToActionSkeleton } from "@/components/middle/Skeleton";
+import dynamic from "next/dynamic";
+import { Dialog } from "@mui/material";
+
+const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
+  ssr: false,
+  loading: () => <CallToActionSkeleton />,
+});
 
 const QuestionReactions = () => {
   const { currentPost: data, setCurrentPost } = useStore((state) => state);
   const user = useStore((state) => state.session?.user);
   const [userReaction, setUserReaction] = React.useState<QuestionReactionType | undefined>();
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const onReact = async (type: string) => {
-    const post = await patchRequest({ endpoint: `/posts/${data?.id}/reactions/${type}/${user?.id}/question` });
-    if (post.error) {
-      toast.error(post.error);
-      return;
+    if (user?.id) {
+      const post = await patchRequest({ endpoint: `/posts/${data?.id}/reactions/${type}/${user?.id}/question` });
+      if (post.error) {
+        toast.error(post.error);
+        return;
+      }
+      return setCurrentPost(post.data);
     }
-    setCurrentPost(post.data);
+    setOpen(true);
   };
 
   // on add to bookmarks
   const onAddToBookmarks = async () => {
-    const post = await patchRequest({ endpoint: `/posts/${data?.id}/bookmarks/${user?.id}` });
+    if (user?.id) {
+      const post = await patchRequest({ endpoint: `/posts/${data?.id}/bookmarks/${user?.id}` });
 
-    if (post.error) {
-      toast.error(post.error);
-      return;
+      if (post.error) {
+        toast.error(post.error);
+        return;
+      }
+      return setCurrentPost(post.data);
     }
-    setCurrentPost(post.data);
+    setOpen(true);
   };
 
   React.useEffect(() => {
@@ -55,6 +74,14 @@ const QuestionReactions = () => {
 
   return (
     <>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <CallToAction />
+      </Dialog>
       <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between" sx={{ mt: 1 }}>
         <Stack direction="row" spacing={2}>
           <Stack
@@ -63,7 +90,7 @@ const QuestionReactions = () => {
             sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, px: 1, borderRadius: 52 }}
           >
             <Tooltip title="I like" placement="bottom" arrow>
-              <IconButton onClick={() => onReact("LIKE")} disabled={!user?.id}>
+              <IconButton onClick={() => onReact("LIKE")}>
                 <ThumbUpSharpIcon color={userReaction === "LIKE" ? "info" : "inherit"} fontSize="small" />
               </IconButton>
             </Tooltip>
@@ -83,7 +110,7 @@ const QuestionReactions = () => {
             sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, px: 1, borderRadius: 52 }}
           >
             <Tooltip title="I like" placement="bottom" arrow>
-              <IconButton onClick={() => onReact("DISLIKE")} disabled={!user?.id}>
+              <IconButton onClick={() => onReact("DISLIKE")}>
                 <ThumbDownOffAltIcon color={userReaction === "DISLIKE" ? "error" : "inherit"} fontSize="small" />
               </IconButton>
             </Tooltip>

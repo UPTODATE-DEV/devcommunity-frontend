@@ -8,8 +8,9 @@ import "../styles/globals.css";
 import "highlight.js/styles/androidstudio.css";
 import { MantineProvider } from "@mantine/core";
 import ToastNotification from "@/components/common/Toast";
-
+import { DefaultSeo } from "next-seo";
 import React from "react";
+import SEO from "@/utils/next-seo.config";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { darkModeActive } = useDarkMode();
@@ -49,6 +50,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           options={{ easing: "ease", speed: 500 }}
         />
 
+        <DefaultSeo {...SEO} />
         <ToastNotification />
         <Component {...pageProps} />
       </ThemeProvider>

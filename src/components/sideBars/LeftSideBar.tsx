@@ -13,7 +13,9 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useRouter } from "next/router";
+import StarIcon from "@mui/icons-material/Star";
 import React from "react";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
 const LeftSideBar = () => {
   const user = useStore((state) => state.session?.user);
@@ -26,7 +28,7 @@ const LeftSideBar = () => {
     { path: "/posts", icon: <QuestionAnswer />, label: "Posts" },
     { path: "/tags", icon: <TagSharpIcon />, label: "Tags" },
     { path: "/cardano", icon: <BlurOnIcon />, label: "Cardano" },
-    { path: "/top-users", icon: <InsertEmoticonSharpIcon />, label: "Top users" },
+    { path: "/top-posts", icon: <AutoAwesomeIcon />, label: "Top posts" },
   ];
 
   const params = [

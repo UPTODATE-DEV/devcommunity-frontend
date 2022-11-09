@@ -13,6 +13,14 @@ import useStore from "@/hooks/useStore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { TypographyStylesProvider } from "@mantine/core";
 import hljs from "highlight.js";
+import { CallToActionSkeleton } from "@/components/middle/Skeleton";
+import dynamic from "next/dynamic";
+import Dialog from "@mui/material/Dialog";
+
+const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
+  ssr: false,
+  loading: () => <CallToActionSkeleton />,
+});
 
 // const colors = ["primary", "secondary", "error", "info", "warning", "success"];
 
@@ -26,12 +34,25 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
   const [showCommentForm, setShowCommentForm] = React.useState(false);
   const [comments, setComments] = React.useState<PostComment[] | []>([]);
   const [comment, setComment] = React.useState("");
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleCleanComment = () => {
     setComment("");
     setShowCommentForm(false);
   };
 
+  const handleShowComment = () => {
+    if (user?.id) {
+      setShowCommentForm(true);
+    } else {
+      setOpen(true);
+    }
+  };
+  
   const handleDeleteComment = async (id: string) => {
     const response = await deleteRequest({ endpoint: `/comments/${id}` });
     if (response.error) {
@@ -75,46 +96,54 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
   }, [comments.length]);
 
   return (
-    <Stack spacing={2} sx={{ py: 1 }}>
-      <Typography variant="h6" color="text.primary">
-        Comments ({comments.length})
-      </Typography>
-      {comments?.map((el) => (
-        <React.Fragment key={el.id}>
-          <Grid container sx={{ py: 2 }} justifyContent="center">
-            <Grid item xs={2} sm={1} md={2} lg={1.2}>
-              <Avatar
-                sx={{ bgcolor: "primary.main", color: "white" }}
-                alt={`${el?.author?.firstName} ${el?.author?.lastName}`}
-                src={el?.author?.avatar?.url}
-              >
-                {el?.author?.firstName.charAt(0)}
-              </Avatar>
+    <>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <CallToAction />
+      </Dialog>
+      <Stack spacing={2} sx={{ py: 1 }}>
+        <Typography variant="h6" color="text.primary">
+          Comments ({comments.length})
+        </Typography>
+        {comments?.map((el) => (
+          <React.Fragment key={el.id}>
+            <Grid container sx={{ py: 2 }} justifyContent="center">
+              <Grid item xs={2} sm={1} md={2} lg={1.2}>
+                <Avatar
+                  sx={{ bgcolor: "primary.main", color: "white" }}
+                  alt={`${el?.author?.firstName} ${el?.author?.lastName}`}
+                  src={el?.author?.avatar?.url}
+                >
+                  {el?.author?.firstName.charAt(0)}
+                </Avatar>
+              </Grid>
+              <Grid item xs={10} sm={11} md={10} lg={10.8}>
+                <Stack sx={{ position: "relative", width: 1 }}>
+                  <Typography color="text.primary" fontWeight={700}>
+                    {el?.author?.firstName} {el?.author?.lastName}
+                  </Typography>
+                  {el.author.id === user?.id && (
+                    <IconButton
+                      sx={{ position: "absolute", top: 0, right: 0 }}
+                      onClick={() => handleDeleteComment(el.id)}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  )}
+                  <TypographyStylesProvider>
+                    <div dangerouslySetInnerHTML={{ __html: el.content }} />
+                  </TypographyStylesProvider>
+                </Stack>
+              </Grid>
             </Grid>
-            <Grid item xs={10} sm={11} md={10} lg={10.8}>
-              <Stack sx={{ position: "relative", width: 1 }}>
-                <Typography color="text.primary" fontWeight={700}>
-                  {el?.author?.firstName} {el?.author?.lastName}
-                </Typography>
-                {el.author.id === user?.id && (
-                  <IconButton
-                    sx={{ position: "absolute", top: 0, right: 0 }}
-                    onClick={() => handleDeleteComment(el.id)}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                )}
-                <TypographyStylesProvider>
-                  <div dangerouslySetInnerHTML={{ __html: el.content }} />
-                </TypographyStylesProvider>
-              </Stack>
-            </Grid>
-          </Grid>
-          <Divider />
-        </React.Fragment>
-      ))}
-      {user &&
-        (showCommentForm ? (
+            <Divider />
+          </React.Fragment>
+        ))}
+        {showCommentForm ? (
           <>
             <RichTextEditor
               value={comment}
@@ -150,7 +179,7 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
               <Stack
                 alignItems="center"
                 direction="row"
-                onClick={() => setShowCommentForm(true)}
+                onClick={handleShowComment}
                 justifyContent="space-between"
                 sx={{
                   borderRadius: 10,
@@ -170,8 +199,9 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
               </Stack>
             </Grid>
           </Grid>
-        ))}
-    </Stack>
+        )}
+      </Stack>
+    </>
   );
 };
 

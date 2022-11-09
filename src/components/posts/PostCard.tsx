@@ -26,47 +26,66 @@ import { Chip } from "@mui/material";
 import TagIcon from "@mui/icons-material/Tag";
 import Link from "next/link";
 import CommentIcon from "@mui/icons-material/Comment";
+import Dialog from "@mui/material/Dialog";
+import { CallToActionSkeleton } from "@/components/middle/Skeleton";
+import dynamic from "next/dynamic";
+
+const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
+  ssr: false,
+  loading: () => <CallToActionSkeleton />,
+});
 
 const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   const user = useStore((state) => state.session?.user);
   const { setPosts, posts } = useStore((state) => state);
   const { push } = useRouter();
   const [userReaction, setUserReaction] = React.useState<ArticleReactionType | undefined>();
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleViewPost = () => {
     push(`/articles/${data?.slug}`);
   };
 
   const onReact = async (type: string) => {
-    const post = await patchRequest({ endpoint: `/posts/${data?.id}/reactions/${type}/${user?.id}/article` });
-    // update posts
-    const updatedPosts = posts.map((el) => {
-      if (el.id === post.data?.id) {
-        return post.data;
-      }
-      return el;
-    });
+    if (user?.id) {
+      const post = await patchRequest({ endpoint: `/posts/${data?.id}/reactions/${type}/${user?.id}/article` });
+      // update posts
+      const updatedPosts = posts.map((el) => {
+        if (el.id === post.data?.id) {
+          return post.data;
+        }
+        return el;
+      });
 
-    setPosts(updatedPosts as Post[]);
+      return setPosts(updatedPosts as Post[]);
+    }
+    setOpen(true);
   };
 
   // on add to bookmarks
   const onAddToBookmarks = async () => {
-    const post = await patchRequest({ endpoint: `/posts/${data?.id}/bookmarks/${user?.id}` });
-    // update posts
-    const updatedPosts = posts.map((el) => {
-      if (el.id === post.data?.id) {
-        return post.data;
-      }
-      return el;
-    });
+    if (user?.id) {
+      const post = await patchRequest({ endpoint: `/posts/${data?.id}/bookmarks/${user?.id}` });
+      // update posts
+      const updatedPosts = posts.map((el) => {
+        if (el.id === post.data?.id) {
+          return post.data;
+        }
+        return el;
+      });
 
-    setPosts(updatedPosts as Post[]);
+      return setPosts(updatedPosts as Post[]);
+    }
+    setOpen(true);
   };
 
   const Like = () => (
     <Tooltip title="I LIKE" placement="bottom" arrow>
-      <IconButton onClick={() => onReact("LIKE")} disabled={!user?.id}>
+      <IconButton onClick={() => onReact("LIKE")}>
         <ThumbUpSharpIcon color="info" fontSize="small" />
       </IconButton>
     </Tooltip>
@@ -74,7 +93,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
 
   const Useful = () => (
     <Tooltip title="USEFUL" placement="bottom" arrow>
-      <IconButton onClick={() => onReact("USEFUL")} disabled={!user?.id}>
+      <IconButton onClick={() => onReact("USEFUL")}>
         <LightbulbSharpIcon color="warning" fontSize="small" />
       </IconButton>
     </Tooltip>
@@ -82,13 +101,12 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
 
   const Love = () => (
     <Tooltip title="I LOVE" placement="bottom" arrow>
-      <IconButton onClick={() => onReact("LOVE")} disabled={!user?.id}>
+      <IconButton onClick={() => onReact("LOVE")}>
         <FavoriteSharpIcon color="error" fontSize="small" />
       </IconButton>
     </Tooltip>
   );
 
-  
   React.useEffect(() => {
     document.querySelectorAll("pre").forEach((el) => {
       hljs.highlightElement(el);
@@ -108,143 +126,152 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
     }
   }, [data?.article?.reactions, user]);
 
-
   return (
-    <Grid container>
-      <Grid item xs={2} sm={1} md={2} lg={1.2}>
-        <Avatar
-          sx={{ bgcolor: "primary.main", color: "white" }}
-          alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
-          src={data?.author?.avatar?.url}
-        >
-          {data?.author?.firstName.charAt(0)}
-        </Avatar>
-      </Grid>
-      <Grid item xs={10} sm={11} md={10} lg={10.8}>
-        <Stack direction="row" spacing={1}>
-          <Typography variant="caption" color="text.primary" gutterBottom fontWeight={700}>
-            {data?.author?.firstName} {data?.author?.lastName}
-          </Typography>
-          <Typography variant="caption" color="text.secondary" gutterBottom fontWeight={700}>
-            -
-          </Typography>
-          <Typography variant="caption" gutterBottom color="text.secondary">
-            {dayjs(data?.publishedOn).fromNow()}
-          </Typography>
-        </Stack>
-        <Typography
-          gutterBottom
-          fontWeight={700}
-          color="text.primary"
-          onClick={handleViewPost}
-          sx={{
-            "&:hover": {
-              color: "primary.main",
-            },
-            cursor: "pointer",
-          }}
-        >
-          {data?.title}
-        </Typography>
-
-        <TypographyStylesProvider>
-          <div dangerouslySetInnerHTML={{ __html: `${data?.content.substring(0, 120)}...` }} />
-        </TypographyStylesProvider>
-
-        {data?.article.image && (
-          <Stack
-            sx={{
-              width: 1,
-              height: { xs: 180, md: 240 },
-              position: "relative",
-              borderRadius: 2,
-              cursor: "pointer",
-              overflow: "hidden",
-              my: 2,
-            }}
-            onClick={handleViewPost}
+    <>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <CallToAction />
+      </Dialog>
+      <Grid container>
+        <Grid item xs={2} sm={1} md={2} lg={1.2}>
+          <Avatar
+            sx={{ bgcolor: "primary.main", color: "white" }}
+            alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
+            src={data?.author?.avatar?.url}
           >
-            <Image src={FILES_BASE_URL + data?.article?.image?.url} alt="Post" layout="fill" objectFit="cover" />
-          </Stack>
-        )}
-
-        <Grid container spacing={1} sx={{ pb: 1 }} direction="row">
-          {data?.tags?.map((el) => (
-            <Grid item xs="auto" key={el.tag.id}>
-              <Chip size="small" icon={<TagIcon fontSize="small" />} sx={{ px: 2 }} clickable label={el.tag.name} />
-            </Grid>
-          ))}
+            {data?.author?.firstName.charAt(0)}
+          </Avatar>
         </Grid>
+        <Grid item xs={10} sm={11} md={10} lg={10.8}>
+          <Stack direction="row" spacing={1}>
+            <Typography variant="caption" color="text.primary" gutterBottom fontWeight={700}>
+              {data?.author?.firstName} {data?.author?.lastName}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" gutterBottom fontWeight={700}>
+              -
+            </Typography>
+            <Typography variant="caption" gutterBottom color="text.secondary">
+              {dayjs(data?.publishedOn).fromNow()}
+            </Typography>
+          </Stack>
+          <Typography
+            gutterBottom
+            fontWeight={700}
+            color="text.primary"
+            onClick={handleViewPost}
+            sx={{
+              "&:hover": {
+                color: "primary.main",
+              },
+              cursor: "pointer",
+            }}
+          >
+            {data?.title}
+          </Typography>
 
-        <Stack
-          direction="row"
-          flexWrap="wrap"
-          spacing={1}
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ mt: 1 }}
-        >
+          <TypographyStylesProvider>
+            <div dangerouslySetInnerHTML={{ __html: `${data?.content.substring(0, 120)}...` }} />
+          </TypographyStylesProvider>
+
+          {data?.article.image && (
+            <Stack
+              sx={{
+                width: 1,
+                height: { xs: 180, md: 240 },
+                position: "relative",
+                borderRadius: 2,
+                cursor: "pointer",
+                overflow: "hidden",
+                my: 2,
+              }}
+              onClick={handleViewPost}
+            >
+              <Image src={FILES_BASE_URL + data?.article?.image?.url} alt="Post" layout="fill" objectFit="cover" />
+            </Stack>
+          )}
+
+          <Grid container spacing={1} sx={{ pb: 1 }} direction="row">
+            {data?.tags?.map((el) => (
+              <Grid item xs="auto" key={el.tag.id}>
+                <Chip size="small" icon={<TagIcon fontSize="small" />} sx={{ px: 2 }} clickable label={el.tag.name} />
+              </Grid>
+            ))}
+          </Grid>
+
           <Stack
             direction="row"
+            flexWrap="wrap"
+            spacing={1}
             alignItems="center"
-            sx={{
-              border: (theme) => `1px solid ${theme.palette.divider}`,
-              borderRadius: 52,
-              transition: "all 0.5s ease",
-            }}
+            justifyContent="space-between"
+            sx={{ mt: 1 }}
           >
-            {!userReaction ? (
-              <>
-                <Like />
-                <Love />
-                <Useful />
-              </>
-            ) : (
-              <>
-                {userReaction === "LIKE" && <Like />}
-                {userReaction === "LOVE" && <Love />}
-                {userReaction === "USEFUL" && <Useful />}
-              </>
-            )}
-            <Tooltip title="See all reactions" placement="bottom" arrow>
-              <IconButton>
-                <Typography variant="caption" color="text.primary" fontWeight={700}>
-                  {data.article?.reactions?.length}
-                </Typography>
-              </IconButton>
-            </Tooltip>
-          </Stack>
-          <Stack direction="row" spacing={2}>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Link href={`/articles/${data?.slug}/#comments`} passHref>
-                <IconButton>
-                  <CommentIcon />
-                </IconButton>
-              </Link>
-              <Typography variant="caption" color="text.secondary" fontWeight={700}>
-                {data?.comments?.length || 0}
-              </Typography>
-            </Stack>
-
             <Stack
               direction="row"
               alignItems="center"
-              sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
+              sx={{
+                border: (theme) => `1px solid ${theme.palette.divider}`,
+                borderRadius: 52,
+                transition: "all 0.5s ease",
+              }}
             >
-              <Tooltip title="Save post" placement="bottom" arrow>
-                <IconButton onClick={onAddToBookmarks}>
-                  {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
-                    <BookmarkRemoveIcon color="secondary" fontSize="small" />
-                  ) : (
-                    <BookmarkAddSharpIcon fontSize="small" />
-                  )}
+              {!userReaction ? (
+                <>
+                  <Like />
+                  <Love />
+                  <Useful />
+                </>
+              ) : (
+                <>
+                  {userReaction === "LIKE" && <Like />}
+                  {userReaction === "LOVE" && <Love />}
+                  {userReaction === "USEFUL" && <Useful />}
+                </>
+              )}
+              <Tooltip title="See all reactions" placement="bottom" arrow>
+                <IconButton>
+                  <Typography variant="caption" color="text.primary" fontWeight={700}>
+                    {data.article?.reactions?.length}
+                  </Typography>
                 </IconButton>
               </Tooltip>
             </Stack>
+            <Stack direction="row" spacing={2}>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Link href={`/articles/${data?.slug}/#comments`} passHref>
+                  <IconButton>
+                    <CommentIcon fontSize="small" />
+                  </IconButton>
+                </Link>
+                <Typography variant="caption" color="text.secondary" fontWeight={700}>
+                  {data?.comments?.length || 0}
+                </Typography>
+              </Stack>
+
+              <Stack
+                direction="row"
+                alignItems="center"
+                sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
+              >
+                <Tooltip title="Save post" placement="bottom" arrow>
+                  <IconButton onClick={onAddToBookmarks}>
+                    {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
+                      <BookmarkRemoveIcon color="secondary" fontSize="small" />
+                    ) : (
+                      <BookmarkAddSharpIcon fontSize="small" />
+                    )}
+                  </IconButton>
+                </Tooltip>
+              </Stack>
+            </Stack>
           </Stack>
-        </Stack>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
 

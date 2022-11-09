@@ -8,6 +8,7 @@ import hljs from "highlight.js";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import React from "react";
+import SEO from "@/components/common/SEO";
 
 const Home: NextPage<{ session: Session; post: Post }> = ({ session, post }) => {
   const setSession = useStore((state) => state.setSession);
@@ -24,11 +25,16 @@ const Home: NextPage<{ session: Session; post: Post }> = ({ session, post }) => 
 
   return (
     <>
-      <Head>
-        <title>{post?.title}</title>
-        <meta name="description" content="Updev community" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <SEO
+        title={post?.title}
+        description={post?.content.substring(0, 180)}
+        authors={post?.author}
+        image={post?.article.image}
+        modifiedTime={post?.updatedAt.toString()}
+        publishedTime={post?.createdAt.toString()}
+        tags={post?.tags.map((el) => el.tag.name)}
+        url={`${process.env.NEXT_PUBLIC_URL}/posts/${post?.slug}`}
+      />
       <Menu />
       <MainContainer>
         <Post data={post} />

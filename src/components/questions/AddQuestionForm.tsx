@@ -11,7 +11,7 @@ import TextField from "@mui/material/TextField";
 import SaveIcon from "@mui/icons-material/Save";
 import Fab from "@mui/material/Fab";
 import NavigationIcon from "@mui/icons-material/Navigation";
-import { postRequest } from "@/lib/api";
+import { getRequest, postRequest } from "@/lib/api";
 import { toast } from "react-toastify";
 import useStore from "@/hooks/useStore";
 import dynamic from "next/dynamic";
@@ -23,7 +23,7 @@ import { useRouter } from "next/router";
 const AddQuestionForm = () => {
   const [loading, setLoading] = React.useState(false);
   const user = useStore((state) => state.session?.user);
-  const [image, setImage] = React.useState("");
+  const [tags, setTags] = React.useState<Tag[]>([{ id: "0", name: "default", _count: 0 }]);
   const [preview, setPreview] = React.useState("");
   const [post, setPost] = React.useState<{ title: string; content: string; tags: string[] | null }>({
     title: "",
@@ -67,10 +67,19 @@ const AddQuestionForm = () => {
   };
 
   React.useEffect(() => {
+    const getTags = async () => {
+      const tags = await getRequest({ endpoint: "/tags" });
+      if (!tags.error) {
+        setTags(tags.data);
+      }
+    };
+
+    getTags();
+
     return () => {
       URL.revokeObjectURL(preview);
     };
-  }, [preview]);
+  }, []);
 
   return (
     <Stack spacing={2} sx={{ py: 1, pb: 4, minHeight: "100vh" }}>
@@ -84,7 +93,7 @@ const AddQuestionForm = () => {
       <Autocomplete
         multiple
         id="tags-filled"
-        options={tags.map((option) => option.title)}
+        options={tags.map((el) => el.name)}
         freeSolo
         onChange={(event: any, newValue: string[] | null) => {
           setPost((state) => ({ ...state, tags: newValue }));
@@ -133,15 +142,5 @@ const AddQuestionForm = () => {
     </Stack>
   );
 };
-
-const tags = [
-  { title: "ReactJs", year: 1994 },
-  { title: "NodeJs", year: 1972 },
-  { title: "Web3", year: 1974 },
-  { title: "Blockchain", year: 2008 },
-  { title: "Cardano", year: 1957 },
-  { title: "JavaScript", year: 1993 },
-  { title: "Flutter", year: 1994 },
-];
 
 export default AddQuestionForm;

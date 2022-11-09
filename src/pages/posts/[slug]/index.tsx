@@ -1,15 +1,14 @@
+import SEO from "@/components/common/SEO";
 import Menu from "@/components/menu/Menu";
-import Post from "@/components/posts/Post";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
 import type { GetServerSideProps, NextPage } from "next";
-import Head from "next/head";
 import React from "react";
-
 import Question from "@/components/questions/Question";
 import hljs from "highlight.js";
+
 const Home: NextPage<{ session: Session; post: Post }> = ({ session, post }) => {
   const setSession = useStore((state) => state.setSession);
 
@@ -25,11 +24,15 @@ const Home: NextPage<{ session: Session; post: Post }> = ({ session, post }) => 
 
   return (
     <>
-      <Head>
-        <title>{post?.title}</title>
-        <meta name="description" content="Updev community" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <SEO
+        title={post?.title}
+        description={post?.content?.substring(0, 180)}
+        authors={post?.author}
+        modifiedTime={post?.updatedAt?.toString()}
+        publishedTime={post?.createdAt?.toString()}
+        tags={post?.tags?.map((el) => el.tag.name)}
+        url={`${process.env.NEXT_PUBLIC_URL}/posts/${post?.slug}`}
+      />
       <Menu />
       <MainContainer>
         <Question data={post} />

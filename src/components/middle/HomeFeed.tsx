@@ -15,7 +15,7 @@ const QuestionCard = dynamic(import("@/components/questions/QuestionCard"), {
 const HomeFeed = () => {
   const posts = useStore((state) => state.posts);
   return (
-    <Stack spacing={5}>
+    <Stack spacing={5} sx={{ py: 2 }}>
       {posts?.map((item, i) => (
         <React.Fragment key={item.id}>
           {item.type === "ARTICLE" ? <PostCard data={item} /> : <QuestionCard data={item} />}

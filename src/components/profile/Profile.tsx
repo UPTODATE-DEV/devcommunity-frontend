@@ -13,21 +13,29 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import dynamic from "next/dynamic";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Button from "@mui/material/Button";
-import { postLocalRequest } from "@/lib/api";
+import { postLocalRequest, postRequest } from "@/lib/api";
 import { googleLogout } from "@react-oauth/google";
-
+import EditIcon from "@mui/icons-material/EditOutlined";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Image from "next/image";
+import { toast } from "react-toastify";
 
 const ProfileTabs = dynamic(import("@/components/profile/ProfileTabs"), { ssr: false, loading: () => null });
+const ProfileEditForm = dynamic(import("@/components/profile/ProfileEditForm"), { ssr: false, loading: () => null });
 
 const Profile = () => {
   const user = useStore((state) => state.session?.user);
   const { reload } = useRouter();
   const [open, setOpen] = React.useState(false);
+  const [editProfile, setEditProfile] = React.useState(false);
+
+  const handleEditProfile = () => {
+    setEditProfile(true);
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -78,13 +86,24 @@ const Profile = () => {
               <TwitterIcon />
             </IconButton>
           </Stack>
-          <Button size="small" color="error" startIcon={<LogoutIcon />} variant="outlined" onClick={handleClickOpen}>
-            Logout
-          </Button>
+          <Stack direction={{ xs: "column-reverse", md: "row" }} spacing={2}>
+            <Button size="small" color="error" startIcon={<LogoutIcon />} variant="outlined" onClick={handleClickOpen}>
+              Logout
+            </Button>
+            <Button
+              size="small"
+              color="primary"
+              startIcon={<EditIcon />}
+              variant="contained"
+              onClick={handleEditProfile}
+            >
+              Edit my profile
+            </Button>
+          </Stack>
         </Stack>
       </Stack>
 
-      <ProfileTabs />
+      {editProfile ? <ProfileEditForm /> : <ProfileTabs />}
 
       <Dialog
         open={open}

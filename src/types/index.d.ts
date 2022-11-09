@@ -27,11 +27,13 @@ interface User {
 
 interface Post {
   id: string;
+  createdAt: Date;
+  updatedAt: Date;
   title: string;
   content: string;
   publishedOn: Date;
   author: User;
-  tags: { tag: Tag }[];
+  tags: Tags[];
   slug: string;
   type: "QUESTION" | "ARTICLE";
   article: Article;
@@ -71,6 +73,10 @@ interface Tag {
   id: string;
   name: string;
   _count: number;
+}
+
+interface Tags {
+  tag: Tag;
 }
 
 interface File {
@@ -123,9 +129,18 @@ interface Bookmarks {
   userId: string;
 }
 
-interface TopPosts {
+interface TopPostsOfTheWeek {
   topQuestionsOfTheWeek: Post[];
   topArticlesOfTheWeek: Post[];
+}
+
+interface TopPosts {
+  id: string;
+  title: string;
+  reactions: number;
+  author: User;
+  slug: string;
+  type: "QUESTION" | "ARTICLE";
 }
 
 interface Notifications {

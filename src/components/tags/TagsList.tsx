@@ -2,23 +2,36 @@ import React from "react";
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import TagIcon from "@mui/icons-material/Tag";
 import Tag from "./Tag";
+import dynamic from "next/dynamic";
 import useStore from "@/hooks/useStore";
+import { HomeFeedSkeleton } from "../middle/Skeleton";
+
+const HomeFeed = dynamic(import("@/components/middle/HomeFeed"), {
+  ssr: false,
+  loading: () => <HomeFeedSkeleton />,
+});
 
 const TagsList = () => {
-  const tags = useStore((state) => state.tags);
+  const { setTagsFilters, tagsFilters, tags, showTagsFilters } = useStore((state) => state);
+  const isIncluded = (el: Tag) => tagsFilters.some((selected) => selected.id === el.id);
 
   return (
-    <Box sx={{ pb: 4 }}>
-      <Grid container spacing={1}>
-        {tags.map((el, i) => (
-          <Grid item xs="auto" key={i}>
-            <Tag label={el.name} />
+    <>
+      {showTagsFilters ? (
+        <HomeFeed />
+      ) : (
+        <Box sx={{ pb: 4 }}>
+          <Grid container spacing={1}>
+            {tags.map((el, i) => (
+              <Grid item xs="auto" key={i} onClick={() => setTagsFilters(el)}>
+                <Tag label={el.name} selected={isIncluded(el)} />
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
-    </Box>
+        </Box>
+      )}
+    </>
   );
 };
 

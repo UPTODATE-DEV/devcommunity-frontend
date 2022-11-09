@@ -51,8 +51,6 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
     <>
       <Head>
         <title>Posts | Updev community</title>
-        <meta name="description" content="Updev community" />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <Menu />

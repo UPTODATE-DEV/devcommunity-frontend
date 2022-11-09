@@ -3,7 +3,7 @@ import CallToAction from "@/components/middle/CallToAction";
 import { HomeFeedSkeleton } from "@/components/middle/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
-import { getRequest } from "@/lib/api";
+import { getRequest, postRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
 import Divider from "@mui/material/Divider";
 import type { NextPage } from "next";
@@ -23,7 +23,7 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
 
   React.useEffect(() => {
     const getPosts = async () => {
-      const posts = await getRequest({ endpoint: "/posts/tag/Cardano" });
+      const posts = await postRequest({ endpoint: "/posts/tags", data: ["cardano"] });
       if (!posts.error) {
         setPosts(posts.data);
       }

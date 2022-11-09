@@ -1,6 +1,5 @@
 import Menu from "@/components/menu/Menu";
-import { CallToActionSkeleton } from "@/components/middle/Skeleton";
-import Search from "@/components/tags/Search";
+import { CallToActionSkeleton, HomeFeedSkeleton } from "@/components/middle/Skeleton";
 import { TagsSkeleton } from "@/components/tags/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
@@ -14,6 +13,8 @@ import Head from "next/head";
 import React from "react";
 
 const Tags = dynamic(import("@/components/tags/TagsList"), { ssr: false, loading: () => <TagsSkeleton /> });
+const Filters = dynamic(import("@/components/tags/Filters"), { ssr: false, loading: () => null });
+const Search = dynamic(import("@/components/tags/Search"), { ssr: false, loading: () => null });
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
   loading: () => <CallToActionSkeleton />,
@@ -22,6 +23,7 @@ const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
   const setTags = useStore((state) => state.setTags);
+  const { showTagsFilters } = useStore((state) => state);
 
   React.useEffect(() => {
     const getTags = async () => {
@@ -47,7 +49,7 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
       <Menu />
       <MainContainer>
         {!session?.user && <CallToAction />}
-        <Search />
+        {showTagsFilters ? <Filters /> : <Search />}
         <Divider />
         <Tags />
       </MainContainer>

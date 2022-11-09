@@ -15,35 +15,54 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import React from "react";
 import { toast } from "react-toastify";
 dayjs.extend(relativeTime);
+import { CallToActionSkeleton } from "@/components/middle/Skeleton";
+import dynamic from "next/dynamic";
+import Dialog from "@mui/material/Dialog";
+
+const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
+  ssr: false,
+  loading: () => <CallToActionSkeleton />,
+});
 
 const PostReactions: React.FC = () => {
   const { currentPost: data, setCurrentPost } = useStore((state) => state);
   const user = useStore((state) => state.session?.user);
   const [userReaction, setUserReaction] = React.useState<ArticleReactionType | undefined>();
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const onReact = async (type: string) => {
-    const post = await patchRequest({ endpoint: `/posts/${data?.id}/reactions/${type}/${user?.id}/article` });
-    if (post.error) {
-      toast.error(post.error);
-      return;
+    if (user?.id) {
+      const post = await patchRequest({ endpoint: `/posts/${data?.id}/reactions/${type}/${user?.id}/article` });
+      if (post.error) {
+        toast.error(post.error);
+        return;
+      }
+      return setCurrentPost(post.data);
     }
-    setCurrentPost(post.data);
+    setOpen(true);
   };
 
   // on add to bookmarks
   const onAddToBookmarks = async () => {
-    const post = await patchRequest({ endpoint: `/posts/${data?.id}/bookmarks/${user?.id}` });
+    if (user?.id) {
+      const post = await patchRequest({ endpoint: `/posts/${data?.id}/bookmarks/${user?.id}` });
 
-    if (post.error) {
-      toast.error(post.error);
-      return;
+      if (post.error) {
+        toast.error(post.error);
+        return;
+      }
+      return setCurrentPost(post.data);
     }
-    setCurrentPost(post.data);
+    setOpen(true);
   };
 
   const Like = () => (
     <Tooltip title="I LIKE" placement="bottom" arrow>
-      <IconButton onClick={() => onReact("LIKE")} disabled={!user?.id}>
+      <IconButton onClick={() => onReact("LIKE")}>
         <ThumbUpSharpIcon color="info" fontSize="small" />
       </IconButton>
     </Tooltip>
@@ -51,7 +70,7 @@ const PostReactions: React.FC = () => {
 
   const Useful = () => (
     <Tooltip title="USEFUL" placement="bottom" arrow>
-      <IconButton onClick={() => onReact("USEFUL")} disabled={!user?.id}>
+      <IconButton onClick={() => onReact("USEFUL")}>
         <LightbulbSharpIcon color="warning" fontSize="small" />
       </IconButton>
     </Tooltip>
@@ -59,7 +78,7 @@ const PostReactions: React.FC = () => {
 
   const Love = () => (
     <Tooltip title="I LOVE" placement="bottom" arrow>
-      <IconButton onClick={() => onReact("LOVE")} disabled={!user?.id}>
+      <IconButton onClick={() => onReact("LOVE")}>
         <FavoriteSharpIcon color="error" fontSize="small" />
       </IconButton>
     </Tooltip>
@@ -80,6 +99,14 @@ const PostReactions: React.FC = () => {
 
   return (
     <>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <CallToAction />
+      </Dialog>
       <Stack
         direction="row"
         flexWrap="wrap"

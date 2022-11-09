@@ -1,24 +1,66 @@
 import React from "react";
+import { NextSeo, ArticleJsonLd } from "next-seo";
 
-const SEO = () => {
-  return (
-    <>
-      <meta name="application-name" content="Updev Community" />
-      <meta name="apple-mobile-web-app-capable" content="yes" />
-      <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-      <meta name="apple-mobile-web-app-title" content="Updev Community" />
-      <meta
-        name="description"
-        content="Updev Community est un forum d'échange et de partage des connaissances entre informaticiens, aussi bien débutants qu'experts dans le but d'améliorer les compétences des développeurs. "
-      />
-      <meta name="format-detection" content="telephone=no" />
-      <meta name="mobile-web-app-capable" content="yes" />
-      <meta name="msapplication-config" content="/icons/browserconfig.xml" />
-      <meta name="msapplication-TileColor" content="#0179bb" />
-      <meta name="theme-color" content="#000000" />
-      <meta name="msapplication-tap-highlight" content="no" />
-    </>
-  );
-};
+interface PostSEO {
+  title: string;
+  description: string;
+  url: string;
+  publishedTime: string;
+  modifiedTime: string;
+  authors: User;
+  tags: string[];
+  image?: File;
+}
 
-export default SEO;
+const PostSEO: React.FC<PostSEO> = ({
+  title,
+  description,
+  url,
+  publishedTime,
+  modifiedTime,
+  authors,
+  tags,
+  image = {
+    url: `${process.env.NEXT_PUBLIC_URL}/images/og-image.jpg`,
+    width: 850,
+    height: 650,
+    name: "Updev Community",
+  },
+}) => (
+  <>
+    <NextSeo
+      openGraph={{
+        title,
+        description,
+        url,
+        type: "article",
+        article: {
+          publishedTime,
+          modifiedTime,
+          authors: [`${authors.firstName} ${authors.lastName}`],
+          tags,
+        },
+        images: [
+          {
+            url: !image.url.startsWith("http") ? `${process.env.NEXT_PUBLIC_API_URL}/assets/${image.url}` : image.url,
+            width: image.width,
+            height: image.height,
+            alt: image.name,
+          },
+        ],
+      }}
+    />
+    <ArticleJsonLd
+      type="BlogPosting"
+      url={url}
+      title={title}
+      images={[`${process.env.NEXT_PUBLIC_API_URL}/assets/${image.url}`]}
+      datePublished={publishedTime}
+      dateModified={modifiedTime}
+      authorName={`${authors.firstName} ${authors.lastName}`}
+      description={description}
+    />
+  </>
+);
+
+export default PostSEO;

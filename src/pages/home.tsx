@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 
 const Banner = dynamic(import("@/components/landingPage/Banner"));
 const Value = dynamic(import("@/components/landingPage/Value"));
+const Contributors = dynamic(import("@/components/landingPage/Contributors"));
 const Widget = dynamic(import("@/components/landingPage/Widget"));
 const Widget2 = dynamic(import("@/components/landingPage/Widget2"));
 const Widget3 = dynamic(import("@/components/landingPage/Widget3"));
@@ -28,6 +29,7 @@ const Home: NextPage = () => {
         <Widget />
         <Widget2 />
         <Widget3 />
+        <Contributors />
         <FAQ />
         <Footer />
       </Box>

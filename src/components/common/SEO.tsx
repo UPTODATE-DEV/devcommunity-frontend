@@ -42,7 +42,7 @@ const PostSEO: React.FC<PostSEO> = ({
         },
         images: [
           {
-            url: !image.url.startsWith("http") ? `${process.env.NEXT_PUBLIC_API_URL}/assets/${image.url}` : image.url,
+            url: !image.url.startsWith("http") ? `${process.env.NEXT_PUBLIC_API_URL}/assets${image.url}` : image.url,
             width: image.width,
             height: image.height,
             alt: image.name,

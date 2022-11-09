@@ -26,41 +26,49 @@ const PostSEO: React.FC<PostSEO> = ({
     height: 650,
     name: "Updev Community",
   },
-}) => (
-  <>
-    <NextSeo
-      openGraph={{
-        title,
-        description,
-        url,
-        type: "article",
-        article: {
-          publishedTime,
-          modifiedTime,
-          authors: [`${authors.firstName} ${authors.lastName}`],
-          tags,
-        },
-        images: [
-          {
-            url: !image.url.startsWith("http") ? `${process.env.NEXT_PUBLIC_FILES_BASE_URL}${image.url}` : image.url,
-            width: image.width,
-            height: image.height,
-            alt: image.name,
+}) => {
+  function removeTags(str: string): string {
+    if (str === null || str === "") return "";
+    else str = str.toString(); // Regular expression to identify HTML tags in // the input string. Replacing the identified // HTML tag with a null string.
+    return str.replace(/(<([^>]+)>)/gi, "");
+  }
+
+  return (
+    <>
+      <NextSeo
+        openGraph={{
+          title,
+          description: removeTags(description),
+          url,
+          type: "article",
+          article: {
+            publishedTime,
+            modifiedTime,
+            authors: [`${authors.firstName} ${authors.lastName}`],
+            tags,
           },
-        ],
-      }}
-    />
-    <ArticleJsonLd
-      type="BlogPosting"
-      url={url}
-      title={title}
-      images={[`${process.env.NEXT_PUBLIC_API_URL}/assets/${image.url}`]}
-      datePublished={publishedTime}
-      dateModified={modifiedTime}
-      authorName={`${authors.firstName} ${authors.lastName}`}
-      description={description}
-    />
-  </>
-);
+          images: [
+            {
+              url: !image.url.startsWith("http") ? `${process.env.NEXT_PUBLIC_FILES_BASE_URL}${image.url}` : image.url,
+              width: image.width,
+              height: image.height,
+              alt: image.name,
+            },
+          ],
+        }}
+      />
+      <ArticleJsonLd
+        type="BlogPosting"
+        url={url}
+        title={title}
+        images={[`${process.env.NEXT_PUBLIC_API_URL}/assets/${image.url}`]}
+        datePublished={publishedTime}
+        dateModified={modifiedTime}
+        authorName={`${authors.firstName} ${authors.lastName}`}
+        description={description}
+      />
+    </>
+  );
+};
 
 export default PostSEO;

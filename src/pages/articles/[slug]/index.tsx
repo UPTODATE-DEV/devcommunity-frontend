@@ -27,12 +27,12 @@ const Home: NextPage<{ session: Session; post: Post }> = ({ session, post }) => 
     <>
       <SEO
         title={post?.title}
-        description={post?.content.substring(0, 180)}
+        description={post?.content?.substring(0, 180)}
         authors={post?.author}
-        image={post?.article.image}
-        modifiedTime={post?.updatedAt.toString()}
-        publishedTime={post?.createdAt.toString()}
-        tags={post?.tags.map((el) => el.tag.name)}
+        image={post?.article?.image}
+        modifiedTime={post?.updatedAt?.toString()}
+        publishedTime={post?.createdAt?.toString()}
+        tags={post?.tags?.map((el) => el.tag.name)}
         url={`${process.env.NEXT_PUBLIC_URL}/posts/${post?.slug}`}
       />
       <Menu />

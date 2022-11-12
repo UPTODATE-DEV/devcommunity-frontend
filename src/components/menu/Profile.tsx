@@ -5,10 +5,13 @@ import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
 import IconButton from "@mui/material/IconButton";
 import useStore from "@/hooks/useStore";
+import useUser from "@/hooks/useUser";
 
 const Profile = () => {
-  const user = useStore((state) => state.session?.user);
+  const sessionUser = useStore((state) => state.session?.user);
   const { push } = useRouter();
+
+  const user = useUser(sessionUser?.email);
 
   const handleGoProfile = () => {
     push("/profile");
@@ -20,7 +23,7 @@ const Profile = () => {
         <Avatar
           sx={{ bgcolor: "primary.main", color: "white" }}
           alt={`${user?.firstName} ${user?.lastName}`}
-          src="/avatar.avif"
+          src={`${process.env.NEXT_PUBLIC_FILES_BASE_URL}${user?.profile?.avatar?.url}`}
         >
           {user?.firstName[0]}
         </Avatar>

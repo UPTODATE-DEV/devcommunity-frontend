@@ -41,7 +41,7 @@ const TopPosts = () => {
               <ListItemAvatar>
                 <Avatar
                   sx={{ bgcolor: "primary.main", color: "white" }}
-                  src={el?.author?.profile?.avatar?.url}
+                  src={process.env.NEXT_PUBLIC_FILES_BASE_URL + el?.author?.profile?.avatar?.url}
                   alt={`${el.author.firstName} ${el.author.lastName}`}
                 >
                   {el.author.firstName.charAt(0)}

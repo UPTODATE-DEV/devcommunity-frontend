@@ -9,9 +9,12 @@ import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
 import { useRouter } from "next/router";
 import useStore from "@/hooks/useStore";
+import useUser from "@/hooks/useUser";
+import { FILES_BASE_URL } from "config/url";
 
 const AddQuestion: React.FC = () => {
-  const user = useStore((state) => state.session?.user);
+  const sessionUser = useStore((state) => state.session?.user);
+  const user = useUser(sessionUser?.email);
   const { push } = useRouter();
   const handleGoToAddPage = () => {
     push("/posts/add");
@@ -29,7 +32,7 @@ const AddQuestion: React.FC = () => {
       <Avatar
         sx={{ bgcolor: "primary.main", color: "white" }}
         alt={`${user?.firstName} ${user?.lastName}`}
-        src={user?.avatar?.url}
+        src={`${FILES_BASE_URL}${user?.profile?.avatar?.url}`}
       >
         {user?.firstName.charAt(0)}
       </Avatar>

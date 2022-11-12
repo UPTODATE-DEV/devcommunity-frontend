@@ -8,6 +8,8 @@ interface Store {
   setPosts(posts: Post[]): void;
   tags: Tag[] | [];
   setTags(tags: Tag[]): void;
+  editProfile: boolean;
+  setEditProfile: (state: boolean) => void;
   topUsers: TopUsers[] | [];
   setTopUsers: (topUsers: TopUsers[]) => void;
   bookmarks: Bookmarks[] | [];
@@ -18,6 +20,8 @@ interface Store {
   setTopPosts: (topPosts: TopPosts[]) => void;
   currentPost: Post | null;
   setCurrentPost: (post: Post) => void;
+  currentUser: User | null;
+  setCurrentUser: (user: User) => void;
   openMobileMenu: boolean;
   setOpenMobileMenu: (open: boolean) => void;
   notifications: Notifications[] | [];
@@ -91,6 +95,14 @@ const useStore = create<Store>()(
       showTagsFilters: false,
       setShowTagsFilters: (showTagsFilters: boolean) => {
         return set((state) => ({ ...state, showTagsFilters }));
+      },
+      currentUser: null,
+      setCurrentUser: (user: User) => {
+        return set((state) => ({ ...state, user }));
+      },
+      editProfile: false,
+      setEditProfile: (editProfile: boolean) => {
+        return set((state) => ({ ...state, editProfile }));
       },
     }))
   )

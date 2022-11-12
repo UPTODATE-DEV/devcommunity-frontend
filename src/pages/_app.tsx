@@ -5,12 +5,13 @@ import withDarkMode, { useDarkMode } from "next-dark-mode";
 import type { AppProps } from "next/app";
 import NextNprogress from "nextjs-progressbar";
 import "../styles/globals.css";
-import "highlight.js/styles/androidstudio.css";
+import "highlight.js/styles/tokyo-night-dark.css";
 import { MantineProvider } from "@mantine/core";
 import ToastNotification from "@/components/common/Toast";
 import { DefaultSeo } from "next-seo";
 import React from "react";
 import SEO from "@/utils/next-seo.config";
+
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { darkModeActive } = useDarkMode();

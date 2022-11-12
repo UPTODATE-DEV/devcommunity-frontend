@@ -47,6 +47,38 @@ const AddQuestionForm = () => {
     setPost({ ...post, [event.target.name]: event.target.value });
   };
 
+  const modules = React.useMemo(
+    () => ({
+      clipboard: {
+        allowed: {
+          tags: [
+            "a",
+            "b",
+            "strong",
+            "code",
+            "blockquote",
+            "img",
+            "u",
+            "s",
+            "i",
+            "p",
+            "br",
+            "ul",
+            "ol",
+            "li",
+            "span",
+            "h2",
+          ],
+          attributes: ["href", "rel", "target", "class", "src"],
+        },
+        keepSelection: true,
+        substituteBlockElements: true,
+        magicPasteLinks: true,
+      },
+    }),
+    []
+  );
+
   const onSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
@@ -119,12 +151,12 @@ const AddQuestionForm = () => {
         stickyOffset={70}
         onImageUpload={handleImageUpload}
         id="rte"
+        modules={modules}
         controls={[
-          ["bold", "italic", "underline", "strike", "code"],
-          ["unorderedList", "orderedList"],
-          ["h1", "h2", "h3"],
-          ["codeBlock", "blockquote"],
-          ["link", "image", "video"],
+          ["bold", "italic", "underline", "link", "code"],
+          ["unorderedList", "orderedList", "sup", "sub"],
+          ["codeBlock", "blockquote", "link"],
+          ["image", "video", "strike"],
         ]}
       />
       <div>

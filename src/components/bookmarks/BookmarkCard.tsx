@@ -15,6 +15,8 @@ import { useRouter } from "next/router";
 import React from "react";
 dayjs.extend(relativeTime);
 import { TypographyStylesProvider } from "@mantine/core";
+import { FILES_BASE_URL } from "config/url";
+import IconButton from "@mui/material/IconButton";
 
 const BookmarkCard: React.FC<{ data: Post }> = ({ data }) => {
   const user = useStore((state) => state.session?.user);
@@ -43,17 +45,31 @@ const BookmarkCard: React.FC<{ data: Post }> = ({ data }) => {
   return (
     <Grid container>
       <Grid item xs={2} md={1.2}>
-        <Avatar
-          sx={{ bgcolor: "primary.main", color: "white" }}
-          alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
-          src={data?.author?.avatar?.url}
-        >
-          {data?.author?.firstName.charAt(0)}
-        </Avatar>
+        <IconButton onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}>
+          <Avatar
+            sx={{ bgcolor: "primary.main", color: "white" }}
+            alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
+            src={FILES_BASE_URL + data?.author?.profile?.avatar?.url}
+          >
+            {data?.author?.firstName.charAt(0)}
+          </Avatar>
+        </IconButton>
       </Grid>
       <Grid item xs={10} md={10.8}>
         <Stack direction="row" spacing={1}>
-          <Typography variant="caption" color="text.primary" gutterBottom fontWeight={700}>
+          <Typography
+            variant="caption"
+            onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}
+            sx={{
+              "&:hover": {
+                color: "primary.main",
+              },
+              cursor: "pointer",
+            }}
+            color="text.primary"
+            gutterBottom
+            fontWeight={700}
+          >
             {data?.author?.firstName} {data?.author?.lastName}
           </Typography>
           <Typography variant="caption" color="text.secondary" gutterBottom fontWeight={700}>
@@ -91,7 +107,7 @@ const BookmarkCard: React.FC<{ data: Post }> = ({ data }) => {
           <Button
             size="small"
             variant="outlined"
-            color="primary"
+            color="secondary"
             sx={{ px: 2 }}
             onClick={onRemoveFromBookmarks}
             startIcon={<BookmarkRemoveIcon />}

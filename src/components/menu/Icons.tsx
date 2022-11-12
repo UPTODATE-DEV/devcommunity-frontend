@@ -29,8 +29,7 @@ const Icons = () => {
   const [fullscreen, setFullscreen] = React.useState(false);
   const user = useStore((state) => state.session?.user);
   const { push } = useRouter();
-
-  const { setNotifications, notifications } = useStore((state) => state);
+  const [notifications, setNotifications] = React.useState(0);
 
   const toggleMode = () => {
     darkModeActive ? switchToLightMode() : switchToDarkMode();
@@ -48,7 +47,7 @@ const Icons = () => {
 
   React.useEffect(() => {
     const getNotifications = async () => {
-      const notifications = await getRequest({ endpoint: `/notifications/${user?.id}` });
+      const notifications = await getRequest({ endpoint: `/notifications/${user?.id}/count` });
       if (!notifications.error) {
         setNotifications(notifications.data);
       }
@@ -67,7 +66,7 @@ const Icons = () => {
       </IconButton>
       {user && (
         <IconButton aria-label="cart" onClick={() => push("/notifications")}>
-          <StyledBadge badgeContent={notifications.filter((el) => el.read === false).length} max={99} color="secondary">
+          <StyledBadge badgeContent={notifications} max={99} color="secondary">
             <NotificationsIcon />
           </StyledBadge>
         </IconButton>

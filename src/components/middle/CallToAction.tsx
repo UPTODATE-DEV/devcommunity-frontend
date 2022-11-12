@@ -1,15 +1,10 @@
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
-import Image from "next/image";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { useRouter } from "next/router";
-import { useGoogleLogin, GoogleOAuthProvider, GoogleLogin, googleLogout } from "@react-oauth/google";
-import { ProfileSkeleton } from "../menu/Skeleton";
+import Typography from "@mui/material/Typography";
 import dynamic from "next/dynamic";
+import Image from "next/image";
+import { ProfileSkeleton } from "../menu/Skeleton";
 
 const Auth = dynamic(() => import("@/components/menu/Auth"), {
   ssr: false,
@@ -17,8 +12,6 @@ const Auth = dynamic(() => import("@/components/menu/Auth"), {
 });
 
 const CallToAction = () => {
-  const { push } = useRouter();
-
   return (
     <Box
       id="call-to-action"

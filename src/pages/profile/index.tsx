@@ -1,5 +1,5 @@
 import Menu from "@/components/menu/Menu";
-import { ProfileSkeleton } from "@/components/menu/Skeleton";
+import { ProfileSkeleton } from "@/components/profile/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { getRequest } from "@/lib/api";

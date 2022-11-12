@@ -17,7 +17,8 @@ import { TypographyStylesProvider } from "@mantine/core";
 import hljs from "highlight.js";
 
 const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }> = ({ data, handleDeletePost }) => {
-  const { push } = useRouter();
+  const { push, asPath } = useRouter();
+  const email = asPath.split("/profile/")[1];
 
   const handleViewPost = () => {
     push(`/articles/${data?.slug}`);
@@ -36,7 +37,7 @@ const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }>
           <Avatar
             sx={{ bgcolor: "primary.main", color: "white" }}
             alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
-            src={data?.author?.avatar?.url}
+            src={FILES_BASE_URL + data?.author?.profile?.avatar?.url}
           >
             {data?.author?.firstName.charAt(0)}
           </Avatar>
@@ -67,9 +68,15 @@ const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }>
           >
             {data?.title.substring(0, 120)}
           </Typography>
-          <TypographyStylesProvider>
-            <div dangerouslySetInnerHTML={{ __html: data?.content.substring(0, 120) }} />
-          </TypographyStylesProvider>
+          <Typography
+            color="text.secondary"
+            component="div"
+            className="content"
+            gutterBottom
+            dangerouslySetInnerHTML={{
+              __html: `${data?.content.substring(0, 120)}...`,
+            }}
+          />
           {data?.article.image && (
             <Stack
               sx={{
@@ -86,25 +93,27 @@ const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }>
               <Image src={FILES_BASE_URL + data?.article?.image?.url} alt="Post" layout="fill" objectFit="cover" />
             </Stack>
           )}
-          <Stack
-            direction="row"
-            flexWrap="wrap"
-            spacing={1}
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{ mt: 1 }}
-          >
-            <Button
-              size="small"
-              variant="outlined"
-              color="error"
-              sx={{ px: 2 }}
-              onClick={() => handleDeletePost(data?.id)}
-              startIcon={<DeleteIcon />}
+          {!email && (
+            <Stack
+              direction="row"
+              flexWrap="wrap"
+              spacing={1}
+              alignItems="center"
+              justifyContent="space-between"
+              sx={{ mt: 1 }}
             >
-              Delete
-            </Button>
-          </Stack>
+              <Button
+                size="small"
+                variant="outlined"
+                color="error"
+                sx={{ px: 2 }}
+                onClick={() => handleDeletePost(data?.id)}
+                startIcon={<DeleteIcon />}
+              >
+                Delete
+              </Button>
+            </Stack>
+          )}
         </Grid>
       </Grid>
     </>

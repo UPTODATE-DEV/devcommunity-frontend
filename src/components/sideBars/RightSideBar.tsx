@@ -8,6 +8,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { FILES_BASE_URL } from "config/url";
 import { useRouter } from "next/router";
 import React from "react";
 const RightSideBar = () => {
@@ -45,7 +46,7 @@ const RightSideBar = () => {
                 <Avatar
                   sx={{ bgcolor: "primary.main", color: "white" }}
                   alt={`${item.author.firstName} ${item.author.lastName}`}
-                  src={`${item.author.profile?.avatar}`}
+                  src={process.env.NEXT_PUBLIC_FILES_BASE_URL + item?.author?.profile?.avatar?.url}
                 >
                   {item.author.firstName.charAt(0)}
                 </Avatar>
@@ -81,7 +82,7 @@ const RightSideBar = () => {
                 <Avatar
                   sx={{ bgcolor: "primary.main", color: "white" }}
                   alt={`${item.author.firstName} ${item.author.lastName}`}
-                  src={`${item.author.profile?.avatar}`}
+                  src={FILES_BASE_URL + item?.author?.profile?.avatar?.url}
                 >
                   {item.author.firstName.charAt(0)}
                 </Avatar>

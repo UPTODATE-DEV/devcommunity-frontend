@@ -4,8 +4,10 @@ import Image from "next/image";
 import React from "react";
 import dayjs from "dayjs";
 import { FILES_BASE_URL } from "config/url";
+import { useRouter } from "next/router";
 
 const PostHeader: React.FC<{ data: Post }> = ({ data }) => {
+  const { push } = useRouter();
   return (
     <Stack
       sx={{
@@ -34,11 +36,21 @@ const PostHeader: React.FC<{ data: Post }> = ({ data }) => {
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
       >
-        <Typography variant="body2" color="#d8d8d8">
+        <Typography
+          variant="body2"
+          color="#d8d8d8"
+          onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}
+          sx={{
+            "&:hover": {
+              color: "primary.main",
+            },
+            cursor: "pointer",
+          }}
+        >
           {data?.author?.firstName} {data?.author?.lastName}
         </Typography>
         <Typography variant="body2" color="#d8d8d8">
-          {dayjs(data?.publishedOn).format("MMM DD, YYYY")}
+          {dayjs(data?.createdAt).format("MMM DD, YYYY")}
         </Typography>
       </Stack>
     </Stack>

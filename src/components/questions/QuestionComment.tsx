@@ -1,20 +1,22 @@
-import React from "react";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import Image from "next/image";
+import RichTextEditor from "@/components/common/RichTextEditor";
+import { CallToActionSkeleton } from "@/components/middle/Skeleton";
+import useStore from "@/hooks/useStore";
+import useUser from "@/hooks/useUser";
+import { deleteRequest, getRequest, postRequest } from "@/lib/api";
 import CommentIcon from "@mui/icons-material/Comment";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Avatar, Button, Divider } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
-import { Avatar, Button, Divider } from "@mui/material";
-import RichTextEditor from "@/components/common/RichTextEditor";
-import { deleteRequest, getRequest, patchRequest, postRequest } from "@/lib/api";
-import { toast } from "react-toastify";
-import useStore from "@/hooks/useStore";
-import DeleteIcon from "@mui/icons-material/Delete";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { FILES_BASE_URL } from "config/url";
 import hljs from "highlight.js";
 import dynamic from "next/dynamic";
-import Dialog from "@mui/material/Dialog";
-import { CallToActionSkeleton } from "@/components/middle/Skeleton";
+import { useRouter } from "next/router";
+import React from "react";
+import { toast } from "react-toastify";
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
@@ -22,11 +24,13 @@ const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
 });
 
 const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
-  const user = useStore((state) => state.session?.user);
+  const sessionUser = useStore((state) => state.session?.user);
+  const user = useUser(sessionUser?.email);
   const [showCommentForm, setShowCommentForm] = React.useState(false);
   const [comments, setComments] = React.useState<PostComment[] | []>([]);
   const [comment, setComment] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const { push } = useRouter();
 
   const handleClose = () => {
     setOpen(false);
@@ -54,6 +58,21 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
       setComments((state) => state.filter((el) => el.id !== id));
     }
   };
+
+  const modules = React.useMemo(
+    () => ({
+      clipboard: {
+        allowed: {
+          tags: ["a", "b", "strong", "code", "blockquote", "u", "s", "i", "p", "br", "ul", "ol", "li", "span"],
+          attributes: ["href", "rel", "target", "class"],
+        },
+        keepSelection: true,
+        substituteBlockElements: true,
+        magicPasteLinks: true,
+      },
+    }),
+    []
+  );
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -104,15 +123,27 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
         {comments?.map((el) => (
           <React.Fragment key={el.id}>
             <Stack direction="row" spacing={2}>
-              <Avatar
-                sx={{ bgcolor: "primary.main", color: "white" }}
-                alt={`${el?.author?.firstName} ${el?.author?.lastName}`}
-                src={el?.author?.avatar?.url}
-              >
-                {el?.author?.firstName.charAt(0)}
-              </Avatar>
+              <IconButton onClick={() => push(`/profile/@${el?.author?.email.split("@")[0]}`)}>
+                <Avatar
+                  sx={{ bgcolor: "primary.main", color: "white" }}
+                  alt={`${el?.author?.firstName} ${el?.author?.lastName}`}
+                  src={FILES_BASE_URL + el?.author?.profile?.avatar?.url}
+                >
+                  {el?.author?.firstName.charAt(0)}
+                </Avatar>
+              </IconButton>
               <Stack sx={{ position: "relative", width: 1 }}>
-                <Typography color="text.primary" fontWeight={700}>
+                <Typography
+                  onClick={() => push(`/profile/@${el?.author?.email.split("@")[0]}`)}
+                  sx={{
+                    "&:hover": {
+                      color: "primary.main",
+                    },
+                    cursor: "pointer",
+                  }}
+                  color="text.primary"
+                  fontWeight={700}
+                >
                   {el?.author?.firstName} {el?.author?.lastName}
                 </Typography>
                 {el.author.id === user?.id && (
@@ -144,6 +175,7 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
                 ["bold", "italic", "underline", "link", "codeBlock"],
                 ["unorderedList", "orderedList", "sup", "sub"],
               ]}
+              modules={modules}
               onChange={(value) => setComment(value)}
               stickyOffset={70}
               id="rte"
@@ -163,7 +195,7 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
               <Avatar
                 sx={{ bgcolor: "primary.main", color: "white" }}
                 alt={`${user?.firstName} ${user?.lastName}`}
-                src={user?.avatar?.url}
+                src={FILES_BASE_URL + user?.profile?.avatar?.url}
               >
                 {user?.firstName.charAt(0)}
               </Avatar>

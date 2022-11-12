@@ -16,6 +16,9 @@ import hljs from "highlight.js";
 import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 import dynamic from "next/dynamic";
 import Dialog from "@mui/material/Dialog";
+import useUser from "@/hooks/useUser";
+import { useRouter } from "next/router";
+import { FILES_BASE_URL } from "config/url";
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
@@ -30,11 +33,13 @@ const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
 // };
 
 const PostComment: React.FC<{ data: Post }> = ({ data }) => {
-  const user = useStore((state) => state.session?.user);
+  const sessionUser = useStore((state) => state.session?.user);
+  const user = useUser(sessionUser?.email);
   const [showCommentForm, setShowCommentForm] = React.useState(false);
   const [comments, setComments] = React.useState<PostComment[] | []>([]);
   const [comment, setComment] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const { push } = useRouter();
 
   const handleClose = () => {
     setOpen(false);
@@ -52,7 +57,7 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
       setOpen(true);
     }
   };
-  
+
   const handleDeleteComment = async (id: string) => {
     const response = await deleteRequest({ endpoint: `/comments/${id}` });
     if (response.error) {
@@ -62,6 +67,21 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
       setComments((state) => state.filter((el) => el.id !== id));
     }
   };
+
+  const modules = React.useMemo(
+    () => ({
+      clipboard: {
+        allowed: {
+          tags: ["a", "b", "strong", "code", "blockquote", "u", "s", "i", "p", "br", "ul", "ol", "li", "span"],
+          attributes: ["href", "rel", "target", "class"],
+        },
+        keepSelection: true,
+        substituteBlockElements: true,
+        magicPasteLinks: true,
+      },
+    }),
+    []
+  );
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -113,17 +133,29 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
           <React.Fragment key={el.id}>
             <Grid container sx={{ py: 2 }} justifyContent="center">
               <Grid item xs={2} sm={1} md={2} lg={1.2}>
-                <Avatar
-                  sx={{ bgcolor: "primary.main", color: "white" }}
-                  alt={`${el?.author?.firstName} ${el?.author?.lastName}`}
-                  src={el?.author?.avatar?.url}
-                >
-                  {el?.author?.firstName.charAt(0)}
-                </Avatar>
+                <IconButton onClick={() => push(`/profile/@${el?.author?.email.split("@")[0]}`)}>
+                  <Avatar
+                    sx={{ bgcolor: "primary.main", color: "white" }}
+                    alt={`${el?.author?.firstName} ${el?.author?.lastName}`}
+                    src={FILES_BASE_URL + el?.author?.profile?.avatar?.url}
+                  >
+                    {el?.author?.firstName.charAt(0)}
+                  </Avatar>
+                </IconButton>
               </Grid>
               <Grid item xs={10} sm={11} md={10} lg={10.8}>
                 <Stack sx={{ position: "relative", width: 1 }}>
-                  <Typography color="text.primary" fontWeight={700}>
+                  <Typography
+                    onClick={() => push(`/profile/@${el?.author?.email.split("@")[0]}`)}
+                    sx={{
+                      "&:hover": {
+                        color: "primary.main",
+                      },
+                      cursor: "pointer",
+                    }}
+                    color="text.primary"
+                    fontWeight={700}
+                  >
                     {el?.author?.firstName} {el?.author?.lastName}
                   </Typography>
                   {el.author.id === user?.id && (
@@ -134,9 +166,15 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
                       <DeleteIcon fontSize="small" />
                     </IconButton>
                   )}
-                  <TypographyStylesProvider>
-                    <div dangerouslySetInnerHTML={{ __html: el.content }} />
-                  </TypographyStylesProvider>
+                  <Typography
+                    color="text.secondary"
+                    component="div"
+                    className="content"
+                    gutterBottom
+                    dangerouslySetInnerHTML={{
+                      __html: el.content,
+                    }}
+                  />
                 </Stack>
               </Grid>
             </Grid>
@@ -151,6 +189,7 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
                 ["bold", "italic", "underline", "link", "codeBlock"],
                 ["unorderedList", "orderedList", "sup", "sub", "code"],
               ]}
+              modules={modules}
               onChange={(value) => setComment(value)}
               stickyOffset={70}
               id="rte"
@@ -170,7 +209,7 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
               <Avatar
                 sx={{ bgcolor: "primary.main", color: "white" }}
                 alt={`${user?.firstName} ${user?.lastName}`}
-                src={user?.avatar?.url}
+                src={FILES_BASE_URL + user?.profile?.avatar?.url}
               >
                 {user?.firstName.charAt(0)}
               </Avatar>

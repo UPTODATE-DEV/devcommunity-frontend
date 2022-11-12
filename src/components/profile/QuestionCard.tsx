@@ -12,10 +12,9 @@ import { useRouter } from "next/router";
 import React from "react";
 dayjs.extend(relativeTime);
 
-import { TypographyStylesProvider } from "@mantine/core";
-
 const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }> = ({ data, handleDeletePost }) => {
-  const { push } = useRouter();
+  const { push, asPath } = useRouter();
+  const email = asPath.split("/profile/")[1];
 
   const handleViewQuestion = () => {
     push(`/posts/${data.slug}`);
@@ -33,7 +32,7 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
         <Avatar
           sx={{ bgcolor: "primary.main", color: "white" }}
           alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
-          src={data?.author?.avatar?.url}
+          src={process.env.NEXT_PUBLIC_FILES_BASE_URL + data?.author?.profile?.avatar?.url}
         >
           {data?.author?.firstName.charAt(0)}
         </Avatar>
@@ -64,29 +63,37 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
         >
           {data?.title.substring(0, 120)}
         </Typography>
-        <TypographyStylesProvider>
-          <div dangerouslySetInnerHTML={{ __html: data?.content.substring(0, 120) }} />
-        </TypographyStylesProvider>
+        <Typography
+          color="text.secondary"
+          component="div"
+          className="content"
+          gutterBottom
+          dangerouslySetInnerHTML={{
+            __html: `${data?.content.substring(0, 120)}...`,
+          }}
+        />
 
-        <Stack
-          direction="row"
-          flexWrap="wrap"
-          spacing={1}
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ mt: 1 }}
-        >
-          <Button
-            size="small"
-            variant="outlined"
-            color="error"
-            sx={{ px: 2 }}
-            onClick={() => handleDeletePost(data?.id)}
-            startIcon={<DeleteIcon />}
+        {!email && (
+          <Stack
+            direction="row"
+            flexWrap="wrap"
+            spacing={1}
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ mt: 1 }}
           >
-            Delete
-          </Button>
-        </Stack>
+            <Button
+              size="small"
+              variant="outlined"
+              color="error"
+              sx={{ px: 2 }}
+              onClick={() => handleDeletePost(data?.id)}
+              startIcon={<DeleteIcon />}
+            >
+              Delete
+            </Button>
+          </Stack>
+        )}
       </Grid>
     </Grid>
   );

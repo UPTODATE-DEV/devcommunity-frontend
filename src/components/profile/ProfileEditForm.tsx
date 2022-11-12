@@ -8,26 +8,32 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import Button from "@mui/material/Button";
 import SaveIcon from "@mui/icons-material/SaveOutlined";
+import CancelIcon from "@mui/icons-material/CancelOutlined";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import Image from "next/image";
 import { patchRequest, postRequest } from "@/lib/api";
 import { toast } from "react-toastify";
 import useStore from "@/hooks/useStore";
+import { useRouter } from "next/router";
+import useUser from "@/hooks/useUser";
 
-const ProfileEditForm = () => {
-  const user = useStore((state) => state.session?.user);
+const ProfileEditForm = ({ user }: { user?: User }) => {
+  const setEditProfile = useStore((state) => state.setEditProfile);
   const [image, setImage] = React.useState("");
   const [preview, setPreview] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
   const [state, setState] = React.useState({
     firstName: user?.firstName,
     lastName: user?.lastName,
-    job: "",
-    phone: "",
-    linkedIn: "",
-    twitter: "",
-    github: "",
-    bio: "",
+    job: user?.profile?.job,
+    phone: user?.profile?.phone,
+    linkedIn: user?.profile?.linkedIn,
+    twitter: user?.profile?.twitter,
+    gitHub: user?.profile?.gitHub,
+    bio: user?.profile?.bio,
   });
+
+  const { reload } = useRouter();
 
   const handleChange = (event: { target: { value: string; name: string } }) => {
     setState({ ...state, [event.target.name]: event.target.value });
@@ -48,11 +54,15 @@ const ProfileEditForm = () => {
   };
 
   const onSave = async () => {
+    setLoading(true);
+    toast.info("In process...");
     const data = await patchRequest({ endpoint: `/users/${user?.id}`, data: { ...state, avatar: image } });
     if (data.error) {
+      setLoading(false);
       return toast.error(data.error?.message);
     }
-    toast.success("Profile updated");
+    setEditProfile(false);
+    reload();
   };
 
   return (
@@ -131,8 +141,8 @@ const ProfileEditForm = () => {
         icon={<GitHubIcon />}
         placeholder="https://github.com/username"
         handleChange={handleChange}
-        name="github"
-        value={state.github}
+        name="gitHub"
+        value={state.gitHub}
       />
       <Input
         icon={<TwitterIcon />}
@@ -148,11 +158,21 @@ const ProfileEditForm = () => {
         name="linkedIn"
         value={state.linkedIn}
       />
-      <div>
-        <Button color="primary" sx={{ px: 4 }} startIcon={<SaveIcon />} variant="contained" onClick={onSave}>
+      <Stack direction="row" spacing={2} sx={{ py: 2 }} justifyContent="flex-end">
+        <Button color="secondary" sx={{ px: 4 }} variant="outlined" onClick={() => setEditProfile(false)}>
+          cancel
+        </Button>
+        <Button
+          color="primary"
+          sx={{ px: 4 }}
+          disabled={loading}
+          startIcon={<SaveIcon />}
+          variant="contained"
+          onClick={onSave}
+        >
           Save
         </Button>
-      </div>
+      </Stack>
     </Stack>
   );
 };

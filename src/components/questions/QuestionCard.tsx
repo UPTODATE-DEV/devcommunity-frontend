@@ -26,6 +26,7 @@ import dynamic from "next/dynamic";
 import Dialog from "@mui/material/Dialog";
 
 import { CallToActionSkeleton } from "@/components/middle/Skeleton";
+import { FILES_BASE_URL } from "config/url";
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
   loading: () => <CallToActionSkeleton />,
@@ -114,17 +115,31 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
       </Dialog>
       <Grid container>
         <Grid item xs={2} sm={1} md={2} lg={1.2}>
-          <Avatar
-            sx={{ bgcolor: "primary.main", color: "white" }}
-            alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
-            src={data?.author?.avatar?.url}
-          >
-            {data?.author?.firstName.charAt(0)}
-          </Avatar>
+          <IconButton onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}>
+            <Avatar
+              sx={{ bgcolor: "primary.main", color: "white" }}
+              alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
+              src={FILES_BASE_URL + data?.author?.profile?.avatar?.url}
+            >
+              {data?.author?.firstName.charAt(0)}
+            </Avatar>
+          </IconButton>
         </Grid>
         <Grid item xs={10} sm={11} md={10} lg={10.8}>
           <Stack direction="row" spacing={1}>
-            <Typography variant="caption" color="text.primary" gutterBottom fontWeight={700}>
+            <Typography
+              onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}
+              sx={{
+                "&:hover": {
+                  color: "primary.main",
+                },
+                cursor: "pointer",
+              }}
+              variant="caption"
+              color="text.primary"
+              gutterBottom
+              fontWeight={700}
+            >
               {data?.author?.firstName} {data?.author?.lastName}
             </Typography>
             <Typography variant="caption" color="text.secondary" gutterBottom fontWeight={700}>
@@ -149,9 +164,15 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
             {data?.title}
           </Typography>
 
-          <TypographyStylesProvider>
-            <div dangerouslySetInnerHTML={{ __html: `${data?.content.substring(0, 120)}...` }} />
-          </TypographyStylesProvider>
+          <Typography
+            color="text.secondary"
+            component="div"
+            className="content"
+            gutterBottom
+            dangerouslySetInnerHTML={{
+              __html: `${data?.content.substring(0, 120)}...`,
+            }}
+          />
 
           <Grid container spacing={1} sx={{ pb: 1 }} direction="row">
             {data?.tags?.map((el) => (

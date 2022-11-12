@@ -62,6 +62,38 @@ const AddPostForm = () => {
     setPost({ ...post, [event.target.name]: event.target.value });
   };
 
+  const modules = React.useMemo(
+    () => ({
+      clipboard: {
+        allowed: {
+          tags: [
+            "a",
+            "b",
+            "strong",
+            "code",
+            "blockquote",
+            "img",
+            "u",
+            "s",
+            "i",
+            "p",
+            "br",
+            "ul",
+            "ol",
+            "li",
+            "span",
+            "h2",
+          ],
+          attributes: ["href", "rel", "target", "class", "src"],
+        },
+        keepSelection: true,
+        substituteBlockElements: true,
+        magicPasteLinks: true,
+      },
+    }),
+    []
+  );
+
   const onSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
@@ -154,6 +186,7 @@ const AddPostForm = () => {
         onChange={(value) => setPost((state) => ({ ...state, content: value }))}
         stickyOffset={70}
         onImageUpload={handleImageUpload}
+        modules={modules}
         id="rte"
         controls={[
           ["bold", "italic", "underline", "link", "code"],

@@ -23,6 +23,8 @@ interface User {
   accountStatus: AccountStatus;
   confirmationCode: string;
   role: Role;
+  posts: Post[];
+  comments: PostComment[];
 }
 
 interface Post {
@@ -46,17 +48,19 @@ interface PostComment {
   id: string;
   content: string;
   author: User;
+  post: Post;
 }
 
 interface Profile {
   id: string;
   avatar: File;
   bio: string;
+  job: string;
   website: string;
   country: string;
   town: string;
   sex: Sex;
-  phone: Phone;
+  phone: string;
   facebook: string;
   twitter: string;
   linkedIn: string;
@@ -143,13 +147,18 @@ interface TopPosts {
   type: "QUESTION" | "ARTICLE";
 }
 
-interface Notifications {
+interface Notification {
   id: string;
   createdAt: Date;
   notificationToUser: User;
   notificationFromUser: User;
   type: "COMMENT" | "REPLY" | "LIKE" | "DISLIKE" | "BOOKMARK" | "SHARE" | "FOLLOW" | "LOVE" | "USEFUL";
   post: Post;
-  comment: Comment;
+  comment: PostComment;
   read: boolean;
+}
+
+interface Notifications {
+  date: string;
+  notifications: Notification[];
 }

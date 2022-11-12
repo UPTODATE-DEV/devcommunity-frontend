@@ -36,18 +36,23 @@ a {
   }
 }
 
-/* .content img,
+.content img,
 .content iframe {
   max-width: 100%;
-} */
+}
 
-/* .content pre {
-  background-color: rgba(0, 0, 0, 0.2);
+.content pre,
+.content code {
+  padding: 12px 30px;
+  border-radius: 4px;
+  line-height: 1;
+  font-size: 14;
+}
+
+.content pre {
   max-width: 100%;
   overflow: auto;
-  padding: 12px;
-  border-radius: 4px;
-} */
+}
 
 iframe.ql-video {
   width: 100%;

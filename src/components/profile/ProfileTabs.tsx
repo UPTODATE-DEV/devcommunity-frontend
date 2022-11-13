@@ -37,7 +37,8 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
   const { push, asPath } = useRouter();
   const [comments, setComments] = React.useState<PostComment[] | []>([]);
 
-  const user = currentUser || useUser(sessionUser?.email);
+  const useUserData = useUser(sessionUser?.email);
+  const user = currentUser || useUserData;
 
   const tabs = [
     {

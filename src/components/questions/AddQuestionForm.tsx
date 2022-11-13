@@ -151,7 +151,7 @@ const AddQuestionForm = () => {
         stickyOffset={70}
         onImageUpload={handleImageUpload}
         id="rte"
-        modules={modules}
+        // modules={modules}
         controls={[
           ["bold", "italic", "underline", "link", "code"],
           ["unorderedList", "orderedList", "sup", "sub"],

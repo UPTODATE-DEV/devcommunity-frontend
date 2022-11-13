@@ -186,7 +186,7 @@ const AddPostForm = () => {
         onChange={(value) => setPost((state) => ({ ...state, content: value }))}
         stickyOffset={70}
         onImageUpload={handleImageUpload}
-        modules={modules}
+        // modules={modules}
         id="rte"
         controls={[
           ["bold", "italic", "underline", "link", "code"],

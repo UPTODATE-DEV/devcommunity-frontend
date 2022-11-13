@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 
-import "quill-paste-smart";
+// import "quill-paste-smart";
 
 export default dynamic(() => import("@mantine/rte"), {
   // Disable during server side rendering

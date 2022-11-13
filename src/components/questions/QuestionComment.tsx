@@ -175,7 +175,7 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
                 ["bold", "italic", "underline", "link", "codeBlock"],
                 ["unorderedList", "orderedList", "sup", "sub"],
               ]}
-              modules={modules}
+              // modules={modules}
               onChange={(value) => setComment(value)}
               stickyOffset={70}
               id="rte"

@@ -14,7 +14,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { FILES_BASE_URL } from "config/url";
 import React from "react";
 
-const ShowQuestionReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
+const ShowQuestionReactions = ({ reactions }: { reactions: QuestionReactionType[] }) => {
   const [tab, setTab] = React.useState<QuestionReactionType>("LIKE");
 
   const tabs: { id: QuestionReactionType; icon: any }[] = [

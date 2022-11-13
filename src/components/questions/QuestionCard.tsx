@@ -121,7 +121,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <ShowQuestionReactions reactions={data.article.reactions} />
+        <ShowQuestionReactions reactions={data?.question?.reactions} />
       </Dialog>
       <Grid container>
         <Grid item xs={2} sm={1} md={2} lg={1.2}>

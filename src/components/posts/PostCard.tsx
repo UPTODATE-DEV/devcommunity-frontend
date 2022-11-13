@@ -147,7 +147,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <ShowPostReactions reactions={data.article.reactions} />
+        <ShowPostReactions reactions={data?.article?.reactions} />
       </Dialog>
 
       <Grid container>

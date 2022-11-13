@@ -1,39 +1,34 @@
-import React from "react";
-import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
-import LightbulbSharpIcon from "@mui/icons-material/LightbulbSharp";
+import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import { Avatar, Divider, Stack } from "@mui/material";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import { Avatar, Divider } from "@mui/material";
+import List from "@mui/material/List";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemText from "@mui/material/ListItemText";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { FILES_BASE_URL } from "config/url";
+import React from "react";
 
-const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
-  const [tab, setTab] = React.useState<ArticleReactionType>("LIKE");
+const ShowQuestionReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
+  const [tab, setTab] = React.useState<QuestionReactionType>("LIKE");
 
-  const tabs: { id: ArticleReactionType; icon: any }[] = [
+  const tabs: { id: QuestionReactionType; icon: any }[] = [
     {
       id: "LIKE",
       icon: <ThumbUpSharpIcon />,
     },
     {
-      id: "LOVE",
-      icon: <LightbulbSharpIcon />,
-    },
-    {
-      id: "USEFUL",
-      icon: <FavoriteSharpIcon />,
+      id: "DISLIKE",
+      icon: <ThumbDownOffAltIcon />,
     },
   ];
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: ArticleReactionType) => {
+  const handleTabChange = (event: React.SyntheticEvent, newValue: QuestionReactionType) => {
     setTab(newValue);
   };
 
@@ -98,4 +93,4 @@ const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
   );
 };
 
-export default ShowPostReactions;
+export default ShowQuestionReactions;

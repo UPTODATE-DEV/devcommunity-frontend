@@ -3,9 +3,12 @@ import { patchRequest } from "@/lib/api";
 import BookmarkAddSharpIcon from "@mui/icons-material/BookmarkAddSharp";
 import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
+import TagIcon from "@mui/icons-material/Tag";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
+import { Chip } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
+import Dialog from "@mui/material/Dialog";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
@@ -15,18 +18,15 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import relativeTime from "dayjs/plugin/relativeTime";
 import hljs from "highlight.js";
+import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { TypographyStylesProvider } from "@mantine/core";
-import Link from "next/link";
-import { Chip } from "@mui/material";
 dayjs.extend(relativeTime);
-import TagIcon from "@mui/icons-material/Tag";
-import dynamic from "next/dynamic";
-import Dialog from "@mui/material/Dialog";
 
 import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 import { FILES_BASE_URL } from "config/url";
+import ShowQuestionReactions from "./ShowQuestionReactions";
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
   loading: () => <CallToActionSkeleton />,
@@ -37,14 +37,15 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   const { push } = useRouter();
   const { setPosts, posts } = useStore((state) => state);
   const [userReaction, setUserReaction] = React.useState<QuestionReactionType | undefined>();
-  const [open, setOpen] = React.useState(false);
+  const [openLogin, setOpenLogin] = React.useState(false);
+  const [openReaction, setOpenReaction] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleCloseLogin = () => {
+    setOpenLogin(false);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseReaction = () => {
+    setOpenReaction(false);
   };
 
   const handleViewQuestion = () => {
@@ -64,7 +65,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
 
       return setPosts(updatedPosts as Post[]);
     }
-    setOpen(true);
+    setOpenLogin(true);
   };
 
   // on add to bookmarks
@@ -81,7 +82,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
 
       return setPosts(updatedPosts as Post[]);
     }
-    setOpen(true);
+    setOpenLogin(true);
   };
 
   React.useEffect(() => {
@@ -106,12 +107,21 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   return (
     <>
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={openLogin}
+        onClose={handleCloseLogin}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <CallToAction />
+      </Dialog>
+
+      <Dialog
+        open={openReaction}
+        onClose={handleCloseReaction}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <ShowQuestionReactions reactions={data.article.reactions} />
       </Dialog>
       <Grid container>
         <Grid item xs={2} sm={1} md={2} lg={1.2}>
@@ -196,7 +206,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
                 </Tooltip>
 
                 <Tooltip title="See all reactions" placement="bottom" arrow>
-                  <IconButton>
+                  <IconButton onClick={() => setOpenReaction(true)}>
                     <Typography variant="caption" color="text.primary" fontWeight={700}>
                       {data?.question?.reactions?.filter((el) => el.type === "LIKE").length}
                     </Typography>

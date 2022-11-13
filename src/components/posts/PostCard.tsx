@@ -1,34 +1,33 @@
-import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
+import { CallToActionSkeleton } from "@/components/middle/Skeleton";
+import useStore from "@/hooks/useStore";
+import { patchRequest } from "@/lib/api";
 import BookmarkAddSharpIcon from "@mui/icons-material/BookmarkAddSharp";
+import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
+import CommentIcon from "@mui/icons-material/Comment";
 import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
 import LightbulbSharpIcon from "@mui/icons-material/LightbulbSharp";
+import TagIcon from "@mui/icons-material/Tag";
 import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
-import VolunteerActivismSharpIcon from "@mui/icons-material/VolunteerActivismSharp";
+import { Chip } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
+import Dialog from "@mui/material/Dialog";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import Image from "next/image";
 import Tooltip from "@mui/material/Tooltip";
-import { useRouter } from "next/router";
-import { TypographyStylesProvider } from "@mantine/core";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-dayjs.extend(relativeTime);
-import "dayjs/locale/fr";
+import Typography from "@mui/material/Typography";
 import { FILES_BASE_URL } from "config/url";
-import useStore from "@/hooks/useStore";
-import React from "react";
-import { patchRequest, postRequest } from "@/lib/api";
+import dayjs from "dayjs";
+import "dayjs/locale/fr";
+import relativeTime from "dayjs/plugin/relativeTime";
 import hljs from "highlight.js";
-import { Chip } from "@mui/material";
-import TagIcon from "@mui/icons-material/Tag";
-import Link from "next/link";
-import CommentIcon from "@mui/icons-material/Comment";
-import Dialog from "@mui/material/Dialog";
-import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 import dynamic from "next/dynamic";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React from "react";
+import ShowPostReactions from "./ShowPostReactions";
+dayjs.extend(relativeTime);
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
@@ -40,10 +39,15 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   const { setPosts, posts } = useStore((state) => state);
   const { push } = useRouter();
   const [userReaction, setUserReaction] = React.useState<ArticleReactionType | undefined>();
-  const [open, setOpen] = React.useState(false);
+  const [openLogin, setOpenLogin] = React.useState(false);
+  const [openReaction, setOpenReaction] = React.useState(false);
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseLogin = () => {
+    setOpenLogin(false);
+  };
+
+  const handleCloseReaction = () => {
+    setOpenReaction(false);
   };
 
   const handleViewPost = () => {
@@ -63,7 +67,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
 
       return setPosts(updatedPosts as Post[]);
     }
-    setOpen(true);
+    setOpenLogin(true);
   };
 
   // on add to bookmarks
@@ -80,7 +84,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
 
       return setPosts(updatedPosts as Post[]);
     }
-    setOpen(true);
+    setOpenLogin(true);
   };
 
   const Like = () => (
@@ -129,13 +133,23 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   return (
     <>
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={openLogin}
+        onClose={handleCloseLogin}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <CallToAction />
       </Dialog>
+
+      <Dialog
+        open={openReaction}
+        onClose={handleCloseReaction}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <ShowPostReactions reactions={data.article.reactions} />
+      </Dialog>
+
       <Grid container>
         <Grid item xs={2} sm={1} md={2} lg={1.2}>
           <IconButton onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}>
@@ -253,7 +267,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
                 </>
               )}
               <Tooltip title="See all reactions" placement="bottom" arrow>
-                <IconButton>
+                <IconButton onClick={() => setOpenReaction(true)}>
                   <Typography variant="caption" color="text.primary" fontWeight={700}>
                     {data.article?.reactions?.length}
                   </Typography>

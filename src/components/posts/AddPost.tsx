@@ -1,16 +1,13 @@
-import React from "react";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import Image from "next/image";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import PostAddIcon from "@mui/icons-material/PostAdd";
-import IconButton from "@mui/material/IconButton";
-import Avatar from "@mui/material/Avatar";
-import { useRouter } from "next/router";
 import useStore from "@/hooks/useStore";
 import useUser from "@/hooks/useUser";
+import PostAddIcon from "@mui/icons-material/PostAdd";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { FILES_BASE_URL } from "config/url";
+import { useRouter } from "next/router";
+import React from "react";
 
 const AddPost: React.FC = () => {
   const sessionUser = useStore((state) => state.session?.user);

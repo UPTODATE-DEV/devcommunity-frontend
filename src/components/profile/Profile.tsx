@@ -38,7 +38,8 @@ const ProfileEditForm = dynamic(import("@/components/profile/ProfileEditForm"), 
 
 const Profile = ({ currentUser }: { currentUser?: User }) => {
   const sessionUser = useStore((state) => state.session?.user);
-  const user = currentUser || useUser(sessionUser?.email);
+  const useUserData = useUser(sessionUser?.email);
+  const user = currentUser || useUserData;
   const { reload } = useRouter();
   const [open, setOpen] = React.useState(false);
   const { editProfile, setEditProfile } = useStore((state) => state);
@@ -172,7 +173,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                 Cancel
               </Button>
             </DialogActions>
-          </Dialog> 
+          </Dialog>
         </Stack>
       )}
     </>

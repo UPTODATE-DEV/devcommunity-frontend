@@ -43,7 +43,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
   const { push, asPath } = useRouter();
   const [comments, setComments] = React.useState<PostComment[] | []>([]);
 
-  const useUserData = useUser(sessionUser?.email);
+  const useUserData = useUser(sessionUser?.username);
   const user = currentUser || useUserData;
 
   const tabs = [
@@ -172,7 +172,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
                       alt={`${user?.firstName} ${user?.lastName}`}
                       src={`${FILES_BASE_URL}${user?.profile?.avatar?.url}`}
                     >
-                      {user?.firstName.charAt(0)}
+                      {user?.firstName?.charAt(0)}
                     </Avatar>
                   </IconButton>
                   <Stack sx={{ position: "relative", width: 1 }}>

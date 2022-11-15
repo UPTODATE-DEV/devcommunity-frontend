@@ -58,7 +58,7 @@ const Value = () => {
     <Container sx={{ bgcolor: "background.paper" }}>
       <Stack alignItems="center" spacing={{ xs: 2, md: 10 }}>
         <Grid container justifyContent="center" alignItems="center" sx={{ width: { xs: 1, md: 0.7 }, mx: "auto" }}>
-          {data[locale === "en" ? 0 : 1].map((el, i) => (
+          {data[locale === "en" ? 1 : 0].map((el, i) => (
             <Grid item xs={12} sm={6} md={4} key={i}>
               <Stack sx={{ mx: 1, py: 4 }} justifyContent="center" alignItems="center" spacing={4}>
                 <Stack sx={{ width: 90, height: 90, position: "relative" }}>

@@ -11,13 +11,13 @@ const data = [
     title: "Customize your feed",
     description:
       "Follow content and topics of choice by using tags as all posts and articles are assigned to one or more hashtags",
-    image: "/images/landingPage/hero.png",
+    image: "/images/landingPage/hero2.png",
   },
   {
     title: "Personnalisez votre flux",
     description:
       "Suivez le contenu et les sujets de votre choix en utilisant des tags. Tous les posts et articles sont assignés à un ou plusieurs hashtags",
-    image: "/images/landingPage/hero.png",
+    image: "/images/landingPage/hero2.png",
   },
 ];
 

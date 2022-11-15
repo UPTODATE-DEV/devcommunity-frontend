@@ -11,13 +11,13 @@ const data = [
     title: "Got stacked? Get help",
     description:
       "Leave your questions to the community. There is surely somebody who can help. Answers are sorted by the number of votes they get.",
-    image: "/images/landingPage/hero.png",
+    image: "/images/landingPage/hero1.png",
   },
   {
     title: "Obtenir de l'aide",
     description:
       "Laissez vos questions à la communauté. Il y a sûrement quelqu'un qui peut aider. Les réponses sont triées en fonction du nombre de votes qu'elles obtiennent.",
-    image: "/images/landingPage/hero.png",
+    image: "/images/landingPage/hero1.png",
   },
 ];
 

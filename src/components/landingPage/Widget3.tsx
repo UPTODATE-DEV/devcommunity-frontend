@@ -10,13 +10,13 @@ const data = [
     title: "Connect with people",
     description:
       "Follow and engage discussion with developers, creators and fellow users with shared interests and don’t miss out on their content.",
-    image: "/images/landingPage/hero.png",
+    image: "/images/landingPage/hero3.png",
   },
   {
     title: "Connectez-vous avec les gens",
     description:
       "Suivez et engagez la discussion avec les développeurs, les créateurs et les autres utilisateurs ayant des intérêts communs et ne ratez pas leur contenu.",
-    image: "/images/landingPage/hero.png",
+    image: "/images/landingPage/hero3.png",
   },
 ];
 

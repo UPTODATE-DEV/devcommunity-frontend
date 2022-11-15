@@ -33,8 +33,8 @@ const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
 // };
 
 const PostComment: React.FC<{ data: Post }> = ({ data }) => {
-  const sessionUser = useStore((state) => state.session?.user);
-  const user = useUser(sessionUser?.email);
+  const session = useStore((state) => state.session?.user);
+  const user = useUser(session?.username);
   const [showCommentForm, setShowCommentForm] = React.useState(false);
   const [comments, setComments] = React.useState<PostComment[] | []>([]);
   const [comment, setComment] = React.useState("");
@@ -211,7 +211,7 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
                 alt={`${user?.firstName} ${user?.lastName}`}
                 src={FILES_BASE_URL + user?.profile?.avatar?.url}
               >
-                {user?.firstName.charAt(0)}
+                {user?.firstName?.charAt(0)}
               </Avatar>
             </Grid>
             <Grid item xs={10} sm={11} md={10} lg={10.8}>

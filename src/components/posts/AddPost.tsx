@@ -10,8 +10,8 @@ import { useRouter } from "next/router";
 import React from "react";
 
 const AddPost: React.FC = () => {
-  const sessionUser = useStore((state) => state.session?.user);
-  const user = useUser(sessionUser?.email);
+  const session = useStore((state) => state.session?.user);
+  const user = useUser(session?.username);
   const { push } = useRouter();
   const handleGoToAddPage = () => {
     push("/articles/add");
@@ -31,7 +31,7 @@ const AddPost: React.FC = () => {
         alt={`${user?.firstName} ${user?.lastName}`}
         src={`${FILES_BASE_URL}${user?.profile?.avatar?.url}`}
       >
-        {user?.firstName.charAt(0)}
+        {user?.firstName?.charAt(0)}
       </Avatar>
       <Stack
         alignItems="center"

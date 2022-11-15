@@ -11,37 +11,48 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import * as React from "react";
 import dynamic from "next/dynamic";
-import { PostsFormSkeleton } from "@/components/posts/Skeleton";
+import { QuestionFormSkeleton } from "@/components/questions/Skeleton";
+import { getRequest } from "@/lib/api";
 
-const AddPostForm = dynamic(() => import("@/components/posts/AddPostForm"), {
+const AddQuestionForm = dynamic(() => import("@/components/questions/AddQuestionForm"), {
   ssr: false,
-  loading: () => <PostsFormSkeleton />,
+  loading: () => <QuestionFormSkeleton />,
 });
 
-const Home: NextPage<{ session: Session }> = ({ session }) => {
+const Home: NextPage<{ session: Session; post: Post }> = ({ session, post }) => {
   const setSession = useStore((state) => state.setSession);
+  const setPost = useStore((state) => state.setPost);
 
   React.useEffect(() => {
     setSession(session);
+    setPost(post);
   }, []);
 
   return (
     <>
       <Head>
-        <title>Add an article | Updev community</title>
+        <title>Edit post | Updev community</title>
         <meta name="description" content="Updev community" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Menu />
       <MainContainer>
-        <AddPostForm />
+        <AddQuestionForm data={post} />
       </MainContainer>
     </>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
-  const { req } = context;
+  const { req, params } = context;
+
+  const post = await getRequest({ endpoint: `/posts/${params?.slug}` });
+
+  if (!post) {
+    return {
+      notFound: true,
+    };
+  }
 
   if (!req.session?.user?.isLoggedIn) {
     return {
@@ -55,6 +66,7 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(async (cont
   return {
     props: {
       session: req.session?.user,
+      post: post.data,
     },
   };
 });

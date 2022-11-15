@@ -1,4 +1,3 @@
-import useStore from "@/hooks/useStore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Button } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
@@ -9,16 +8,16 @@ import { FILES_BASE_URL } from "config/url";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import relativeTime from "dayjs/plugin/relativeTime";
+import hljs from "highlight.js";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import EditIcon from "@mui/icons-material/EditOutlined";
 import React from "react";
 dayjs.extend(relativeTime);
-import { TypographyStylesProvider } from "@mantine/core";
-import hljs from "highlight.js";
 
 const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }> = ({ data, handleDeletePost }) => {
   const { push, asPath } = useRouter();
-  const email = asPath.split("/profile/")[1];
+  const username = asPath.split("/profile/")[1];
 
   const handleViewPost = () => {
     push(`/articles/${data?.slug}`);
@@ -93,15 +92,18 @@ const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }>
               <Image src={FILES_BASE_URL + data?.article?.image?.url} alt="Post" layout="fill" objectFit="cover" />
             </Stack>
           )}
-          {!email && (
-            <Stack
-              direction="row"
-              flexWrap="wrap"
-              spacing={1}
-              alignItems="center"
-              justifyContent="space-between"
-              sx={{ mt: 1 }}
-            >
+          {!username && (
+            <Stack direction="row" flexWrap="wrap" spacing={1} alignItems="center" sx={{ mt: 1 }}>
+              <Button
+                size="small"
+                variant="contained"
+                color="primary"
+                sx={{ px: 2 }}
+                onClick={() => push(`/articles/${data?.slug}/edit`)}
+                startIcon={<EditIcon />}
+              >
+                Edit
+              </Button>
               <Button
                 size="small"
                 variant="outlined"

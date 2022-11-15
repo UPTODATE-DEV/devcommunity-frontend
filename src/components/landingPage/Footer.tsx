@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const navigations = [
   { name: "Home", path: "/" },
@@ -25,7 +26,31 @@ const terms = [
   { name: "Privacy policy", path: "/policy" },
 ];
 
+const data = [
+  {
+    title: "Ready to join the community?",
+    description: "Create your account now or use an existing one",
+    buttons: [
+      { name: "Create account", path: "/signup" },
+      { name: "Log in", path: "/signin" },
+    ],
+    about: "Room for developers to connect, learn, share skills and knowledge and grow as a community",
+  },
+  {
+    title: "Prêt à rejoindre la communauté?",
+    description: "Créez votre compte maintenant ou utilisez-en un existant",
+    buttons: [
+      { name: "Créer un compte", path: "/signup" },
+      { name: "Se connecter", path: "/signin" },
+    ],
+    about:
+      "Plateforme d’échange et de connection entre développeurs pour partager et améliorer les compétences et des connaissances et grandir en tant que communauté      ",
+  },
+];
+
 const Footer = () => {
+  const { locale } = useRouter();
+  const { title, description, buttons, about } = data[locale === "en" ? 0 : 1];
   return (
     <Box sx={{ bgcolor: "action.hover" }}>
       <Container sx={{ py: 4 }}>
@@ -33,19 +58,19 @@ const Footer = () => {
           <Stack spacing={4} direction={{ xs: "column", md: "row" }} justifyContent="space-between">
             <Stack spacing={2}>
               <Typography variant="h4" textAlign={{ xs: "center", md: "left" }} color="text.primary">
-                Ready to get started?
+                {title}
               </Typography>
 
               <Typography textAlign={{ xs: "center", md: "left" }} color="text.secondary">
-                Create your free account now
+                {description}
               </Typography>
             </Stack>
 
             <Stack direction={{ xs: "column", md: "row" }} spacing={2} justifyContent="center" alignItems="center">
               <Button variant="contained" disableElevation={true} color="primary" sx={{ px: 4, py: 1 }}>
-                Get started
+                {buttons[0].name}
               </Button>
-              <Button sx={{ px: 4, py: 1 }}>Try free</Button>
+              <Button sx={{ px: 4, py: 1 }}>{buttons[1].name}</Button>
             </Stack>
           </Stack>
           <Divider />
@@ -57,10 +82,7 @@ const Footer = () => {
                   <Stack sx={{ width: 180, height: 90, position: "relative" }}>
                     <Image src="/logo.svg" layout="fill" objectFit="contain" />
                   </Stack>
-                  <Typography color="text.secondary">
-                    Bulkit is built for developers and designers. It is modular approach lets you create an original
-                    landing page for your brand.
-                  </Typography>
+                  <Typography color="text.secondary">{about}</Typography>
                 </Stack>
               </Grid>
               <Grid item xs={12} sm={6} lg={2.5}>
@@ -92,7 +114,7 @@ const Footer = () => {
               <Grid item xs={12} sm={6} lg={2.5}>
                 <Stack>
                   <Typography variant="h6" color="text.primary" fontSize={14} component="span" sx={{ py: 2 }}>
-                    RESSOURCES
+                    {locale == "fr" ? "RESSOURCES" : "RESOURCES"}
                   </Typography>
                   {ressources.map((el) => (
                     <Stack
@@ -118,7 +140,7 @@ const Footer = () => {
               <Grid item xs={12} sm={6} lg={2.5}>
                 <Stack>
                   <Typography variant="h6" color="text.primary" fontSize={14} component="span" sx={{ py: 2 }}>
-                    TERMS
+                    {locale === "fr" ? "TERMES" : "TERMS"}
                   </Typography>
                   {terms.map((el) => (
                     <Stack

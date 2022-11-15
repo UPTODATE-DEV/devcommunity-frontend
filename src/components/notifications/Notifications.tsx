@@ -13,8 +13,14 @@ import { alpha } from "@mui/material";
 import { patchRequest } from "@/lib/api";
 import { toast } from "react-toastify";
 import { FILES_BASE_URL } from "config/url";
-
 import dayjs from "dayjs";
+import dynamic from "next/dynamic";
+import { TopSkeleton } from "@/components/topPosts/Skeleton";
+
+const Empty = dynamic(import("@/components/common/Empty"), {
+  ssr: false,
+  loading: () => <TopSkeleton />,
+});
 
 const Notifications = () => {
   const notifications = useStore((state) => state.notifications);
@@ -35,6 +41,7 @@ const Notifications = () => {
         Notifications
       </Typography>
       <Divider variant="inset" />
+      {notifications?.length === 0 && <Empty />}
       {notifications.map((el) => (
         <Stack key={el.date}>
           <Typography color="text.secondary">{dayjs(el.date).format("MMM DD, YYYY")}</Typography>

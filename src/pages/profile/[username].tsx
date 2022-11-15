@@ -50,21 +50,12 @@ const Home: NextPage<{ session: Session; user: User }> = ({ session, user }) => 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
   const { req, params } = context;
 
-  const email = params?.username?.slice(1, params.username.length);
-  const user = await getRequest({ endpoint: `/users/${email}@gmail.com` });
+  const username = params?.username?.slice(1, params.username.length);
+
+  const user = await getRequest({ endpoint: `/users/${username}` });
 
   if (!user.data) {
     return { notFound: true };
-  }
-
-  // redirect to home if no session
-  if (!req.session?.user) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
   }
 
   return {

@@ -21,15 +21,15 @@ const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
   const tabs: { id: ArticleReactionType; icon: any }[] = [
     {
       id: "LIKE",
-      icon: <ThumbUpSharpIcon />,
+      icon: <ThumbUpSharpIcon color="primary" />,
     },
     {
       id: "LOVE",
-      icon: <LightbulbSharpIcon />,
+      icon: <FavoriteSharpIcon color="error" />,
     },
     {
       id: "USEFUL",
-      icon: <FavoriteSharpIcon />,
+      icon: <LightbulbSharpIcon color="warning" />,
     },
   ];
 
@@ -88,7 +88,7 @@ const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
                       }}
                     />
                   </ListItemButton>
-                  <Divider variant="inset" component="li" />
+                  {i !== reactions.length - 1 && <Divider variant="inset" component="li" />}
                 </React.Fragment>
               ))}
           </List>

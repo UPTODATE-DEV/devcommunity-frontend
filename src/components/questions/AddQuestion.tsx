@@ -13,8 +13,8 @@ import useUser from "@/hooks/useUser";
 import { FILES_BASE_URL } from "config/url";
 
 const AddQuestion: React.FC = () => {
-  const sessionUser = useStore((state) => state.session?.user);
-  const user = useUser(sessionUser?.email);
+  const session = useStore((state) => state.session?.user);
+  const user = useUser(session?.username);
   const { push } = useRouter();
   const handleGoToAddPage = () => {
     push("/posts/add");
@@ -34,7 +34,7 @@ const AddQuestion: React.FC = () => {
         alt={`${user?.firstName} ${user?.lastName}`}
         src={`${FILES_BASE_URL}${user?.profile?.avatar?.url}`}
       >
-        {user?.firstName.charAt(0)}
+        {user?.firstName?.charAt(0)}
       </Avatar>
       <Stack
         alignItems="center"

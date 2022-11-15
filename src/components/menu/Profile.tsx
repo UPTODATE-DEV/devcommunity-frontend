@@ -8,10 +8,10 @@ import useStore from "@/hooks/useStore";
 import useUser from "@/hooks/useUser";
 
 const Profile = () => {
-  const sessionUser = useStore((state) => state.session?.user);
   const { push } = useRouter();
-
-  const user = useUser(sessionUser?.email);
+  
+  const session = useStore((state) => state.session?.user);
+  const user = useUser(session?.username);
 
   const handleGoProfile = () => {
     push("/profile");
@@ -25,7 +25,7 @@ const Profile = () => {
           alt={`${user?.firstName} ${user?.lastName}`}
           src={`${process.env.NEXT_PUBLIC_FILES_BASE_URL}${user?.profile?.avatar?.url}`}
         >
-          {user?.firstName[0]}
+          {user?.firstName?.charAt(0)}
         </Avatar>
       </IconButton>
       <Stack sx={{ width: 150, display: { xs: "none", lg: "flex" } }}>

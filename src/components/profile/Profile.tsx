@@ -7,6 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import useStore from "@/hooks/useStore";
 import Paper from "@mui/material/Paper";
 import dayjs from "dayjs";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import TwitterIcon from "@mui/icons-material/Twitter";
@@ -18,6 +19,7 @@ import { googleLogout } from "@react-oauth/google";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
+import ListItemText from "@mui/material/ListItemText";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -25,27 +27,45 @@ import Image from "next/image";
 import { toast } from "react-toastify";
 import useUser from "@/hooks/useUser";
 import { FILES_BASE_URL } from "config/url";
+import Fab from "@mui/material/Fab";
 import { ProfileQuestionTabsSkeleton } from "./Skeleton";
+import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 const ProfileTabs = dynamic(import("@/components/profile/ProfileTabs"), {
   ssr: false,
   loading: () => <ProfileQuestionTabsSkeleton />,
 });
+
 const ProfileEditForm = dynamic(import("@/components/profile/ProfileEditForm"), {
   ssr: false,
   loading: () => null,
 });
 
 const Profile = ({ currentUser }: { currentUser?: User }) => {
-  const sessionUser = useStore((state) => state.session?.user);
-  const useUserData = useUser(sessionUser?.email);
+  const session = useStore((state) => state.session?.user);
+  const useUserData = useUser(session?.username);
   const user = currentUser || useUserData;
   const { reload } = useRouter();
   const [open, setOpen] = React.useState(false);
   const { editProfile, setEditProfile } = useStore((state) => state);
 
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
   const handleEditProfile = () => {
     setEditProfile(true);
+    handleCloseMenu();
   };
 
   const handleClickOpen = () => {
@@ -54,6 +74,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
 
   const handleClose = () => {
     setOpen(false);
+    handleCloseMenu();
   };
 
   const onLogout = async () => {
@@ -89,7 +110,20 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
             </Stack>
 
             <Stack spacing={2} alignItems="flex-end">
-              <Stack direction="row" spacing={2}>
+              {!currentUser && (
+                <IconButton
+                  aria-label="more"
+                  id="long-button"
+                  aria-controls={openMenu ? "long-menu" : undefined}
+                  aria-expanded={openMenu ? "true" : undefined}
+                  aria-haspopup="true"
+                  onClick={handleOpenMenu}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+              )}
+
+              <Stack direction="row" spacing={{ xs: 1, md: 2 }}>
                 {user?.profile?.gitHub && (
                   <a href={user?.profile?.gitHub} target="_blank" rel="noreferrer noopener">
                     <IconButton>
@@ -112,39 +146,37 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                   </a>
                 )}
               </Stack>
-              <Stack direction={{ xs: "column-reverse", md: "row" }} spacing={2}>
-                <Button
-                  size="small"
-                  color="error"
-                  startIcon={<LogoutIcon />}
-                  variant="outlined"
-                  onClick={handleClickOpen}
-                >
-                  Logout
-                </Button>
-                {!currentUser &&
-                  (!editProfile ? (
-                    <Button
-                      size="small"
-                      color="primary"
-                      startIcon={<EditIcon />}
-                      variant="contained"
-                      onClick={handleEditProfile}
-                    >
-                      Edit my profile
-                    </Button>
-                  ) : (
-                    <Button
-                      size="small"
-                      color="secondary"
-                      sx={{ px: 4 }}
-                      variant="outlined"
-                      onClick={() => setEditProfile(false)}
-                    >
-                      cancel edit
-                    </Button>
-                  ))}
-              </Stack>
+
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={openMenu}
+                onClose={handleCloseMenu}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+              >
+                <MenuItem onClick={handleEditProfile}>
+                  <ListItemIcon>
+                    <EditIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Edit profile</ListItemText>
+                </MenuItem>
+                <MenuItem onClick={handleClickOpen}>
+                  <ListItemIcon>
+                    <PowerSettingsNewIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Logout</ListItemText>
+                </MenuItem>
+              </Menu>
             </Stack>
           </Stack>
 

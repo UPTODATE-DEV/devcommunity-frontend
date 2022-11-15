@@ -83,7 +83,7 @@ const ShowQuestionReactions = ({ reactions }: { reactions: QuestionsReaction[] }
                       }}
                     />
                   </ListItemButton>
-                  <Divider variant="inset" component="li" />
+                  {i !== reactions.length - 1 && <Divider variant="inset" component="li" />}
                 </React.Fragment>
               ))}
           </List>

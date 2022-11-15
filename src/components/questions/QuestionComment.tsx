@@ -24,8 +24,8 @@ const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
 });
 
 const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
-  const sessionUser = useStore((state) => state.session?.user);
-  const user = useUser(sessionUser?.email);
+  const session = useStore((state) => state.session?.user);
+  const user = useUser(session?.username);
   const [showCommentForm, setShowCommentForm] = React.useState(false);
   const [comments, setComments] = React.useState<PostComment[] | []>([]);
   const [comment, setComment] = React.useState("");

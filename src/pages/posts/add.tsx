@@ -46,7 +46,7 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(async (cont
   if (!req.session?.user?.isLoggedIn) {
     return {
       redirect: {
-        destination: "/auth/login",
+        destination: "/",
         permanent: false,
       },
     };

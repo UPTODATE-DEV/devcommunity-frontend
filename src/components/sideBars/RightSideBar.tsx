@@ -9,8 +9,20 @@ import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { FILES_BASE_URL } from "config/url";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
+
+const Empty = dynamic(import("@/components/common/Empty"), {
+  ssr: false,
+  loading: () => null,
+});
+
+const ListItems = dynamic(import("@/components/sideBars/ListItems"), {
+  ssr: false,
+  loading: () => null,
+});
+
 const RightSideBar = () => {
   const { push } = useRouter();
 
@@ -39,34 +51,9 @@ const RightSideBar = () => {
       </Typography>
       <Divider />
       <List sx={{ width: { xs: "100%", md: 350 }, bgcolor: "background.paper" }}>
+        {posts?.topArticlesOfTheWeek?.length === 0 && <Empty />}
         {posts?.topArticlesOfTheWeek.map((item, i) => (
-          <React.Fragment key={item.id}>
-            <ListItemButton alignItems="flex-start" onClick={() => handleViewPost(`/articles/${item.slug}`)}>
-              <ListItemAvatar>
-                <Avatar
-                  sx={{ bgcolor: "primary.main", color: "white" }}
-                  alt={`${item.author.firstName} ${item.author.lastName}`}
-                  src={process.env.NEXT_PUBLIC_FILES_BASE_URL + item?.author?.profile?.avatar?.url}
-                >
-                  {item.author.firstName.charAt(0)}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={item.title}
-                primaryTypographyProps={{
-                  fontWeight: 700,
-                }}
-                secondary={
-                  <Stack sx={{ width: 1 }} component="span">
-                    <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
-                      By {`${item.author.firstName} ${item.author.lastName}`}
-                    </Typography>
-                  </Stack>
-                }
-              />
-            </ListItemButton>
-            {i < 2 && <Divider variant="inset" component="li" />}
-          </React.Fragment>
+          <ListItems item={item} handleViewPost={handleViewPost} i={i} />
         ))}
       </List>
       <Divider />
@@ -75,35 +62,9 @@ const RightSideBar = () => {
       </Typography>
       <Divider />
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-        {posts?.topQuestionsOfTheWeek?.map((item, i) => (
-          <React.Fragment key={item.id}>
-            <ListItemButton alignItems="flex-start" onClick={() => handleViewPost(`/posts/${item.slug}`)}>
-              <ListItemAvatar>
-                <Avatar
-                  sx={{ bgcolor: "primary.main", color: "white" }}
-                  alt={`${item.author.firstName} ${item.author.lastName}`}
-                  src={FILES_BASE_URL + item?.author?.profile?.avatar?.url}
-                >
-                  {item.author.firstName.charAt(0)}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={item.title}
-                primaryTypographyProps={{
-                  fontWeight: 700,
-                }}
-                secondary={
-                  <span>
-                    <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
-                      By {`${item.author.firstName} ${item.author.lastName}`}
-                    </Typography>
-                    {` — ${item.question?.reactions.filter((el) => el.type === "LIKE").length} likes`}
-                  </span>
-                }
-              />
-            </ListItemButton>
-            {i < 2 && <Divider variant="inset" component="li" />}
-          </React.Fragment>
+        {posts?.topQuestionsOfTheWeek?.length === 0 && <Empty />}
+        {posts?.topQuestionsOfTheWeek.map((item, i) => (
+          <ListItems item={item} handleViewPost={handleViewPost} i={i} />
         ))}
       </List>
     </Stack>

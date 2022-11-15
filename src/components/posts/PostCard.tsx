@@ -231,7 +231,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
           <Grid container spacing={1} sx={{ pb: 1 }} direction="row">
             {data?.tags?.map((el) => (
               <Grid item xs="auto" key={el.tag.id}>
-                <Chip size="small" icon={<TagIcon fontSize="small" />} sx={{ px: 2 }} clickable label={el.tag.name} />
+                <Chip size="small" icon={<TagIcon fontSize="small" />} sx={{ px: 2 }} label={el.tag.name} />
               </Grid>
             ))}
           </Grid>

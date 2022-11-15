@@ -18,6 +18,7 @@ interface User {
   firstName: string;
   lastName: string;
   email: string;
+  username: string;
   profile: Profile;
   password: string;
   accountStatus: AccountStatus;

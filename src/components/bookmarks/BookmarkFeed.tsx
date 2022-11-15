@@ -6,6 +6,7 @@ import Divider from "@mui/material/Divider";
 import { PostsListSkeleton } from "@/components/posts/Skeleton";
 import { QuestionsListSkeleton } from "@/components/questions/Skeleton";
 import Typography from "@mui/material/Typography";
+import { HomeFeedSkeleton } from "../middle/Skeleton";
 
 const BookmarkCard = dynamic(import("@/components/bookmarks/BookmarkCard"), {
   ssr: false,
@@ -16,6 +17,11 @@ const QuestionCard = dynamic(import("@/components/questions/QuestionCard"), {
   loading: () => <QuestionsListSkeleton />,
 });
 
+const Empty = dynamic(import("@/components/common/Empty"), {
+  ssr: false,
+  loading: () => <HomeFeedSkeleton />,
+});
+
 const BookmarkFeed = () => {
   const bookmarks = useStore((state) => state.bookmarks);
   return (
@@ -24,6 +30,7 @@ const BookmarkFeed = () => {
         My bookmarks
       </Typography>
       <Divider variant="inset" />
+      {bookmarks.length === 0 && <Empty />}
       {bookmarks?.map((item, i) => (
         <Stack spacing={5} key={item.id}>
           <BookmarkCard data={item.post} />

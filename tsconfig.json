@@ -23,6 +23,7 @@
       "@/layouts/*": ["layouts/*"],
       "@/lib/*": ["lib/*"],
       "@/hooks/*": ["hooks/*"],
+      "@/assets/*": ["assets/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/utils/next-seo.config.ts"],

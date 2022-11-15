@@ -137,13 +137,13 @@ const PostReactions: React.FC = () => {
               {userReaction === "USEFUL" && <Useful />}
             </>
           )}
-          <Tooltip title="See all reactions" placement="bottom" arrow>
+          {/* <Tooltip title="See all reactions" placement="bottom" arrow>
             <IconButton>
-              <Typography variant="caption" color="text.primary" fontWeight={700}>
-                {data?.article?.reactions?.length}
-              </Typography>
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
+          <Typography variant="caption" color="text.primary" fontWeight={700}>
+            {data?.article?.reactions?.length}
+          </Typography>
         </Stack>
         <Stack direction="row" spacing={2}>
           <Stack

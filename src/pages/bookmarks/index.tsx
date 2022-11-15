@@ -1,11 +1,9 @@
 import Menu from "@/components/menu/Menu";
-import CallToAction from "@/components/middle/CallToAction";
 import { HomeFeedSkeleton } from "@/components/middle/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
-import Divider from "@mui/material/Divider";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
@@ -52,6 +50,15 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
   const { req } = context;
+
+  if (!req.session?.user) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {

@@ -2,6 +2,7 @@ import Menu from "@/components/menu/Menu";
 import CallToAction from "@/components/middle/CallToAction";
 import Search from "@/components/tags/Search";
 import { TagsSkeleton } from "@/components/tags/Skeleton";
+import { TopSkeleton } from "@/components/topPosts/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { getRequest } from "@/lib/api";
@@ -13,7 +14,7 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import React from "react";
 
-const TopPosts = dynamic(import("@/components/topPosts/TopPosts"), { ssr: false, loading: () => null });
+const TopPosts = dynamic(import("@/components/topPosts/TopPosts"), { ssr: false, loading: () => <TopSkeleton /> });
 
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);

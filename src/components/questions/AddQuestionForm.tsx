@@ -11,7 +11,7 @@ import TextField from "@mui/material/TextField";
 import SaveIcon from "@mui/icons-material/Save";
 import Fab from "@mui/material/Fab";
 import NavigationIcon from "@mui/icons-material/Navigation";
-import { getRequest, postRequest } from "@/lib/api";
+import { getRequest, patchRequest, postRequest } from "@/lib/api";
 import { toast } from "react-toastify";
 import useStore from "@/hooks/useStore";
 import dynamic from "next/dynamic";
@@ -20,15 +20,15 @@ import RichTextEditor from "@/components/common/RichTextEditor";
 import { FILES_BASE_URL } from "config/url";
 import { useRouter } from "next/router";
 
-const AddQuestionForm = () => {
+const AddQuestionForm = ({ data }: { data?: Post }) => {
   const [loading, setLoading] = React.useState(false);
   const user = useStore((state) => state.session?.user);
   const [tags, setTags] = React.useState<Tag[]>([{ id: "0", name: "default", _count: 0 }]);
   const [preview, setPreview] = React.useState("");
-  const [post, setPost] = React.useState<{ title: string; content: string; tags: string[] | null }>({
-    title: "",
-    content: "",
-    tags: null,
+  const [post, setPost] = React.useState<{ title?: string; content?: string; tags: string[] | null }>({
+    title: data?.title || "",
+    content: data?.content || "",
+    tags: data?.tags?.map((el) => el.tag.name) || [],
   });
 
   const { push } = useRouter();
@@ -47,53 +47,26 @@ const AddQuestionForm = () => {
     setPost({ ...post, [event.target.name]: event.target.value });
   };
 
-  const modules = React.useMemo(
-    () => ({
-      clipboard: {
-        allowed: {
-          tags: [
-            "a",
-            "b",
-            "strong",
-            "code",
-            "blockquote",
-            "img",
-            "u",
-            "s",
-            "i",
-            "p",
-            "br",
-            "ul",
-            "ol",
-            "li",
-            "span",
-            "h2",
-          ],
-          attributes: ["href", "rel", "target", "class", "src"],
-        },
-        keepSelection: true,
-        substituteBlockElements: true,
-        magicPasteLinks: true,
-      },
-    }),
-    []
-  );
-
   const onSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
     toast.info("In process...");
-    const response = await postRequest({
-      endpoint: "/posts",
-      data: { ...post, author: user?.id, type: "QUESTION" },
-    });
+    const response = data?.id
+      ? await patchRequest({
+          endpoint: `/posts/${data?.id}`,
+          data: { ...post, author: user?.id, type: "QUESTION" },
+        })
+      : await postRequest({
+          endpoint: "/posts",
+          data: { ...post, author: user?.id, type: "QUESTION" },
+        });
     if (response.error) {
       setLoading(false);
       toast.error(response.error?.message);
     }
     if (response.data) {
       setLoading(false);
-      toast.success("Post created successfully");
+      toast.success(data?.title ? "Post updated" : "Post created");
       push(`/posts/${response.data?.slug}`);
     }
   };
@@ -118,6 +91,7 @@ const AddQuestionForm = () => {
       <TextField
         name="title"
         variant="filled"
+        value={post?.title}
         placeholder="Post title..."
         onChange={handleChange}
         sx={{ "&.MuiTextField-root > .MuiFilledInput-root": { px: 2, pb: 1 } }}
@@ -127,6 +101,7 @@ const AddQuestionForm = () => {
         id="tags-filled"
         options={tags.map((el) => el.name)}
         freeSolo
+        defaultValue={post?.tags as any}
         onChange={(event: any, newValue: string[] | null) => {
           setPost((state) => ({ ...state, tags: newValue }));
         }}

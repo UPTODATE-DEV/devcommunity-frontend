@@ -11,6 +11,7 @@ import hljs from "highlight.js";
 import { useRouter } from "next/router";
 import React from "react";
 dayjs.extend(relativeTime);
+import EditIcon from "@mui/icons-material/EditOutlined";
 
 const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }> = ({ data, handleDeletePost }) => {
   const { push, asPath } = useRouter();
@@ -74,14 +75,17 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
         />
 
         {!email && (
-          <Stack
-            direction="row"
-            flexWrap="wrap"
-            spacing={1}
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{ mt: 1 }}
-          >
+          <Stack direction="row" flexWrap="wrap" spacing={1} alignItems="center" sx={{ mt: 1 }}>
+            <Button
+              size="small"
+              variant="contained"
+              color="primary"
+              sx={{ px: 2 }}
+              onClick={() => push({ pathname: `/posts/${data?.slug}/edit` }, undefined, { shallow: true })}
+              startIcon={<EditIcon />}
+            >
+              Edit
+            </Button>
             <Button
               size="small"
               variant="outlined"

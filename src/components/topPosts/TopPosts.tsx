@@ -9,6 +9,13 @@ import useStore from "@/hooks/useStore";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { useRouter } from "next/router";
+import { TopSkeleton } from "./Skeleton";
+import dynamic from "next/dynamic";
+
+const Empty = dynamic(import("@/components/common/Empty"), {
+  ssr: false,
+  loading: () => <TopSkeleton />,
+});
 
 const TopPosts = () => {
   const topPosts = useStore((state) => state.topPosts);
@@ -22,6 +29,7 @@ const TopPosts = () => {
     <Stack spacing={2} sx={{ py: 2 }}>
       <Typography variant="h6">Top Posts</Typography>
       <Divider variant="inset" />
+      {topPosts?.length === 0 && <Empty />}
       <List>
         {topPosts?.map((el, i) => (
           <React.Fragment key={i}>

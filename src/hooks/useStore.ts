@@ -31,6 +31,8 @@ interface Store {
   clearTagsFilters: () => void;
   showTagsFilters: boolean;
   setShowTagsFilters: (state: boolean) => void;
+  post: Post | null;
+  setPost: (post: Post) => void;
 }
 
 const useStore = create<Store>()(
@@ -103,6 +105,10 @@ const useStore = create<Store>()(
       editProfile: false,
       setEditProfile: (editProfile: boolean) => {
         return set((state) => ({ ...state, editProfile }));
+      },
+      post: null,
+      setPost: (post: Post) => {
+        return set((state) => ({ ...state, post }));
       },
     }))
   )

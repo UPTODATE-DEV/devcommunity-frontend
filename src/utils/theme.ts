@@ -20,7 +20,7 @@ export const theme = (mode: "light" | "dark") =>
       },
     },
     typography: {
-      fontFamily: ["Roboto", "sans-serif"].join(","),
+      fontFamily: ["Poppins", "sans-serif"].join(","),
     },
   });
 

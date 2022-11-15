@@ -25,6 +25,7 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
   const [state, setState] = React.useState({
     firstName: user?.firstName,
     lastName: user?.lastName,
+    email: user?.email,
     job: user?.profile?.job,
     phone: user?.profile?.phone,
     linkedIn: user?.profile?.linkedIn,

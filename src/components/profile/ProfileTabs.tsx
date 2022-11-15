@@ -29,6 +29,12 @@ import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { FILES_BASE_URL } from "config/url";
 import useUser from "@/hooks/useUser";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
+
+const Empty = dynamic(import("@/components/common/Empty"), {
+  ssr: false,
+  loading: () => null,
+});
 
 const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
   const [tab, setTab] = React.useState("0");
@@ -60,6 +66,9 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
       icon: <CommentIcon />,
     },
   ];
+
+  const questions = posts.filter((el) => el.type === "QUESTION");
+  const articles = posts.filter((el) => el.type === "ARTICLE");
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
@@ -127,14 +136,13 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
       </TabList>
       <TabPanel sx={{ p: 0 }} value={"0"}>
         <Stack spacing={5}>
-          {posts
-            .filter((el) => el.type === "QUESTION")
-            .map((item, index) => (
-              <React.Fragment key={item.id}>
-                <QuestionCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
-                {posts.length !== index && <Divider />}
-              </React.Fragment>
-            ))}
+          {questions.length === 0 && <Empty />}
+          {questions?.map((item, index) => (
+            <React.Fragment key={item.id}>
+              <QuestionCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
+              {posts.length !== index && <Divider />}
+            </React.Fragment>
+          ))}
         </Stack>
         {/* <Stack sx={{ display: "flex", width: 1, my: 6 }} alignItems="center">
           <CircularProgress />
@@ -142,19 +150,19 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
       </TabPanel>
       <TabPanel sx={{ p: 0 }} value={"1"}>
         <Stack spacing={5}>
-          {posts
-            .filter((el) => el.type === "ARTICLE")
-            .map((item, index) => (
-              <React.Fragment key={item.id}>
-                <PostCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
-                {posts.length !== index && <Divider />}
-              </React.Fragment>
-            ))}
+          {articles.length === 0 && <Empty />}
+          {articles?.map((item, index) => (
+            <React.Fragment key={item.id}>
+              <PostCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
+              {posts.length !== index && <Divider />}
+            </React.Fragment>
+          ))}
         </Stack>
       </TabPanel>
       {!currentUser && (
         <TabPanel sx={{ p: 0 }} value={"2"}>
           <Stack spacing={1}>
+            {comments.length === 0 && <Empty />}
             {comments.map((el, index) => (
               <React.Fragment key={el.id}>
                 <Stack direction="row" spacing={2}>

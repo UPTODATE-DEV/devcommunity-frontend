@@ -187,7 +187,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
           <Grid container spacing={1} sx={{ pb: 1 }} direction="row">
             {data?.tags?.map((el) => (
               <Grid item xs="auto" key={el.tag.id}>
-                <Chip size="small" icon={<TagIcon fontSize="small" />} clickable label={el.tag.name} />
+                <Chip size="small" icon={<TagIcon fontSize="small" />} label={el.tag.name} />
               </Grid>
             ))}
           </Grid>

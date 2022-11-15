@@ -1,9 +1,10 @@
 import useStore from "@/hooks/useStore";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import BlurOnIcon from "@mui/icons-material/BlurOn";
 import BookmarkSharpIcon from "@mui/icons-material/BookmarkSharp";
+import BusinessIcon from "@mui/icons-material/Business";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import HomeSharpIcon from "@mui/icons-material/HomeSharp";
-import InsertEmoticonSharpIcon from "@mui/icons-material/InsertEmoticonSharp";
 import ManageAccounts from "@mui/icons-material/ManageAccountsSharp";
 import QuestionAnswer from "@mui/icons-material/QuestionAnswerSharp";
 import TagSharpIcon from "@mui/icons-material/TagSharp";
@@ -13,9 +14,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useRouter } from "next/router";
-import StarIcon from "@mui/icons-material/Star";
 import React from "react";
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
 const LeftSideBar = () => {
   const user = useStore((state) => state.session?.user);
@@ -29,6 +28,7 @@ const LeftSideBar = () => {
     { path: "/tags", icon: <TagSharpIcon />, label: "Tags" },
     { path: "/cardano", icon: <BlurOnIcon />, label: "Cardano" },
     { path: "/top-posts", icon: <AutoAwesomeIcon />, label: "Top posts" },
+    { path: "/home", icon: <BusinessIcon />, label: "About Us" },
   ];
 
   const params = [

@@ -49,6 +49,15 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
 export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
   const { req } = context;
 
+  if (!req.session?.user) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
   return {
     props: {
       session: req?.session?.user || null,

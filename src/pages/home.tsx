@@ -38,8 +38,8 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
         <Widget />
         <Widget2 />
         <Widget3 />
-        <Contributors />
         <FAQ />
+        <Contributors />
         <Footer />
       </Box>
     </>

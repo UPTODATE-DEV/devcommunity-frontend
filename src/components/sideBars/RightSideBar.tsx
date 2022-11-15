@@ -53,7 +53,7 @@ const RightSideBar = () => {
       <List sx={{ width: { xs: "100%", md: 350 }, bgcolor: "background.paper" }}>
         {posts?.topArticlesOfTheWeek?.length === 0 && <Empty />}
         {posts?.topArticlesOfTheWeek.map((item, i) => (
-          <ListItems item={item} handleViewPost={handleViewPost} i={i} />
+          <ListItems key={item.id} item={item} handleViewPost={handleViewPost} i={i} />
         ))}
       </List>
       <Divider />
@@ -64,7 +64,7 @@ const RightSideBar = () => {
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
         {posts?.topQuestionsOfTheWeek?.length === 0 && <Empty />}
         {posts?.topQuestionsOfTheWeek.map((item, i) => (
-          <ListItems item={item} handleViewPost={handleViewPost} i={i} />
+          <ListItems key={item.id} item={item} handleViewPost={handleViewPost} i={i} />
         ))}
       </List>
     </Stack>

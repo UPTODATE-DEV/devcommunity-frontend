@@ -23,6 +23,29 @@ const data = [
   },
 ];
 
+const contributors = [
+  {
+    name: "Uptodate Developers",
+    picture: "https://github.com/luccin243.png",
+    github: "https://github.com/luccin243",
+  },
+  {
+    name: "Luccin Masirika",
+    picture: "https://github.com/luccin243.png",
+    github: "https://github.com/luccin243",
+  },
+  {
+    name: "Yannick Senga",
+    picture: "https://github.com/yannick243.png",
+    github: "https://github.com/yannick243",
+  },
+  {
+    name: "Jack Mutobu",
+    picture: "https://github.com/JackMutobu.png",
+    github: "https://github.com/JackMutobu",
+  },
+];
+
 const Contributors = () => {
   const { locale } = useRouter();
   const { title, description } = data[locale === "en" ? 0 : 1];
@@ -34,12 +57,22 @@ const Contributors = () => {
       <Typography sx={{ width: { xs: 1, md: 0.6 } }} color="text.secondary" textAlign="center" gutterBottom>
         {description}
       </Typography>
-      <Stack justifyContent="center" alignItems="center" direction="row" sx={{ py: 4 }}>
-        <a href="https://github.com/luccin243" target="_blank" rel="noreferrer noopener">
-          <IconButton>
-            <Avatar sx={{ width: 80, height: 80, bgcolor: "primary.main", color: "white" }}>L</Avatar>
-          </IconButton>
-        </a>
+      <Stack justifyContent="center" alignItems="center" spacing={2} direction="row" sx={{ py: 4 }}>
+        {contributors.map((contributor) => (
+          <a
+            title={contributor.name}
+            key={contributor.github}
+            href={contributor.github}
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            <IconButton>
+              <Avatar sx={{ width: 80, height: 80, bgcolor: "primary.main", color: "white" }} src={contributor.picture}>
+                L
+              </Avatar>
+            </IconButton>
+          </a>
+        ))}
       </Stack>
     </Stack>
   );

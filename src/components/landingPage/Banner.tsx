@@ -39,7 +39,7 @@ const Banner = () => {
             textAlign="center"
             variant="h2"
             fontWeight={600}
-            sx={{ width: { xs: 1, md: 0.6 }, typography: { fontSize: { xs: "1.5rem", md: "3.5rem" } } }}
+            sx={{ width: { xs: 1, md: 0.6 }, fontSize: { xs: "2.5rem", md: "3.5rem" } }}
             color="text.primary"
           >
             {title}

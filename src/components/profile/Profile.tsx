@@ -103,8 +103,11 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                 <Typography variant="caption" color="text.secondary" noWrap sx={{ width: 1 }}>
                   {user?.email}
                 </Typography>
+                <Typography flexWrap="nowrap" variant="caption" color="text.secondary" noWrap sx={{ width: 1 }}>
+                  {user?.profile?.job}
+                </Typography>
                 <Typography variant="caption" fontSize={10} color="text.secondary">
-                  Joined Us on {dayjs(user?.createdAt).format("MM/DD/YYYY")}
+                  Joined Us Since {dayjs(user?.createdAt).format("YYYY")}
                 </Typography>
               </Stack>
             </Stack>

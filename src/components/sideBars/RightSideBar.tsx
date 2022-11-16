@@ -63,8 +63,8 @@ const RightSideBar = () => {
       <Divider />
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
         {posts?.topQuestionsOfTheWeek?.length === 0 && <Empty />}
-        {posts?.topQuestionsOfTheWeek.map((item, i) => (
-          <ListItems key={item.id} item={item} handleViewPost={handleViewPost} i={i} />
+        {posts?.topQuestionsOfTheWeek.map((item) => (
+          <ListItems key={item.id} item={item} handleViewPost={handleViewPost} />
         ))}
       </List>
     </Stack>

@@ -220,7 +220,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
                 </Tooltip>
 
                 <Tooltip title="See all reactions" placement="bottom" arrow>
-                  <IconButton>
+                  <IconButton onClick={() => setOpenReaction(true)}>
                     <Typography variant="caption" color="text.primary" fontWeight={700}>
                       {data?.question?.reactions?.filter((el) => el.type === "DISLIKE").length}
                     </Typography>

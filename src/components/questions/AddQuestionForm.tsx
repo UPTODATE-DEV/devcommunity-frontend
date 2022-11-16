@@ -134,7 +134,16 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
           ["image", "video", "strike"],
         ]}
       />
-      <div>
+      <Stack spacing={2} direction="row" alignItems="center">
+        <Fab
+          variant="extended"
+          disabled={loading}
+          // color="error"
+          sx={{ px: 4 }}
+          onClick={() => push({ pathname: "/posts" }, undefined, { shallow: true })}
+        >
+          Cancel
+        </Fab>
         <Fab
           variant="extended"
           disabled={!post.title || !post.content || !post.tags?.length || loading}
@@ -145,7 +154,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
           <SaveIcon sx={{ mr: 1 }} />
           {loading ? "Loading..." : "Save"}
         </Fab>
-      </div>
+      </Stack>
     </Stack>
   );
 };

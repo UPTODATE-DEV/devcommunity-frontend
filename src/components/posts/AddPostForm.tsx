@@ -15,6 +15,7 @@ import { getRequest, patchRequest, postRequest } from "@/lib/api";
 import { toast } from "react-toastify";
 import useStore from "@/hooks/useStore";
 import dynamic from "next/dynamic";
+import CancelIcon from "@mui/icons-material/CancelOutlined";
 import { useState } from "react";
 import { FILES_BASE_URL } from "config/url";
 import { useRouter } from "next/router";
@@ -172,7 +173,16 @@ const AddPostForm = ({ data }: { data?: Post }) => {
           ["image", "video", "strike"],
         ]}
       />
-      <div>
+      <Stack spacing={2} direction="row" alignItems="center">
+        <Fab
+          variant="extended"
+          disabled={loading}
+          // color="error"
+          sx={{ px: 4 }}
+          onClick={() => push({ pathname: "/articles" }, undefined, { shallow: true })}
+        >
+          Cancel
+        </Fab>
         <Fab
           variant="extended"
           disabled={!image || !post.title || !post.content || !post.tags?.length || loading}
@@ -183,7 +193,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
           <SaveIcon sx={{ mr: 1 }} />
           {loading ? "Loading..." : "Save"}
         </Fab>
-      </div>
+      </Stack>
     </Stack>
   );
 };

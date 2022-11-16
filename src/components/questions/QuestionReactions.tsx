@@ -95,13 +95,9 @@ const QuestionReactions = () => {
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="See all reactions" placement="bottom" arrow>
-              <IconButton>
-                <Typography variant="caption" color="text.primary" fontWeight={700}>
-                  {data?.question?.reactions?.filter((el) => el.type === "LIKE").length}
-                </Typography>
-              </IconButton>
-            </Tooltip>
+            <Typography sx={{ px: 2 }} variant="caption" color="text.primary" fontWeight={700}>
+              {data?.question?.reactions?.filter((el) => el.type === "LIKE").length}
+            </Typography>
           </Stack>
 
           <Stack
@@ -115,13 +111,9 @@ const QuestionReactions = () => {
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="See all reactions" placement="bottom" arrow>
-              <IconButton>
-                <Typography variant="caption" color="text.primary" fontWeight={700}>
-                  {data?.question?.reactions?.filter((el) => el.type === "DISLIKE").length}
-                </Typography>
-              </IconButton>
-            </Tooltip>
+            <Typography sx={{ px: 2 }} variant="caption" color="text.primary" fontWeight={700}>
+              {data?.question?.reactions?.filter((el) => el.type === "DISLIKE").length}
+            </Typography>
           </Stack>
         </Stack>
         <Stack direction="row" spacing={2}>

@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import React from "react";
 
-const ListItems = ({ item, handleViewPost, i }: { item: Post; handleViewPost: (path: string) => void; i: number }) => {
+const ListItems = ({ item, handleViewPost }: { item: Post; handleViewPost: (path: string) => void }) => {
   return (
     <React.Fragment key={item.id}>
       <ListItemButton alignItems="flex-start" onClick={() => handleViewPost(`/articles/${item.slug}`)}>
@@ -34,7 +34,7 @@ const ListItems = ({ item, handleViewPost, i }: { item: Post; handleViewPost: (p
           }
         />
       </ListItemButton>
-      {i < 2 && <Divider variant="inset" component="li" />}
+      <Divider variant="inset" component="li" />
     </React.Fragment>
   );
 };

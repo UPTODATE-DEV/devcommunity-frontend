@@ -45,10 +45,11 @@ const Menu: React.FC = () => {
   const setPosts = useStore((state) => state.setPosts);
   const posts = useStore((state) => state.posts);
 
-  const actions: SpotlightAction[] = posts?.map((_, index) => ({
-    title: _.title,
-    onTrigger: () => push(`/${_.type === "ARTICLE" ? "articles" : "posts"}/${_.slug}`),
-  }));
+  const actions: SpotlightAction[] =
+    posts?.map((_, index) => ({
+      title: _.title,
+      onTrigger: () => push(`/${_.type === "ARTICLE" ? "articles" : "posts"}/${_.slug}`),
+    })) || [];
 
   const toggleDrawer = () => (event: React.KeyboardEvent | React.MouseEvent) => {
     if (

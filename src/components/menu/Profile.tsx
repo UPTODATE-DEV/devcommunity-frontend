@@ -9,7 +9,7 @@ import useUser from "@/hooks/useUser";
 
 const Profile = () => {
   const { push } = useRouter();
-  
+
   const session = useStore((state) => state.session?.user);
   const user = useUser(session?.username);
 

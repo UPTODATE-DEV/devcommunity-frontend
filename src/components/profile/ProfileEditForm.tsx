@@ -37,7 +37,8 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
   const { reload } = useRouter();
 
   const handleChange = (event: { target: { value: string; name: string } }) => {
-    setState({ ...state, [event.target.name]: event.target.value });
+    const value = event.target.name === "bio" ? event.target.value.substring(0, 210) : event.target.value;
+    setState({ ...state, [event.target.name]: value });
   };
 
   const handleImageChange = async (e: any) => {
@@ -127,7 +128,7 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
         name="job"
       />
       <Input
-        label="Short Bio"
+        label="Short Bio (Max: 210 Char)"
         placeholder="Enter a short bio"
         handleChange={handleChange}
         name="bio"

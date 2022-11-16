@@ -35,14 +35,14 @@ const contributors = [
     github: "https://github.com/luccin243",
   },
   {
-    name: "Yannick Senga",
-    picture: "https://github.com/yannick243.png",
-    github: "https://github.com/yannick243",
-  },
-  {
     name: "Jack Mutobu",
     picture: "https://github.com/JackMutobu.png",
     github: "https://github.com/JackMutobu",
+  },
+  {
+    name: "Yannick Senga",
+    picture: "https://github.com/yannick243.png",
+    github: "https://github.com/yannick243",
   },
 ];
 

@@ -16,9 +16,10 @@ import { toast } from "react-toastify";
 import useStore from "@/hooks/useStore";
 import { useRouter } from "next/router";
 import useUser from "@/hooks/useUser";
+import useStoreNoPersist from "@/hooks/useStoreNoPersist";
 
 const ProfileEditForm = ({ user }: { user?: User }) => {
-  const setEditProfile = useStore((state) => state.setEditProfile);
+  const { editProfile, setEditProfile } = useStoreNoPersist((state) => state);
   const [image, setImage] = React.useState("");
   const [preview, setPreview] = React.useState("");
   const [loading, setLoading] = React.useState(false);

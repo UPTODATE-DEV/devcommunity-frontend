@@ -38,6 +38,7 @@ const Banner = () => {
           <Typography
             textAlign="center"
             variant="h2"
+            typography={{ xs: { fontSize: 30 }, md: { fontSize: 40 }, md: { fontSize: 50 } }}
             fontWeight={600}
             sx={{ width: { xs: 1, md: 0.6 } }}
             color="text.primary"

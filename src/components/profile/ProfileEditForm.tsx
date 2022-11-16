@@ -68,6 +68,10 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
     reload();
   };
 
+  React.useEffect(() => {
+    return () => setEditProfile(false);
+  }, []);
+
   return (
     <Stack spacing={2} sx={{ py: 2 }}>
       <Divider />

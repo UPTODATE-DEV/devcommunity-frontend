@@ -84,6 +84,10 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
     reload();
   };
 
+  React.useEffect(() => {
+    return () => setEditProfile(false);
+  }, []);
+
   return (
     <>
       {user?.id && (

@@ -33,7 +33,7 @@ const PostHeader: React.FC<{ data: Post }> = ({ data }) => {
         }}
         alignItems="center"
         justifyContent="space-between"
-        direction={{ xs: "column", sm: "row" }}
+        direction="row"
         spacing={2}
       >
         <Typography

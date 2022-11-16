@@ -8,8 +8,6 @@ interface Store {
   setPosts(posts: Post[]): void;
   tags: Tag[] | [];
   setTags(tags: Tag[]): void;
-  editProfile: boolean;
-  setEditProfile: (state: boolean) => void;
   topUsers: TopUsers[] | [];
   setTopUsers: (topUsers: TopUsers[]) => void;
   bookmarks: Bookmarks[] | [];
@@ -101,10 +99,6 @@ const useStore = create<Store>()(
       currentUser: null,
       setCurrentUser: (user: User) => {
         return set((state) => ({ ...state, user }));
-      },
-      editProfile: false,
-      setEditProfile: (editProfile: boolean) => {
-        return set((state) => ({ ...state, editProfile }));
       },
       post: null,
       setPost: (post: Post) => {

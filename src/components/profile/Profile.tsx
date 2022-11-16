@@ -33,6 +33,7 @@ import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import useStoreNoPersist from "@/hooks/useStoreNoPersist";
 
 const ProfileTabs = dynamic(import("@/components/profile/ProfileTabs"), {
   ssr: false,
@@ -50,7 +51,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   const user = currentUser || useUserData;
   const { reload } = useRouter();
   const [open, setOpen] = React.useState(false);
-  const { editProfile, setEditProfile } = useStore((state) => state);
+  const { editProfile, setEditProfile } = useStoreNoPersist((state) => state);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);

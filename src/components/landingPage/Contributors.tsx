@@ -26,8 +26,8 @@ const data = [
 const contributors = [
   {
     name: "Uptodate Developers",
-    picture: "https://github.com/luccin243.png",
-    github: "https://github.com/luccin243",
+    picture: "https://github.com/UPTODATE-DEV.png",
+    github: "https://github.com/UPTODATE-DEV",
   },
   {
     name: "Luccin Masirika",

@@ -61,7 +61,6 @@ const TopPosts = () => {
                   fontWeight: 700,
                 }}
                 secondaryTypographyProps={{
-                  color: "secondary.main",
                   fontWeight: 700,
                 }}
                 secondary={

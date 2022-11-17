@@ -26,6 +26,8 @@ const Notifications = () => {
   const notifications = useStore((state) => state.notifications);
   const { push, locale } = useRouter();
 
+  locale === "en" ? dayjs.locale("en") : dayjs.locale("fr");
+
   const handleReadNotification = async (notification: Notification) => {
     const post = notification.post;
     const response = await patchRequest({ endpoint: `/notifications/${notification.id}` });
@@ -44,7 +46,7 @@ const Notifications = () => {
       {notifications?.length === 0 && <Empty />}
       {notifications.map((el) => (
         <Stack key={el.date}>
-          <Typography color="text.secondary">{dayjs(el.date).format("MMM DD, YYYY")}</Typography>
+          <Typography color="text.secondary">{dayjs(el.date).format("DD MMMM YYYY")}</Typography>
           <List>
             {el.notifications.map((el, i) => (
               <React.Fragment key={el.id}>
@@ -71,11 +73,12 @@ const Notifications = () => {
                         <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
                           {`${el?.notificationFromUser.firstName} ${el?.notificationFromUser.lastName}`}
                         </Typography>{" "}
-                        {el.type === "COMMENT" && locale === "en" ? "a commenté votre post" : "commented on your post"}
-                        {el.type === "DISLIKE" && locale === "en" ? "a réagit votre post" : "reacted on your post"}
-                        {el.type === "LIKE" && locale === "en" ? "a réagit votre post" : "reacted on your post"}
-                        {el.type === "LOVE" && locale === "en" ? "a réagit votre post" : "reacted on your post"}
-                        {el.type === "USEFUL" && locale === "en" ? "a réagit votre post" : "reacted on your post"}
+                        {el.type === "COMMENT" &&
+                          (locale === "en" ? "a commenté votre post" : "commented on your post")}
+                        {el.type === "DISLIKE" && (locale === "en" ? "a réagit à votre post" : "reacted on your post")}
+                        {el.type === "LIKE" && (locale === "en" ? "a réagit à votre post" : "reacted on your post")}
+                        {el.type === "LOVE" && (locale === "en" ? "a réagit à votre post" : "reacted on your post")}
+                        {el.type === "USEFUL" && (locale === "en" ? "a réagit à votre post" : "reacted on your post")}
                       </React.Fragment>
                     }
                     secondary={el.post.title}

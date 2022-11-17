@@ -7,6 +7,7 @@ import { PostsListSkeleton } from "@/components/posts/Skeleton";
 import { QuestionsListSkeleton } from "@/components/questions/Skeleton";
 import Typography from "@mui/material/Typography";
 import { HomeFeedSkeleton } from "../middle/Skeleton";
+import { useRouter } from "next/router";
 
 const BookmarkCard = dynamic(import("@/components/bookmarks/BookmarkCard"), {
   ssr: false,
@@ -23,11 +24,12 @@ const Empty = dynamic(import("@/components/common/Empty"), {
 });
 
 const BookmarkFeed = () => {
+  const { push, locale } = useRouter();
   const bookmarks = useStore((state) => state.bookmarks);
   return (
     <Stack spacing={2} sx={{ py: 2 }}>
       <Typography variant="h6" color="text.primary">
-        My bookmarks
+        {locale === "en" ? "My bookmarks" : "Mes favoris"}
       </Typography>
       <Divider variant="inset" />
       {bookmarks.length === 0 && <Empty />}

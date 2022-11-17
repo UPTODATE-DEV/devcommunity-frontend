@@ -86,21 +86,9 @@ const LeftSideBar = () => {
           </List>
         </React.Fragment>
       )}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          "& > *": {
-            m: 1,
-          },
-        }}
-      >
-        <ButtonGroup onClick={toggleLang} variant="outlined" aria-label="outlined button group">
-          <Button>{locale === "en" ? "French" : "Français"}</Button>
-          <Button>{locale === "en" ? "English" : "Anglais"}</Button>
-        </ButtonGroup>
-      </Box>
+      <Button sx={{ xs: "block", md: "none" }} variant="outlined" onClick={toggleLang}>
+        {locale === "en" ? "French" : "Anglais"}
+      </Button>
     </>
   );
 };

@@ -46,7 +46,7 @@ const Notifications = () => {
       {notifications?.length === 0 && <Empty />}
       {notifications.map((el) => (
         <Stack key={el.date}>
-          <Typography color="text.secondary">{dayjs(el.date).format("DD MMMM YYYY")}</Typography>
+          <Typography color="text.secondary">{dayjs(el.date).format("DD/MM/YYYY")}</Typography>
           <List>
             {el.notifications.map((el, i) => (
               <React.Fragment key={el.id}>

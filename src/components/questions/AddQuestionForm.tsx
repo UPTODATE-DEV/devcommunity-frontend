@@ -1,7 +1,6 @@
 import RichTextEditor from "@/components/common/RichTextEditor";
 import useStore from "@/hooks/useStore";
 import { getRequest, patchRequest, postRequest } from "@/lib/api";
-import SaveIcon from "@mui/icons-material/Save";
 import Autocomplete from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
 import Fab from "@mui/material/Fab";

@@ -112,8 +112,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                   {user?.profile?.job}
                 </Typography>
                 <Typography variant="caption" fontSize={10} color="text.secondary">
-                  {locale === "en" ? "Joined Us Since" : "Nous a rejoint depuis"}{" "}
-                  {dayjs(user?.createdAt).format("YYYY")}
+                  {locale === "en" ? "Member Since" : "Membre depuis"} {dayjs(user?.createdAt).format("YYYY")}
                 </Typography>
               </Stack>
             </Stack>
@@ -204,9 +203,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                {locale === "en"
-                  ? "Are you sure you want to log out of Updev Community? Your current session will be ended but your account won’t be deleted. You will need to go through the signin process next time you log in."
-                  : "Êtes-vous sûr de vouloir vous déconnecter de la communauté Updev? Votre session actuelle sera terminée, mais votre compte ne sera pas supprimé. Vous devrez passer par le processus de connexion la prochaine fois que vous vous connecterez."}
+                {locale === "en" ? "Are you sure you want to log out?" : "Êtes-vous sûr de vouloir vous déconnecter?"}
               </DialogContentText>
             </DialogContent>
             <DialogActions>

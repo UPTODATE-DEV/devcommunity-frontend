@@ -42,7 +42,7 @@ const RightSideBar = () => {
   return (
     <Stack>
       <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
-        {locale === "en" ? "Top articles of the Week" : "Meilleures articles de la semaine"}
+        {locale === "en" ? "Top articles of the Week" : "Meilleurs articles de la semaine"}
       </Typography>
       <Divider />
       <List sx={{ width: { xs: "100%", md: 350 }, bgcolor: "background.paper" }}>

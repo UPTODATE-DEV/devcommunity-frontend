@@ -21,7 +21,7 @@ import IconButton from "@mui/material/IconButton";
 const BookmarkCard: React.FC<{ data: Post }> = ({ data }) => {
   const user = useStore((state) => state.session?.user);
   const { setBookmarks, bookmarks } = useStore((state) => state);
-  const { push } = useRouter();
+  const { push, locale } = useRouter();
 
   const handleViewPost = () => {
     push(`${data?.type === "ARTICLE" ? "/articles" : "/posts"}/${data?.slug}`);
@@ -112,7 +112,7 @@ const BookmarkCard: React.FC<{ data: Post }> = ({ data }) => {
             onClick={onRemoveFromBookmarks}
             startIcon={<BookmarkRemoveIcon />}
           >
-            Remove
+            {locale === "en" ? "Remove" : "Retirer"}
           </Button>
         </Stack>
       </Grid>

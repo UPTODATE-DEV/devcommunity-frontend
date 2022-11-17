@@ -20,7 +20,8 @@ export const theme = (mode: "light" | "dark") =>
       },
     },
     typography: {
-      fontFamily: ["Poppins", "sans-serif"].join(","),
+      fontFamily: ["Roboto", "sans-serif"].join(","),
+      fontSize: 14,
     },
   });
 

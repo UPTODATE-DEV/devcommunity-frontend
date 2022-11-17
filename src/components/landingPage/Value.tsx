@@ -55,7 +55,7 @@ const Value = () => {
   const { locale } = useRouter();
 
   return (
-    <Container sx={{ bgcolor: "background.paper" }}>
+    <Container sx={{ bgcolor: "background.paper" }} id="HowItsWorks">
       <Stack alignItems="center" spacing={{ xs: 2, md: 10 }}>
         <Grid container justifyContent="center" alignItems="center" sx={{ width: { xs: 1, md: 0.7 }, mx: "auto" }}>
           {data[locale === "en" ? 1 : 0].map((el, i) => (

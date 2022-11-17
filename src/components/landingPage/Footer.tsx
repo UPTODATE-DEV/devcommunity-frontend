@@ -14,20 +14,16 @@ import { CallToActionSkeleton } from "../middle/Skeleton";
 const data = [
   {
     title: "Ready to join the community?",
-    description: "Create your account now or use an existing one",
-    buttons: [
-      { name: "Create account", path: "/signup" },
-      { name: "Log in", path: "/signin" },
-    ],
+    description:
+      "Si vous remarquez une fonctionnalité qui manque, une erreur, ou une idée à ajouter, n'hésitez pas d'améliorer cet espace communautaire.",
+    button: "Contact us",
     about: "Room for developers to connect, learn, share skills and knowledge and grow as a community",
   },
   {
     title: "Prêt à rejoindre la communauté?",
-    description: "Créez votre compte maintenant ou utilisez-en un existant",
-    buttons: [
-      { name: "Créer un compte", path: "/signup" },
-      { name: "Se connecter", path: "/signin" },
-    ],
+    description:
+      "If you notice a missing feature, an error, or an idea to add, do not hesitate to improve this community space",
+    button: "Nous contacter",
     about:
       "Plateforme d’échange et de connection entre développeurs pour partager et améliorer leurs compétences et connaissances et grandir en tant que communauté",
   },
@@ -39,10 +35,8 @@ const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
 });
 
 const Footer = () => {
-  const [openLogin, setOpenLogin] = React.useState(false);
-
   const { locale } = useRouter();
-  const { title, description, buttons, about } = data[locale === "en" ? 0 : 1];
+  const { title, description, button, about } = data[locale === "en" ? 0 : 1];
 
   const navigations = [
     { name: locale === "en" ? "Home" : "Accueil", path: "/" },
@@ -51,11 +45,6 @@ const Footer = () => {
   ];
 
   const ressources = [{ name: "Updev", path: "http://updev.africa" }];
-
-  const terms = [
-    { name: "Terms of Service", path: "/terms" },
-    { name: "Privacy policy", path: "/policy" },
-  ];
 
   return (
     <Box sx={{ bgcolor: "action.hover" }}>
@@ -72,18 +61,17 @@ const Footer = () => {
               </Typography>
             </Stack>
 
-            <Stack direction={{ xs: "column", md: "row" }} spacing={2} justifyContent="center" alignItems="center">
-              <Button
-                variant="contained"
-                onClick={() => setOpenLogin(true)}
-                disableElevation={true}
-                color="primary"
-                sx={{ px: 4, py: 1 }}
-              >
-                {buttons[0].name}
-              </Button>
-              <Button onClick={() => setOpenLogin(true)} sx={{ px: 4, py: 1 }}>
-                {buttons[1].name}
+            <Stack
+              component="a"
+              href="https://updev.africa/contact-us"
+              target="_blank"
+              direction={{ xs: "column", md: "row" }}
+              spacing={2}
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Button variant="contained" disableElevation={true} color="primary" sx={{ px: 4, py: 1 }}>
+                {button}
               </Button>
             </Stack>
           </Stack>

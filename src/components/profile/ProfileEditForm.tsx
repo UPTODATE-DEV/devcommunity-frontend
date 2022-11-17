@@ -102,14 +102,14 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
         <Stack spacing={2} sx={{ width: 1 }}>
           <Input
             value={state.firstName}
-            label="First Name"
+            label={locale === "en" ? "First name" : "Prénom"}
             placeholder={locale === "en" ? "Enter your first Name" : "Entrez votre prénom"}
             handleChange={handleChange}
             name="firstName"
           />
           <Input
             value={state.lastName}
-            label="Last Name"
+            label={locale === "en" ? "Last name" : "Nom"}
             placeholder={locale === "en" ? "Enter your last name" : "Entrez votre nom"}
             handleChange={handleChange}
             name="lastName"
@@ -119,20 +119,20 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
 
       <Input
         value={state.phone}
-        label="Phone"
+        label={locale === "en" ? "Phone" : "Téléphone"}
         placeholder={locale === "en" ? "Enter your phone number" : "Entrez votre numéro de téléphone"}
         handleChange={handleChange}
         name="phone"
       />
       <Input
         value={state.job}
-        label="Current Job"
-        placeholder={locale === "en" ? "Enter your current job" : "Entrez votre emploi actuel"}
+        label={locale === "en" ? "Job" : "Profession"}
+        placeholder={locale === "en" ? "Enter your current job" : "Entrez votre profession actuel"}
         handleChange={handleChange}
         name="job"
       />
       <Input
-        label="Short Bio (Max: 210 Char)"
+        label="Short Bio"
         placeholder={
           locale === "en"
             ? "Describe yourself in few lines (less than 210 characters)"
@@ -172,14 +172,7 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
         <Button color="secondary" sx={{ px: 4 }} variant="outlined" onClick={() => setEditProfile(false)}>
           {locale === "en" ? "Cancel" : "Annuler"}
         </Button>
-        <Button
-          color="primary"
-          sx={{ px: 4 }}
-          disabled={loading}
-          startIcon={<SaveIcon />}
-          variant="contained"
-          onClick={onSave}
-        >
+        <Button color="primary" sx={{ px: 4 }} disabled={loading} startIcon={<SaveIcon />} variant="contained">
           {locale === "en" ? "Update" : "Mettre à jour"}
         </Button>
       </Stack>

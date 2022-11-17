@@ -187,7 +187,6 @@ const AddPostForm = ({ data }: { data?: Post }) => {
           sx={{ px: 4 }}
           onClick={onSubmit}
         >
-          <SaveIcon sx={{ mr: 1 }} />
           {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Publish" : "Publier"}
         </Fab>
       </Stack>

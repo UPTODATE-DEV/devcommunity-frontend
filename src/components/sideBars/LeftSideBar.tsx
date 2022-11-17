@@ -86,7 +86,7 @@ const LeftSideBar = () => {
           </List>
         </React.Fragment>
       )}
-      <Button sx={{ xs: "block", md: "none" }} variant="outlined" onClick={toggleLang}>
+      <Button sx={{ display: { xs: "block", md: "none" }, ml: 1 }} variant="outlined" onClick={toggleLang}>
         {locale === "en" ? "French" : "Anglais"}
       </Button>
     </>

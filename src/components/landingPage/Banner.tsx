@@ -57,7 +57,7 @@ const Banner = () => {
             >
               {buttons.un}
             </Button>
-            <Button onClick={() => push("/#HowItsWorks")} sx={{ borderRadius: 50, px: 4, py: 1 }}>
+            <Button onClick={() => push("/home/#HowItsWorks")} sx={{ borderRadius: 50, px: 4, py: 1 }}>
               {buttons.deux}
             </Button>
           </Stack>

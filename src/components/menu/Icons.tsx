@@ -64,7 +64,7 @@ const Icons = () => {
   }, []);
 
   return (
-    <Stack direction="row" alignItems="center" spacing={{ xs: 0, md: 2 }}>
+    <Stack direction="row" alignItems="center" spacing={{ xs: 0, md: 1 }}>
       <IconButton onClick={toggleMode}>
         {darkModeActive ? <DarkModeIcon /> : <LightModeIcon color="warning" />}
       </IconButton>

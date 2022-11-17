@@ -68,7 +68,6 @@ const Value = () => {
                 <Typography color="text.secondary" textAlign="center">
                   {el.description}
                 </Typography>
-                <Stack sx={{ width: { xs: 1, md: 160 }, height: 4, bgcolor: "divider" }}></Stack>
               </Stack>
             </Grid>
           ))}

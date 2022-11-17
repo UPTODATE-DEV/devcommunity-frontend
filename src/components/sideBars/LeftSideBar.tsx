@@ -96,9 +96,9 @@ const LeftSideBar = () => {
           },
         }}
       >
-        <ButtonGroup variant="outlined" aria-label="outlined button group">
-          <Button>French</Button>
-          <Button>English</Button>
+        <ButtonGroup onClick={toggleLang} variant="outlined" aria-label="outlined button group">
+          <Button>{locale === "en" ? "French" : "Français"}</Button>
+          <Button>{locale === "en" ? "English" : "Anglais"}</Button>
         </ButtonGroup>
       </Box>
     </>

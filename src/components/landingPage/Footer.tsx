@@ -15,24 +15,19 @@ const data = [
   {
     title: "Ready to join the community?",
     description:
-      "Si vous remarquez une fonctionnalité qui manque, une erreur, ou une idée à ajouter, n'hésitez pas d'améliorer cet espace communautaire.",
+      "If you notice a missing feature, an error, or an idea to add, do not hesitate to improve this community space",
     button: "Contact us",
     about: "Room for developers to connect, learn, share skills and knowledge and grow as a community",
   },
   {
     title: "Prêt à rejoindre la communauté?",
     description:
-      "If you notice a missing feature, an error, or an idea to add, do not hesitate to improve this community space",
+      "Si vous remarquez une fonctionnalité qui manque, une erreur, ou une idée à ajouter, n'hésitez pas d'améliorer cet espace communautaire.",
     button: "Nous contacter",
     about:
       "Plateforme d’échange et de connection entre développeurs pour partager et améliorer leurs compétences et connaissances et grandir en tant que communauté",
   },
 ];
-
-const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
-  ssr: false,
-  loading: () => <CallToActionSkeleton />,
-});
 
 const Footer = () => {
   const { locale } = useRouter();

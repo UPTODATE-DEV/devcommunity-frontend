@@ -8,7 +8,7 @@ import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
 import LightbulbSharpIcon from "@mui/icons-material/LightbulbSharp";
 import TagIcon from "@mui/icons-material/Tag";
 import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
-import { Chip } from "@mui/material";
+import Chip from "@mui/material/Chip";
 import Avatar from "@mui/material/Avatar";
 import Dialog from "@mui/material/Dialog";
 import Grid from "@mui/material/Grid";

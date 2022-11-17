@@ -62,6 +62,7 @@ const Footer = () => {
               target="_blank"
               direction={{ xs: "column", md: "row" }}
               spacing={2}
+              flexShrink={0}
               justifyContent="center"
               alignItems="center"
             >

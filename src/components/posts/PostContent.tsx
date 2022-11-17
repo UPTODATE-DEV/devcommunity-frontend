@@ -1,7 +1,9 @@
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import relativeTime from "dayjs/plugin/relativeTime";
 import React from "react";
+import Grid from "@mui/material/Grid";
+import Chip from "@mui/material/Chip";
+import TagIcon from "@mui/icons-material/Tag";
 
 const PostContent: React.FC<{ data: Post }> = ({ data }) => {
   return (
@@ -21,6 +23,14 @@ const PostContent: React.FC<{ data: Post }> = ({ data }) => {
           __html: data?.content,
         }}
       />
+
+      <Grid container spacing={1} sx={{ pb: 1 }} direction="row">
+        {data?.tags?.map((el) => (
+          <Grid item xs="auto" key={el.tag.id}>
+            <Chip size="small" icon={<TagIcon fontSize="small" />} sx={{ px: 2 }} label={el.tag.name} />
+          </Grid>
+        ))}
+      </Grid>
     </Stack>
   );
 };

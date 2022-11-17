@@ -35,7 +35,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
     tags: data?.tags?.map((el) => el.tag.name) || [],
   });
 
-  const { push } = useRouter();
+  const { push, locale } = useRouter();
 
   const handleImageChange = async (e: any) => {
     setPreview(URL?.createObjectURL(e.target.files[0]));
@@ -68,7 +68,6 @@ const AddPostForm = ({ data }: { data?: Post }) => {
   const onSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
-    toast.info("In process...");
     const response = data?.id
       ? await patchRequest({
           endpoint: `/posts/${data?.id}`,
@@ -155,7 +154,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
         name="title"
         variant="filled"
         value={post.title}
-        placeholder="Article title..."
+        placeholder={locale === "en" ? "Title" : "Titre"}
         onChange={handleChange}
         sx={{ "&.MuiTextField-root > .MuiFilledInput-root": { px: 2, pb: 1 } }}
       />
@@ -164,7 +163,6 @@ const AddPostForm = ({ data }: { data?: Post }) => {
         onChange={(value) => setPost((state) => ({ ...state, content: value }))}
         stickyOffset={70}
         onImageUpload={handleImageUpload}
-        // modules={modules}
         id="rte"
         controls={[
           ["bold", "italic", "underline", "link", "code"],
@@ -177,11 +175,10 @@ const AddPostForm = ({ data }: { data?: Post }) => {
         <Fab
           variant="extended"
           disabled={loading}
-          // color="error"
           sx={{ px: 4 }}
           onClick={() => push({ pathname: "/articles" }, undefined, { shallow: true })}
         >
-          Cancel
+          {locale === "en" ? "Cancel" : "Annuler"}
         </Fab>
         <Fab
           variant="extended"
@@ -191,7 +188,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
           onClick={onSubmit}
         >
           <SaveIcon sx={{ mr: 1 }} />
-          {loading ? "Loading..." : "Save"}
+          {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Publish" : "Publier"}
         </Fab>
       </Stack>
     </Stack>

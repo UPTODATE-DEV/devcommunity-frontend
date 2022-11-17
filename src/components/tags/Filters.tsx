@@ -8,9 +8,11 @@ import Button from "@mui/material/Button";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import useStore from "@/hooks/useStore";
 import Grid from "@mui/material/Grid";
+import { useRouter } from "next/router";
 
 const Filters = () => {
   const { setShowTagsFilters, tagsFilters, clearTagsFilters } = useStore((state) => state);
+  const { locale } = useRouter();
 
   return (
     <Stack spacing={2} justifyContent="flex-end">
@@ -23,9 +25,8 @@ const Filters = () => {
         size="small"
         variant="contained"
         disableElevation
-        startIcon={<CancelIcon />}
       >
-        Clear Filters
+        {locale === "en" ? "Close filters" : "Fermer les filtres"}
       </Button>
       <Grid container spacing={1}>
         {tagsFilters.map((tag, i) => (

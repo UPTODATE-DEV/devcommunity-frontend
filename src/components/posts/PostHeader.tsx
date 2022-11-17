@@ -7,7 +7,9 @@ import { FILES_BASE_URL } from "config/url";
 import { useRouter } from "next/router";
 
 const PostHeader: React.FC<{ data: Post }> = ({ data }) => {
-  const { push } = useRouter();
+  const { push, locale } = useRouter();
+  locale === "en" ? dayjs.locale("en") : dayjs.locale("fr");
+
   return (
     <Stack
       sx={{

@@ -25,7 +25,7 @@ const Widget = () => {
   const { locale } = useRouter();
   const { title, description, image } = data[locale === "en" ? 0 : 1];
   return (
-    <Container sx={{ py: 4, mt: 8 }}>
+    <Container sx={{ py: 4, mt: 8 }} id="HowItsWorks">
       <Grid container justifyContent="center" alignItems="center" direction={{ xs: "column-reverse", md: "row" }}>
         <Grid item xs={12} md={6} sx={{ width: 1 }}>
           <Stack sx={{ width: 1, height: 350, position: "relative" }}>

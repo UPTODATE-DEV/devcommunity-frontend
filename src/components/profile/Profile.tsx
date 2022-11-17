@@ -49,7 +49,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   const session = useStore((state) => state.session?.user);
   const useUserData = useUser(session?.username);
   const user = currentUser || useUserData;
-  const { reload } = useRouter();
+  const { reload, locale } = useRouter();
   const [open, setOpen] = React.useState(false);
   const { editProfile, setEditProfile } = useStoreNoPersist((state) => state);
 
@@ -112,7 +112,8 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                   {user?.profile?.job}
                 </Typography>
                 <Typography variant="caption" fontSize={10} color="text.secondary">
-                  Joined Us Since {dayjs(user?.createdAt).format("YYYY")}
+                  {locale === "en" ? "Joined Us Since" : "Nous a rejoint depuis"}{" "}
+                  {dayjs(user?.createdAt).format("YYYY")}
                 </Typography>
               </Stack>
             </Stack>
@@ -176,13 +177,13 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                   <ListItemIcon>
                     <EditIcon fontSize="small" />
                   </ListItemIcon>
-                  <ListItemText>Edit profile</ListItemText>
+                  <ListItemText>{locale === "en" ? "Edit Profile" : "Modifier le profil"}</ListItemText>
                 </MenuItem>
                 <MenuItem onClick={handleClickOpen}>
                   <ListItemIcon>
                     <PowerSettingsNewIcon fontSize="small" />
                   </ListItemIcon>
-                  <ListItemText>Logout</ListItemText>
+                  <ListItemText>{locale === "en" ? "Log out" : "Déconnexion"}</ListItemText>
                 </MenuItem>
               </Menu>
             </Stack>
@@ -198,19 +199,22 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
-            <DialogTitle id="alert-dialog-title">{"Logout lorem ipsum"}</DialogTitle>
+            <DialogTitle id="alert-dialog-title">
+              {locale === "en" ? "Confirm Logout" : "Confirmer la déconnexion"}
+            </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                Are you sure you want to logout? Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit,
-                perspiciatis. Facilis ullam voluptatum omnis maxime.{" "}
+                {locale === "en"
+                  ? "Are you sure you want to log out of Updev Community? Your current session will be ended but your account won’t be deleted. You will need to go through the signin process next time you log in."
+                  : "Êtes-vous sûr de vouloir vous déconnecter de la communauté Updev? Votre session actuelle sera terminée, mais votre compte ne sera pas supprimé. Vous devrez passer par le processus de connexion la prochaine fois que vous vous connecterez."}
               </DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button sx={{ px: 4 }} color="error" variant="outlined" disableElevation onClick={onLogout}>
-                Logout
+                {locale === "en" ? "Log out" : "Déconnexion"}
               </Button>
               <Button sx={{ px: 4 }} disableElevation variant="contained" onClick={handleClose} autoFocus>
-                Cancel
+                {locale === "en" ? "Cancel" : "Annuler"}
               </Button>
             </DialogActions>
           </Dialog>

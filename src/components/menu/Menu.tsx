@@ -1,21 +1,20 @@
 import useStore from "@/hooks/useStore";
+import type { SpotlightAction } from "@mantine/spotlight";
+import { openSpotlight, SpotlightProvider } from "@mantine/spotlight";
+import MenuIcon from "@mui/icons-material/Menu";
 import AppBar from "@mui/material/AppBar";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
-import { IconsSkeletons, ProfileSkeleton, LogoSkeleton } from "./Skeleton";
-import dynamic from "next/dynamic";
-import { SpotlightProvider, openSpotlight } from "@mantine/spotlight";
-import type { SpotlightAction } from "@mantine/spotlight";
-import MenuIcon from "@mui/icons-material/Menu";
+import { IconsSkeletons, LogoSkeleton, ProfileSkeleton } from "./Skeleton";
 
-import { IconSearch } from "@tabler/icons";
-import { Avatar } from "@mantine/core";
 import { getRequest } from "@/lib/api";
 import { Grid, IconButton } from "@mui/material";
+import { IconSearch } from "@tabler/icons";
 import Mobile from "./Mobile";
 
 const Auth = dynamic(() => import("./Auth"), {
@@ -40,7 +39,7 @@ const Logo = dynamic(() => import("./Logo"), {
 
 const Menu: React.FC = () => {
   const user = useStore((state) => state.session?.user);
-  const { push } = useRouter();
+  const { push, locale } = useRouter();
   const { openMobileMenu, setOpenMobileMenu } = useStore((state) => state);
   const setPosts = useStore((state) => state.setPosts);
   const posts = useStore((state) => state.posts);
@@ -121,10 +120,10 @@ const Menu: React.FC = () => {
                   }}
                 >
                   <Typography variant="caption" color="text.secondary">
-                    Search...
+                    {locale === "en" ? "Search..." : "Rechercher..."}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    ⌘K
+                  <Typography sx={{ display: { xs: "none", md: "inline" } }} variant="caption" color="text.secondary">
+                    Cmd + K
                   </Typography>
                 </Stack>
               </SpotlightProvider>

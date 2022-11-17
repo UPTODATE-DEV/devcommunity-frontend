@@ -30,7 +30,7 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
   const [comments, setComments] = React.useState<PostComment[] | []>([]);
   const [comment, setComment] = React.useState("");
   const [open, setOpen] = React.useState(false);
-  const { push } = useRouter();
+  const { push, locale } = useRouter();
 
   const handleClose = () => {
     setOpen(false);
@@ -58,21 +58,6 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
       setComments((state) => state.filter((el) => el.id !== id));
     }
   };
-
-  const modules = React.useMemo(
-    () => ({
-      clipboard: {
-        allowed: {
-          tags: ["a", "b", "strong", "code", "blockquote", "u", "s", "i", "p", "br", "ul", "ol", "li", "span"],
-          attributes: ["href", "rel", "target", "class"],
-        },
-        keepSelection: true,
-        substituteBlockElements: true,
-        magicPasteLinks: true,
-      },
-    }),
-    []
-  );
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -118,7 +103,7 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
       </Dialog>
       <Stack spacing={2} sx={{ py: 1 }}>
         <Typography variant="h6" color="text.primary">
-          Comments ({comments.length})
+          {locale === "en" ? "Comments" : "Commentaires" } ({comments.length})
         </Typography>
         {comments?.map((el) => (
           <React.Fragment key={el.id}>
@@ -182,10 +167,10 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
             />
             <Stack direction="row" spacing={2} justifyContent="flex-end">
               <Button variant="outlined" sx={{ px: 2 }} disableElevation onClick={() => setShowCommentForm(false)}>
-                Cancel
+                {locale === "en" ? "Cancel" : "Annuler"}
               </Button>
               <Button variant="contained" sx={{ px: 2 }} disableElevation onClick={onSubmit}>
-                Comment
+                {locale === "en" ? "Comment" : "Commenter"}
               </Button>
             </Stack>
           </>
@@ -216,7 +201,7 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
                 }}
               >
                 <Typography variant="caption" color="text.secondary">
-                  Live a comment...
+                {locale === "en" ? "Leave a comment" : "Laisser un commentaire"}
                 </Typography>
                 <IconButton>
                   <CommentIcon fontSize="small" />

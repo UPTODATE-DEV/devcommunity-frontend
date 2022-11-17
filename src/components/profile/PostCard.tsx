@@ -16,7 +16,7 @@ import React from "react";
 dayjs.extend(relativeTime);
 
 const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }> = ({ data, handleDeletePost }) => {
-  const { push, asPath } = useRouter();
+  const { push, asPath, locale } = useRouter();
   const username = asPath.split("/profile/")[1];
 
   const handleViewPost = () => {
@@ -102,7 +102,7 @@ const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }>
                 onClick={() => push(`/articles/${data?.slug}/edit`)}
                 startIcon={<EditIcon />}
               >
-                Edit
+                {locale === "fr" ? "Modifier" : "Edit"}
               </Button>
               <Button
                 size="small"
@@ -112,7 +112,7 @@ const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }>
                 onClick={() => handleDeletePost(data?.id)}
                 startIcon={<DeleteIcon />}
               >
-                Delete
+                {locale === "fr" ? "Supprimer" : "Delete"}
               </Button>
             </Stack>
           )}

@@ -5,26 +5,11 @@ import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import dynamic from "next/dynamic";
 import Image from "next/image";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import Link from "next/link";
 import { useRouter } from "next/router";
-
-const navigations = [
-  { name: "Home", path: "/" },
-  { name: "Articles", path: "/articles" },
-  { name: "Posts", path: "/posts" },
-];
-
-const ressources = [
-  { name: "Updev", path: "/updev-commnunity" },
-  { name: "Updev", path: "/updev-challenge" },
-];
-
-const terms = [
-  { name: "Terms of Service", path: "/terms" },
-  { name: "Privacy policy", path: "/policy" },
-];
+import React from "react";
+import { CallToActionSkeleton } from "../middle/Skeleton";
 
 const data = [
   {
@@ -44,13 +29,34 @@ const data = [
       { name: "Se connecter", path: "/signin" },
     ],
     about:
-      "Plateforme d’échange et de connection entre développeurs pour partager et améliorer les compétences et des connaissances et grandir en tant que communauté      ",
+      "Plateforme d’échange et de connection entre développeurs pour partager et améliorer leurs compétences et connaissances et grandir en tant que communauté",
   },
 ];
 
+const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
+  ssr: false,
+  loading: () => <CallToActionSkeleton />,
+});
+
 const Footer = () => {
+  const [openLogin, setOpenLogin] = React.useState(false);
+
   const { locale } = useRouter();
   const { title, description, buttons, about } = data[locale === "en" ? 0 : 1];
+
+  const navigations = [
+    { name: locale === "en" ? "Home" : "Accueil", path: "/" },
+    { name: "Articles", path: "/articles" },
+    { name: "Posts", path: "/posts" },
+  ];
+
+  const ressources = [{ name: "Updev", path: "http://updev.africa" }];
+
+  const terms = [
+    { name: "Terms of Service", path: "/terms" },
+    { name: "Privacy policy", path: "/policy" },
+  ];
+
   return (
     <Box sx={{ bgcolor: "action.hover" }}>
       <Container sx={{ py: 4 }}>
@@ -67,10 +73,18 @@ const Footer = () => {
             </Stack>
 
             <Stack direction={{ xs: "column", md: "row" }} spacing={2} justifyContent="center" alignItems="center">
-              <Button variant="contained" disableElevation={true} color="primary" sx={{ px: 4, py: 1 }}>
+              <Button
+                variant="contained"
+                onClick={() => setOpenLogin(true)}
+                disableElevation={true}
+                color="primary"
+                sx={{ px: 4, py: 1 }}
+              >
                 {buttons[0].name}
               </Button>
-              <Button sx={{ px: 4, py: 1 }}>{buttons[1].name}</Button>
+              <Button onClick={() => setOpenLogin(true)} sx={{ px: 4, py: 1 }}>
+                {buttons[1].name}
+              </Button>
             </Stack>
           </Stack>
           <Divider />
@@ -140,27 +154,24 @@ const Footer = () => {
               <Grid item xs={12} sm={6} lg={2.5}>
                 <Stack>
                   <Typography variant="h6" color="text.primary" fontSize={14} component="span" sx={{ py: 2 }}>
-                    {locale === "fr" ? "TERMES" : "TERMS"}
+                    CONTACT
                   </Typography>
-                  {terms.map((el) => (
-                    <Stack
-                      direction="row"
-                      key={el?.path}
-                      alignItems="center"
-                      spacing={1}
-                      sx={{
-                        color: "text.secondary",
-                        "&:hover": { color: "primary.main" },
-                        py: 0.5,
-                      }}
-                    >
-                      <a href={el?.path} target="_blank" rel="noreferrer noopener">
-                        <Typography component="a" gutterBottom>
-                          {el.name}
-                        </Typography>
-                      </a>
-                    </Stack>
-                  ))}
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    spacing={1}
+                    sx={{
+                      color: "text.secondary",
+                      "&:hover": { color: "primary.main" },
+                      py: 0.5,
+                    }}
+                  >
+                    <a href="mailto:contact@uptodatedevelopers.com" target="_blank" rel="noreferrer noopener">
+                      <Typography component="a" gutterBottom>
+                        contact@uptodatedevelopers.com
+                      </Typography>
+                    </a>
+                  </Stack>
                 </Stack>
               </Grid>
             </Grid>

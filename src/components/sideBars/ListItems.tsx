@@ -5,9 +5,12 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { useRouter } from "next/router";
 import React from "react";
 
 const ListItems = ({ item, handleViewPost }: { item: Post; handleViewPost: (path: string) => void }) => {
+  const { locale } = useRouter();
+
   return (
     <React.Fragment key={item.id}>
       <ListItemButton alignItems="flex-start" onClick={() => handleViewPost(`/articles/${item.slug}`)}>
@@ -28,7 +31,7 @@ const ListItems = ({ item, handleViewPost }: { item: Post; handleViewPost: (path
           secondary={
             <Stack sx={{ width: 1 }} component="span">
               <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
-                By {`${item.author.firstName} ${item.author.lastName}`}
+                {locale === "en" ? "By" : "Par"} {`${item.author.firstName} ${item.author.lastName}`}
               </Typography>
             </Stack>
           }

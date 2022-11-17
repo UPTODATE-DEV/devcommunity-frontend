@@ -1,11 +1,9 @@
-import React from "react";
-import Chip from "@mui/material/Chip";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Tag from "./Tag";
-import dynamic from "next/dynamic";
 import useStore from "@/hooks/useStore";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import dynamic from "next/dynamic";
 import { HomeFeedSkeleton } from "../middle/Skeleton";
+import Tag from "./Tag";
 
 const HomeFeed = dynamic(import("@/components/middle/HomeFeed"), {
   ssr: false,

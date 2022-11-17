@@ -34,11 +34,13 @@ const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
 
 const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   const user = useStore((state) => state.session?.user);
-  const { push } = useRouter();
+  const { push, locale } = useRouter();
   const { setPosts, posts } = useStore((state) => state);
   const [userReaction, setUserReaction] = React.useState<QuestionReactionType | undefined>();
   const [openLogin, setOpenLogin] = React.useState(false);
   const [openReaction, setOpenReaction] = React.useState(false);
+
+  locale === "fr" ? dayjs.locale("fr") : dayjs.locale("en");
 
   const handleCloseLogin = () => {
     setOpenLogin(false);
@@ -156,7 +158,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
               -
             </Typography>
             <Typography variant="caption" gutterBottom color="text.secondary">
-              {dayjs(data?.publishedOn).fromNow()}
+              {dayjs(data?.createdAt).fromNow()}
             </Typography>
           </Stack>
           <Typography
@@ -199,13 +201,17 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
                 alignItems="center"
                 sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, px: 1, borderRadius: 52 }}
               >
-                <Tooltip title="I like" placement="bottom" arrow>
+                <Tooltip title={locale === "en" ? "Endorse" : "Approuver"} placement="bottom" arrow>
                   <IconButton onClick={() => onReact("LIKE")}>
                     <ThumbUpSharpIcon color={userReaction === "LIKE" ? "info" : "inherit"} fontSize="small" />
                   </IconButton>
                 </Tooltip>
 
-                <Tooltip title="See all reactions" placement="bottom" arrow>
+                <Tooltip
+                  title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"}
+                  placement="bottom"
+                  arrow
+                >
                   <IconButton onClick={() => setOpenReaction(true)}>
                     <Typography variant="caption" color="text.primary" fontWeight={700}>
                       {data?.question?.reactions?.filter((el) => el.type === "LIKE").length}
@@ -213,13 +219,17 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
                   </IconButton>
                 </Tooltip>
 
-                <Tooltip title="I like" placement="bottom" arrow>
+                <Tooltip title={locale === "en" ? "Disapprove" : "Désapprouver"} placement="bottom" arrow>
                   <IconButton onClick={() => onReact("DISLIKE")}>
                     <ThumbDownOffAltIcon color={userReaction === "DISLIKE" ? "error" : "inherit"} fontSize="small" />
                   </IconButton>
                 </Tooltip>
 
-                <Tooltip title="See all reactions" placement="bottom" arrow>
+                <Tooltip
+                  title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"}
+                  placement="bottom"
+                  arrow
+                >
                   <IconButton onClick={() => setOpenReaction(true)}>
                     <Typography variant="caption" color="text.primary" fontWeight={700}>
                       {data?.question?.reactions?.filter((el) => el.type === "DISLIKE").length}
@@ -245,7 +255,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
                 alignItems="center"
                 sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
               >
-                <Tooltip title="Save post" placement="bottom" arrow>
+                <Tooltip title={locale === "en" ? "Add to bookmarks" : "Ajouter aux favoris"} placement="bottom" arrow>
                   <IconButton onClick={onAddToBookmarks}>
                     {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
                       <BookmarkRemoveIcon color="secondary" fontSize="small" />

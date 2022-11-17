@@ -83,7 +83,9 @@ const ShowQuestionReactions = ({ reactions }: { reactions: QuestionsReaction[] }
                       }}
                     />
                   </ListItemButton>
-                  {i !== reactions.length - 1 && <Divider variant="inset" component="li" />}
+                  {i !== reactions.filter((reaction) => reaction.type === tab.id).length - 1 && (
+                    <Divider variant="inset" component="li" />
+                  )}
                 </React.Fragment>
               ))}
           </List>

@@ -1,3 +1,4 @@
+import { useI18n } from "@/hooks/useI18n";
 import useStore from "@/hooks/useStore";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import BlurOnIcon from "@mui/icons-material/BlurOn";
@@ -16,25 +17,35 @@ import ListItemText from "@mui/material/ListItemText";
 import { useRouter } from "next/router";
 import React from "react";
 
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import Box from "@mui/material/Box";
+
 const LeftSideBar = () => {
   const user = useStore((state) => state.session?.user);
-  const { route, push } = useRouter();
+  const { route, push, locale } = useRouter();
   const matches = (path: string): boolean => `/${route.split("/")[1]}` === path;
 
+  const switchLanguages = useI18n<"fr" | "en">();
+
+  const toggleLang = () => {
+    switchLanguages(locale === "fr" ? "en" : "fr");
+  };
+
   const main = [
-    { path: "/", icon: <HomeSharpIcon />, label: "Main feed" },
+    { path: "/", icon: <HomeSharpIcon />, label: locale === "fr" ? "Accueil" : "Home" },
     { path: "/articles", icon: <HistoryEduIcon />, label: "Articles" },
     { path: "/posts", icon: <QuestionAnswer />, label: "Posts" },
     { path: "/tags", icon: <TagSharpIcon />, label: "Tags" },
     { path: "/cardano", icon: <BlurOnIcon />, label: "Cardano" },
     { path: "/top-posts", icon: <AutoAwesomeIcon />, label: "Top posts" },
-    { path: "/home", icon: <BusinessIcon />, label: "About Us" },
+    { path: "/home", icon: <BusinessIcon />, label: "Updev" },
   ];
 
   const params = [
-    { path: "/bookmarks", icon: <BookmarkSharpIcon />, label: "Bookmarks" },
+    { path: "/bookmarks", icon: <BookmarkSharpIcon />, label: locale === "fr" ? "Favoris" : "Bookmarks" },
     // { path: "/settings", icon: <SettingsSharpIcon />, label: "Settings" },
-    { path: "/profile", icon: <ManageAccounts />, label: "My account" },
+    { path: "/profile", icon: <ManageAccounts />, label: locale === "en" ? "My account" : "Mon compte" },
   ];
 
   return (
@@ -75,6 +86,21 @@ const LeftSideBar = () => {
           </List>
         </React.Fragment>
       )}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          "& > *": {
+            m: 1,
+          },
+        }}
+      >
+        <ButtonGroup variant="outlined" aria-label="outlined button group">
+          <Button>French</Button>
+          <Button>English</Button>
+        </ButtonGroup>
+      </Box>
     </>
   );
 };

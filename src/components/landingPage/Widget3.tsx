@@ -13,7 +13,7 @@ const data = [
     image: "/images/landingPage/hero3.png",
   },
   {
-    title: "Connectez-vous avec les gens",
+    title: "Créer des connections",
     description:
       "Suivez et engagez la discussion avec les développeurs, les créateurs et les autres utilisateurs ayant des intérêts communs et ne ratez pas leur contenu.",
     image: "/images/landingPage/hero3.png",

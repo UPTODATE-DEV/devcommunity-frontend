@@ -19,7 +19,7 @@ const Empty = dynamic(import("@/components/common/Empty"), {
 
 const TopPosts = () => {
   const topPosts = useStore((state) => state.topPosts);
-  const { push } = useRouter();
+  const { push, locale } = useRouter();
 
   const handleViewPost = (post: TopPosts) => {
     push(post.type === "QUESTION" ? `/posts/${post.slug}` : `/articles/${post.slug}`);
@@ -27,7 +27,7 @@ const TopPosts = () => {
 
   return (
     <Stack spacing={2} sx={{ py: 2 }}>
-      <Typography variant="h6">Top Posts</Typography>
+      <Typography variant="h6">{locale === "en" ? "Top Posts" : "Meilleurs posts"}</Typography>
       <Divider variant="inset" />
       {topPosts?.length === 0 && <Empty />}
       <List>
@@ -67,7 +67,7 @@ const TopPosts = () => {
                 secondary={
                   <span>
                     <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
-                      By {`${el.author.firstName} ${el.author.lastName}`}
+                      {locale === "en" ? "By" : "Par"} {`${el.author.firstName} ${el.author.lastName}`}
                     </Typography>
                     {` — ${el?.reactions} reactions`}
                   </span>

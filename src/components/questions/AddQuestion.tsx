@@ -15,7 +15,7 @@ import { FILES_BASE_URL } from "config/url";
 const AddQuestion: React.FC = () => {
   const session = useStore((state) => state.session?.user);
   const user = useUser(session?.username);
-  const { push } = useRouter();
+  const { push, locale } = useRouter();
   const handleGoToAddPage = () => {
     push("/posts/add");
   };
@@ -50,7 +50,9 @@ const AddQuestion: React.FC = () => {
         }}
       >
         <Typography variant="caption" color="text.secondary">
-          Click to start a new post...
+          {locale === "en"
+            ? "Share your questions, quick tips and ideas here"
+            : "Partagez vos questions, astuces et idées ici"}
         </Typography>
         <IconButton>
           <PostAddIcon fontSize="small" />

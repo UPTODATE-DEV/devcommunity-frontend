@@ -5,10 +5,12 @@ import useStore from "@/hooks/useStore";
 import Button from "@mui/material/Button";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import Stack from "@mui/material/Stack";
+import { useRouter } from "next/router";
 
 const Search = () => {
   const [name, setName] = React.useState("");
   const { setTags, setPosts, tagsFilters, setShowTagsFilters } = useStore((state) => state);
+  const { locale } = useRouter();
 
   React.useEffect(() => {
     const getTags = async () => {
@@ -37,7 +39,7 @@ const Search = () => {
       <InputBase
         sx={{ mt: 2, width: 1 }}
         value={name}
-        placeholder="Search tags..."
+        placeholder={locale === "en" ? "Search tags..." : "Rechercher des tags..."}
         onChange={(e) => setName(e.target.value)}
       />
       {!!tagsFilters.length && (
@@ -49,7 +51,7 @@ const Search = () => {
           disableElevation
           startIcon={<FilterListIcon />}
         >
-          Filter
+          {locale === "en" ? "Filter" : "Filtrer"}
         </Button>
       )}
     </Stack>

@@ -40,7 +40,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
   const [tab, setTab] = React.useState("0");
   const [posts, setPosts] = React.useState<Post[] | []>([]);
   const sessionUser = useStore((state) => state.session?.user);
-  const { push, asPath } = useRouter();
+  const { push, locale } = useRouter();
   const [comments, setComments] = React.useState<PostComment[] | []>([]);
 
   const useUserData = useUser(sessionUser?.username);
@@ -61,7 +61,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
     },
     {
       id: 2,
-      label: "Comments",
+      label: locale === "en" ? "Comments" : "commentaires",
       show: currentUser ? false : true,
       icon: <CommentIcon />,
     },
@@ -207,7 +207,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
                         onClick={() => handleViewPost(el.post)}
                         startIcon={<RemoveRedEyeIcon />}
                       >
-                        Go to post
+                        {locale === "en" ? "View post" : "Voir le post"}
                       </Button>
 
                       <Button
@@ -218,7 +218,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
                         onClick={() => handleDeleteComment(el.id)}
                         startIcon={<DeleteIcon />}
                       >
-                        Delete
+                        {locale === "en" ? "Delete" : "Supprimer"}
                       </Button>
                     </Stack>
                   </Stack>

@@ -1,14 +1,9 @@
 import useStore from "@/hooks/useStore";
 import { getRequest } from "@/lib/api";
-import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { FILES_BASE_URL } from "config/url";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
@@ -24,7 +19,7 @@ const ListItems = dynamic(import("@/components/sideBars/ListItems"), {
 });
 
 const RightSideBar = () => {
-  const { push } = useRouter();
+  const { push, locale } = useRouter();
 
   const handleViewPost = (path: string) => {
     push(path);
@@ -47,7 +42,7 @@ const RightSideBar = () => {
   return (
     <Stack>
       <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
-        Top articles of the Week
+        {locale === "en" ? "Top articles of the Week" : "Meilleures articles de la semaine"}
       </Typography>
       <Divider />
       <List sx={{ width: { xs: "100%", md: 350 }, bgcolor: "background.paper" }}>
@@ -58,7 +53,7 @@ const RightSideBar = () => {
       </List>
       <Divider />
       <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
-        Top posts of the Week
+        {locale === "en" ? "Top Posts of the Week" : "Meilleurs posts de la semaine"}
       </Typography>
       <Divider />
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>

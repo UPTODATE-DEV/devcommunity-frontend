@@ -1,8 +1,7 @@
-import React from "react";
+import { TypographyStylesProvider } from "@mantine/core";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import ReactMarkdown from "react-markdown";
-import { TypographyStylesProvider } from "@mantine/core";
+import React from "react";
 
 const QuestionContent: React.FC<{ data: Post }> = ({ data }) => {
   return (

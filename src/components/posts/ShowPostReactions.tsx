@@ -14,6 +14,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
 import { FILES_BASE_URL } from "config/url";
+import { useRouter } from "next/router";
 
 const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
   const [tab, setTab] = React.useState<ArticleReactionType>("LIKE");
@@ -88,7 +89,9 @@ const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
                       }}
                     />
                   </ListItemButton>
-                  {i !== reactions.length - 1 && <Divider variant="inset" component="li" />}
+                  {i !== reactions.filter((reaction) => reaction.type === tab.id).length - 1 && (
+                    <Divider variant="inset" component="li" />
+                  )}
                 </React.Fragment>
               ))}
           </List>

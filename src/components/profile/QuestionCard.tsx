@@ -14,7 +14,7 @@ dayjs.extend(relativeTime);
 import EditIcon from "@mui/icons-material/EditOutlined";
 
 const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }> = ({ data, handleDeletePost }) => {
-  const { push, asPath } = useRouter();
+  const { push, asPath, locale } = useRouter();
   const email = asPath.split("/profile/")[1];
 
   const handleViewQuestion = () => {
@@ -84,7 +84,7 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
               onClick={() => push({ pathname: `/posts/${data?.slug}/edit` }, undefined, { shallow: true })}
               startIcon={<EditIcon />}
             >
-              Edit
+              {locale === "fr" ? "Modifier" : "Edit"}
             </Button>
             <Button
               size="small"
@@ -94,7 +94,7 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
               onClick={() => handleDeletePost(data?.id)}
               startIcon={<DeleteIcon />}
             >
-              Delete
+              {locale === "fr" ? "Supprimer" : "Delete"}
             </Button>
           </Stack>
         )}

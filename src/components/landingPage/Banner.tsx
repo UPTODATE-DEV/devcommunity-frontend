@@ -19,7 +19,7 @@ const data = [
   {
     title: "Grandir ensemble en tant que développeurs",
     description:
-      "Créer un espace permettant aux développeurs d'apprendre, de partager et d'améliorer leurs compétences et leurs connaissances",
+      "Espace d’échange et de connection entre développeurs pour partager et améliorer leurs compétences et connaissances",
     buttons: {
       un: "Commencer",
       deux: "Comment ça marche",
@@ -28,7 +28,7 @@ const data = [
 ];
 
 const Banner = () => {
-  const { locale } = useRouter();
+  const { locale, push } = useRouter();
   const { title, description, buttons } = data[locale === "en" ? 0 : 1];
 
   return (
@@ -48,10 +48,18 @@ const Banner = () => {
             {description}
           </Typography>
           <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
-            <Button variant="contained" disableElevation={true} color="primary" sx={{ borderRadius: 50, px: 4, py: 1 }}>
+            <Button
+              onClick={() => push("/")}
+              variant="contained"
+              disableElevation={true}
+              color="primary"
+              sx={{ borderRadius: 50, px: 4, py: 1 }}
+            >
               {buttons.un}
             </Button>
-            <Button sx={{ borderRadius: 50, px: 4, py: 1 }}>{buttons.deux}</Button>
+            <Button onClick={() => push("/#HowItsWorks")} sx={{ borderRadius: 50, px: 4, py: 1 }}>
+              {buttons.deux}
+            </Button>
           </Stack>
           <Stack
             sx={{

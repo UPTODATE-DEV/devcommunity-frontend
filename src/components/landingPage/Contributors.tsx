@@ -17,9 +17,9 @@ const data = [
       "Missing a feature on Updev Community? You can help implement and bring it to life by yourself since Updev Community is an open source project.    ",
   },
   {
-    title: "Contribuer au développement de la communauté Updev",
+    title: "Contribuer au développement de Updev Community",
     description:
-      "Une fonctionnalité manque sur Updev Community? Vous pouvez aider à l'implémenter et la rendre vivante par vous-même puisque Updev Community est un projet open source.",
+      "Vous manquez une fonctionnalité sur Updev Community? Vous pouvez aider à l'implémenter et à l’intégrer par vous-même.Updev Community est un projet open source",
   },
 ];
 

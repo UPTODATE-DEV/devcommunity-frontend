@@ -14,7 +14,7 @@ const data = [
     image: "/images/landingPage/hero2.png",
   },
   {
-    title: "Personnalisez votre flux",
+    title: "Personnaliser le flux",
     description:
       "Suivez le contenu et les sujets de votre choix en utilisant des tags. Tous les posts et articles sont assignés à un ou plusieurs hashtags",
     image: "/images/landingPage/hero2.png",

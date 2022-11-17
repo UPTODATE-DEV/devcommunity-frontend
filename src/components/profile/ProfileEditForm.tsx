@@ -1,22 +1,19 @@
-import React from "react";
 import Input from "@/components/common/Input";
-import Stack from "@mui/material/Stack";
-import Divider from "@mui/material/Divider";
-import Typography from "@mui/material/Typography";
+import useStoreNoPersist from "@/hooks/useStoreNoPersist";
+import { patchRequest, postRequest } from "@/lib/api";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import SaveIcon from "@mui/icons-material/SaveOutlined";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import Button from "@mui/material/Button";
-import SaveIcon from "@mui/icons-material/SaveOutlined";
-import CancelIcon from "@mui/icons-material/CancelOutlined";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import Divider from "@mui/material/Divider";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import Image from "next/image";
-import { patchRequest, postRequest } from "@/lib/api";
-import { toast } from "react-toastify";
-import useStore from "@/hooks/useStore";
 import { useRouter } from "next/router";
-import useUser from "@/hooks/useUser";
-import useStoreNoPersist from "@/hooks/useStoreNoPersist";
+import React from "react";
+import { toast } from "react-toastify";
 
 const ProfileEditForm = ({ user }: { user?: User }) => {
   const { editProfile, setEditProfile } = useStoreNoPersist((state) => state);
@@ -35,7 +32,7 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
     bio: user?.profile?.bio,
   });
 
-  const { reload } = useRouter();
+  const { reload, locale } = useRouter();
 
   const handleChange = (event: { target: { value: string; name: string } }) => {
     const value = event.target.name === "bio" ? event.target.value.substring(0, 210) : event.target.value;
@@ -75,7 +72,9 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
   return (
     <Stack spacing={2} sx={{ py: 2 }}>
       <Divider />
-      <Typography color="text.primary">Personal informations</Typography>
+      <Typography color="text.primary">
+        {locale === "en" ? "Personal informations" : "Informations personnelles"}
+      </Typography>
       <Divider />
       <Stack spacing={2} direction={{ xs: "column", md: "row" }}>
         <Stack
@@ -104,14 +103,14 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
           <Input
             value={state.firstName}
             label="First Name"
-            placeholder="Enter your first name"
+            placeholder={locale === "en" ? "Enter your first Name" : "Entrez votre prénom"}
             handleChange={handleChange}
             name="firstName"
           />
           <Input
             value={state.lastName}
             label="Last Name"
-            placeholder="Enter your last name"
+            placeholder={locale === "en" ? "Enter your last name" : "Entrez votre nom"}
             handleChange={handleChange}
             name="lastName"
           />
@@ -121,20 +120,24 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
       <Input
         value={state.phone}
         label="Phone"
-        placeholder="Enter your phone number"
+        placeholder={locale === "en" ? "Enter your phone number" : "Entrez votre numéro de téléphone"}
         handleChange={handleChange}
         name="phone"
       />
       <Input
         value={state.job}
         label="Current Job"
-        placeholder="Enter your current job"
+        placeholder={locale === "en" ? "Enter your current job" : "Entrez votre emploi actuel"}
         handleChange={handleChange}
         name="job"
       />
       <Input
         label="Short Bio (Max: 210 Char)"
-        placeholder="Enter a short bio"
+        placeholder={
+          locale === "en"
+            ? "Describe yourself in few lines (less than 210 characters)"
+            : "Décrivez-vous en quelques lignes (moins de 210 caractères)"
+        }
         handleChange={handleChange}
         name="bio"
         value={state.bio}
@@ -142,7 +145,7 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
         rows={4}
       />
       <Divider />
-      <Typography color="text.primary">Others informations</Typography>
+      <Typography color="text.primary">{locale === "en" ? "More infos" : "Plus d'infos"}</Typography>
       <Divider />
       <Input
         icon={<GitHubIcon />}
@@ -167,7 +170,7 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
       />
       <Stack direction="row" spacing={2} sx={{ py: 2 }} justifyContent="flex-end">
         <Button color="secondary" sx={{ px: 4 }} variant="outlined" onClick={() => setEditProfile(false)}>
-          cancel
+          {locale === "en" ? "Cancel" : "Annuler"}
         </Button>
         <Button
           color="primary"
@@ -177,7 +180,7 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
           variant="contained"
           onClick={onSave}
         >
-          Save
+          {locale === "en" ? "Update" : "Mettre à jour"}
         </Button>
       </Stack>
     </Stack>

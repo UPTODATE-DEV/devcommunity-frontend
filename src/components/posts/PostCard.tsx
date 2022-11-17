@@ -37,10 +37,12 @@ const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
 const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   const user = useStore((state) => state.session?.user);
   const { setPosts, posts } = useStore((state) => state);
-  const { push } = useRouter();
+  const { push, locale } = useRouter();
   const [userReaction, setUserReaction] = React.useState<ArticleReactionType | undefined>();
   const [openLogin, setOpenLogin] = React.useState(false);
   const [openReaction, setOpenReaction] = React.useState(false);
+
+  locale === "en" ? dayjs.locale("en") : dayjs.locale("fr");
 
   const handleCloseLogin = () => {
     setOpenLogin(false);
@@ -88,7 +90,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   };
 
   const Like = () => (
-    <Tooltip title="I LIKE" placement="bottom" arrow>
+    <Tooltip title={locale === "en" ? "Like" : "Aimer"} placement="bottom" arrow>
       <IconButton onClick={() => onReact("LIKE")}>
         <ThumbUpSharpIcon color="info" fontSize="small" />
       </IconButton>
@@ -96,7 +98,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   );
 
   const Useful = () => (
-    <Tooltip title="USEFUL" placement="bottom" arrow>
+    <Tooltip title={locale === "en" ? "Insightful" : "Intéressant"} placement="bottom" arrow>
       <IconButton onClick={() => onReact("USEFUL")}>
         <LightbulbSharpIcon color="warning" fontSize="small" />
       </IconButton>
@@ -104,7 +106,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   );
 
   const Love = () => (
-    <Tooltip title="I LOVE" placement="bottom" arrow>
+    <Tooltip title={locale === "en" ? "Love" : "Adorer"} placement="bottom" arrow>
       <IconButton onClick={() => onReact("LOVE")}>
         <FavoriteSharpIcon color="error" fontSize="small" />
       </IconButton>
@@ -183,7 +185,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
               -
             </Typography>
             <Typography variant="caption" gutterBottom color="text.secondary">
-              {dayjs(data?.publishedOn).fromNow()}
+              {dayjs(data?.createdAt).fromNow()}
             </Typography>
           </Stack>
           <Typography
@@ -266,7 +268,12 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
                   {userReaction === "USEFUL" && <Useful />}
                 </>
               )}
-              <Tooltip title="See all reactions" placement="bottom" arrow>
+
+              <Tooltip
+                title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"}
+                placement="bottom"
+                arrow
+              >
                 <IconButton onClick={() => setOpenReaction(true)}>
                   <Typography variant="caption" color="text.primary" fontWeight={700}>
                     {data.article?.reactions?.length}
@@ -291,7 +298,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
                 alignItems="center"
                 sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
               >
-                <Tooltip title="Save post" placement="bottom" arrow>
+                <Tooltip title={locale === "en" ? "Add to bookmarks" : "Ajouter aux favoris"} placement="bottom" arrow>
                   <IconButton onClick={onAddToBookmarks}>
                     {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
                       <BookmarkRemoveIcon color="secondary" fontSize="small" />

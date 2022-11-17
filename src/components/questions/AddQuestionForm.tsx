@@ -1,24 +1,16 @@
-import React from "react";
-import Stack from "@mui/material/Stack";
-import Input from "@/components/common/Input";
-import Image from "next/image";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import InputBase from "@mui/material/InputBase";
-import { Divider } from "@mui/material";
-import Chip from "@mui/material/Chip";
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
-import SaveIcon from "@mui/icons-material/Save";
-import Fab from "@mui/material/Fab";
-import NavigationIcon from "@mui/icons-material/Navigation";
-import { getRequest, patchRequest, postRequest } from "@/lib/api";
-import { toast } from "react-toastify";
-import useStore from "@/hooks/useStore";
-import dynamic from "next/dynamic";
-import { useState } from "react";
 import RichTextEditor from "@/components/common/RichTextEditor";
+import useStore from "@/hooks/useStore";
+import { getRequest, patchRequest, postRequest } from "@/lib/api";
+import SaveIcon from "@mui/icons-material/Save";
+import Autocomplete from "@mui/material/Autocomplete";
+import Chip from "@mui/material/Chip";
+import Fab from "@mui/material/Fab";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
 import { FILES_BASE_URL } from "config/url";
 import { useRouter } from "next/router";
+import React from "react";
+import { toast } from "react-toastify";
 
 const AddQuestionForm = ({ data }: { data?: Post }) => {
   const [loading, setLoading] = React.useState(false);
@@ -31,7 +23,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
     tags: data?.tags?.map((el) => el.tag.name) || [],
   });
 
-  const { push } = useRouter();
+  const { push, locale } = useRouter();
 
   const handleImageUpload = React.useCallback(async (file: File): Promise<string> => {
     const formData = new FormData();
@@ -92,7 +84,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
         name="title"
         variant="filled"
         value={post?.title}
-        placeholder="Post title..."
+        placeholder={locale === "en" ? "Title" : "Titre"}
         onChange={handleChange}
         sx={{ "&.MuiTextField-root > .MuiFilledInput-root": { px: 2, pb: 1 } }}
       />
@@ -126,7 +118,6 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
         stickyOffset={70}
         onImageUpload={handleImageUpload}
         id="rte"
-        // modules={modules}
         controls={[
           ["bold", "italic", "underline", "link", "code"],
           ["unorderedList", "orderedList", "sup", "sub"],
@@ -138,11 +129,10 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
         <Fab
           variant="extended"
           disabled={loading}
-          // color="error"
           sx={{ px: 4 }}
           onClick={() => push({ pathname: "/posts" }, undefined, { shallow: true })}
         >
-          Cancel
+          {locale === "en" ? "Cancel" : "Annuler"}
         </Fab>
         <Fab
           variant="extended"
@@ -152,7 +142,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
           onClick={onSubmit}
         >
           <SaveIcon sx={{ mr: 1 }} />
-          {loading ? "Loading..." : "Save"}
+          {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Publish" : "Publier"}
         </Fab>
       </Stack>
     </Stack>

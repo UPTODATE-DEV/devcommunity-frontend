@@ -12,7 +12,7 @@ import React from "react";
 const AddPost: React.FC = () => {
   const session = useStore((state) => state.session?.user);
   const user = useUser(session?.username);
-  const { push } = useRouter();
+  const { push, locale } = useRouter();
   const handleGoToAddPage = () => {
     push("/articles/add");
   };
@@ -47,7 +47,7 @@ const AddPost: React.FC = () => {
         }}
       >
         <Typography variant="caption" color="text.secondary">
-          Click to start writing an article...
+          {locale === "en" ? "Start an article..." : "Commencer un article..."}
         </Typography>
         <IconButton>
           <PostAddIcon fontSize="small" />

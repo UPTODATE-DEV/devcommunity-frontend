@@ -24,7 +24,7 @@ const Empty = dynamic(import("@/components/common/Empty"), {
 
 const Notifications = () => {
   const notifications = useStore((state) => state.notifications);
-  const { push } = useRouter();
+  const { push, locale } = useRouter();
 
   const handleReadNotification = async (notification: Notification) => {
     const post = notification.post;
@@ -71,11 +71,11 @@ const Notifications = () => {
                         <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
                           {`${el?.notificationFromUser.firstName} ${el?.notificationFromUser.lastName}`}
                         </Typography>{" "}
-                        {el.type === "COMMENT" && "a commenté votre post"}
-                        {el.type === "DISLIKE" && "a réagit votre post"}
-                        {el.type === "LIKE" && "a réagit votre post"}
-                        {el.type === "LOVE" && "a réagit votre post"}
-                        {el.type === "USEFUL" && "a réagit votre post"}
+                        {el.type === "COMMENT" && locale === "en" ? "a commenté votre post" : "commented on your post"}
+                        {el.type === "DISLIKE" && locale === "en" ? "a réagit votre post" : "reacted on your post"}
+                        {el.type === "LIKE" && locale === "en" ? "a réagit votre post" : "reacted on your post"}
+                        {el.type === "LOVE" && locale === "en" ? "a réagit votre post" : "reacted on your post"}
+                        {el.type === "USEFUL" && locale === "en" ? "a réagit votre post" : "reacted on your post"}
                       </React.Fragment>
                     }
                     secondary={el.post.title}

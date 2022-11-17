@@ -17,6 +17,7 @@ dayjs.extend(relativeTime);
 import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 import dynamic from "next/dynamic";
 import { Dialog } from "@mui/material";
+import { useRouter } from "next/router";
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
@@ -28,6 +29,7 @@ const QuestionReactions = () => {
   const user = useStore((state) => state.session?.user);
   const [userReaction, setUserReaction] = React.useState<QuestionReactionType | undefined>();
   const [open, setOpen] = React.useState(false);
+  const { locale } = useRouter();
 
   const handleClose = () => {
     setOpen(false);
@@ -89,7 +91,7 @@ const QuestionReactions = () => {
             alignItems="center"
             sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, px: 1, borderRadius: 52 }}
           >
-            <Tooltip title="I like" placement="bottom" arrow>
+            <Tooltip title={locale === "en" ? "Endorse" : "Approuver"} placement="bottom" arrow>
               <IconButton onClick={() => onReact("LIKE")}>
                 <ThumbUpSharpIcon color={userReaction === "LIKE" ? "info" : "inherit"} fontSize="small" />
               </IconButton>
@@ -105,7 +107,7 @@ const QuestionReactions = () => {
             alignItems="center"
             sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, px: 1, borderRadius: 52 }}
           >
-            <Tooltip title="I like" placement="bottom" arrow>
+            <Tooltip title={locale === "en" ? "Disapprove" : "Désapprouver"} placement="bottom" arrow>
               <IconButton onClick={() => onReact("DISLIKE")}>
                 <ThumbDownOffAltIcon color={userReaction === "DISLIKE" ? "error" : "inherit"} fontSize="small" />
               </IconButton>
@@ -122,7 +124,7 @@ const QuestionReactions = () => {
             alignItems="center"
             sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
           >
-            <Tooltip title="Save post" placement="bottom" arrow>
+            <Tooltip title={locale === "en" ? "Add to bookmarks" : "Ajouter aux favoris"} placement="bottom" arrow>
               <IconButton onClick={onAddToBookmarks}>
                 {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
                   <BookmarkRemoveIcon color="secondary" fontSize="small" />

@@ -172,7 +172,7 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
         <Button color="secondary" sx={{ px: 4 }} variant="outlined" onClick={() => setEditProfile(false)}>
           {locale === "en" ? "Cancel" : "Annuler"}
         </Button>
-        <Button color="primary" sx={{ px: 4 }} disabled={loading} startIcon={<SaveIcon />} variant="contained">
+        <Button onClick={onSave} color="primary" sx={{ px: 4 }} disabled={loading} startIcon={<SaveIcon />} variant="contained">
           {locale === "en" ? "Update" : "Mettre à jour"}
         </Button>
       </Stack>

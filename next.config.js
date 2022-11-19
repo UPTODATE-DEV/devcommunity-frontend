@@ -14,7 +14,7 @@ const nextConfig = {
   productionBrowserSourceMaps: true,
   swcMinify: true,
   images: {
-    domains: ["localhost", "api-community.updevtest.com"],
+    domains: ["localhost", "api-community.updevtest.com",  "api.updevcommunity.com"],
     formats: ["image/avif", "image/webp"],
   },
   i18n: {

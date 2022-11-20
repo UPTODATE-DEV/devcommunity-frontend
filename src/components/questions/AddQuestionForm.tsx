@@ -22,7 +22,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
     tags: data?.tags?.map((el) => el.tag.name) || [],
   });
 
-  const { push, locale } = useRouter();
+  const { push, locale, replace } = useRouter();
 
   const handleImageUpload = React.useCallback(async (file: File): Promise<string> => {
     const formData = new FormData();
@@ -58,7 +58,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
     if (response.data) {
       setLoading(false);
       toast.success(data?.title ? "Post updated" : "Post created");
-      push(`/posts/${response.data?.slug}`);
+      replace(`/posts/${response.data?.slug}`);
     }
   };
 

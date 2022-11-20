@@ -22,6 +22,7 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setPosts = useStore((state) => state.setPosts);
 
   React.useEffect(() => {
+    setPosts([])
     const getPosts = async () => {
       const posts = await postRequest({ endpoint: "/posts/tags", data: ["cardano"] });
       if (!posts.error) {

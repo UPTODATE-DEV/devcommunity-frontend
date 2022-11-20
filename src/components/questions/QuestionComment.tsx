@@ -182,7 +182,7 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
                 alt={`${user?.firstName} ${user?.lastName}`}
                 src={FILES_BASE_URL + user?.profile?.avatar?.url}
               >
-                {user?.firstName.charAt(0)}
+                {user?.firstName?.charAt(0)}
               </Avatar>
             </Grid>
             <Grid item xs={12} md={10.8}>

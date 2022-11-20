@@ -9,7 +9,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import { IconsSkeletons, LogoSkeleton, ProfileSkeleton } from "./Skeleton";
 
 import { getRequest } from "@/lib/api";
@@ -41,8 +41,7 @@ const Menu: React.FC = () => {
   const user = useStore((state) => state.session?.user);
   const { push, locale } = useRouter();
   const { openMobileMenu, setOpenMobileMenu } = useStore((state) => state);
-  const setPosts = useStore((state) => state.setPosts);
-  const posts = useStore((state) => state.posts);
+  const [posts, setPosts] = useState<Post[] | []>([]);
 
   const actions: SpotlightAction[] =
     posts?.map((_, index) => ({

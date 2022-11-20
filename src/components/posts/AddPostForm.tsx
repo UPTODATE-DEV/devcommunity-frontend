@@ -35,7 +35,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
     tags: data?.tags?.map((el) => el.tag.name) || [],
   });
 
-  const { push, locale } = useRouter();
+  const { push, locale, replace } = useRouter();
 
   const handleImageChange = async (e: any) => {
     setPreview(URL?.createObjectURL(e.target.files[0]));
@@ -84,7 +84,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
     if (response.data) {
       setLoading(false);
       toast.success(data?.title ? "Post updated" : "Post created");
-      push(`/articles/${response.data?.slug}`);
+      replace(`/articles/${response.data?.slug}`);
     }
   };
 

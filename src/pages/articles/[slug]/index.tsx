@@ -47,6 +47,10 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(async (cont
   const { req } = context;
   const post = await getRequest({ endpoint: `/posts/${context.params?.slug}` });
 
+  if (post.data.type !== "ARTICLE") {
+    return { notFound: true };
+  }
+  
   return {
     props: {
       session: req?.session?.user || null,

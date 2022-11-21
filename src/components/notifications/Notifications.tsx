@@ -74,10 +74,10 @@ const Notifications = () => {
                           {`${el?.notificationFromUser.firstName} ${el?.notificationFromUser.lastName}`}
                         </Typography>{" "}
                         {el.type === "COMMENT" && (locale === "fr" ? "a commenté votre" : "commented on your")}
-                        {el.type === "DISLIKE" && (locale === "fr" ? "a réagit à votre" : "reacted on your")}
-                        {el.type === "LIKE" && (locale === "fr" ? "a réagit à votre" : "reacted on your")}
-                        {el.type === "LOVE" && (locale === "fr" ? "a réagit à votre" : "reacted on your")}
-                        {el.type === "USEFUL" && (locale === "fr" ? "a réagit à votre" : "reacted on your")}{" "}
+                        {el.type === "DISLIKE" && (locale === "fr" ? "a réagi à votre" : "reacted on your")}
+                        {el.type === "LIKE" && (locale === "fr" ? "a réagi à votre" : "reacted on your")}
+                        {el.type === "LOVE" && (locale === "fr" ? "a réagi à votre" : "reacted on your")}
+                        {el.type === "USEFUL" && (locale === "fr" ? "a réagi à votre" : "reacted on your")}{" "}
                         {el.post.type === "ARTICLE" ? "article" : "post"}
                       </React.Fragment>
                     }

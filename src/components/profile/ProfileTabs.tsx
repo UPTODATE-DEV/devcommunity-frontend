@@ -116,6 +116,8 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
     <TabContext value={tab}>
       <TabList
         onChange={handleTabChange}
+        scrollButtons
+        allowScrollButtonsMobile
         variant={useMediaQuery("(min-width:600px)") ? "fullWidth" : "scrollable"}
         aria-label="lab API tabs example"
         sx={{ borderBottom: 1, borderColor: "divider", bgcolor: "action.hover" }}

@@ -92,20 +92,20 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
     <>
       {user?.id && (
         <Stack spacing={2}>
-          <Stack direction="row" justifyContent="space-between">
+          <Stack direction="row" justifyContent="space-between" sx={{ position: "relative" }}>
             <Stack direction="row" spacing={1} alignItems="center" justifyContent="center">
               <Avatar
-                sx={{ width: 60, height: 60, bgcolor: "primary.main", color: "white" }}
+                sx={{ width: { xs: 40, md: 60 }, height: { xs: 40, md: 60 }, bgcolor: "primary.main", color: "white" }}
                 alt={`${user?.firstName} ${user?.lastName}`}
                 src={`${FILES_BASE_URL}${user?.profile?.avatar?.url}`}
               >
                 {user?.firstName[0]}
               </Avatar>
               <Stack>
-                <Typography variant="h6" color="text.primary" fontWeight={700}>
+                <Typography variant="h6" sx={{ fontSize: { xs: 14, md: 16 } }} color="text.primary" fontWeight={700}>
                   {user?.firstName} {user?.lastName}
                 </Typography>
-                <Typography variant="caption" color="text.secondary" noWrap sx={{ width: 1 }}>
+                <Typography variant="caption" color="text.secondary">
                   {user?.email}
                 </Typography>
                 <Typography flexWrap="nowrap" variant="caption" color="text.secondary" noWrap sx={{ width: 1 }}>
@@ -117,7 +117,12 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
               </Stack>
             </Stack>
 
-            <Stack spacing={2} alignItems="flex-end">
+            <Stack
+              spacing={2}
+              alignItems="flex-end"
+              flexShrink={1}
+              sx={{ position: "absolute", right: 1, top: "-10px" }}
+            >
               {!currentUser && (
                 <IconButton
                   aria-label="more"

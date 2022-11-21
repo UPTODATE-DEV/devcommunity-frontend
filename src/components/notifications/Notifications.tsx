@@ -73,12 +73,12 @@ const Notifications = () => {
                         <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
                           {`${el?.notificationFromUser.firstName} ${el?.notificationFromUser.lastName}`}
                         </Typography>{" "}
-                        {el.type === "COMMENT" &&
-                          (locale === "en" ? "a commenté votre post" : "commented on your post")}
-                        {el.type === "DISLIKE" && (locale === "en" ? "a réagit à votre post" : "reacted on your post")}
-                        {el.type === "LIKE" && (locale === "en" ? "a réagit à votre post" : "reacted on your post")}
-                        {el.type === "LOVE" && (locale === "en" ? "a réagit à votre post" : "reacted on your post")}
-                        {el.type === "USEFUL" && (locale === "en" ? "a réagit à votre post" : "reacted on your post")}
+                        {el.type === "COMMENT" && (locale === "fr" ? "a commenté votre" : "commented on your")}
+                        {el.type === "DISLIKE" && (locale === "fr" ? "a réagit à votre" : "reacted on your")}
+                        {el.type === "LIKE" && (locale === "fr" ? "a réagit à votre" : "reacted on your")}
+                        {el.type === "LOVE" && (locale === "fr" ? "a réagit à votre" : "reacted on your")}
+                        {el.type === "USEFUL" && (locale === "fr" ? "a réagit à votre" : "reacted on your")}{" "}
+                        {el.post.type === "ARTICLE" ? "article" : "post"}
                       </React.Fragment>
                     }
                     secondary={el.post.title}

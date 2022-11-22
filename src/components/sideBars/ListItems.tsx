@@ -13,7 +13,7 @@ const ListItems = ({ item, handleViewPost }: { item: Post; handleViewPost: (path
 
   return (
     <React.Fragment key={item.id}>
-      <ListItemButton alignItems="flex-start" onClick={() => handleViewPost(`/articles/${item.slug}`)}>
+      <ListItemButton alignItems="flex-start" onClick={() => handleViewPost(item.slug)}>
         <ListItemAvatar>
           <Avatar
             sx={{ bgcolor: "primary.main", color: "white" }}

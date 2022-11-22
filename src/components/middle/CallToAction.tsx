@@ -19,7 +19,7 @@ const data = [
       "Add an account to get access to all the features and engage with the content being shared by the community",
   },
   {
-    title: "Bienvenue dans la communauté Updev",
+    title: "Bienvenue sur Updev Community",
     description:
       "Ajoutez un compte pour accéder à toutes les fonctionnalités et interagir avec le contenu partagé par la communauté",
   },

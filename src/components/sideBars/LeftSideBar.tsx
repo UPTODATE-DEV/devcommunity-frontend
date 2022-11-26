@@ -37,7 +37,7 @@ const LeftSideBar = () => {
     { path: "/articles", icon: <HistoryEduIcon />, label: "Articles" },
     { path: "/posts", icon: <QuestionAnswer />, label: "Posts" },
     { path: "/tags", icon: <TagSharpIcon />, label: "Tags" },
-    { path: "/cardano", icon: <BlurOnIcon />, label: "Cardano" },
+    { path: "/blockchain", icon: <BlurOnIcon />, label: "Blockchain" },
     { path: "/top-posts", icon: <AutoAwesomeIcon />, label: "Top posts" },
     { path: "/home", icon: <BusinessIcon />, label: "Updev" },
   ];

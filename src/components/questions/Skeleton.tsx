@@ -14,9 +14,9 @@ export function QuestionsListSkeleton() {
               <Skeleton variant="rectangular" width={120} height={5} sx={{ borderRadius: 2 }} />
               <Skeleton variant="rectangular" width="100%" height={20} sx={{ borderRadius: 2 }} />
               <Skeleton variant="rectangular" width="100%" height={10} sx={{ borderRadius: 2 }} />
-              <Skeleton variant="rectangular" width="100%" height={10} sx={{ borderRadius: 2 }} />
             </Stack>
           </Stack>
+          <Skeleton variant="rectangular" width="100%" height={10} sx={{ borderRadius: 2 }} />
           <Divider />
         </React.Fragment>
       ))}

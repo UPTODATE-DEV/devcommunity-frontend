@@ -23,6 +23,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 dayjs.extend(relativeTime);
+import Share from "@/components/common/Share";
 
 import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 import { FILES_BASE_URL } from "config/url";
@@ -107,7 +108,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   }, [data?.question?.reactions, user]);
 
   return (
-    <>
+    <Stack>
       <Dialog
         open={openLogin}
         onClose={handleCloseLogin}
@@ -171,105 +172,119 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
                 color: "primary.main",
               },
               cursor: "pointer",
+              display: "-webkit-box!important",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              textOverflow: "ellipse",
+              whiteSpace: "normal",
             }}
           >
             {data?.title}
           </Typography>
-
-          <Typography
-            color="text.secondary"
-            component="div"
-            className="content"
-            gutterBottom
-            dangerouslySetInnerHTML={{
-              __html: `${data?.content.substring(0, 120)}...`,
-            }}
-          />
-
-          <Grid container spacing={1} sx={{ pb: 1 }} direction="row">
-            {data?.tags?.map((el) => (
-              <Grid item xs="auto" key={el.tag.id}>
-                <Chip size="small" icon={<TagIcon fontSize="small" />} label={el.tag.name} />
-              </Grid>
-            ))}
-          </Grid>
-
-          <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between" sx={{ mt: 1 }}>
-            <Stack direction="row" spacing={2}>
-              <Stack
-                direction="row"
-                alignItems="center"
-                sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, px: 1, borderRadius: 52 }}
-              >
-                <Tooltip title={locale === "en" ? "Endorse" : "Approuver"} placement="bottom" arrow>
-                  <IconButton onClick={() => onReact("LIKE")}>
-                    <ThumbUpSharpIcon color={userReaction === "LIKE" ? "info" : "inherit"} fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-
-                <Tooltip
-                  title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"}
-                  placement="bottom"
-                  arrow
-                >
-                  <IconButton onClick={() => setOpenReaction(true)}>
-                    <Typography variant="caption" color="text.primary" fontWeight={700}>
-                      {data?.question?.reactions?.filter((el) => el.type === "LIKE").length}
-                    </Typography>
-                  </IconButton>
-                </Tooltip>
-
-                <Tooltip title={locale === "en" ? "Disapprove" : "Désapprouver"} placement="bottom" arrow>
-                  <IconButton onClick={() => onReact("DISLIKE")}>
-                    <ThumbDownOffAltIcon color={userReaction === "DISLIKE" ? "error" : "inherit"} fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-
-                <Tooltip
-                  title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"}
-                  placement="bottom"
-                  arrow
-                >
-                  <IconButton onClick={() => setOpenReaction(true)}>
-                    <Typography variant="caption" color="text.primary" fontWeight={700}>
-                      {data?.question?.reactions?.filter((el) => el.type === "DISLIKE").length}
-                    </Typography>
-                  </IconButton>
-                </Tooltip>
-              </Stack>
-            </Stack>
-            <Stack direction="row" spacing={2}>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Link href={`/posts/${data?.slug}/#comments`} passHref>
-                  <IconButton>
-                    <QuestionAnswerIcon fontSize="small" />
-                  </IconButton>
-                </Link>
-                <Typography variant="caption" color="text.secondary" fontWeight={700}>
-                  {data?.comments?.length || 0}
-                </Typography>
-              </Stack>
-
-              <Stack
-                direction="row"
-                alignItems="center"
-                sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
-              >
-                <Tooltip title={locale === "en" ? "Add to bookmarks" : "Ajouter aux favoris"} placement="bottom" arrow>
-                  <IconButton onClick={onAddToBookmarks}>
-                    {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
-                      <BookmarkRemoveIcon color="secondary" fontSize="small" />
-                    ) : (
-                      <BookmarkAddSharpIcon fontSize="small" />
-                    )}
-                  </IconButton>
-                </Tooltip>
-              </Stack>
-            </Stack>
-          </Stack>
         </Grid>
       </Grid>
-    </>
+      <Typography
+        color="text.secondary"
+        component="div"
+        className="content"
+        gutterBottom
+        sx={{
+          display: "-webkit-box!important",
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden",
+          textOverflow: "ellipse",
+          whiteSpace: "normal",
+        }}
+        dangerouslySetInnerHTML={{
+          __html: data?.content.length > 120 ? `${data?.content.substring(0, 140)}...` : data?.content,
+        }}
+      />
+
+      <Grid container spacing={1} sx={{ pb: 1 }} direction="row">
+        {data?.tags?.map((el) => (
+          <Grid item xs="auto" key={el.tag.id}>
+            <Chip size="small" icon={<TagIcon fontSize="small" />} label={el.tag.name} />
+          </Grid>
+        ))}
+      </Grid>
+
+      <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between" sx={{ mt: 1 }}>
+        <Stack direction="row" spacing={2}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, px: 1, borderRadius: 52 }}
+          >
+            <Tooltip title={locale === "en" ? "Endorse" : "Approuver"} placement="bottom" arrow>
+              <IconButton onClick={() => onReact("LIKE")}>
+                <ThumbUpSharpIcon color={userReaction === "LIKE" ? "info" : "inherit"} fontSize="small" />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip
+              title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"}
+              placement="bottom"
+              arrow
+            >
+              <IconButton onClick={() => setOpenReaction(true)}>
+                <Typography variant="caption" color="text.primary" fontWeight={700}>
+                  {data?.question?.reactions?.filter((el) => el.type === "LIKE").length}
+                </Typography>
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title={locale === "en" ? "Disapprove" : "Désapprouver"} placement="bottom" arrow>
+              <IconButton onClick={() => onReact("DISLIKE")}>
+                <ThumbDownOffAltIcon color={userReaction === "DISLIKE" ? "error" : "inherit"} fontSize="small" />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip
+              title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"}
+              placement="bottom"
+              arrow
+            >
+              <IconButton onClick={() => setOpenReaction(true)}>
+                <Typography variant="caption" color="text.primary" fontWeight={700}>
+                  {data?.question?.reactions?.filter((el) => el.type === "DISLIKE").length}
+                </Typography>
+              </IconButton>
+            </Tooltip>
+          </Stack>
+        </Stack>
+        <Stack direction="row" spacing={2}>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Link href={`/posts/${data?.slug}/#comments`} passHref>
+              <IconButton>
+                <QuestionAnswerIcon fontSize="small" />
+              </IconButton>
+            </Link>
+            <Typography variant="caption" color="text.secondary" fontWeight={700}>
+              {data?.comments?.length || 0}
+            </Typography>
+          </Stack>
+
+          <Stack
+            direction="row"
+            alignItems="center"
+            sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
+          >
+            <Tooltip title={locale === "en" ? "Add to bookmarks" : "Ajouter aux favoris"} placement="bottom" arrow>
+              <IconButton onClick={onAddToBookmarks}>
+                {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
+                  <BookmarkRemoveIcon color="secondary" fontSize="small" />
+                ) : (
+                  <BookmarkAddSharpIcon fontSize="small" />
+                )}
+              </IconButton>
+            </Tooltip>
+          </Stack>
+          <Share data={data} />
+        </Stack>
+      </Stack>
+    </Stack>
   );
 };
 

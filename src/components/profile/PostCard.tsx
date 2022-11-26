@@ -63,6 +63,12 @@ const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }>
                 color: "primary.main",
               },
               cursor: "pointer",
+              display: "-webkit-box!important",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              textOverflow: "ellipse",
+              whiteSpace: "normal",
             }}
           >
             {data?.title.substring(0, 120)}
@@ -71,9 +77,17 @@ const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }>
             color="text.secondary"
             component="div"
             className="content"
+            sx={{
+              display: "-webkit-box!important",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              textOverflow: "ellipse",
+              whiteSpace: "normal",
+            }}
             gutterBottom
             dangerouslySetInnerHTML={{
-              __html: `${data?.content.substring(0, 120)}...`,
+              __html: data?.content.length > 120 ? `${data?.content.substring(0, 140)}...` : data?.content,
             }}
           />
           {data?.article.image && (

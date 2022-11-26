@@ -6,7 +6,6 @@ const withPWA = require("next-pwa")({
   dest: "public",
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === "development",
 });
 
 const nextConfig = {
@@ -14,7 +13,7 @@ const nextConfig = {
   productionBrowserSourceMaps: true,
   swcMinify: true,
   images: {
-    domains: ["localhost", "api-community.updevtest.com",  "api.updevcommunity.com"],
+    domains: ["localhost", "api-community.updevtest.com", "api.updevcommunity.com"],
     formats: ["image/avif", "image/webp"],
   },
   i18n: {

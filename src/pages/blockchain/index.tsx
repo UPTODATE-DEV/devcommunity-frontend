@@ -22,9 +22,9 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setPosts = useStore((state) => state.setPosts);
 
   React.useEffect(() => {
-    setPosts([])
+    setPosts([]);
     const getPosts = async () => {
-      const posts = await postRequest({ endpoint: "/posts/tags", data: ["cardano"] });
+      const posts = await postRequest({ endpoint: "/posts/tags", data: ["blockchain"] });
       if (!posts.error) {
         setPosts(posts.data);
       }
@@ -38,7 +38,7 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
   return (
     <>
       <Head>
-        <title>Cardano | Updev community</title>
+        <title>Blockchain | Updev community</title>
         <meta name="description" content="Updev community" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

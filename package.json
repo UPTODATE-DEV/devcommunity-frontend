@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-     "start": "next start -p 3017",
-    "lint": "next lint"
+    "start": "next start -p 3017",
+    "lint": "next lint",
+    "postbuild": "next-sitemap --config next-sitemap.config.js"
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",
@@ -30,6 +31,7 @@
     "next-dark-mode": "^3.0.0",
     "next-pwa": "^5.6.0",
     "next-seo": "^5.14.0",
+    "next-sitemap": "^3.1.32",
     "nextjs-progressbar": "^0.0.14",
     "quill-paste-smart": "^1.4.10",
     "react": "18.2.0",

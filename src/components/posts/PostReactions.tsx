@@ -18,6 +18,7 @@ dayjs.extend(relativeTime);
 import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 import dynamic from "next/dynamic";
 import Dialog from "@mui/material/Dialog";
+import Share from "@/components/common/Share";
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
@@ -157,6 +158,7 @@ const PostReactions: React.FC = () => {
               </IconButton>
             </Tooltip>
           </Stack>
+          <Share data={data} />
         </Stack>
       </Stack>
     </>

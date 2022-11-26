@@ -43,80 +43,102 @@ const BookmarkCard: React.FC<{ data: Post }> = ({ data }) => {
   }, []);
 
   return (
-    <Grid container>
-      <Grid item xs={2} md={1.2}>
-        <IconButton onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}>
-          <Avatar
-            sx={{ bgcolor: "primary.main", color: "white" }}
-            alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
-            src={FILES_BASE_URL + data?.author?.profile?.avatar?.url}
-          >
-            {data?.author?.firstName.charAt(0)}
-          </Avatar>
-        </IconButton>
-      </Grid>
-      <Grid item xs={10} md={10.8}>
-        <Stack direction="row" spacing={1}>
+    <Stack>
+      <Grid container>
+        <Grid item xs={2} md={1.2}>
+          <IconButton onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}>
+            <Avatar
+              sx={{ bgcolor: "primary.main", color: "white" }}
+              alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
+              src={FILES_BASE_URL + data?.author?.profile?.avatar?.url}
+            >
+              {data?.author?.firstName.charAt(0)}
+            </Avatar>
+          </IconButton>
+        </Grid>
+        <Grid item xs={10} md={10.8}>
+          <Stack direction="row" spacing={1}>
+            <Typography
+              variant="caption"
+              onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}
+              sx={{
+                "&:hover": {
+                  color: "primary.main",
+                },
+                cursor: "pointer",
+              }}
+              color="text.primary"
+              gutterBottom
+              fontWeight={700}
+            >
+              {data?.author?.firstName} {data?.author?.lastName}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" gutterBottom fontWeight={700}>
+              -
+            </Typography>
+            <Typography variant="caption" gutterBottom color="text.secondary">
+              {dayjs(data?.publishedOn).fromNow()}
+            </Typography>
+          </Stack>
           <Typography
-            variant="caption"
-            onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}
+            gutterBottom
+            fontWeight={700}
+            color="text.primary"
+            onClick={handleViewPost}
             sx={{
               "&:hover": {
                 color: "primary.main",
               },
               cursor: "pointer",
+              display: "-webkit-box!important",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              textOverflow: "ellipse",
+              whiteSpace: "normal",
             }}
-            color="text.primary"
-            gutterBottom
-            fontWeight={700}
           >
-            {data?.author?.firstName} {data?.author?.lastName}
+            {data?.title.substring(0, 120)}
           </Typography>
-          <Typography variant="caption" color="text.secondary" gutterBottom fontWeight={700}>
-            -
-          </Typography>
-          <Typography variant="caption" gutterBottom color="text.secondary">
-            {dayjs(data?.publishedOn).fromNow()}
-          </Typography>
-        </Stack>
-        <Typography
-          gutterBottom
-          fontWeight={700}
-          color="text.primary"
-          onClick={handleViewPost}
-          sx={{
-            "&:hover": {
-              color: "primary.main",
-            },
-            cursor: "pointer",
-          }}
-        >
-          {data?.title.substring(0, 120)}
-        </Typography>
-        <TypographyStylesProvider>
-          <div dangerouslySetInnerHTML={{ __html: data?.content.substring(0, 120) }} />
-        </TypographyStylesProvider>
-        <Stack
-          direction="row"
-          flexWrap="wrap"
-          spacing={1}
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ mt: 1 }}
-        >
-          <Button
-            size="small"
-            variant="outlined"
-            color="secondary"
-            sx={{ px: 2 }}
-            onClick={onRemoveFromBookmarks}
-            startIcon={<BookmarkRemoveIcon />}
-          >
-            {locale === "en" ? "Remove" : "Retirer"}
-          </Button>
-        </Stack>
+        </Grid>
       </Grid>
-    </Grid>
+      <Typography
+        color="text.secondary"
+        component="div"
+        className="content"
+        gutterBottom
+        sx={{
+          display: "-webkit-box!important",
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden",
+          textOverflow: "ellipse",
+          whiteSpace: "normal",
+        }}
+        dangerouslySetInnerHTML={{
+          __html: data?.content.length > 120 ? `${data?.content.substring(0, 140)}...` : data?.content,
+        }}
+      />
+      <Stack
+        direction="row"
+        flexWrap="wrap"
+        spacing={1}
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ mt: 1 }}
+      >
+        <Button
+          size="small"
+          variant="outlined"
+          color="secondary"
+          sx={{ px: 2 }}
+          onClick={onRemoveFromBookmarks}
+          startIcon={<BookmarkRemoveIcon />}
+        >
+          {locale === "en" ? "Remove" : "Retirer"}
+        </Button>
+      </Stack>
+    </Stack>
   );
 };
 

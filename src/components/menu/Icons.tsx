@@ -72,7 +72,7 @@ const Icons = () => {
         {fullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
       </IconButton> */}
       <IconButton sx={{ display: { xs: "none", md: "block" } }} onClick={toggleLang}>
-        {locale === "en" ? (
+        {locale === "fr" ? (
           <Stack
             sx={{
               boxShadow: "0 0 5px 0 rgba(0,0,0,0.3)",

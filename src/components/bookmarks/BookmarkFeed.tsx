@@ -1,21 +1,15 @@
-import useStore from "@/hooks/useStore";
-import React from "react";
-import Stack from "@mui/material/Stack";
-import dynamic from "next/dynamic";
-import Divider from "@mui/material/Divider";
 import { PostsListSkeleton } from "@/components/posts/Skeleton";
-import { QuestionsListSkeleton } from "@/components/questions/Skeleton";
+import useStore from "@/hooks/useStore";
+import Divider from "@mui/material/Divider";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { HomeFeedSkeleton } from "../middle/Skeleton";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import { HomeFeedSkeleton } from "../middle/Skeleton";
 
 const BookmarkCard = dynamic(import("@/components/bookmarks/BookmarkCard"), {
   ssr: false,
   loading: () => <PostsListSkeleton />,
-});
-const QuestionCard = dynamic(import("@/components/questions/QuestionCard"), {
-  ssr: false,
-  loading: () => <QuestionsListSkeleton />,
 });
 
 const Empty = dynamic(import("@/components/common/Empty"), {
@@ -24,7 +18,7 @@ const Empty = dynamic(import("@/components/common/Empty"), {
 });
 
 const BookmarkFeed = () => {
-  const { push, locale } = useRouter();
+  const { locale } = useRouter();
   const bookmarks = useStore((state) => state.bookmarks);
   return (
     <Stack spacing={2} sx={{ py: 2 }}>

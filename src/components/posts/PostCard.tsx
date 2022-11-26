@@ -27,6 +27,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import ShowPostReactions from "./ShowPostReactions";
+import Share from "@/components/common/Share";
 dayjs.extend(relativeTime);
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
@@ -152,166 +153,186 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
         <ShowPostReactions reactions={data?.article?.reactions} />
       </Dialog>
 
-      <Grid container>
-        <Grid item xs={2} sm={1} md={2} lg={1.2}>
-          <IconButton onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}>
-            <Avatar
-              sx={{ bgcolor: "primary.main", color: "white" }}
-              alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
-              src={FILES_BASE_URL + data?.author?.profile?.avatar?.url}
-            >
-              {data?.author?.firstName.charAt(0)}
-            </Avatar>
-          </IconButton>
-        </Grid>
-        <Grid item xs={10} sm={11} md={10} lg={10.8}>
-          <Stack direction="row" spacing={1}>
+      <Stack>
+        <Grid container>
+          <Grid item xs={2} sm={1} md={2} lg={1.2}>
+            <IconButton onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}>
+              <Avatar
+                sx={{ bgcolor: "primary.main", color: "white" }}
+                alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
+                src={FILES_BASE_URL + data?.author?.profile?.avatar?.url}
+              >
+                {data?.author?.firstName.charAt(0)}
+              </Avatar>
+            </IconButton>
+          </Grid>
+          <Grid item xs={10} sm={11} md={10} lg={10.8}>
+            <Stack direction="row" spacing={1}>
+              <Typography
+                variant="caption"
+                onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}
+                sx={{
+                  "&:hover": {
+                    color: "primary.main",
+                  },
+                  cursor: "pointer",
+                }}
+                color="text.primary"
+                gutterBottom
+                fontWeight={700}
+              >
+                {data?.author?.firstName} {data?.author?.lastName}
+              </Typography>
+
+              <Typography variant="caption" gutterBottom color="text.secondary">
+                {dayjs(data?.createdAt).fromNow()}
+              </Typography>
+            </Stack>
             <Typography
-              variant="caption"
-              onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}
+              gutterBottom
+              fontWeight={700}
+              color="text.primary"
+              onClick={handleViewPost}
               sx={{
                 "&:hover": {
                   color: "primary.main",
                 },
                 cursor: "pointer",
-              }}
-              color="text.primary"
-              gutterBottom
-              fontWeight={700}
-            >
-              {data?.author?.firstName} {data?.author?.lastName}
-            </Typography>
-            <Typography variant="caption" color="text.secondary" gutterBottom fontWeight={700}>
-              -
-            </Typography>
-            <Typography variant="caption" gutterBottom color="text.secondary">
-              {dayjs(data?.createdAt).fromNow()}
-            </Typography>
-          </Stack>
-          <Typography
-            gutterBottom
-            fontWeight={700}
-            color="text.primary"
-            onClick={handleViewPost}
-            sx={{
-              "&:hover": {
-                color: "primary.main",
-              },
-              cursor: "pointer",
-            }}
-          >
-            {data?.title}
-          </Typography>
-
-          <Typography
-            color="text.secondary"
-            component="div"
-            className="content"
-            gutterBottom
-            dangerouslySetInnerHTML={{
-              __html: `${data?.content.substring(0, 120)}...`,
-            }}
-          />
-
-          {data?.article.image && (
-            <Stack
-              sx={{
-                width: 1,
-                height: { xs: 180, md: 240 },
-                position: "relative",
-                borderRadius: 2,
-                cursor: "pointer",
+                display: "-webkit-box!important",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
                 overflow: "hidden",
-                my: 2,
+                textOverflow: "ellipse",
+                whiteSpace: "normal",
               }}
-              onClick={handleViewPost}
             >
-              <Image src={FILES_BASE_URL + data?.article?.image?.url} alt="Post" layout="fill" objectFit="cover" />
-            </Stack>
-          )}
-
-          <Grid container spacing={1} sx={{ pb: 1 }} direction="row">
-            {data?.tags?.map((el) => (
-              <Grid item xs="auto" key={el.tag.id}>
-                <Chip size="small" icon={<TagIcon fontSize="small" />} sx={{ px: 2 }} label={el.tag.name} />
-              </Grid>
-            ))}
+              {data?.title}
+            </Typography>
           </Grid>
+        </Grid>
 
+        <Typography
+          color="text.secondary"
+          component="div"
+          className="content"
+          gutterBottom
+          sx={{
+            display: "-webkit-box!important",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipse",
+            whiteSpace: "normal",
+          }}
+          dangerouslySetInnerHTML={{
+            __html: data?.content.length > 120 ? `${data?.content.substring(0, 140)}...` : data?.content,
+          }}
+        />
+
+        {data?.article.image && (
+          <Stack
+            sx={{
+              width: 1,
+              height: { xs: 180, md: 240 },
+              position: "relative",
+              borderRadius: 2,
+              cursor: "pointer",
+              overflow: "hidden",
+              mb: 2,
+            }}
+            onClick={handleViewPost}
+          >
+            <Image
+              src={FILES_BASE_URL + data?.article?.image?.url}
+              alt={`${data?.title} | Updev Community`}
+              layout="fill"
+              objectFit="cover"
+            />
+          </Stack>
+        )}
+
+        <Grid container spacing={1} sx={{ pb: 1 }} direction="row">
+          {data?.tags?.map((el) => (
+            <Grid item xs="auto" key={el.tag.id}>
+              <Chip size="small" icon={<TagIcon fontSize="small" />} sx={{ px: 2 }} label={el.tag.name} />
+            </Grid>
+          ))}
+        </Grid>
+
+        <Stack
+          direction="row"
+          flexWrap="wrap"
+          spacing={1}
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ mt: 1 }}
+        >
           <Stack
             direction="row"
-            flexWrap="wrap"
-            spacing={1}
             alignItems="center"
-            justifyContent="space-between"
-            sx={{ mt: 1 }}
+            sx={{
+              border: (theme) => `1px solid ${theme.palette.divider}`,
+              borderRadius: 52,
+              transition: "all 0.5s ease",
+            }}
           >
+            {!userReaction ? (
+              <>
+                <Like />
+                <Love />
+                <Useful />
+              </>
+            ) : (
+              <>
+                {userReaction === "LIKE" && <Like />}
+                {userReaction === "LOVE" && <Love />}
+                {userReaction === "USEFUL" && <Useful />}
+              </>
+            )}
+
+            <Tooltip
+              title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"}
+              placement="bottom"
+              arrow
+            >
+              <IconButton onClick={() => setOpenReaction(true)}>
+                <Typography variant="caption" color="text.primary" fontWeight={700}>
+                  {data.article?.reactions?.length}
+                </Typography>
+              </IconButton>
+            </Tooltip>
+          </Stack>
+          <Stack direction="row" spacing={2}>
+            <Stack direction="row" alignItems="center">
+              <Link href={`/articles/${data?.slug}/#comments`} passHref>
+                <IconButton>
+                  <CommentIcon fontSize="small" />
+                </IconButton>
+              </Link>
+              <Typography variant="caption" color="text.secondary" fontWeight={700}>
+                {data?.comments?.length || 0}
+              </Typography>
+            </Stack>
+
             <Stack
               direction="row"
               alignItems="center"
-              sx={{
-                border: (theme) => `1px solid ${theme.palette.divider}`,
-                borderRadius: 52,
-                transition: "all 0.5s ease",
-              }}
+              sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
             >
-              {!userReaction ? (
-                <>
-                  <Like />
-                  <Love />
-                  <Useful />
-                </>
-              ) : (
-                <>
-                  {userReaction === "LIKE" && <Like />}
-                  {userReaction === "LOVE" && <Love />}
-                  {userReaction === "USEFUL" && <Useful />}
-                </>
-              )}
-
-              <Tooltip
-                title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"}
-                placement="bottom"
-                arrow
-              >
-                <IconButton onClick={() => setOpenReaction(true)}>
-                  <Typography variant="caption" color="text.primary" fontWeight={700}>
-                    {data.article?.reactions?.length}
-                  </Typography>
+              <Tooltip title={locale === "en" ? "Add to bookmarks" : "Ajouter aux favoris"} placement="bottom" arrow>
+                <IconButton onClick={onAddToBookmarks}>
+                  {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
+                    <BookmarkRemoveIcon color="secondary" fontSize="small" />
+                  ) : (
+                    <BookmarkAddSharpIcon fontSize="small" />
+                  )}
                 </IconButton>
               </Tooltip>
             </Stack>
-            <Stack direction="row" spacing={2}>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Link href={`/articles/${data?.slug}/#comments`} passHref>
-                  <IconButton>
-                    <CommentIcon fontSize="small" />
-                  </IconButton>
-                </Link>
-                <Typography variant="caption" color="text.secondary" fontWeight={700}>
-                  {data?.comments?.length || 0}
-                </Typography>
-              </Stack>
-
-              <Stack
-                direction="row"
-                alignItems="center"
-                sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
-              >
-                <Tooltip title={locale === "en" ? "Add to bookmarks" : "Ajouter aux favoris"} placement="bottom" arrow>
-                  <IconButton onClick={onAddToBookmarks}>
-                    {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
-                      <BookmarkRemoveIcon color="secondary" fontSize="small" />
-                    ) : (
-                      <BookmarkAddSharpIcon fontSize="small" />
-                    )}
-                  </IconButton>
-                </Tooltip>
-              </Stack>
-            </Stack>
+            <Share data={data} />
           </Stack>
-        </Grid>
-      </Grid>
+        </Stack>
+      </Stack>
     </>
   );
 };

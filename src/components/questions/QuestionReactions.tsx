@@ -18,6 +18,7 @@ import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 import dynamic from "next/dynamic";
 import { Dialog } from "@mui/material";
 import { useRouter } from "next/router";
+import Share from "@/components/common/Share";
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
@@ -124,7 +125,7 @@ const QuestionReactions = () => {
             alignItems="center"
             sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
           >
-            <Tooltip title={locale === "en" ? "Add to bookmarks" : "Ajouter aux favoris"} placement="bottom" arrow>
+            <Tooltip title="Save post" placement="bottom" arrow>
               <IconButton onClick={onAddToBookmarks}>
                 {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
                   <BookmarkRemoveIcon color="secondary" fontSize="small" />
@@ -134,6 +135,7 @@ const QuestionReactions = () => {
               </IconButton>
             </Tooltip>
           </Stack>
+          <Share data={data} />
         </Stack>
       </Stack>
     </>

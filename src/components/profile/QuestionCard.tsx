@@ -61,12 +61,6 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
                 color: "primary.main",
               },
               cursor: "pointer",
-              display: "-webkit-box!important",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-              textOverflow: "ellipse",
-              whiteSpace: "normal",
             }}
           >
             {data?.title.substring(0, 120)}
@@ -78,14 +72,6 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
         component="div"
         className="content"
         gutterBottom
-        sx={{
-          display: "-webkit-box!important",
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: "vertical",
-          overflow: "hidden",
-          textOverflow: "ellipse",
-          whiteSpace: "normal",
-        }}
         dangerouslySetInnerHTML={{
           __html: `${data?.content.substring(0, 120)}...`,
         }}

@@ -198,12 +198,6 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
                   color: "primary.main",
                 },
                 cursor: "pointer",
-                display: "-webkit-box!important",
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-                textOverflow: "ellipse",
-                whiteSpace: "normal",
               }}
             >
               {data?.title}
@@ -216,16 +210,8 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
           component="div"
           className="content"
           gutterBottom
-          sx={{
-            display: "-webkit-box!important",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            textOverflow: "ellipse",
-            whiteSpace: "normal",
-          }}
           dangerouslySetInnerHTML={{
-            __html: data?.content.length > 120 ? `${data?.content.substring(0, 140)}...` : data?.content,
+            __html: data?.content.length > 120 ? `${data?.content.substring(0, 120)}...` : data?.content,
           }}
         />
 

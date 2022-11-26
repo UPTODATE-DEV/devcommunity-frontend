@@ -238,7 +238,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
               borderRadius: 2,
               cursor: "pointer",
               overflow: "hidden",
-              mb: 2,
+              my: 2,
             }}
             onClick={handleViewPost}
           >

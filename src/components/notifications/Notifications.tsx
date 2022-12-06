@@ -10,12 +10,13 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { useRouter } from "next/router";
 import { alpha } from "@mui/material";
-import { patchRequest } from "@/lib/api";
+import { getRequest, patchRequest } from "@/lib/api";
 import { toast } from "react-toastify";
 import { FILES_BASE_URL } from "config/url";
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";
 import { TopSkeleton } from "@/components/topPosts/Skeleton";
+import useSocket from "@/hooks/useSocket";
 
 const Empty = dynamic(import("@/components/common/Empty"), {
   ssr: false,
@@ -24,7 +25,10 @@ const Empty = dynamic(import("@/components/common/Empty"), {
 
 const Notifications = () => {
   const notifications = useStore((state) => state.notifications);
+  const setNotifications = useStore((state) => state.setNotifications);
   const { push, locale } = useRouter();
+  const session = useStore((state) => state.session?.user);
+  const socket = useSocket();
 
   locale === "en" ? dayjs.locale("en") : dayjs.locale("fr");
 
@@ -36,6 +40,19 @@ const Notifications = () => {
     }
     push(`${post.type === "ARTICLE" ? "/articles" : "/posts"}/${post.slug}`);
   };
+
+  React.useEffect(() => {
+    socket.on("notification", () => {
+      const getNotifications = async () => {
+        const notifications = await getRequest({ endpoint: `/notifications/${session?.id}` });
+        if (!notifications.error) {
+          setNotifications(notifications.data);
+        }
+      };
+
+      getNotifications();
+    });
+  }, []);
 
   return (
     <Stack spacing={2} sx={{ py: 2 }}>

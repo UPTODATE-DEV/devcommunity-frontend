@@ -19,6 +19,7 @@ import dynamic from "next/dynamic";
 import { Dialog } from "@mui/material";
 import { useRouter } from "next/router";
 import Share from "@/components/common/Share";
+import useSocket from "@/hooks/useSocket";
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
@@ -31,6 +32,7 @@ const QuestionReactions = () => {
   const [userReaction, setUserReaction] = React.useState<QuestionReactionType | undefined>();
   const [open, setOpen] = React.useState(false);
   const { locale } = useRouter();
+  const socket = useSocket();
 
   const handleClose = () => {
     setOpen(false);
@@ -43,6 +45,9 @@ const QuestionReactions = () => {
         toast.error(post.error);
         return;
       }
+
+      socket.emit("notification", { notificationFromUser: user, id: Date.now().toString(), post: post.data, type });
+
       return setCurrentPost(post.data);
     }
     setOpen(true);

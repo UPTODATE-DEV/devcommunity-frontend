@@ -19,6 +19,7 @@ import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 import dynamic from "next/dynamic";
 import Dialog from "@mui/material/Dialog";
 import Share from "@/components/common/Share";
+import useSocket from "@/hooks/useSocket";
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
@@ -30,6 +31,7 @@ const PostReactions: React.FC = () => {
   const user = useStore((state) => state.session?.user);
   const [userReaction, setUserReaction] = React.useState<ArticleReactionType | undefined>();
   const [open, setOpen] = React.useState(false);
+  const socket = useSocket();
 
   const handleClose = () => {
     setOpen(false);
@@ -42,6 +44,7 @@ const PostReactions: React.FC = () => {
         toast.error(post.error);
         return;
       }
+      socket.emit("notification", { notificationFromUser: user, id: Date.now().toString(), post: post.data, type });
       return setCurrentPost(post.data);
     }
     setOpen(true);

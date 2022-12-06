@@ -14,6 +14,7 @@ import { styled } from "@mui/material/styles";
 import useStore from "@/hooks/useStore";
 import { getRequest } from "@/lib/api";
 import Image from "next/image";
+import useSocket from "@/hooks/useSocket";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -31,6 +32,7 @@ const Icons = () => {
   const user = useStore((state) => state.session?.user);
   const { push, locale } = useRouter();
   const [notifications, setNotifications] = React.useState(0);
+  const socket = useSocket();
 
   const toggleMode = () => {
     darkModeActive ? switchToLightMode() : switchToDarkMode();
@@ -61,6 +63,10 @@ const Icons = () => {
     };
 
     getNotifications();
+
+    socket.on("notification", () => {
+      getNotifications();
+    });
   }, []);
 
   return (

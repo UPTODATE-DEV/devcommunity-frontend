@@ -28,6 +28,7 @@ import Share from "@/components/common/Share";
 import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 import { FILES_BASE_URL } from "config/url";
 import ShowQuestionReactions from "./ShowQuestionReactions";
+import useSocket from "@/hooks/useSocket";
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
   loading: () => <CallToActionSkeleton />,
@@ -40,6 +41,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   const [userReaction, setUserReaction] = React.useState<QuestionReactionType | undefined>();
   const [openLogin, setOpenLogin] = React.useState(false);
   const [openReaction, setOpenReaction] = React.useState(false);
+  const socket = useSocket();
 
   locale === "fr" ? dayjs.locale("fr") : dayjs.locale("en");
 
@@ -65,6 +67,8 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
         }
         return el;
       });
+      
+      socket.emit("notification", { notificationFromUser: user, id: Date.now().toString(), post: post.data, type });
 
       return setPosts(updatedPosts as Post[]);
     }

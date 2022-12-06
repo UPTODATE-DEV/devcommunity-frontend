@@ -9,13 +9,28 @@ import "highlight.js/styles/tokyo-night-dark.css";
 import { MantineProvider } from "@mantine/core";
 import ToastNotification from "@/components/common/Toast";
 import { DefaultSeo } from "next-seo";
-import React from "react";
+import React, { useEffect } from "react";
 import SEO from "@/utils/next-seo.config";
+import io from "socket.io-client";
+import { BASE_API_URL } from "@/config/url";
 
+const socket = io(BASE_API_URL);
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { darkModeActive } = useDarkMode();
   const mode = darkModeActive ? "dark" : "light";
+
+  useEffect(() => {
+    Notification.requestPermission().then((result) => {
+      console.log("NOTIFICATIONS:" + result);
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("disconnect");
+      socket.off("notification");
+    };
+  }, []);
 
   return (
     <MantineProvider

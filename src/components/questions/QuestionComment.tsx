@@ -1,5 +1,6 @@
 import RichTextEditor from "@/components/common/RichTextEditor";
 import { CallToActionSkeleton } from "@/components/middle/Skeleton";
+import useSocket from "@/hooks/useSocket";
 import useStore from "@/hooks/useStore";
 import useUser from "@/hooks/useUser";
 import { deleteRequest, getRequest, postRequest } from "@/lib/api";
@@ -31,6 +32,7 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
   const [comment, setComment] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const { push, locale } = useRouter();
+  const socket = useSocket();
 
   const handleClose = () => {
     setOpen(false);
@@ -69,6 +71,12 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
       toast.error(response.error?.message);
     }
     if (response.data) {
+      socket.emit("notification", {
+        notificationFromUser: user,
+        id: Date.now().toString(),
+        post: data,
+        type: "COMMENT",
+      });
       setComments((state) => [...state, response.data]);
       handleCleanComment();
     }
@@ -103,7 +111,7 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
       </Dialog>
       <Stack spacing={2} sx={{ py: 1 }}>
         <Typography variant="h6" color="text.primary">
-          {locale === "en" ? "Comments" : "Commentaires" } ({comments.length})
+          {locale === "en" ? "Comments" : "Commentaires"} ({comments.length})
         </Typography>
         {comments?.map((el) => (
           <React.Fragment key={el.id}>
@@ -201,7 +209,7 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
                 }}
               >
                 <Typography variant="caption" color="text.secondary">
-                {locale === "en" ? "Leave a comment" : "Laisser un commentaire"}
+                  {locale === "en" ? "Leave a comment" : "Laisser un commentaire"}
                 </Typography>
                 <IconButton>
                   <CommentIcon fontSize="small" />

@@ -1,36 +1,28 @@
-import React from "react";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import Image from "next/image";
+import RichTextEditor from "@/components/common/RichTextEditor";
+import { CallToActionSkeleton } from "@/components/middle/Skeleton";
+import useSocket from "@/hooks/useSocket";
+import useStore from "@/hooks/useStore";
+import useUser from "@/hooks/useUser";
+import { deleteRequest, getRequest, postRequest } from "@/lib/api";
 import CommentIcon from "@mui/icons-material/Comment";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Avatar, Button, Divider } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
-import { Avatar, Button, Divider } from "@mui/material";
-import RichTextEditor from "@/components/common/RichTextEditor";
-import { deleteRequest, getRequest, patchRequest, postRequest } from "@/lib/api";
-import { toast } from "react-toastify";
-import useStore from "@/hooks/useStore";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { TypographyStylesProvider } from "@mantine/core";
-import hljs from "highlight.js";
-import { CallToActionSkeleton } from "@/components/middle/Skeleton";
-import dynamic from "next/dynamic";
-import Dialog from "@mui/material/Dialog";
-import useUser from "@/hooks/useUser";
-import { useRouter } from "next/router";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { FILES_BASE_URL } from "config/url";
+import hljs from "highlight.js";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import React from "react";
+import { toast } from "react-toastify";
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
   loading: () => <CallToActionSkeleton />,
 });
-
-// const colors = ["primary", "secondary", "error", "info", "warning", "success"];
-
-// const getAvatarBg = () => {
-//   const index = Math.floor(Math.random() * 6);
-//   return `${colors[index]}.main`;
-// };
 
 const PostComment: React.FC<{ data: Post }> = ({ data }) => {
   const session = useStore((state) => state.session?.user);
@@ -40,6 +32,7 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
   const [comment, setComment] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const { push, locale } = useRouter();
+  const socket = useSocket();
 
   const handleClose = () => {
     setOpen(false);
@@ -68,21 +61,6 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
     }
   };
 
-  const modules = React.useMemo(
-    () => ({
-      clipboard: {
-        allowed: {
-          tags: ["a", "b", "strong", "code", "blockquote", "u", "s", "i", "p", "br", "ul", "ol", "li", "span"],
-          attributes: ["href", "rel", "target", "class"],
-        },
-        keepSelection: true,
-        substituteBlockElements: true,
-        magicPasteLinks: true,
-      },
-    }),
-    []
-  );
-
   const onSubmit = async (e: any) => {
     e.preventDefault();
     const response = await postRequest({
@@ -93,6 +71,12 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
       toast.error(response.error?.message);
     }
     if (response.data) {
+      socket.emit("notification", {
+        notificationFromUser: user,
+        id: Date.now().toString(),
+        post: data,
+        type: "COMMENT",
+      });
       setComments((state) => [...state, response.data]);
       handleCleanComment();
     }
@@ -189,7 +173,6 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
                 ["bold", "italic", "underline", "link", "codeBlock"],
                 ["unorderedList", "orderedList", "sup", "sub", "code"],
               ]}
-              // modules={modules}
               onChange={(value) => setComment(value)}
               stickyOffset={70}
               id="rte"

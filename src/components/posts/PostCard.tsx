@@ -28,6 +28,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import ShowPostReactions from "./ShowPostReactions";
 import Share from "@/components/common/Share";
+import useSocket from "@/hooks/useSocket";
 dayjs.extend(relativeTime);
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
@@ -42,6 +43,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   const [userReaction, setUserReaction] = React.useState<ArticleReactionType | undefined>();
   const [openLogin, setOpenLogin] = React.useState(false);
   const [openReaction, setOpenReaction] = React.useState(false);
+  const socket = useSocket();
 
   locale === "en" ? dayjs.locale("en") : dayjs.locale("fr");
 
@@ -67,6 +69,8 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
         }
         return el;
       });
+
+      socket.emit("notification", { notificationFromUser: user, id: Date.now().toString(), post: post.data, type });
 
       return setPosts(updatedPosts as Post[]);
     }

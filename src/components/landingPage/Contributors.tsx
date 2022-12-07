@@ -57,9 +57,9 @@ const Contributors = () => {
       <Typography sx={{ width: { xs: 1, md: 0.6 } }} color="text.secondary" textAlign="center" gutterBottom>
         {description}
       </Typography>
-      <Grid container spacing={2} justifyContent="center" alignItems="center">
+      <Grid container spacing={2} justifyContent="center" alignItems="center" sx={{ py: 3 }}>
         {contributors.map((contributor) => (
-          <Grid item xs={6} sm={4} md={3} lg={2} key={contributor.name}>
+          <Grid item xs="auto" key={contributor.name}>
             <a
               title={contributor.name}
               key={contributor.github}

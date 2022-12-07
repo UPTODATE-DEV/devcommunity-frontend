@@ -21,9 +21,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   const mode = darkModeActive ? "dark" : "light";
 
   useEffect(() => {
-    Notification.requestPermission().then((result) => {
-      console.log("NOTIFICATIONS:" + result);
-    });
+    // Notification.requestPermission().then((result) => {
+    //   console.log("NOTIFICATIONS:" + result);
+    // });
 
     return () => {
       socket.off("connect");

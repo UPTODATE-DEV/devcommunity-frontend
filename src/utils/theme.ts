@@ -5,8 +5,8 @@ export const theme = (mode: "light" | "dark") =>
     palette: {
       mode: mode,
       background: {
-        paper: mode === "light" ? "#ffffff" : "#000f21",
-        default: "#000f21",
+        paper: mode === "light" ? "#ffffff" : "#192734",
+        default: "#192734",
       },
       primary: {
         main: "#0179bb",
@@ -20,7 +20,7 @@ export const theme = (mode: "light" | "dark") =>
       },
     },
     typography: {
-      fontFamily: ["Roboto", "sans-serif"].join(","),
+      fontFamily: ["Poppins", "sans-serif"].join(","),
       fontSize: 14,
     },
   });

@@ -79,63 +79,61 @@ const Menu: React.FC = () => {
       color="transparent"
       sx={{ backdropFilter: "blur(20px)", borderTop: "none", borderLeft: "none", borderRight: "none" }}
     >
-      <Container sx={{ mx: "auto" }}>
-        <Mobile />
-        <Toolbar>
-          <Grid
-            container
-            spacing={{ xs: 0, md: 2 }}
-            justifyContent="space-between"
-            alignItems="center"
-            sx={{ width: 1, py: 1 }}
-          >
-            <Grid item xs={2}>
-              <Logo />
-              <IconButton sx={{ display: { md: "none" } }} onClick={toggleDrawer()}>
-                <MenuIcon />
-              </IconButton>
-            </Grid>
-            <Grid item xs={5} md={6}>
-              <SpotlightProvider
-                actions={actions}
-                searchIcon={<IconSearch size={18} />}
-                searchPlaceholder="Search..."
-                shortcut={["mod + P", "mod + K", "/"]}
-                limit={7}
-                nothingFoundMessage="Nothing found..."
-              >
-                <Stack
-                  alignItems="center"
-                  direction="row"
-                  justifyContent="space-between"
-                  onClick={() => openSpotlight()}
-                  sx={{
-                    borderRadius: 10,
-                    bgcolor: "action.hover",
-                    minWidth: 1,
-                    height: 40,
-                    px: 4,
-                    cursor: "pointer",
-                  }}
-                >
-                  <Typography variant="caption" color="text.secondary">
-                    {locale === "en" ? "Search..." : "Rechercher..."}
-                  </Typography>
-                  <Typography sx={{ display: { xs: "none", md: "inline" } }} variant="caption" color="text.secondary">
-                    Cmd + K
-                  </Typography>
-                </Stack>
-              </SpotlightProvider>
-            </Grid>
-            <Grid item xs={3} md={4}>
-              <Stack direction="row" justifyContent="space-between" alignItems="center">
-                <Icons />
-                <Stack sx={{ display: { xs: "none", md: "flex" } }}>{user ? <Profile /> : <Auth />}</Stack>
-              </Stack>
-            </Grid>
+      <Mobile />
+      <Toolbar>
+        <Grid
+          container
+          spacing={{ xs: 0, md: 2 }}
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{ width: 1, py: 1 }}
+        >
+          <Grid item xs={2}>
+            <Logo />
+            <IconButton sx={{ display: { md: "none" } }} onClick={toggleDrawer()}>
+              <MenuIcon />
+            </IconButton>
           </Grid>
-        </Toolbar>
-      </Container>
+          <Grid item xs={5} md={6}>
+            <SpotlightProvider
+              actions={actions}
+              searchIcon={<IconSearch size={18} />}
+              searchPlaceholder="Search..."
+              shortcut={["mod + P", "mod + K", "/"]}
+              limit={7}
+              nothingFoundMessage="Nothing found..."
+            >
+              <Stack
+                alignItems="center"
+                direction="row"
+                justifyContent="space-between"
+                onClick={() => openSpotlight()}
+                sx={{
+                  borderRadius: 10,
+                  bgcolor: "action.hover",
+                  minWidth: 1,
+                  height: 40,
+                  px: 4,
+                  cursor: "pointer",
+                }}
+              >
+                <Typography variant="caption" color="text.secondary">
+                  {locale === "en" ? "Search..." : "Rechercher..."}
+                </Typography>
+                <Typography sx={{ display: { xs: "none", md: "inline" } }} variant="caption" color="text.secondary">
+                  Cmd + K
+                </Typography>
+              </Stack>
+            </SpotlightProvider>
+          </Grid>
+          <Grid item xs={3} md={4}>
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <Icons />
+              <Stack sx={{ display: { xs: "none", md: "flex" } }}>{user ? <Profile /> : <Auth />}</Stack>
+            </Stack>
+          </Grid>
+        </Grid>
+      </Toolbar>
     </AppBar>
   );
 };

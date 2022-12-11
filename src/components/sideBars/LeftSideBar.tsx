@@ -17,9 +17,18 @@ import ListItemText from "@mui/material/ListItemText";
 import { useRouter } from "next/router";
 import React from "react";
 
+import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
+import HistoryEduTwoToneIcon from "@mui/icons-material/HistoryEduTwoTone";
+import QuestionAnswerTwoToneIcon from "@mui/icons-material/QuestionAnswerTwoTone";
+import TagTwoToneIcon from "@mui/icons-material/TagTwoTone";
+import CurrencyBitcoinTwoToneIcon from "@mui/icons-material/CurrencyBitcoinTwoTone";
+import AutoAwesomeTwoToneIcon from "@mui/icons-material/AutoAwesomeTwoTone";
+import ConnectWithoutContactTwoToneIcon from "@mui/icons-material/ConnectWithoutContactTwoTone";
+
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Box from "@mui/material/Box";
+import { Stack } from "@mui/system";
 
 const LeftSideBar = () => {
   const user = useStore((state) => state.session?.user);
@@ -33,13 +42,17 @@ const LeftSideBar = () => {
   };
 
   const main = [
-    { path: "/", icon: <HomeSharpIcon />, label: locale === "fr" ? "Accueil" : "Home" },
-    { path: "/articles", icon: <HistoryEduIcon />, label: "Articles" },
-    { path: "/posts", icon: <QuestionAnswer />, label: "Posts" },
-    { path: "/tags", icon: <TagSharpIcon />, label: "Tags" },
-    { path: "/blockchain", icon: <BlurOnIcon />, label: "Blockchain" },
-    { path: "/top-posts", icon: <AutoAwesomeIcon />, label: "Top posts" },
-    { path: "/home", icon: <BusinessIcon />, label: "Updev" },
+    { path: "/", icon: <HomeTwoToneIcon />, label: locale === "fr" ? "Accueil" : "Home" },
+    { path: "/articles", icon: <HistoryEduTwoToneIcon />, label: "Articles" },
+    { path: "/posts", icon: <QuestionAnswerTwoToneIcon />, label: "Posts" },
+    { path: "/tags", icon: <TagTwoToneIcon />, label: "Tags" },
+    { path: "/blockchain", icon: <CurrencyBitcoinTwoToneIcon />, label: "Blockchain" },
+    { path: "/top-posts", icon: <AutoAwesomeTwoToneIcon />, label: "Top posts" },
+    {
+      path: "/home",
+      icon: <ConnectWithoutContactTwoToneIcon />,
+      label: locale === "fr" ? "A propos de nous" : "About Us",
+    },
   ];
 
   const params = [
@@ -50,9 +63,25 @@ const LeftSideBar = () => {
 
   return (
     <>
-      <List>
+      <List sx={{ width: 1 }}>
         {main.map(({ path, icon, label }) => (
-          <ListItemButton key={path} selected={matches(path)} onClick={() => push(path)}>
+          <ListItemButton
+            key={path}
+            onClick={() => push(path)}
+            sx={{
+              position: "relative",
+              "&:after": {
+                position: "absolute",
+                content: "''",
+                width: 5,
+                height: 1,
+                bottom: 0,
+                left: 0,
+                backgroundColor: matches(path) ? "primary.main" : "transparent",
+                transition: "all 0.3s ease-in-out",
+              },
+            }}
+          >
             <ListItemIcon sx={{ mr: -1, color: matches(path) ? "primary.main" : "text.primary" }}>{icon}</ListItemIcon>
             <ListItemText
               primary={label}
@@ -93,4 +122,4 @@ const LeftSideBar = () => {
   );
 };
 
-export default LeftSideBar;
+export default React.memo(LeftSideBar);

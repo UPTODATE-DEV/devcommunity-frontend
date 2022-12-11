@@ -9,6 +9,7 @@ import Box from "@mui/material/Box";
 import CallToAction from "@/components/middle/CallToAction";
 import dynamic from "next/dynamic";
 import { LeftBarSkeleton, RightBarSkeleton } from "@/components/sideBars/Skeleton";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const RightSideBar = dynamic(import("@/components/sideBars/RightSideBar"), {
   ssr: false,
@@ -20,13 +21,17 @@ const LeftSideBar = dynamic(import("@/components/sideBars/LeftSideBar"), {
 });
 
 const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Box sx={{ bgcolor: "background.paper", minHeight: "100vh" }}>
-      <Container sx={{ mx: "auto" }}>
-        <Grid container>
+      <Grid container>
+        {!isMobile && (
           <Grid
             item
-            md={2}
+            md={3}
+            lg={2}
+            xl={1.5}
             className="hide-scrollbar"
             sx={{
               position: "sticky",
@@ -37,18 +42,21 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
               borderRight: (theme) => `1px solid ${theme.palette.divider}`,
             }}
           >
-            <Paper elevation={0} sx={{ position: "relative", top: 70 }}>
+            <Paper elevation={0} sx={{ position: "relative", top: 70, width: 1 }}>
               <LeftSideBar />
             </Paper>
           </Grid>
-          <Grid item md={6} sx={{ width: 1 }}>
-            <Stack sx={{ mt: 10, px: { xs: 0, md: 2 } }} spacing={2}>
-              {children}
-            </Stack>
-          </Grid>
+        )}
+        <Grid item md={9} lg={7} sx={{ width: 1 }}>
+          <Stack sx={{ mt: 10, px: { xs: 0, md: 2 } }} spacing={2}>
+            {children}
+          </Stack>
+        </Grid>
+        {!isMobile && (
           <Grid
             item
-            md={4}
+            lg={3}
+            xl={3.5}
             className="hide-scrollbar"
             sx={{
               position: "sticky",
@@ -56,15 +64,14 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
               height: "100vh",
               overflow: "auto",
               width: 1,
-              display: { xs: "none", md: "flex" },
+              display: { xs: "none", lg: "flex" },
+              borderLeft: (theme) => `1px solid ${theme.palette.divider}`,
             }}
           >
-            <Paper variant="outlined" sx={{ position: "relative", top: 80 }}>
-              <RightSideBar />
-            </Paper>
+            <RightSideBar />
           </Grid>
-        </Grid>
-      </Container>
+        )}
+      </Grid>
     </Box>
   );
 };

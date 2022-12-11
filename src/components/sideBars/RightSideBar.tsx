@@ -40,15 +40,20 @@ const RightSideBar = () => {
   }, []);
 
   return (
-    <Stack>
+    <Stack sx={{ position: "relative", top: 70, width: 1 }}>
       <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
         {locale === "en" ? "Top articles of the Week" : "Meilleurs articles de la semaine"}
       </Typography>
       <Divider />
-      <List sx={{ width: { xs: "100%", md: 350 }, bgcolor: "background.paper" }}>
+      <List sx={{ width: { xs: "100%" }, bgcolor: "background.paper" }}>
         {posts?.topArticlesOfTheWeek?.length === 0 && <Empty />}
         {posts?.topArticlesOfTheWeek.map((item, i) => (
-          <ListItems key={item.id} item={item} handleViewPost={(path) => handleView(path, "articles")} />
+          <ListItems
+            key={item.id}
+            item={item}
+            handleViewPost={(path) => handleView(path, "articles")}
+            divider={i !== posts?.topArticlesOfTheWeek.length - 1}
+          />
         ))}
       </List>
       <Divider />
@@ -58,12 +63,17 @@ const RightSideBar = () => {
       <Divider />
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
         {posts?.topQuestionsOfTheWeek?.length === 0 && <Empty />}
-        {posts?.topQuestionsOfTheWeek.map((item) => (
-          <ListItems key={item.id} item={item} handleViewPost={(path) => handleView(path, "posts")} />
+        {posts?.topQuestionsOfTheWeek.map((item, i) => (
+          <ListItems
+            key={item.id}
+            item={item}
+            handleViewPost={(path) => handleView(path, "posts")}
+            divider={i !== posts?.topQuestionsOfTheWeek.length - 1}
+          />
         ))}
       </List>
     </Stack>
   );
 };
 
-export default RightSideBar;
+export default React.memo(RightSideBar);

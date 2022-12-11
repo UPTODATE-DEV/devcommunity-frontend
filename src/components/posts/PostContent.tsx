@@ -6,8 +6,15 @@ import Chip from "@mui/material/Chip";
 import TagIcon from "@mui/icons-material/Tag";
 
 const PostContent: React.FC<{ data: Post }> = ({ data }) => {
+  const wrapCode = (html: any) => {
+    const removeStyles = (html: string) => html.replace(/style="[^"]*"/g, "");
+    const wrapCode = (html: string) => html.replace(/<code>([^<]*)<\/code>/g, "<pre><code>$1</code></pre>");
+
+    return wrapCode(removeStyles(html));
+  };
+
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} sx={{ px: 2 }}>
       <Typography variant="h4" color="text.primary" fontWeight={700} gutterBottom>
         {data?.title}
       </Typography>
@@ -20,7 +27,7 @@ const PostContent: React.FC<{ data: Post }> = ({ data }) => {
         gutterBottom
         sx={{ lineHeight: 1.65 }}
         dangerouslySetInnerHTML={{
-          __html: data?.content,
+          __html: wrapCode(data?.content),
         }}
       />
 

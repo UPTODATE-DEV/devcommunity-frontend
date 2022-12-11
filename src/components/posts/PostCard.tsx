@@ -25,10 +25,19 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useCallback } from "react";
 import ShowPostReactions from "./ShowPostReactions";
 import Share from "@/components/common/Share";
 import useSocket from "@/hooks/useSocket";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
+import { useMobileMediaQuery } from "@/lib/media";
+import PostContent from "@/components/common/PostContent";
+import PostTags from "./PostTags";
+import PostCardHeader from "./PostCardHeader";
+import PostImage from "./PostImage";
+import UserAvatar from "@/components/common/UserAvatar";
+import { getArticleImageUrl, getContent, getUserFullName, getUserProfileImageUrl, parseDate } from "@/lib/posts";
+import { useGoToPost, useGoToUserProfile } from "@/hooks/posts";
 dayjs.extend(relativeTime);
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
@@ -137,8 +146,24 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
     }
   }, [data?.article?.reactions, user]);
 
+  const { author } = data;
+  const goToProfile = useGoToUserProfile();
+  const goToPost = useGoToPost();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const postContent = getContent(data?.content, isMobile ? 180 : 240);
+
+  const handleGoToProfile = useCallback(() => {
+    goToProfile(author?.email);
+  }, [author?.email]);
+
+  const handleGoToPost = useCallback(() => {
+    goToPost(data?.slug);
+  }, [data?.slug]);
+
   return (
-    <>
+    <Box sx={{ p: { xs: 2, md: 0 } }}>
       <Dialog
         open={openLogin}
         onClose={handleCloseLogin}
@@ -157,174 +182,133 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
         <ShowPostReactions reactions={data?.article?.reactions} />
       </Dialog>
 
-      <Stack>
-        <Grid container>
-          <Grid item xs={2} sm={1} md={2} lg={1.2}>
-            <IconButton onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}>
-              <Avatar
-                sx={{ bgcolor: "primary.main", color: "white" }}
-                alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
-                src={FILES_BASE_URL + data?.author?.profile?.avatar?.url}
-              >
-                {data?.author?.firstName.charAt(0)}
-              </Avatar>
-            </IconButton>
-          </Grid>
-          <Grid item xs={10} sm={11} md={10} lg={10.8}>
-            <Stack direction="row" spacing={1}>
-              <Typography
-                variant="caption"
-                onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}
-                sx={{
-                  "&:hover": {
-                    color: "primary.main",
-                  },
-                  cursor: "pointer",
-                }}
-                color="text.primary"
-                gutterBottom
-                fontWeight={700}
-              >
-                {data?.author?.firstName} {data?.author?.lastName}
-              </Typography>
-
-              <Typography variant="caption" gutterBottom color="text.secondary">
-                {dayjs(data?.createdAt).fromNow()}
-              </Typography>
-            </Stack>
-            <Typography
-              gutterBottom
-              fontWeight={700}
-              color="text.primary"
-              onClick={handleViewPost}
-              sx={{
-                "&:hover": {
-                  color: "primary.main",
-                },
-                cursor: "pointer",
-              }}
-            >
-              {data?.title}
-            </Typography>
-          </Grid>
-        </Grid>
-
-        <Typography
-          color="text.secondary"
-          component="div"
-          className="content"
-          gutterBottom
-          dangerouslySetInnerHTML={{
-            __html: data?.content.length > 120 ? `${data?.content.substring(0, 120)}...` : data?.content,
-          }}
-        />
-
-        {data?.article.image && (
-          <Stack
-            sx={{
-              width: 1,
-              height: { xs: 180, md: 240 },
-              position: "relative",
-              borderRadius: 2,
-              cursor: "pointer",
-              overflow: "hidden",
-              my: 2,
-            }}
-            onClick={handleViewPost}
-          >
-            <Image
-              src={FILES_BASE_URL + data?.article?.image?.url}
-              alt={`${data?.title} | Updev Community`}
-              layout="fill"
-              objectFit="cover"
-            />
-          </Stack>
-        )}
-
-        <Grid container spacing={1} sx={{ pb: 1 }} direction="row">
-          {data?.tags?.map((el) => (
-            <Grid item xs="auto" key={el.tag.id}>
-              <Chip size="small" icon={<TagIcon fontSize="small" />} sx={{ px: 2 }} label={el.tag.name} />
+      <Grid container spacing={{ xs: 0, sm: 2, lg: 4 }}>
+        <Grid container item xs={12} sm={8}>
+          <Grid container>
+            <Grid item xs={2} sm={1.6} md={1.8} lg={1.6} xl={1.4}>
+              <UserAvatar
+                name={getUserFullName(author)}
+                pictureUrl={getUserProfileImageUrl(author)}
+                handleClick={handleGoToProfile}
+              />
             </Grid>
-          ))}
-        </Grid>
 
-        <Stack
-          direction="row"
-          flexWrap="wrap"
-          spacing={1}
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ mt: 1 }}
-        >
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{
-              border: (theme) => `1px solid ${theme.palette.divider}`,
-              borderRadius: 52,
-              transition: "all 0.5s ease",
-            }}
-          >
-            {!userReaction ? (
-              <>
-                <Like />
-                <Love />
-                <Useful />
-              </>
-            ) : (
-              <>
-                {userReaction === "LIKE" && <Like />}
-                {userReaction === "LOVE" && <Love />}
-                {userReaction === "USEFUL" && <Useful />}
-              </>
-            )}
-
-            <Tooltip
-              title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"}
-              placement="bottom"
-              arrow
-            >
-              <IconButton onClick={() => setOpenReaction(true)}>
-                <Typography variant="caption" color="text.primary" fontWeight={700}>
-                  {data.article?.reactions?.length}
-                </Typography>
-              </IconButton>
-            </Tooltip>
-          </Stack>
-          <Stack direction="row" spacing={2}>
-            <Stack direction="row" alignItems="center">
-              <Link href={`/articles/${data?.slug}/#comments`} passHref>
-                <IconButton>
-                  <CommentIcon fontSize="small" />
-                </IconButton>
-              </Link>
-              <Typography variant="caption" color="text.secondary" fontWeight={700}>
-                {data?.comments?.length || 0}
-              </Typography>
-            </Stack>
-
-            <Stack
-              direction="row"
-              alignItems="center"
-              sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
-            >
-              <Tooltip title={locale === "en" ? "Add to bookmarks" : "Ajouter aux favoris"} placement="bottom" arrow>
-                <IconButton onClick={onAddToBookmarks}>
-                  {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
-                    <BookmarkRemoveIcon color="secondary" fontSize="small" />
+            <Grid item xs={10} sm={10.4} md={9.2} lg={10.4} xl={10.6}>
+              <PostCardHeader
+                title={data?.title}
+                handleClickGoToPost={handleGoToPost}
+                handleClickGoToProfile={handleGoToProfile}
+                date={parseDate({ date: data?.publishedOn, type: "relative" })}
+                name={getUserFullName(author)}
+              />
+            </Grid>
+          </Grid>
+          <Grid container>
+            <Grid item sm={1.6} md={2} lg={1.6} xl={1.4}></Grid>
+            <Grid item xs={12} sm={10.4} md={10} lg={10.4} xl={10.6}>
+              <PostContent content={postContent} />
+              {isMobile && (
+                <PostImage
+                  handleClick={handleGoToPost}
+                  title={data?.title}
+                  articleUrl={getArticleImageUrl(data?.article)}
+                />
+              )}
+              <PostTags tags={data?.tags} />
+              <Stack
+                direction="row"
+                flexWrap="wrap"
+                spacing={1}
+                alignItems="center"
+                justifyContent="space-between"
+                sx={{ mt: 1 }}
+              >
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  sx={{
+                    border: (theme) => `1px solid ${theme.palette.divider}`,
+                    borderRadius: 52,
+                    transition: "all 0.5s ease",
+                  }}
+                >
+                  {!userReaction ? (
+                    <>
+                      <Like />
+                      <Love />
+                      <Useful />
+                    </>
                   ) : (
-                    <BookmarkAddSharpIcon fontSize="small" />
+                    <>
+                      {userReaction === "LIKE" && <Like />}
+                      {userReaction === "LOVE" && <Love />}
+                      {userReaction === "USEFUL" && <Useful />}
+                    </>
                   )}
-                </IconButton>
-              </Tooltip>
-            </Stack>
-            <Share data={data} />
-          </Stack>
-        </Stack>
-      </Stack>
-    </>
+
+                  <Tooltip
+                    title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"}
+                    placement="bottom"
+                    arrow
+                  >
+                    <IconButton onClick={() => setOpenReaction(true)}>
+                      <Typography variant="caption" color="text.primary" fontWeight={700}>
+                        {data.article?.reactions?.length}
+                      </Typography>
+                    </IconButton>
+                  </Tooltip>
+                </Stack>
+                <Stack direction="row" spacing={2}>
+                  <Stack direction="row" alignItems="center">
+                    <Link href={`/articles/${data?.slug}/#comments`} passHref>
+                      <IconButton>
+                        <CommentIcon fontSize="small" />
+                      </IconButton>
+                    </Link>
+                    <Typography variant="caption" color="text.secondary" fontWeight={700}>
+                      {data?.comments?.length || 0}
+                    </Typography>
+                  </Stack>
+
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
+                  >
+                    <Tooltip
+                      title={locale === "en" ? "Add to bookmarks" : "Ajouter aux favoris"}
+                      placement="bottom"
+                      arrow
+                    >
+                      <IconButton onClick={onAddToBookmarks}>
+                        {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
+                          <BookmarkRemoveIcon color="secondary" fontSize="small" />
+                        ) : (
+                          <BookmarkAddSharpIcon fontSize="small" />
+                        )}
+                      </IconButton>
+                    </Tooltip>
+                  </Stack>
+                  <Share data={data} />
+                </Stack>
+              </Stack>
+            </Grid>
+          </Grid>
+        </Grid>
+        {!isMobile && (
+          <Grid item xs={0} sm={4}>
+            <PostImage
+              handleClick={handleGoToPost}
+              title={data?.title}
+              articleUrl={getArticleImageUrl(data?.article)}
+            />
+          </Grid>
+        )}
+      </Grid>
+    </Box>
   );
 };
 
-export default PostCard;
+const PostActions = () => {};
+
+export default React.memo(PostCard);

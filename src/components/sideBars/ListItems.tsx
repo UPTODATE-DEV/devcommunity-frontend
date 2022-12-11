@@ -8,7 +8,15 @@ import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
 import React from "react";
 
-const ListItems = ({ item, handleViewPost }: { item: Post; handleViewPost: (path: string) => void }) => {
+const ListItems = ({
+  item,
+  handleViewPost,
+  divider,
+}: {
+  item: Post;
+  divider: boolean;
+  handleViewPost: (path: string) => void;
+}) => {
   const { locale } = useRouter();
 
   return (
@@ -25,21 +33,18 @@ const ListItems = ({ item, handleViewPost }: { item: Post; handleViewPost: (path
         </ListItemAvatar>
         <ListItemText
           primary={item.title}
-          primaryTypographyProps={{
-            fontWeight: 700,
-          }}
           secondary={
             <Stack sx={{ width: 1 }} component="span">
-              <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
+              <Typography sx={{ display: "inline" }} component="span" variant="caption" color="text.primary">
                 {locale === "en" ? "By" : "Par"} {`${item.author.firstName} ${item.author.lastName}`}
               </Typography>
             </Stack>
           }
         />
       </ListItemButton>
-      <Divider variant="inset" component="li" />
+      {divider && <Divider variant="inset" component="li" />}
     </React.Fragment>
   );
 };
 
-export default ListItems;
+export default React.memo(ListItems);

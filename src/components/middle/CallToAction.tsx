@@ -1,3 +1,4 @@
+import { Paper } from "@mui/material";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
@@ -29,7 +30,8 @@ const CallToAction = () => {
   const { locale } = useRouter();
   const { title, description } = data[locale === "fr" ? 1 : 0];
   return (
-    <Box
+    <Paper
+      variant="outlined"
       id="call-to-action"
       sx={{
         py: 4,
@@ -64,7 +66,7 @@ const CallToAction = () => {
           </Stack>
         </Stack>
       </Container>
-    </Box>
+    </Paper>
   );
 };
 

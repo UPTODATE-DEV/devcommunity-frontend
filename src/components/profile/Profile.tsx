@@ -80,6 +80,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
 
   const onLogout = async () => {
     googleLogout();
+    handleClose();
     await postLocalRequest({ endpoint: "/api/logout" });
     reload();
   };

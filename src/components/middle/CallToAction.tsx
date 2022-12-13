@@ -35,7 +35,6 @@ const CallToAction = () => {
       id="call-to-action"
       sx={{
         py: 4,
-        bgcolor: "primary.main",
         position: "relative",
         borderRadius: 1,
         overflow: "hidden",

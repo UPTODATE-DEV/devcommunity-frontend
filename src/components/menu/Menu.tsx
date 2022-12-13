@@ -131,7 +131,6 @@ const Menu: React.FC = () => {
             <Stack
               direction="row"
               spacing={2}
-              justifyContent="space-between"
               alignItems="center"
               sx={{ height: 60, width: 1 }}
             >

@@ -9,7 +9,7 @@ import useStore from "@/hooks/useStore";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { useRouter } from "next/router";
-import { alpha } from "@mui/material";
+import { alpha, Button } from "@mui/material";
 import { getRequest, patchRequest } from "@/lib/api";
 import { toast } from "react-toastify";
 import { FILES_BASE_URL } from "config/url";
@@ -41,6 +41,19 @@ const Notifications = () => {
     push(`${post.type === "ARTICLE" ? "/articles" : "/posts"}/${post.slug}`);
   };
 
+  const handleReadAll = async () => {
+    const response = await patchRequest({ endpoint: `/notifications/${session?.id}/all` });
+    if (response.error) {
+      toast.error(response.error?.message);
+    }
+    setNotifications(
+      notifications.map((el) => ({
+        ...el,
+        notifications: el.notifications.map((notif) => ({ ...notif, read: true })),
+      }))
+    );
+  };
+
   React.useEffect(() => {
     socket.on("notification", () => {
       const getNotifications = async () => {
@@ -56,9 +69,14 @@ const Notifications = () => {
 
   return (
     <Stack spacing={2} sx={{ py: 2 }}>
-      <Typography variant="h6" color="text.primary">
-        Notifications
-      </Typography>
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Typography variant="h6" color="text.primary">
+          Notifications
+        </Typography>
+        <Button onClick={handleReadAll} variant="outlined">
+          Mark all as read
+        </Button>
+      </Stack>
       <Divider variant="inset" />
       {notifications?.length === 0 && <Empty />}
       {notifications.map((el) => (

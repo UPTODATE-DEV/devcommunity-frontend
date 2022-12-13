@@ -23,7 +23,7 @@ const PostContent = ({ content }: { content: string }) => {
       color="text.secondary"
       component="div"
       className="content"
-      gutterBottom
+      variant="body2"
       dangerouslySetInnerHTML={{
         __html: content,
       }}

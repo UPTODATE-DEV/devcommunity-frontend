@@ -24,54 +24,48 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
-    <Box sx={{ bgcolor: "background.paper", minHeight: "100vh" }}>
-      <Grid container>
-        {!isMobile && (
-          <Grid
-            item
-            md={3}
-            lg={2}
-            xl={1.5}
-            className="hide-scrollbar"
-            sx={{
-              position: "sticky",
-              top: 0,
-              height: "100vh",
-              overflow: "auto",
-              display: { xs: "none", md: "flex" },
-              borderRight: (theme) => `1px solid ${theme.palette.divider}`,
-            }}
-          >
-            <Paper elevation={0} sx={{ position: "relative", top: 70, width: 1 }}>
+    <Box sx={{ bgcolor: "background.default", minHeight: "100vh" }}>
+      <Container maxWidth="xl">
+        <Grid container spacing={2}>
+          {!isMobile && (
+            <Grid
+              item
+              md={3}
+              lg={2}
+              className="hide-scrollbar"
+              sx={{
+                position: "sticky",
+                top: 76,
+                height: 1,
+                overflow: "auto",
+                display: { sm: "none", md: "flex" },
+              }}
+            >
               <LeftSideBar />
-            </Paper>
-          </Grid>
-        )}
-        <Grid item md={9} lg={7} sx={{ width: 1 }}>
-          <Stack sx={{ mt: 10, px: { xs: 0, md: 2 } }} spacing={2}>
+            </Grid>
+          )}
+          <Grid item md={9} lg={7} sx={{ mt: 1.9 }}>
             {children}
-          </Stack>
-        </Grid>
-        {!isMobile && (
-          <Grid
-            item
-            lg={3}
-            xl={3.5}
-            className="hide-scrollbar"
-            sx={{
-              position: "sticky",
-              top: 0,
-              height: "100vh",
-              overflow: "auto",
-              width: 1,
-              display: { xs: "none", lg: "flex" },
-              borderLeft: (theme) => `1px solid ${theme.palette.divider}`,
-            }}
-          >
-            <RightSideBar />
           </Grid>
-        )}
-      </Grid>
+          {!isMobile && (
+            <Grid
+              item
+              lg={3}
+              className="hide-scrollbar"
+              sx={{
+                position: "sticky",
+                top: 76,
+                height: 1,
+                overflow: "auto",
+                width: 1,
+                display: { xs: "none", lg: "flex" },
+              }}
+            >
+              <RightSideBar />
+            </Grid>
+          )}
+        </Grid>
+      </Container>
     </Box>
   );
 };

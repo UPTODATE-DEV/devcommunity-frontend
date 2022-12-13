@@ -14,13 +14,11 @@ const PostImage = ({
     <Stack
       sx={{
         width: 1,
-        height: 240,
+        height: 140,
         position: "relative",
         borderRadius: 2,
         cursor: "pointer",
         overflow: "hidden",
-        border: (theme) => `1px solid ${theme.palette.divider}`,
-        my: 2,
         bgcolor: "action.hover",
       }}
       onClick={handleClick}

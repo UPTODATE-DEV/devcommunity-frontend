@@ -1,5 +1,6 @@
 import useStore from "@/hooks/useStore";
 import { getRequest } from "@/lib/api";
+import { Paper } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import Stack from "@mui/material/Stack";
@@ -40,38 +41,40 @@ const RightSideBar = () => {
   }, []);
 
   return (
-    <Stack sx={{ position: "relative", top: 70, width: 1 }}>
-      <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
-        {locale === "en" ? "Top articles of the Week" : "Meilleurs articles de la semaine"}
-      </Typography>
-      <Divider />
-      <List sx={{ width: { xs: "100%" }, bgcolor: "background.paper" }}>
-        {posts?.topArticlesOfTheWeek?.length === 0 && <Empty />}
-        {posts?.topArticlesOfTheWeek.map((item, i) => (
-          <ListItems
-            key={item.id}
-            item={item}
-            handleViewPost={(path) => handleView(path, "articles")}
-            divider={i !== posts?.topArticlesOfTheWeek.length - 1}
-          />
-        ))}
-      </List>
-      <Divider />
-      <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
-        {locale === "en" ? "Top Posts of the Week" : "Meilleurs posts de la semaine"}
-      </Typography>
-      <Divider />
-      <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-        {posts?.topQuestionsOfTheWeek?.length === 0 && <Empty />}
-        {posts?.topQuestionsOfTheWeek.map((item, i) => (
-          <ListItems
-            key={item.id}
-            item={item}
-            handleViewPost={(path) => handleView(path, "posts")}
-            divider={i !== posts?.topQuestionsOfTheWeek.length - 1}
-          />
-        ))}
-      </List>
+    <Stack spacing={2}>
+      <Paper variant="outlined" sx={{ position: "relative", width: 1 }}>
+        <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
+          {locale === "en" ? "Top articles of the Week" : "Meilleurs articles de la semaine"}
+        </Typography>
+        <Divider />
+        <List sx={{ width: { xs: "100%" }, bgcolor: "background.paper" }}>
+          {posts?.topArticlesOfTheWeek?.length === 0 && <Empty />}
+          {posts?.topArticlesOfTheWeek.map((item, i) => (
+            <ListItems
+              key={item.id}
+              item={item}
+              handleViewPost={(path) => handleView(path, "articles")}
+              divider={i !== posts?.topArticlesOfTheWeek.length - 1}
+            />
+          ))}
+        </List>
+        <Divider />
+        <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
+          {locale === "en" ? "Top Posts of the Week" : "Meilleurs posts de la semaine"}
+        </Typography>
+        <Divider />
+        <List sx={{ width: "100%", bgcolor: "background.paper" }}>
+          {posts?.topQuestionsOfTheWeek?.length === 0 && <Empty />}
+          {posts?.topQuestionsOfTheWeek.map((item, i) => (
+            <ListItems
+              key={item.id}
+              item={item}
+              handleViewPost={(path) => handleView(path, "posts")}
+              divider={i !== posts?.topQuestionsOfTheWeek.length - 1}
+            />
+          ))}
+        </List>
+      </Paper>
     </Stack>
   );
 };

@@ -6,11 +6,11 @@ export const getUserFullName = (user?: User) => {
 };
 
 export const getUserProfileImageUrl = (user?: User) => {
-  return FILES_BASE_URL + user?.profile?.avatar?.url || undefined;
+  return user?.profile?.avatar?.url ? FILES_BASE_URL + user?.profile?.avatar?.url : undefined;
 };
 
 export const getArticleImageUrl = (article?: Article) => {
-  return FILES_BASE_URL + article?.image?.url || undefined;
+  return article?.image?.url ? FILES_BASE_URL + article?.image?.url : undefined;
 };
 
 export const getContent = (content: string, limit: number) => {

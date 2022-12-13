@@ -1,23 +1,26 @@
 import { Stack, Typography } from "@mui/material";
+import { getUserFullName, getUserProfileImageUrl } from "../../lib/posts";
+import UserAvatar from "../common/UserAvatar";
 
 const PostHeader = ({
-  name = "",
-  title = "",
+  author,
   date = "",
-  handleClickGoToPost,
   handleClickGoToProfile,
 }: {
-  name?: string;
-  title?: string;
+  author?: User;
   date?: string;
   handleClickGoToProfile: () => void;
-  handleClickGoToPost: () => void;
 }) => {
   return (
-    <Stack spacing={1} sx={{ mt: 1 }}>
-      <Stack direction="row" spacing={1}>
+    <Stack spacing={1} direction="row" alignItems="center">
+      <UserAvatar
+        name={getUserFullName(author)}
+        pictureUrl={getUserProfileImageUrl(author)}
+        handleClick={handleClickGoToProfile}
+      />
+      <Stack>
         <Typography
-          variant="caption"
+          variant="body2"
           onClick={handleClickGoToProfile}
           sx={{
             "&:hover": {
@@ -26,32 +29,14 @@ const PostHeader = ({
             cursor: "pointer",
           }}
           color="text.primary"
-          gutterBottom
           fontWeight={700}
         >
-          {name}
+          {getUserFullName(author)}
         </Typography>
-        <Typography variant="caption" color="text.secondary" gutterBottom fontWeight={700}>
-          -
-        </Typography>
-        <Typography variant="caption" gutterBottom color="text.secondary">
+        <Typography variant="caption" color="text.secondary" sx={{ textTransform: "capitalize" }}>
           {date}
         </Typography>
       </Stack>
-      <Typography
-        gutterBottom
-        fontWeight={700}
-        color="text.primary"
-        onClick={handleClickGoToPost}
-        sx={{
-          "&:hover": {
-            color: "primary.main",
-          },
-          cursor: "pointer",
-        }}
-      >
-        {title}
-      </Typography>
     </Stack>
   );
 };

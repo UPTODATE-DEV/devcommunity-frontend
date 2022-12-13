@@ -6,6 +6,10 @@ import dynamic from "next/dynamic";
 import React from "react";
 import QuestionContent from "./QuestionContent";
 
+const QuestionSuggestions = dynamic(import("@/components/questions/QuestionSuggestions"), {
+  ssr: false,
+  loading: () => null,
+});
 const QuestionComment = dynamic(import("@/components/questions/QuestionComment"), { ssr: false, loading: () => null });
 const QuestionReactions = dynamic(import("@/components/questions/QuestionReactions"), {
   ssr: false,
@@ -30,7 +34,7 @@ const Question: React.FC<{ data: Post }> = ({ data }) => {
       <QuestionContent data={data} />
       <Divider />
       <QuestionReactions />
-      <Divider />
+      <QuestionSuggestions data={data} />
       <div id="comments"></div>
       <QuestionComment data={data} />
       <Divider />

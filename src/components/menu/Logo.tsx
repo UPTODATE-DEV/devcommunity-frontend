@@ -11,7 +11,13 @@ const Logo = () => {
 
   return (
     <Stack
-      sx={{ width: 110, display: { xs: "none", md: "flex" }, height: 50, position: "relative", cursor: "pointer" }}
+      sx={{
+        width: 110,
+        display: { xs: "none", md: "flex" },
+        height: 1,
+        position: "relative",
+        cursor: "pointer",
+      }}
       onClick={handleGoHome}
     >
       <Image src="/logo.svg" layout="fill" objectFit="contain" />

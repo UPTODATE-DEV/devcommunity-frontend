@@ -4,7 +4,7 @@ import Input from "@/components/common/Input";
 import Image from "next/image";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import InputBase from "@mui/material/InputBase";
-import { Divider } from "@mui/material";
+import { Button, Divider } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
@@ -26,7 +26,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
   const getPreview = data?.article?.image.url;
   const [loading, setLoading] = React.useState(false);
   const user = useStore((state) => state.session?.user);
-  const [tags, setTags] = React.useState<Tag[]>([{ id: "0", name: "default", _count: 0 }]);
+  const [tags, setTags] = React.useState<Tag[]>([{ id: "0", name: "default", _count: { posts: 0 } }]);
   const [image, setImage] = React.useState(getImage || "");
   const [preview, setPreview] = React.useState<string>(getPreview ? FILES_BASE_URL + getPreview : "");
   const [post, setPost] = React.useState<{ title?: string; content?: string; tags: string[] | null }>({
@@ -75,7 +75,30 @@ const AddPostForm = ({ data }: { data?: Post }) => {
         })
       : await postRequest({
           endpoint: "/posts",
+          data: { ...post, image, author: user?.id, type: "ARTICLE", draft: true },
+        });
+    if (response.error) {
+      setLoading(false);
+      toast.error(response.error?.message);
+    }
+    if (response.data) {
+      setLoading(false);
+      toast.success(data?.title ? "Post updated" : "Post created");
+      replace(`/articles/${response.data?.slug}`);
+    }
+  };
+
+  const onPublish = async (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+    const response = data?.id
+      ? await patchRequest({
+          endpoint: `/posts/${data?.id}`,
           data: { ...post, image, author: user?.id, type: "ARTICLE" },
+        })
+      : await postRequest({
+          endpoint: "/posts",
+          data: { ...post, image, author: user?.id, type: "ARTICLE", draft: false },
         });
     if (response.error) {
       setLoading(false);
@@ -172,23 +195,38 @@ const AddPostForm = ({ data }: { data?: Post }) => {
         ]}
       />
       <Stack spacing={2} direction="row" alignItems="center">
-        <Fab
-          variant="extended"
+        <Button
+          disableElevation
+          color="inherit"
+          variant="outlined"
           disabled={loading}
-          sx={{ px: 4 }}
-          onClick={() => push({ pathname: "/articles" }, undefined, { shallow: true })}
+          sx={{ px: 4, borderRadius: 50 }}
+          onClick={() => push({ pathname: "/posts" }, undefined, { shallow: true })}
         >
           {locale === "en" ? "Cancel" : "Annuler"}
-        </Fab>
-        <Fab
-          variant="extended"
-          disabled={!image || !post.title || !post.content || !post.tags?.length || loading}
-          color="primary"
-          sx={{ px: 4 }}
+        </Button>
+
+        <Button
+          disableElevation
+          color="success"
+          variant="outlined"
+          disabled={!post.title || !post.content || !post.tags?.length || loading}
+          sx={{ px: 4, borderRadius: 50 }}
           onClick={onSubmit}
         >
+          {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Save" : "Enregistrer"}
+        </Button>
+
+        <Button
+          disableElevation
+          color="primary"
+          variant="contained"
+          disabled={!post.title || !post.content || !post.tags?.length || loading}
+          sx={{ px: 4, borderRadius: 50 }}
+          onClick={onPublish}
+        >
           {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Publish" : "Publier"}
-        </Fab>
+        </Button>
       </Stack>
     </Stack>
   );

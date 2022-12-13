@@ -77,7 +77,7 @@ interface Phone {
 interface Tag {
   id: string;
   name: string;
-  _count: number;
+  _count: { posts: number };
 }
 
 interface Tags {

@@ -21,17 +21,11 @@ const Share = ({ data }: { data: Post | null }) => {
   };
 
   return (
-    <Stack
-      direction="row"
-      alignItems="center"
-      sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
-    >
-      <Tooltip title={locale === "en" ? "Share" : "Partager"} placement="bottom" arrow>
-        <IconButton onClick={onShare}>
-          <ShareIcon fontSize="small" />
-        </IconButton>
-      </Tooltip>
-    </Stack>
+    <Tooltip title={locale === "en" ? "Share" : "Partager"} placement="bottom" arrow>
+      <IconButton onClick={onShare}>
+        <ShareIcon fontSize="small" />
+      </IconButton>
+    </Tooltip>
   );
 };
 

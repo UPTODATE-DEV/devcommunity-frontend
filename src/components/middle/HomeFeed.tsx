@@ -13,6 +13,7 @@ import useSWR from "swr";
 import useSWRInfinite from "swr/infinite";
 import axios from "axios";
 import { API } from "@/config/url";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const ModalCreation = dynamic(import("@/components/common/ModalCreation"), {
   ssr: false,
@@ -30,12 +31,11 @@ const Empty = dynamic(import("@/components/common/Empty"), {
 });
 
 const HomeFeed = () => {
-  const [posts, setPosts] = React.useState<Post[]>([]);
   const [open, setOpen] = React.useState(false);
   const session = useStore((state) => state.session?.user);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [endOfPage, setEndOfPage] = React.useState(false);
-  const [perPage, setPerPage] = React.useState(1);
+  const [perPage, setPerPage] = React.useState(3);
   const [type, setType] = React.useState<"QUESTION" | "ARTICLE" | undefined>();
 
   const params = qs.stringify({
@@ -48,8 +48,6 @@ const HomeFeed = () => {
   const fetcher = async (url: string, params: any): Promise<any> => {
     const { data } = await axios.get(url, {
       baseURL: API,
-      params,
-      paramsSerializer: (params: any) => qs.stringify(params),
     });
     return data;
   };
@@ -59,7 +57,6 @@ const HomeFeed = () => {
       setEndOfPage(true);
       return null;
     }
-    if (pageIndex === 0) return `/posts`
     return `/posts?page=${pageIndex + 1}&${params}`;
   };
 
@@ -82,21 +79,22 @@ const HomeFeed = () => {
   }, [currentPage]);
 
   return (
-    <Stack spacing={5} sx={{ py: 2, position: "relative", minHeight: "70vh" }}>
+    <Stack sx={{ position: "relative", minHeight: "70vh" }} spacing={2}>
       {size === 0 && <Empty />}
       {isLoading && <HomeFeedSkeleton />}
       <ModalCreation open={open} handleClose={handleClose} />
 
       {data?.map((posts, index) => {
         return posts.map((item, i) => (
-          <React.Fragment key={item.id}>
-            {item.type === "ARTICLE" ? <PostCard data={item} /> : <QuestionCard data={item} />}
-            {posts.length !== i && <Divider />}
-          </React.Fragment>
+          <React.Fragment key={item.id}>{item.type === "ARTICLE" && <PostCard data={item} />}</React.Fragment>
         ));
       })}
 
-      {isValidating && <h1>Loading...</h1>}
+      {isValidating && (
+        <Stack sx={{ display: "flex", width: 1, my: 6 }} alignItems="center">
+          <CircularProgress />
+        </Stack>
+      )}
 
       {session && (
         <Fab

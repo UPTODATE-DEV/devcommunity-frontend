@@ -23,7 +23,7 @@ const TagsList = () => {
           <Grid container spacing={1}>
             {tags.map((el, i) => (
               <Grid item xs="auto" key={i} onClick={() => setTagsFilters(el)}>
-                <Tag label={el.name} selected={isIncluded(el)} />
+                <Tag label={el.name} selected={isIncluded(el)} count={el?._count.posts} />
               </Grid>
             ))}
           </Grid>

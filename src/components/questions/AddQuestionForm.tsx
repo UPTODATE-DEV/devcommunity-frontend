@@ -1,9 +1,9 @@
 import RichTextEditor from "@/components/common/RichTextEditor";
 import useStore from "@/hooks/useStore";
 import { getRequest, patchRequest, postRequest } from "@/lib/api";
+import { Button } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
-import Fab from "@mui/material/Fab";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import { FILES_BASE_URL } from "config/url";
@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 const AddQuestionForm = ({ data }: { data?: Post }) => {
   const [loading, setLoading] = React.useState(false);
   const user = useStore((state) => state.session?.user);
-  const [tags, setTags] = React.useState<Tag[]>([{ id: "0", name: "default", _count: 0 }]);
+  const [tags, setTags] = React.useState<Tag[]>([{ id: "0", name: "default", _count: { posts: 0 } }]);
   const [preview, setPreview] = React.useState("");
   const [post, setPost] = React.useState<{ title?: string; content?: string; tags: string[] | null }>({
     title: data?.title || "",
@@ -41,7 +41,6 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
   const onSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
-    toast.info("In process...");
     const response = data?.id
       ? await patchRequest({
           endpoint: `/posts/${data?.id}`,
@@ -125,23 +124,38 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
         ]}
       />
       <Stack spacing={2} direction="row" alignItems="center">
-        <Fab
-          variant="extended"
+        <Button
+          disableElevation
+          color="inherit"
+          variant="outlined"
           disabled={loading}
-          sx={{ px: 4 }}
+          sx={{ px: 4, borderRadius: 50 }}
           onClick={() => push({ pathname: "/posts" }, undefined, { shallow: true })}
         >
           {locale === "en" ? "Cancel" : "Annuler"}
-        </Fab>
-        <Fab
-          variant="extended"
+        </Button>
+
+        <Button
+          disableElevation
+          color="success"
+          variant="outlined"
           disabled={!post.title || !post.content || !post.tags?.length || loading}
+          sx={{ px: 4, borderRadius: 50 }}
+          onClick={() => push({ pathname: "/posts" }, undefined, { shallow: true })}
+        >
+          {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Save" : "Enregistrer"}
+        </Button>
+
+        <Button
+          disableElevation
           color="primary"
-          sx={{ px: 4 }}
-          onClick={onSubmit}
+          variant="contained"
+          disabled={!post.title || !post.content || !post.tags?.length || loading}
+          sx={{ px: 4, borderRadius: 50 }}
+          onClick={() => push({ pathname: "/posts" }, undefined, { shallow: true })}
         >
           {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Publish" : "Publier"}
-        </Fab>
+        </Button>
       </Stack>
     </Stack>
   );

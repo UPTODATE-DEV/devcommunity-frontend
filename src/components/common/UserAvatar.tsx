@@ -10,7 +10,7 @@ const UserAvatar = ({
   handleClick: () => void;
 }) => {
   return (
-    <IconButton onClick={handleClick}>
+    <IconButton onClick={handleClick} sx={{ p: 0 }}>
       {pictureUrl ? (
         <Avatar sx={{ bgcolor: "primary.main", color: "white" }} src={pictureUrl} alt={name} />
       ) : (

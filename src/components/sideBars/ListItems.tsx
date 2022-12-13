@@ -6,7 +6,10 @@ import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useCallback } from "react";
+import { useGoToUserProfile } from "../../hooks/posts";
+import { getUserFullName, getUserProfileImageUrl } from "../../lib/posts";
+import UserAvatar from "../common/UserAvatar";
 
 const ListItems = ({
   item,
@@ -19,17 +22,21 @@ const ListItems = ({
 }) => {
   const { locale } = useRouter();
 
+  const goToProfile = useGoToUserProfile();
+
+  const handleGoToProfile = useCallback((email: string) => {
+    goToProfile(email);
+  }, []);
+
   return (
     <React.Fragment key={item.id}>
       <ListItemButton alignItems="flex-start" onClick={() => handleViewPost(item.slug)}>
         <ListItemAvatar>
-          <Avatar
-            sx={{ bgcolor: "primary.main", color: "white" }}
-            alt={`${item.author.firstName} ${item.author.lastName}`}
-            src={process.env.NEXT_PUBLIC_FILES_BASE_URL + item?.author?.profile?.avatar?.url}
-          >
-            {item.author.firstName.charAt(0)}
-          </Avatar>
+          <UserAvatar
+            name={getUserFullName(item.author)}
+            pictureUrl={getUserProfileImageUrl(item.author)}
+            handleClick={() => handleGoToProfile(item.author.email)}
+          />
         </ListItemAvatar>
         <ListItemText
           primary={item.title}

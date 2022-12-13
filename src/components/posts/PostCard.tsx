@@ -29,8 +29,7 @@ import React, { useCallback } from "react";
 import ShowPostReactions from "./ShowPostReactions";
 import Share from "@/components/common/Share";
 import useSocket from "@/hooks/useSocket";
-import { Box, useMediaQuery, useTheme } from "@mui/material";
-import { useMobileMediaQuery } from "@/lib/media";
+import { Box, Paper, useMediaQuery, useTheme } from "@mui/material";
 import PostContent from "@/components/common/PostContent";
 import PostTags from "./PostTags";
 import PostCardHeader from "./PostCardHeader";
@@ -163,7 +162,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   }, [data?.slug]);
 
   return (
-    <Box sx={{ p: { xs: 2, md: 0 } }}>
+    <Paper variant="outlined" sx={{ p: 2 }}>
       <Dialog
         open={openLogin}
         onClose={handleCloseLogin}
@@ -183,129 +182,106 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
       </Dialog>
 
       <Grid container spacing={{ xs: 0, sm: 2, lg: 4 }}>
-        <Grid container item xs={12} sm={8}>
-          <Grid container>
-            <Grid item xs={2} sm={1.6} md={1.8} lg={1.6} xl={1.4}>
-              <UserAvatar
-                name={getUserFullName(author)}
-                pictureUrl={getUserProfileImageUrl(author)}
-                handleClick={handleGoToProfile}
-              />
-            </Grid>
-
-            <Grid item xs={10} sm={10.4} md={9.2} lg={10.4} xl={10.6}>
-              <PostCardHeader
-                title={data?.title}
-                handleClickGoToPost={handleGoToPost}
-                handleClickGoToProfile={handleGoToProfile}
-                date={parseDate({ date: data?.publishedOn, type: "relative" })}
-                name={getUserFullName(author)}
-              />
-            </Grid>
-          </Grid>
-          <Grid container>
-            <Grid item sm={1.6} md={2} lg={1.6} xl={1.4}></Grid>
-            <Grid item xs={12} sm={10.4} md={10} lg={10.4} xl={10.6}>
-              <PostContent content={postContent} />
-              {isMobile && (
-                <PostImage
-                  handleClick={handleGoToPost}
-                  title={data?.title}
-                  articleUrl={getArticleImageUrl(data?.article)}
-                />
-              )}
-              <PostTags tags={data?.tags} />
-              <Stack
-                direction="row"
-                flexWrap="wrap"
-                spacing={1}
-                alignItems="center"
-                justifyContent="space-between"
-                sx={{ mt: 1 }}
-              >
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  sx={{
-                    border: (theme) => `1px solid ${theme.palette.divider}`,
-                    borderRadius: 52,
-                    transition: "all 0.5s ease",
-                  }}
-                >
-                  {!userReaction ? (
-                    <>
-                      <Like />
-                      <Love />
-                      <Useful />
-                    </>
-                  ) : (
-                    <>
-                      {userReaction === "LIKE" && <Like />}
-                      {userReaction === "LOVE" && <Love />}
-                      {userReaction === "USEFUL" && <Useful />}
-                    </>
-                  )}
-
-                  <Tooltip
-                    title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"}
-                    placement="bottom"
-                    arrow
-                  >
-                    <IconButton onClick={() => setOpenReaction(true)}>
-                      <Typography variant="caption" color="text.primary" fontWeight={700}>
-                        {data.article?.reactions?.length}
-                      </Typography>
-                    </IconButton>
-                  </Tooltip>
-                </Stack>
-                <Stack direction="row" spacing={2}>
-                  <Stack direction="row" alignItems="center">
-                    <Link href={`/articles/${data?.slug}/#comments`} passHref>
-                      <IconButton>
-                        <CommentIcon fontSize="small" />
-                      </IconButton>
-                    </Link>
-                    <Typography variant="caption" color="text.secondary" fontWeight={700}>
-                      {data?.comments?.length || 0}
-                    </Typography>
-                  </Stack>
-
-                  <Stack
-                    direction="row"
-                    alignItems="center"
-                    sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
-                  >
-                    <Tooltip
-                      title={locale === "en" ? "Add to bookmarks" : "Ajouter aux favoris"}
-                      placement="bottom"
-                      arrow
-                    >
-                      <IconButton onClick={onAddToBookmarks}>
-                        {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
-                          <BookmarkRemoveIcon color="secondary" fontSize="small" />
-                        ) : (
-                          <BookmarkAddSharpIcon fontSize="small" />
-                        )}
-                      </IconButton>
-                    </Tooltip>
-                  </Stack>
-                  <Share data={data} />
-                </Stack>
-              </Stack>
-            </Grid>
-          </Grid>
-        </Grid>
-        {!isMobile && (
-          <Grid item xs={0} sm={4}>
+        <Grid item xs={12} sm={8}>
+          <PostCardHeader
+            handleClickGoToProfile={handleGoToProfile}
+            date={parseDate({ date: data?.publishedOn, type: "relative" })}
+            author={author}
+          />
+          <Typography
+            fontWeight={700}
+            color="text.primary"
+            variant="h6"
+            onClick={handleGoToPost}
+            sx={{
+              "&:hover": {
+                color: "primary.main",
+              },
+              cursor: "pointer",
+              mb: "-8px",
+              mt: 1,
+            }}
+          >
+            {data?.title}
+          </Typography>
+          <PostContent content={postContent} />
+          {isMobile && (
             <PostImage
               handleClick={handleGoToPost}
               title={data?.title}
               articleUrl={getArticleImageUrl(data?.article)}
             />
+          )}
+          <PostTags tags={data?.tags} />
+        </Grid>
+        {!isMobile && (
+          <Grid item xs={0} sm={4}>
+            <Stack justifyContent="center" alignItems="center" sx={{ height: 1 }}>
+              <PostImage
+                handleClick={handleGoToPost}
+                title={data?.title}
+                articleUrl={getArticleImageUrl(data?.article)}
+              />
+            </Stack>
           </Grid>
         )}
       </Grid>
-    </Box>
+      <Stack
+        direction="row"
+        flexWrap="wrap"
+        spacing={1}
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ mt: 1 }}
+      >
+        <Stack direction="row" alignItems="center">
+          {!userReaction ? (
+            <>
+              <Like />
+              <Love />
+              <Useful />
+            </>
+          ) : (
+            <>
+              {userReaction === "LIKE" && <Like />}
+              {userReaction === "LOVE" && <Love />}
+              {userReaction === "USEFUL" && <Useful />}
+            </>
+          )}
+
+          <Tooltip title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"} placement="bottom" arrow>
+            <IconButton onClick={() => setOpenReaction(true)}>
+              <Typography variant="caption" color="text.primary" fontWeight={700}>
+                {data.article?.reactions?.length}
+              </Typography>
+            </IconButton>
+          </Tooltip>
+        </Stack>
+        <Stack direction="row" spacing={2}>
+          <Stack direction="row" alignItems="center">
+            <Link href={`/articles/${data?.slug}/#comments`} passHref>
+              <IconButton>
+                <CommentIcon fontSize="small" />
+              </IconButton>
+            </Link>
+            <Typography variant="caption" color="text.secondary" fontWeight={700}>
+              {data?.comments?.length || 0}
+            </Typography>
+          </Stack>
+
+          <Tooltip title={locale === "en" ? "Add to bookmarks" : "Ajouter aux favoris"} placement="bottom" arrow>
+            <IconButton onClick={onAddToBookmarks}>
+              {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
+                <BookmarkRemoveIcon color="secondary" fontSize="small" />
+              ) : (
+                <BookmarkAddSharpIcon fontSize="small" />
+              )}
+            </IconButton>
+          </Tooltip>
+          <Share data={data} />
+        </Stack>
+      </Stack>
+    </Paper>
   );
 };
 

@@ -6,7 +6,7 @@ export const theme = (mode: "light" | "dark") =>
       mode: mode,
       background: {
         paper: mode === "light" ? "#ffffff" : "#192734",
-        default: "#192734",
+        default: mode === "light" ? "rgba(0, 0, 0, 0.04)" : "#17212b",
       },
       primary: {
         main: "#0179bb",
@@ -17,6 +17,15 @@ export const theme = (mode: "light" | "dark") =>
       },
       accent: {
         main: "#5B759F",
+      },
+    },
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 900,
+        lg: 1280,
+        xl: 1536,
       },
     },
     typography: {

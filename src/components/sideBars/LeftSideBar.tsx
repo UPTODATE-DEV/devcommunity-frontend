@@ -29,6 +29,18 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Box from "@mui/material/Box";
 import { Stack } from "@mui/system";
+import { Paper } from "@mui/material";
+import {
+  FcHome,
+  FcNook,
+  FcSms,
+  FcMindMap,
+  FcPositiveDynamic,
+  FcAddressBook,
+  FcBookmark,
+  FcSettings,
+  FcAbout,
+} from "react-icons/fc";
 
 const LeftSideBar = () => {
   const user = useStore((state) => state.session?.user);
@@ -42,27 +54,27 @@ const LeftSideBar = () => {
   };
 
   const main = [
-    { path: "/", icon: <HomeTwoToneIcon />, label: locale === "fr" ? "Accueil" : "Home" },
-    { path: "/articles", icon: <HistoryEduTwoToneIcon />, label: "Articles" },
-    { path: "/posts", icon: <QuestionAnswerTwoToneIcon />, label: "Posts" },
-    { path: "/tags", icon: <TagTwoToneIcon />, label: "Tags" },
-    { path: "/blockchain", icon: <CurrencyBitcoinTwoToneIcon />, label: "Blockchain" },
-    { path: "/top-posts", icon: <AutoAwesomeTwoToneIcon />, label: "Top posts" },
+    { path: "/", icon: <FcHome fontSize={28} />, label: locale === "fr" ? "Accueil" : "Home" },
+    { path: "/articles", icon: <FcNook fontSize={28} />, label: "Articles" },
+    { path: "/posts", icon: <FcSms fontSize={28} />, label: "Posts" },
+    { path: "/tags", icon: <FcAddressBook fontSize={28} />, label: "Tags" },
+    { path: "/blockchain", icon: <FcMindMap fontSize={28} />, label: "Blockchain" },
+    { path: "/top-posts", icon: <FcPositiveDynamic fontSize={28} />, label: "Top posts" },
     {
       path: "/home",
-      icon: <ConnectWithoutContactTwoToneIcon />,
+      icon: <FcAbout fontSize={28} />,
       label: locale === "fr" ? "A propos de nous" : "About Us",
     },
   ];
 
   const params = [
-    { path: "/bookmarks", icon: <BookmarkSharpIcon />, label: locale === "fr" ? "Favoris" : "Bookmarks" },
+    { path: "/bookmarks", icon: <FcBookmark fontSize={28} />, label: locale === "fr" ? "Favoris" : "Bookmarks" },
     // { path: "/settings", icon: <SettingsSharpIcon />, label: "Settings" },
-    { path: "/profile", icon: <ManageAccounts />, label: locale === "en" ? "My account" : "Mon compte" },
+    { path: "/profile", icon: <FcSettings fontSize={28} />, label: locale === "en" ? "My account" : "Mon compte" },
   ];
 
   return (
-    <>
+    <Paper variant="outlined" sx={{ position: "relative", width: 1 }}>
       <List sx={{ width: 1 }}>
         {main.map(({ path, icon, label }) => (
           <ListItemButton
@@ -77,6 +89,7 @@ const LeftSideBar = () => {
                 height: 1,
                 bottom: 0,
                 left: 0,
+                borderRadius: 9,
                 backgroundColor: matches(path) ? "primary.main" : "transparent",
                 transition: "all 0.3s ease-in-out",
               },
@@ -118,7 +131,7 @@ const LeftSideBar = () => {
       <Button sx={{ display: { xs: "block", md: "none" }, ml: 1 }} variant="outlined" onClick={toggleLang}>
         {locale === "en" ? "French" : "Anglais"}
       </Button>
-    </>
+    </Paper>
   );
 };
 

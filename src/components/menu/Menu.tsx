@@ -16,13 +16,14 @@ import { getRequest } from "@/lib/api";
 import { Grid, IconButton } from "@mui/material";
 import { IconSearch } from "@tabler/icons";
 import Mobile from "./Mobile";
+import { getUserFullName, getUserProfileImageUrl } from "../../lib/posts";
 
 const Auth = dynamic(() => import("./Auth"), {
   ssr: false,
   loading: () => <ProfileSkeleton />,
 });
 
-const Profile = dynamic(() => import("./Profile"), {
+const UserAvatar = dynamic(() => import("@/components/common/UserAvatar"), {
   ssr: false,
   loading: () => <ProfileSkeleton />,
 });
@@ -60,6 +61,10 @@ const Menu: React.FC = () => {
     setOpenMobileMenu(true);
   };
 
+  const handleClickGoToProfile = () => {
+    push("/profile");
+  };
+
   React.useEffect(() => {
     const getPosts = async () => {
       const posts = await getRequest({ endpoint: "/posts" });
@@ -73,67 +78,73 @@ const Menu: React.FC = () => {
 
   return (
     <AppBar
-      position="fixed"
-      elevation={0}
+      position="sticky"
       variant="outlined"
-      color="transparent"
-      sx={{ backdropFilter: "blur(20px)", borderTop: "none", borderLeft: "none", borderRight: "none" }}
+      elevation={0}
+      color="inherit"
+      sx={{ borderTop: "none", borderLeft: "none", borderRight: "none" }}
     >
       <Mobile />
-      <Toolbar>
-        <Grid
-          container
-          spacing={{ xs: 0, md: 2 }}
-          justifyContent="space-between"
-          alignItems="center"
-          sx={{ width: 1, py: 1 }}
-        >
-          <Grid item xs={2}>
+      <Container maxWidth="xl" sx={{ py: 1 }}>
+        <Grid container alignItems="center" spacing={2}>
+          <Grid item md={3} lg={2} justifyContent="center" alignItems="center" sx={{ height: 65 }}>
             <Logo />
             <IconButton sx={{ display: { md: "none" } }} onClick={toggleDrawer()}>
               <MenuIcon />
             </IconButton>
           </Grid>
-          <Grid item xs={5} md={6}>
-            <SpotlightProvider
-              actions={actions}
-              searchIcon={<IconSearch size={18} />}
-              searchPlaceholder="Search..."
-              shortcut={["mod + P", "mod + K", "/"]}
-              limit={7}
-              nothingFoundMessage="Nothing found..."
-            >
-              <Stack
-                alignItems="center"
-                direction="row"
-                justifyContent="space-between"
-                onClick={() => openSpotlight()}
-                sx={{
-                  borderRadius: 10,
-                  bgcolor: "action.hover",
-                  minWidth: 1,
-                  height: 40,
-                  px: 4,
-                  cursor: "pointer",
-                }}
+          <Grid item md={9} lg={7} justifyContent="center" alignItems="center" sx={{ height: 1 }}>
+            <Stack sx={{ height: 1 }} justifyContent="center">
+              <SpotlightProvider
+                actions={actions}
+                searchIcon={<IconSearch size={18} />}
+                searchPlaceholder="Search..."
+                shortcut={["mod + P", "mod + K", "/"]}
+                limit={7}
+                nothingFoundMessage="Nothing found..."
               >
-                <Typography variant="caption" color="text.secondary">
-                  {locale === "en" ? "Search..." : "Rechercher..."}
-                </Typography>
-                <Typography sx={{ display: { xs: "none", md: "inline" } }} variant="caption" color="text.secondary">
-                  Cmd + K
-                </Typography>
-              </Stack>
-            </SpotlightProvider>
+                <Stack
+                  alignItems="center"
+                  direction="row"
+                  justifyContent="space-between"
+                  onClick={() => openSpotlight()}
+                  sx={{
+                    borderRadius: 10,
+                    bgcolor: "action.hover",
+                    minWidth: 1,
+                    height: 40,
+                    px: 4,
+                    cursor: "pointer",
+                  }}
+                >
+                  <Typography variant="caption" color="text.secondary">
+                    {locale === "en" ? "Search..." : "Rechercher..."}
+                  </Typography>
+                  <Typography sx={{ display: { xs: "none", md: "inline" } }} variant="caption" color="text.secondary">
+                    Cmd + K
+                  </Typography>
+                </Stack>
+              </SpotlightProvider>
+            </Stack>
           </Grid>
-          <Grid item xs={3} md={4}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Grid item lg={3} alignItems="center" sx={{ height: 1, display: { xs: "none", lg: "flex" } }}>
+            <Stack direction="row" spacing={2} justifyContent="space-between" alignItems="center" sx={{ height: 60 }}>
+              <Stack>
+                {user ? (
+                  <UserAvatar
+                    name={getUserFullName(user)}
+                    pictureUrl={getUserProfileImageUrl(user)}
+                    handleClick={handleClickGoToProfile}
+                  />
+                ) : (
+                  <Auth />
+                )}
+              </Stack>
               <Icons />
-              <Stack sx={{ display: { xs: "none", md: "flex" } }}>{user ? <Profile /> : <Auth />}</Stack>
             </Stack>
           </Grid>
         </Grid>
-      </Toolbar>
+      </Container>
     </AppBar>
   );
 };

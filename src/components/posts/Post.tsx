@@ -9,6 +9,7 @@ import useStore from "@/hooks/useStore";
 
 const PostComment = dynamic(import("@/components/posts/PostComment"), { ssr: false, loading: () => null });
 const PostReactions = dynamic(import("@/components/posts/PostReactions"), { ssr: false, loading: () => null });
+const PostSuggestions = dynamic(import("@/components/posts/PostSuggestions"), { ssr: false, loading: () => null });
 
 const Post: React.FC<{ data: Post }> = ({ data }) => {
   const { setCurrentPost } = useStore((state) => state);
@@ -24,12 +25,13 @@ const Post: React.FC<{ data: Post }> = ({ data }) => {
   }, []);
 
   return (
-    <Stack spacing={4}>
+    <Stack spacing={2}>
       <PostHeader data={data} />
       <PostContent data={data} />
       <Divider />
       <PostReactions />
-      <Divider />
+      {/* <Divider /> */}
+      <PostSuggestions data={data} />
       <div id="comments"></div>
       <PostComment data={data} />
       <Divider />

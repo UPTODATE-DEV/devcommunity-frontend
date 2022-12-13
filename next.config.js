@@ -12,7 +12,7 @@ const withPWA = require("next-pwa")({
 
 const nextConfig = {
   reactStrictMode: true,
-  productionBrowserSourceMaps: true,
+  // productionBrowserSourceMaps: true,
   swcMinify: true,
   images: {
     domains: ["localhost", "api-community.updevtest.com", "api.updevcommunity.com"],

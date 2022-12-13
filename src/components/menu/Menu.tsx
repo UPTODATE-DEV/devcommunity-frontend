@@ -93,7 +93,7 @@ const Menu: React.FC = () => {
               <MenuIcon />
             </IconButton>
           </Grid>
-          <Grid item md={9} lg={7} justifyContent="center" alignItems="center" sx={{ height: 1 }}>
+          <Grid item md={9} lg={6} justifyContent="center" alignItems="center" sx={{ height: 1 }}>
             <Stack sx={{ height: 1 }} justifyContent="center">
               <SpotlightProvider
                 actions={actions}
@@ -127,7 +127,7 @@ const Menu: React.FC = () => {
               </SpotlightProvider>
             </Stack>
           </Grid>
-          <Grid item lg={3} alignItems="center" sx={{ height: 1, display: { xs: "none", lg: "flex" } }}>
+          <Grid item lg={4} alignItems="center" sx={{ height: 1, display: { xs: "none", lg: "flex" } }}>
             <Stack direction="row" spacing={2} justifyContent="space-between" alignItems="center" sx={{ height: 60 }}>
               <Stack>
                 {user ? (

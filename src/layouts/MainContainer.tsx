@@ -44,13 +44,13 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
               <LeftSideBar />
             </Grid>
           )}
-          <Grid item md={9} lg={7} sx={{ mt: 1.9 }}>
+          <Grid item md={9} lg={6} sx={{ mt: 1.9 }}>
             {children}
           </Grid>
           {!isMobile && (
             <Grid
               item
-              lg={3}
+              lg={4}
               className="hide-scrollbar"
               sx={{
                 position: "sticky",

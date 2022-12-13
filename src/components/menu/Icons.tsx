@@ -129,7 +129,8 @@ const Icons = () => {
         aria-expanded={open ? "true" : undefined}
         onClick={handleToggle}
         color="inherit"
-        sx={{ display: { xs: "none", md: "flex" } }}
+        variant='outlined'
+        sx={{ display: { xs: "none", md: "flex" }, px: 1 }}
         endIcon={
           locale === "fr" ? (
             <Stack

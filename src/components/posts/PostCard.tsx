@@ -151,7 +151,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const postContent = getContent(data?.content, isMobile ? 180 : 240);
+  const postContent = getContent(data?.content, isMobile ? 180 : 220);
 
   const handleGoToProfile = useCallback(() => {
     goToProfile(author?.email);

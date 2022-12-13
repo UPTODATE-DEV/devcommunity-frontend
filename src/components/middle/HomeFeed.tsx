@@ -79,7 +79,7 @@ const HomeFeed = () => {
   }, [currentPage]);
 
   return (
-    <Stack sx={{ position: "relative", minHeight: "70vh" }} spacing={2}>
+    <>
       {size === 0 && <Empty />}
       {isLoading && <HomeFeedSkeleton />}
       <ModalCreation open={open} handleClose={handleClose} />
@@ -106,7 +106,7 @@ const HomeFeed = () => {
           <AddIcon />
         </Fab>
       )}
-    </Stack>
+    </>
   );
 };
 

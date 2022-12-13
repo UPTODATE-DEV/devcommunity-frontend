@@ -119,9 +119,9 @@ const Icons = () => {
         {darkModeActive ? <DarkModeIcon /> : <LightModeIcon color="warning" />}
       </IconButton>
 
-      <IconButton sx={{ display: { xs: "none", md: "flex" } }} onClick={toggleFullscreen}>
+      {/* <IconButton sx={{ display: { xs: "none", md: "flex" } }} onClick={toggleFullscreen}>
         {fullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
-      </IconButton>
+      </IconButton> */}
 
       <Button
         ref={anchorRef}

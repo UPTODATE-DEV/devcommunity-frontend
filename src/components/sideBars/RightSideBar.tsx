@@ -41,7 +41,7 @@ const RightSideBar = () => {
   }, []);
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} sx={{ width: 1 }}>
       <Paper variant="outlined" sx={{ position: "relative", width: 1 }}>
         <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
           {locale === "en" ? "Top articles of the Week" : "Meilleurs articles de la semaine"}

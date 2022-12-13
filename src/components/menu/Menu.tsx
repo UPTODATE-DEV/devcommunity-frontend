@@ -128,7 +128,14 @@ const Menu: React.FC = () => {
             </Stack>
           </Grid>
           <Grid item lg={3} alignItems="center" sx={{ height: 1, display: { xs: "none", lg: "flex" } }}>
-            <Stack direction="row" spacing={2} justifyContent="space-between" alignItems="center" sx={{ height: 60 }}>
+            <Stack
+              direction="row"
+              spacing={2}
+              justifyContent="space-between"
+              alignItems="center"
+              sx={{ height: 60, width: 1 }}
+            >
+              <Icons />
               <Stack>
                 {user ? (
                   <UserAvatar
@@ -140,7 +147,6 @@ const Menu: React.FC = () => {
                   <Auth />
                 )}
               </Stack>
-              <Icons />
             </Stack>
           </Grid>
         </Grid>

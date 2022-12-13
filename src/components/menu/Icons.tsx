@@ -130,7 +130,7 @@ const Icons = () => {
         onClick={handleToggle}
         color="inherit"
         sx={{ display: { xs: "none", md: "flex" }, px: 1 }}
-        endIcon={
+        startIcon={
           locale === "fr" ? (
             <Stack
               sx={{

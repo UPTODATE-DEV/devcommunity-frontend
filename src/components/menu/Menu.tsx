@@ -135,7 +135,6 @@ const Menu: React.FC = () => {
               alignItems="center"
               sx={{ height: 60, width: 1 }}
             >
-              <Icons />
               <Stack>
                 {user ? (
                   <UserAvatar
@@ -147,6 +146,7 @@ const Menu: React.FC = () => {
                   <Auth />
                 )}
               </Stack>
+              <Icons />
             </Stack>
           </Grid>
         </Grid>

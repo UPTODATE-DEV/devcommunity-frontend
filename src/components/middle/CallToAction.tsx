@@ -35,7 +35,7 @@ const CallToAction = () => {
         py: 4,
         bgcolor: "primary.main",
         position: "relative",
-        borderRadius: 2,
+        borderRadius: 1,
         overflow: "hidden",
         "&::after": {
           display: "block",

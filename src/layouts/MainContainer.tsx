@@ -57,7 +57,7 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
               sx={{
                 position: "sticky",
                 top: 76,
-                height: 1,
+                height: "100vh",
                 overflow: "auto",
                 width: 1,
                 display: { xs: "none", lg: "flex" },

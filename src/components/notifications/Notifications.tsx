@@ -17,6 +17,7 @@ import dayjs from "dayjs";
 import dynamic from "next/dynamic";
 import { TopSkeleton } from "@/components/topPosts/Skeleton";
 import useSocket from "@/hooks/useSocket";
+import Paper from "@mui/material/Paper";
 
 const Empty = dynamic(import("@/components/common/Empty"), {
   ssr: false,
@@ -84,7 +85,7 @@ const Notifications = () => {
           <Typography color="text.secondary">{dayjs(el.date).format("DD/MM/YYYY")}</Typography>
           <List>
             {el.notifications.map((el, i) => (
-              <React.Fragment key={el.id}>
+              <Paper variant="outlined" key={el.id} sx={{ my: 0.5 }}>
                 <ListItemButton
                   onClick={() => handleReadNotification(el)}
                   sx={{
@@ -123,8 +124,7 @@ const Notifications = () => {
                     }}
                   />
                 </ListItemButton>
-                <Divider variant="inset" component="li" />
-              </React.Fragment>
+              </Paper>
             ))}
           </List>
         </Stack>

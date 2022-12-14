@@ -64,10 +64,10 @@ const PostReactions: React.FC = () => {
     setOpen(true);
   };
 
-  const Like = () => (
+  const Like = ({ liked = false }: { liked?: boolean }) => (
     <Tooltip title="I LIKE" placement="bottom" arrow>
       <IconButton onClick={() => onReact("LIKE")}>
-        <ThumbUpSharpIcon color="info" fontSize="small" />
+        <ThumbUpSharpIcon color={liked ? "info" : "inherit"} fontSize="small" />
       </IconButton>
     </Tooltip>
   );
@@ -123,7 +123,6 @@ const PostReactions: React.FC = () => {
           direction="row"
           alignItems="center"
           sx={{
-            border: (theme) => `1px solid ${theme.palette.divider}`,
             borderRadius: 52,
             transition: "all 0.5s ease",
           }}
@@ -136,7 +135,7 @@ const PostReactions: React.FC = () => {
             </>
           ) : (
             <>
-              {userReaction === "LIKE" && <Like />}
+              {userReaction === "LIKE" && <Like liked />}
               {userReaction === "LOVE" && <Love />}
               {userReaction === "USEFUL" && <Useful />}
             </>
@@ -146,11 +145,7 @@ const PostReactions: React.FC = () => {
           </Typography>
         </Stack>
         <Stack direction="row" spacing={2}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
-          >
+          <Stack direction="row" alignItems="center">
             <Tooltip title="Save post" placement="bottom" arrow>
               <IconButton onClick={onAddToBookmarks}>
                 {data?.bookmarks?.find((el) => el.userId === user?.id) ? (

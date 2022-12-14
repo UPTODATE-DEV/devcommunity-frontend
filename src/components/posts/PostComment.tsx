@@ -18,6 +18,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-toastify";
+import Comment from "@/components/common/Comment";
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
@@ -115,53 +116,7 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
         </Typography>
         {comments?.map((el) => (
           <React.Fragment key={el.id}>
-            <Grid container sx={{ py: 2 }} justifyContent="center">
-              <Grid item xs={2} sm={1} md={2} lg={1.2}>
-                <IconButton onClick={() => push(`/profile/@${el?.author?.email.split("@")[0]}`)}>
-                  <Avatar
-                    sx={{ bgcolor: "primary.main", color: "white" }}
-                    alt={`${el?.author?.firstName} ${el?.author?.lastName}`}
-                    src={FILES_BASE_URL + el?.author?.profile?.avatar?.url}
-                  >
-                    {el?.author?.firstName.charAt(0)}
-                  </Avatar>
-                </IconButton>
-              </Grid>
-              <Grid item xs={10} sm={11} md={10} lg={10.8}>
-                <Stack sx={{ position: "relative", width: 1 }}>
-                  <Typography
-                    onClick={() => push(`/profile/@${el?.author?.email.split("@")[0]}`)}
-                    sx={{
-                      "&:hover": {
-                        color: "primary.main",
-                      },
-                      cursor: "pointer",
-                    }}
-                    color="text.primary"
-                    fontWeight={700}
-                  >
-                    {el?.author?.firstName} {el?.author?.lastName}
-                  </Typography>
-                  {el.author.id === user?.id && (
-                    <IconButton
-                      sx={{ position: "absolute", top: 0, right: 0 }}
-                      onClick={() => handleDeleteComment(el.id)}
-                    >
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
-                  )}
-                  <Typography
-                    color="text.secondary"
-                    component="div"
-                    className="content"
-                    gutterBottom
-                    dangerouslySetInnerHTML={{
-                      __html: el.content,
-                    }}
-                  />
-                </Stack>
-              </Grid>
-            </Grid>
+            <Comment data={el as unknown as Post} />
             <Divider />
           </React.Fragment>
         ))}

@@ -2,6 +2,8 @@ import create from "zustand";
 import { devtools } from "zustand/middleware";
 
 interface Store {
+  openLoginModal: boolean;
+  setOpenLoginModal: (loading: boolean) => void;
   authLoading: boolean;
   setAuthLoading: (loading: boolean) => void;
   editProfile: boolean;
@@ -12,6 +14,8 @@ const useStoreNoPersist = create<Store>()(
   devtools((set) => ({
     authLoading: false,
     setAuthLoading: (loading) => set({ authLoading: loading }),
+    openLoginModal: false,
+    setOpenLoginModal: (loading) => set({ authLoading: loading }),
     editProfile: false,
     setEditProfile: (editProfile: boolean) => {
       return set((state) => ({ ...state, editProfile }));

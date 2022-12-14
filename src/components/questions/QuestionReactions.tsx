@@ -92,11 +92,7 @@ const QuestionReactions = () => {
       </Dialog>
       <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between" sx={{ mt: 1 }}>
         <Stack direction="row" spacing={2}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, px: 1, borderRadius: 52 }}
-          >
+          <Stack direction="row" alignItems="center">
             <Tooltip title={locale === "en" ? "Endorse" : "Approuver"} placement="bottom" arrow>
               <IconButton onClick={() => onReact("LIKE")}>
                 <ThumbUpSharpIcon color={userReaction === "LIKE" ? "info" : "inherit"} fontSize="small" />
@@ -108,11 +104,7 @@ const QuestionReactions = () => {
             </Typography>
           </Stack>
 
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, px: 1, borderRadius: 52 }}
-          >
+          <Stack direction="row" alignItems="center">
             <Tooltip title={locale === "en" ? "Disapprove" : "Désapprouver"} placement="bottom" arrow>
               <IconButton onClick={() => onReact("DISLIKE")}>
                 <ThumbDownOffAltIcon color={userReaction === "DISLIKE" ? "error" : "inherit"} fontSize="small" />
@@ -125,11 +117,7 @@ const QuestionReactions = () => {
           </Stack>
         </Stack>
         <Stack direction="row" spacing={2}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
-          >
+          <Stack direction="row" alignItems="center">
             <Tooltip title="Save post" placement="bottom" arrow>
               <IconButton onClick={onAddToBookmarks}>
                 {data?.bookmarks?.find((el) => el.userId === user?.id) ? (

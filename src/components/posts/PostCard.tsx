@@ -1,42 +1,30 @@
+import Bookmark from "@/components/common/Bookmark";
+import PostContent from "@/components/common/PostContent";
+import PostReaction from "@/components/common/PostReaction";
+import Share from "@/components/common/Share";
 import { CallToActionSkeleton } from "@/components/middle/Skeleton";
+import { useGoToPost, useGoToUserProfile } from "@/hooks/posts";
+import useSocket from "@/hooks/useSocket";
 import useStore from "@/hooks/useStore";
-import { patchRequest } from "@/lib/api";
-import BookmarkAddSharpIcon from "@mui/icons-material/BookmarkAddSharp";
-import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
+import { getArticleImageUrl, getContent, parseDate } from "@/lib/posts";
 import CommentIcon from "@mui/icons-material/Comment";
-import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
-import LightbulbSharpIcon from "@mui/icons-material/LightbulbSharp";
-import TagIcon from "@mui/icons-material/Tag";
-import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
-import Chip from "@mui/material/Chip";
-import Avatar from "@mui/material/Avatar";
+import { Paper, useMediaQuery, useTheme } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { FILES_BASE_URL } from "config/url";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import relativeTime from "dayjs/plugin/relativeTime";
 import hljs from "highlight.js";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
-import ShowPostReactions from "./ShowPostReactions";
-import Share from "@/components/common/Share";
-import useSocket from "@/hooks/useSocket";
-import { Box, Paper, useMediaQuery, useTheme } from "@mui/material";
-import PostContent from "@/components/common/PostContent";
-import PostTags from "./PostTags";
-import PostCardHeader from "./PostCardHeader";
+import PostCardHeader from "../common/PostCardHeader";
+import PostTags from "../common/PostTags";
 import PostImage from "./PostImage";
-import UserAvatar from "@/components/common/UserAvatar";
-import { getArticleImageUrl, getContent, getUserFullName, getUserProfileImageUrl, parseDate } from "@/lib/posts";
-import { useGoToPost, useGoToUserProfile } from "@/hooks/posts";
 dayjs.extend(relativeTime);
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
@@ -46,12 +34,8 @@ const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
 
 const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   const user = useStore((state) => state.session?.user);
-  const { setPosts, posts } = useStore((state) => state);
-  const { push, locale } = useRouter();
-  const [userReaction, setUserReaction] = React.useState<ArticleReactionType | undefined>();
+  const { locale } = useRouter();
   const [openLogin, setOpenLogin] = React.useState(false);
-  const [openReaction, setOpenReaction] = React.useState(false);
-  const socket = useSocket();
 
   locale === "en" ? dayjs.locale("en") : dayjs.locale("fr");
 
@@ -59,91 +43,11 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
     setOpenLogin(false);
   };
 
-  const handleCloseReaction = () => {
-    setOpenReaction(false);
-  };
-
-  const handleViewPost = () => {
-    push(`/articles/${data?.slug}`);
-  };
-
-  const onReact = async (type: string) => {
-    if (user?.id) {
-      const post = await patchRequest({ endpoint: `/posts/${data?.id}/reactions/${type}/${user?.id}/article` });
-      // update posts
-      const updatedPosts = posts.map((el) => {
-        if (el.id === post.data?.id) {
-          return post.data;
-        }
-        return el;
-      });
-
-      socket.emit("notification", { notificationFromUser: user, id: Date.now().toString(), post: post.data, type });
-
-      return setPosts(updatedPosts as Post[]);
-    }
-    setOpenLogin(true);
-  };
-
-  // on add to bookmarks
-  const onAddToBookmarks = async () => {
-    if (user?.id) {
-      const post = await patchRequest({ endpoint: `/posts/${data?.id}/bookmarks/${user?.id}` });
-      // update posts
-      const updatedPosts = posts.map((el) => {
-        if (el.id === post.data?.id) {
-          return post.data;
-        }
-        return el;
-      });
-
-      return setPosts(updatedPosts as Post[]);
-    }
-    setOpenLogin(true);
-  };
-
-  const Like = () => (
-    <Tooltip title={locale === "en" ? "Like" : "Aimer"} placement="bottom" arrow>
-      <IconButton onClick={() => onReact("LIKE")}>
-        <ThumbUpSharpIcon color="info" fontSize="small" />
-      </IconButton>
-    </Tooltip>
-  );
-
-  const Useful = () => (
-    <Tooltip title={locale === "en" ? "Insightful" : "Intéressant"} placement="bottom" arrow>
-      <IconButton onClick={() => onReact("USEFUL")}>
-        <LightbulbSharpIcon color="warning" fontSize="small" />
-      </IconButton>
-    </Tooltip>
-  );
-
-  const Love = () => (
-    <Tooltip title={locale === "en" ? "Love" : "Adorer"} placement="bottom" arrow>
-      <IconButton onClick={() => onReact("LOVE")}>
-        <FavoriteSharpIcon color="error" fontSize="small" />
-      </IconButton>
-    </Tooltip>
-  );
-
   React.useEffect(() => {
     document.querySelectorAll("pre").forEach((el) => {
       hljs.highlightElement(el);
     });
   }, []);
-
-  React.useEffect(() => {
-    if (user) {
-      const reaction = data?.article?.reactions?.find((reaction) => {
-        return reaction?.user?.id === user?.id;
-      });
-      if (reaction) {
-        setUserReaction(reaction.type);
-      } else {
-        setUserReaction(undefined);
-      }
-    }
-  }, [data?.article?.reactions, user]);
 
   const { author } = data;
   const goToProfile = useGoToUserProfile();
@@ -171,16 +75,6 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
       >
         <CallToAction />
       </Dialog>
-
-      <Dialog
-        open={openReaction}
-        onClose={handleCloseReaction}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <ShowPostReactions reactions={data?.article?.reactions} />
-      </Dialog>
-
       <Grid container spacing={{ xs: 0, sm: 2, lg: 4 }}>
         <Grid item xs={12} sm={8}>
           <PostCardHeader
@@ -234,29 +128,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
         justifyContent="space-between"
         sx={{ mt: 1 }}
       >
-        <Stack direction="row" alignItems="center">
-          {!userReaction ? (
-            <>
-              <Like />
-              <Love />
-              <Useful />
-            </>
-          ) : (
-            <>
-              {userReaction === "LIKE" && <Like />}
-              {userReaction === "LOVE" && <Love />}
-              {userReaction === "USEFUL" && <Useful />}
-            </>
-          )}
-
-          <Tooltip title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"} placement="bottom" arrow>
-            <IconButton onClick={() => setOpenReaction(true)}>
-              <Typography variant="caption" color="text.primary" fontWeight={700}>
-                {data.article?.reactions?.length}
-              </Typography>
-            </IconButton>
-          </Tooltip>
-        </Stack>
+        <PostReaction post={data} userId={user?.id} />
         <Stack direction="row" spacing={2}>
           <Stack direction="row" alignItems="center">
             <Link href={`/articles/${data?.slug}/#comments`} passHref>
@@ -269,22 +141,12 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
             </Typography>
           </Stack>
 
-          <Tooltip title={locale === "en" ? "Add to bookmarks" : "Ajouter aux favoris"} placement="bottom" arrow>
-            <IconButton onClick={onAddToBookmarks}>
-              {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
-                <BookmarkRemoveIcon color="secondary" fontSize="small" />
-              ) : (
-                <BookmarkAddSharpIcon fontSize="small" />
-              )}
-            </IconButton>
-          </Tooltip>
+          <Bookmark post={data} userId={user?.id} />
           <Share data={data} />
         </Stack>
       </Stack>
     </Paper>
   );
 };
-
-const PostActions = () => {};
 
 export default React.memo(PostCard);

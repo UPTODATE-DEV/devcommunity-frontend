@@ -47,7 +47,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             "#5C5F66",
             "#373A40",
             "#2C2E33",
-            "#000f21",
+            "#17212b",
             "#000d21",
             "#141517",
             "#101113",

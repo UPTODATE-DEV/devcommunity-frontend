@@ -8,10 +8,10 @@ import Stack from "@mui/material/Stack";
 import dynamic from "next/dynamic";
 import React, { useEffect } from "react";
 import { HomeFeedSkeleton } from "./Skeleton";
-import qs from "qs";
 import useSWR from "swr";
 import useSWRInfinite from "swr/infinite";
 import axios from "axios";
+import qs from "qs";
 import { API } from "@/config/url";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -35,7 +35,7 @@ const HomeFeed = () => {
   const session = useStore((state) => state.session?.user);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [endOfPage, setEndOfPage] = React.useState(false);
-  const [perPage, setPerPage] = React.useState(3);
+  const [perPage, setPerPage] = React.useState(10);
   const [type, setType] = React.useState<"QUESTION" | "ARTICLE" | undefined>();
 
   const params = qs.stringify({
@@ -79,14 +79,16 @@ const HomeFeed = () => {
   }, [currentPage]);
 
   return (
-    <>
+    <Stack spacing={2} sx={{ pb: 2 }}>
       {size === 0 && <Empty />}
       {isLoading && <HomeFeedSkeleton />}
       <ModalCreation open={open} handleClose={handleClose} />
 
       {data?.map((posts, index) => {
         return posts.map((item, i) => (
-          <React.Fragment key={item.id}>{item.type === "ARTICLE" && <PostCard data={item} />}</React.Fragment>
+          <React.Fragment key={item.id}>
+            {item.type === "ARTICLE" ? <PostCard data={item} /> : <QuestionCard data={item} />}
+          </React.Fragment>
         ));
       })}
 
@@ -106,7 +108,7 @@ const HomeFeed = () => {
           <AddIcon />
         </Fab>
       )}
-    </>
+    </Stack>
   );
 };
 

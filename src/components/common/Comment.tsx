@@ -27,10 +27,9 @@ import Share from "@/components/common/Share";
 import PostContent from "@/components/common/PostContent";
 import PostTags from "@/components/common/PostTags";
 import PostCardHeader from "@/components/common/PostCardHeader";
-
 import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 import { FILES_BASE_URL } from "config/url";
-import ShowQuestionReactions from "./ShowQuestionReactions";
+import ShowQuestionReactions from "../questions/ShowQuestionReactions";
 import useSocket from "@/hooks/useSocket";
 import { getContent, parseDate } from "@/lib/posts";
 import { useGoToPost, useGoToUserProfile } from "../../hooks/posts";
@@ -39,7 +38,7 @@ const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   loading: () => <CallToActionSkeleton />,
 });
 
-const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
+const Comment: React.FC<{ data: Post }> = ({ data }) => {
   const user = useStore((state) => state.session?.user);
   const { push, locale } = useRouter();
   const { setPosts, posts } = useStore((state) => state);
@@ -52,8 +51,6 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   const goToProfile = useGoToUserProfile();
   const goToPost = useGoToPost();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const postContent = getContent(data?.content, isMobile ? 180 : 220);
 
   locale === "fr" ? dayjs.locale("fr") : dayjs.locale("en");
 
@@ -132,7 +129,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   }, [data?.question?.reactions, user]);
 
   return (
-    <Paper variant="outlined" sx={{ p: 2 }}>
+    <>
       <Dialog
         open={openLogin}
         onClose={handleCloseLogin}
@@ -155,23 +152,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
         date={parseDate({ date: data?.publishedOn, type: "relative" })}
         author={author}
       />
-      <Typography
-        fontWeight={700}
-        color="text.primary"
-        variant="h6"
-        onClick={handleGoToPost}
-        sx={{
-          "&:hover": {
-            color: "primary.main",
-          },
-          cursor: "pointer",
-          mb: "-8px",
-          mt: 1,
-        }}
-      >
-        {data?.title}
-      </Typography>
-      <PostContent content={postContent} />
+      <PostContent content={data?.content} />
       <PostTags tags={data?.tags} />
       <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between" sx={{ mt: 1 }}>
         <Stack direction="row" spacing={2}>
@@ -224,23 +205,10 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
               {data?.comments?.length || 0}
             </Typography>
           </Stack>
-
-          <Stack direction="row" alignItems="center">
-            <Tooltip title={locale === "en" ? "Add to bookmarks" : "Ajouter aux favoris"} placement="bottom" arrow>
-              <IconButton onClick={onAddToBookmarks}>
-                {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
-                  <BookmarkRemoveIcon color="secondary" fontSize="small" />
-                ) : (
-                  <BookmarkAddSharpIcon fontSize="small" />
-                )}
-              </IconButton>
-            </Tooltip>
-          </Stack>
-          <Share data={data} />
         </Stack>
       </Stack>
-    </Paper>
+    </>
   );
 };
 
-export default QuestionCard;
+export default Comment;

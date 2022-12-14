@@ -5,6 +5,7 @@ import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
+import { Paper, Stack } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
@@ -49,9 +50,13 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
       <Menu />
       <MainContainer>
         {!session?.user && <CallToAction />}
-        {showTagsFilters ? <Filters /> : <Search />}
-        <Divider />
-        <Tags />
+        <Paper variant="outlined" sx={{ p: 2 }}>
+          <Stack spacing={2}>
+            {showTagsFilters ? <Filters /> : <Search />}
+            <Divider />
+            <Tags />
+          </Stack>
+        </Paper>
       </MainContainer>
     </>
   );

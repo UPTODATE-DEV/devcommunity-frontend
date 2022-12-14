@@ -6,6 +6,7 @@ import Divider from "@mui/material/Divider";
 import dynamic from "next/dynamic";
 import hljs from "highlight.js";
 import useStore from "@/hooks/useStore";
+import { Paper } from "@mui/material";
 
 const PostComment = dynamic(import("@/components/posts/PostComment"), { ssr: false, loading: () => null });
 const PostReactions = dynamic(import("@/components/posts/PostReactions"), { ssr: false, loading: () => null });
@@ -25,17 +26,17 @@ const Post: React.FC<{ data: Post }> = ({ data }) => {
   }, []);
 
   return (
-    <Stack spacing={2}>
-      <PostHeader data={data} />
-      <PostContent data={data} />
-      <Divider />
-      <PostReactions />
-      {/* <Divider /> */}
-      <PostSuggestions data={data} />
-      <div id="comments"></div>
-      <PostComment data={data} />
-      <Divider />
-    </Stack>
+    <Paper variant="outlined" sx={{ p: 2 }}>
+      <Stack spacing={2}>
+        <PostHeader data={data} />
+        <PostContent data={data} />
+        <Divider />
+        <PostReactions />
+        <div id="comments"></div>
+        <PostComment data={data} />
+        <PostSuggestions data={data} />
+      </Stack>
+    </Paper>
   );
 };
 

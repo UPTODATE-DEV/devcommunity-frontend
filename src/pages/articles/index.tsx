@@ -55,7 +55,6 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
       <Menu />
       <MainContainer>
         {session?.user ? <AddPost /> : <CallToAction />}
-        <Divider />
         <PostList />
       </MainContainer>
     </>

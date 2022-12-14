@@ -11,6 +11,7 @@ import Stack from "@mui/material/Stack";
 import { useRouter } from "next/router";
 import { TopSkeleton } from "./Skeleton";
 import dynamic from "next/dynamic";
+import { Paper } from "@mui/material";
 
 const Empty = dynamic(import("@/components/common/Empty"), {
   ssr: false,
@@ -26,58 +27,70 @@ const TopPosts = () => {
   };
 
   return (
-    <Stack spacing={2} sx={{ py: 2 }}>
-      <Typography variant="h6">{locale === "en" ? "Top Posts" : "Meilleurs posts"}</Typography>
-      <Divider variant="inset" />
-      {topPosts?.length === 0 && <Empty />}
-      <List>
-        {topPosts?.map((el, i) => (
-          <React.Fragment key={i}>
-            <ListItemButton
-              onClick={() => handleViewPost(el)}
-              sx={{
-                bgcolor:
-                  i === 0
-                    ? "rgba(52,152,219,0.3)"
-                    : i === 1
-                    ? "rgba(52,152,219,0.2)"
-                    : i === 2
-                    ? "rgba(52,152,219,0.1)"
-                    : "inherit",
-              }}
-            >
-              <ListItemAvatar>
-                <Avatar
-                  sx={{ bgcolor: "primary.main", color: "white" }}
-                  src={process.env.NEXT_PUBLIC_FILES_BASE_URL + el?.author?.profile?.avatar?.url}
-                  alt={`${el.author.firstName} ${el.author.lastName}`}
-                >
-                  {el.author.firstName.charAt(0)}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={el.title}
-                primaryTypographyProps={{
-                  fontWeight: 700,
+    <Paper variant="outlined" sx={{ p: 2 }}>
+      <Stack spacing={2} sx={{ py: 2 }}>
+        <Typography variant="h6">{locale === "en" ? "Top Posts" : "Meilleurs posts"}</Typography>
+        <Divider variant="inset" />
+        {topPosts?.length === 0 && <Empty />}
+        <List>
+          {topPosts?.map((el, i) => (
+            <React.Fragment key={i}>
+              <ListItemButton
+                onClick={() => handleViewPost(el)}
+                sx={{
+                  position: "relative",
+                  "&:after": {
+                    position: "absolute",
+                    content: "''",
+                    width: 15,
+                    height: 1,
+                    bottom: 0,
+                    right: 0,
+                    backgroundColor:
+                      i === 0
+                        ? "rgba(52,152,219,1)"
+                        : i === 1
+                        ? "rgba(52,152,219,0.5)"
+                        : i === 2
+                        ? "rgba(52,152,219,0.2)"
+                        : "inherit",
+                    transition: "all 0.3s ease-in-out",
+                  },
                 }}
-                secondaryTypographyProps={{
-                  fontWeight: 700,
-                }}
-                secondary={
-                  <span>
-                    <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
-                      {locale === "en" ? "By" : "Par"} {`${el.author.firstName} ${el.author.lastName}`}
-                    </Typography>
-                    {` — ${el?.reactions} reactions`}
-                  </span>
-                }
-              />
-            </ListItemButton>
-            <Divider variant="inset" component="li" />
-          </React.Fragment>
-        ))}
-      </List>
-    </Stack>
+              >
+                <ListItemAvatar>
+                  <Avatar
+                    sx={{ bgcolor: "primary.main", color: "white" }}
+                    src={process.env.NEXT_PUBLIC_FILES_BASE_URL + el?.author?.profile?.avatar?.url}
+                    alt={`${el.author.firstName} ${el.author.lastName}`}
+                  >
+                    {el.author.firstName.charAt(0)}
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={el.title}
+                  primaryTypographyProps={{
+                    fontWeight: 700,
+                  }}
+                  secondaryTypographyProps={{
+                    fontWeight: 700,
+                  }}
+                  secondary={
+                    <span>
+                      <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
+                        {locale === "en" ? "By" : "Par"} {`${el.author.firstName} ${el.author.lastName}`}
+                      </Typography>
+                      {` — ${el?.reactions} reactions`}
+                    </span>
+                  }
+                />
+              </ListItemButton>
+              <Divider variant="inset" component="li" />
+            </React.Fragment>
+          ))}
+        </List>
+      </Stack>
+    </Paper>
   );
 };
 

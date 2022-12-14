@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
 import React from "react";
-import { postRequest } from "../../lib/api";
+import { postRequest } from "@/lib/api";
 
 const PostSuggestions: React.FC<{ data: Post }> = ({ data }) => {
   const [posts, setPosts] = React.useState<Post[] | []>([]);
@@ -66,7 +66,6 @@ const PostSuggestions: React.FC<{ data: Post }> = ({ data }) => {
           </React.Fragment>
         ))}
       </List>
-      <Divider />
     </Stack>
   );
 };

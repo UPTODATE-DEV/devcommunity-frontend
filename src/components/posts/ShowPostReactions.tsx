@@ -19,18 +19,21 @@ import { useRouter } from "next/router";
 const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
   const [tab, setTab] = React.useState<ArticleReactionType>("LIKE");
 
-  const tabs: { id: ArticleReactionType; icon: any }[] = [
+  const tabs: { id: ArticleReactionType; icon: any; label: string }[] = [
     {
       id: "LIKE",
       icon: <ThumbUpSharpIcon color="primary" />,
+      label: "Likes",
     },
     {
       id: "LOVE",
       icon: <FavoriteSharpIcon color="error" />,
+      label: "Loves",
     },
     {
       id: "USEFUL",
       icon: <LightbulbSharpIcon color="warning" />,
+      label: "Use full",
     },
   ];
 
@@ -51,15 +54,19 @@ const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
             icon={item.icon}
             key={item.id}
             iconPosition="start"
-            sx={{ minHeight: 50 }}
-            label={<Typography>{reactions.filter((reaction) => reaction.type === item.id).length}</Typography>}
+            sx={{ width: { xs: "auto", md: 700 } }}
+            label={
+              <Typography>{`${reactions.filter((reaction) => reaction.type === item.id).length} ${
+                item.label
+              }`}</Typography>
+            }
             value={item.id}
           />
         ))}
       </TabList>
 
       {tabs.map((tab) => (
-        <TabPanel key={tab.id} sx={{ p: 0 }} value={tab.id}>
+        <TabPanel key={tab.id} sx={{ p: 0, height: 400 }} value={tab.id}>
           <List>
             {reactions
               .filter((reaction) => reaction.type === tab.id)

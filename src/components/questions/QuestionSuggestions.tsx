@@ -66,7 +66,6 @@ const QuestionSuggestions: React.FC<{ data: Post }> = ({ data }) => {
           </React.Fragment>
         ))}
       </List>
-      <Divider />
     </Stack>
   );
 };

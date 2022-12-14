@@ -1,6 +1,6 @@
 import { Stack, Typography } from "@mui/material";
 import { getUserFullName, getUserProfileImageUrl } from "../../lib/posts";
-import UserAvatar from "../common/UserAvatar";
+import UserAvatar from "./UserAvatar";
 
 const PostHeader = ({
   author,

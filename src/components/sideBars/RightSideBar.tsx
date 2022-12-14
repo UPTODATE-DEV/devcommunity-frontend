@@ -8,13 +8,9 @@ import Typography from "@mui/material/Typography";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
+import ListItems from "./ListItems";
 
 const Empty = dynamic(import("@/components/common/Empty"), {
-  ssr: false,
-  loading: () => null,
-});
-
-const ListItems = dynamic(import("@/components/sideBars/ListItems"), {
   ssr: false,
   loading: () => null,
 });

@@ -5,6 +5,13 @@ import React, { useCallback, useLayoutEffect, useRef } from "react";
 const PostContent = ({ content }: { content: string }) => {
   const preElements = useRef([]);
 
+  const wrapCode = (html: any) => {
+    const removeStyles = (html: string) => html.replace(/style="[^"]*"/g, "");
+    const wrapCode = (html: string) => html.replace(/<code>([^<]*)<\/code>/g, "<pre><code>$1</code></pre>");
+
+    return wrapCode(removeStyles(html));
+  };
+
   const highlightPreElements = useCallback<any>(() => {
     // @ts-ignore
     preElements.current = document.querySelectorAll("pre");
@@ -25,7 +32,7 @@ const PostContent = ({ content }: { content: string }) => {
       className="content"
       variant="body2"
       dangerouslySetInnerHTML={{
-        __html: content,
+        __html: wrapCode(content),
       }}
     />
   );

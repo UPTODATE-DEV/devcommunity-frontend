@@ -73,7 +73,7 @@ const QuestionsList = () => {
   }, [currentPage]);
 
   return (
-    <Stack spacing={5}>
+    <Stack spacing={2} sx={{ pb: 2 }}>
       <ModalCreation open={open} handleClose={handleClose} />
       {size === 0 && <Empty />}
       {isLoading && <QuestionsListSkeleton />}
@@ -82,7 +82,6 @@ const QuestionsList = () => {
         return posts.map((item, i) => (
           <React.Fragment key={item.id}>
             <QuestionCard data={item} />
-            {posts.length !== i && <Divider />}
           </React.Fragment>
         ));
       })}

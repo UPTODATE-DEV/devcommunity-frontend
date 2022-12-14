@@ -45,7 +45,7 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
             </Grid>
           )}
           <Grid item md={9} lg={7} sx={{ mt: 1.9 }}>
-            <Stack sx={{ position: "relative", minHeight: "70vh" }} spacing={2}>
+            <Stack sx={{ position: "relative", minHeight: "100vh" }} spacing={2}>
               {children}
             </Stack>
           </Grid>

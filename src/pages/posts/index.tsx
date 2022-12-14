@@ -56,7 +56,6 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
       <Menu />
       <MainContainer>
         {session?.user ? <AddQuestion /> : <CallToAction />}
-        <Divider />
         <QuestionsList />
       </MainContainer>
     </>

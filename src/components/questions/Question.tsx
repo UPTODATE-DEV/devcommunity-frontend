@@ -1,4 +1,5 @@
 import useStore from "@/hooks/useStore";
+import { Paper } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import hljs from "highlight.js";
@@ -30,15 +31,16 @@ const Question: React.FC<{ data: Post }> = ({ data }) => {
   }, []);
 
   return (
-    <Stack spacing={4}>
-      <QuestionContent data={data} />
-      <Divider />
-      <QuestionReactions />
-      <QuestionSuggestions data={data} />
-      <div id="comments"></div>
-      <QuestionComment data={data} />
-      <Divider />
-    </Stack>
+    <Paper variant="outlined" sx={{ p: 2 }}>
+      <Stack spacing={4}>
+        <QuestionContent data={data} />
+        <Divider />
+        <QuestionReactions />
+        <div id="comments"></div>
+        <QuestionComment data={data} />
+        <QuestionSuggestions data={data} />
+      </Stack>
+    </Paper>
   );
 };
 

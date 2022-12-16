@@ -5,15 +5,15 @@ import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
-import Divider from "@mui/material/Divider";
 import hljs from "highlight.js";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import React from "react";
 
-const AddQuestion = dynamic(import("@/components/questions/AddQuestion"), { ssr: false, loading: () => null });
+const AddPost = dynamic(import("@/components/common/AddPost"), { ssr: false, loading: () => null });
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
@@ -24,15 +24,20 @@ const QuestionsList = dynamic(import("@/components/questions/QuestionsList"), {
   loading: () => <QuestionsListSkeleton />,
 });
 
-const Home: NextPage<{ session: Session }> = ({ session }) => {
+const Home: NextPage<{ session: Session; locale: string }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
   const setPosts = useStore((state) => state.setPosts);
+  const { push, locale } = useRouter();
 
   React.useEffect(() => {
     document.querySelectorAll("pre").forEach((el) => {
       hljs.highlightElement(el);
     });
   }, []);
+
+  const handleGoToAddPage = () => {
+    push("/posts/add");
+  };
 
   React.useEffect(() => {
     const getPosts = async () => {
@@ -55,7 +60,18 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
 
       <Menu />
       <MainContainer>
-        {session?.user ? <AddQuestion /> : <CallToAction />}
+        {session?.user ? (
+          <AddPost
+            label={
+              locale === "en"
+                ? "Share your questions, quick tips and ideas here"
+                : "Partagez vos questions, astuces et idées ici"
+            }
+            handleClick={handleGoToAddPage}
+          />
+        ) : (
+          <CallToAction />
+        )}
         <QuestionsList />
       </MainContainer>
     </>

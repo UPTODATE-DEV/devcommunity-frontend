@@ -1,12 +1,12 @@
-import React from "react";
-import Stack from "@mui/material/Stack";
-import PostHeader from "@/components/posts/PostHeader";
 import PostContent from "@/components/posts/PostContent";
-import Divider from "@mui/material/Divider";
-import dynamic from "next/dynamic";
-import hljs from "highlight.js";
+import PostHeader from "@/components/posts/PostHeader";
 import useStore from "@/hooks/useStore";
-import { Paper } from "@mui/material";
+import Divider from "@mui/material/Divider";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import hljs from "highlight.js";
+import dynamic from "next/dynamic";
+import React from "react";
 
 const PostComment = dynamic(import("@/components/posts/PostComment"), { ssr: false, loading: () => null });
 const PostReactions = dynamic(import("@/components/posts/PostReactions"), { ssr: false, loading: () => null });

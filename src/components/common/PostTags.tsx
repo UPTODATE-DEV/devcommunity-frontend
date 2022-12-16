@@ -1,4 +1,5 @@
-import { Chip, Grid } from "@mui/material";
+import Chip from "@mui/material/Chip";
+import Grid from "@mui/material/Grid";
 import TagIcon from "@mui/icons-material/Tag";
 
 const PostTags = ({ tags }: { tags?: Tags[] }) => {

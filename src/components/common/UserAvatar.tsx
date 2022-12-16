@@ -1,4 +1,5 @@
-import { Avatar, IconButton } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
 
 const UserAvatar = ({
   name = "",

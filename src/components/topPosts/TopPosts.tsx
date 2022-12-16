@@ -11,7 +11,7 @@ import Stack from "@mui/material/Stack";
 import { useRouter } from "next/router";
 import { TopSkeleton } from "./Skeleton";
 import dynamic from "next/dynamic";
-import { Paper } from "@mui/material";
+import Paper from "@mui/material/Paper";
 
 const Empty = dynamic(import("@/components/common/Empty"), {
   ssr: false,

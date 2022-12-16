@@ -29,8 +29,15 @@ export const theme = (mode: "light" | "dark") =>
       },
     },
     typography: {
-      fontFamily: ["Poppins", "sans-serif"].join(","),
+      fontFamily: ["Inter", "sans-serif"].join(","),
       fontSize: 14,
+    },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          text: { textTransform: "capitalize" },
+        },
+      },
     },
   });
 

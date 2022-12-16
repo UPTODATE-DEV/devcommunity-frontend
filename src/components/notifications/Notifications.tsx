@@ -1,23 +1,26 @@
-import React from "react";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemText from "@mui/material/ListItemText";
-import Avatar from "@mui/material/Avatar";
-import Divider from "@mui/material/Divider";
-import useStore from "@/hooks/useStore";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-import { useRouter } from "next/router";
-import { alpha, Button } from "@mui/material";
-import { getRequest, patchRequest } from "@/lib/api";
-import { toast } from "react-toastify";
-import { FILES_BASE_URL } from "config/url";
-import dayjs from "dayjs";
-import dynamic from "next/dynamic";
 import { TopSkeleton } from "@/components/topPosts/Skeleton";
 import useSocket from "@/hooks/useSocket";
+import useStore from "@/hooks/useStore";
+import { getRequest, patchRequest } from "@/lib/api";
+import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { alpha } from "@mui/system";
+import dayjs from "dayjs";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import React, { useCallback } from "react";
+import { toast } from "react-toastify";
+
+import { FcCalendar } from "react-icons/fc";
+import { useGoToPost, useGoToUserProfile } from "../../hooks/posts";
+import { getUserFullName, getUserProfileImageUrl } from "../../lib";
+import UserAvatar from "../common/UserAvatar";
 
 const Empty = dynamic(import("@/components/common/Empty"), {
   ssr: false,
@@ -30,17 +33,19 @@ const Notifications = () => {
   const { push, locale } = useRouter();
   const session = useStore((state) => state.session?.user);
   const socket = useSocket();
+  const goToProfile = useGoToUserProfile();
+  const goToPost = useGoToPost();
 
   locale === "en" ? dayjs.locale("en") : dayjs.locale("fr");
 
-  const handleReadNotification = async (notification: Notification) => {
+  const handleReadNotification = useCallback(async (notification: Notification) => {
     const post = notification.post;
     const response = await patchRequest({ endpoint: `/notifications/${notification.id}` });
     if (response.error) {
       toast.error(response.error?.message);
     }
-    push(`${post.type === "ARTICLE" ? "/articles" : "/posts"}/${post.slug}`);
-  };
+    goToPost(post);
+  }, []);
 
   const handleReadAll = async () => {
     const response = await patchRequest({ endpoint: `/notifications/${session?.id}/all` });
@@ -50,7 +55,7 @@ const Notifications = () => {
     setNotifications(
       notifications.map((el) => ({
         ...el,
-        notifications: el.notifications.map((notif) => ({ ...notif, read: true })),
+        notifications: el.notifications.map((notification) => ({ ...notification, read: true })),
       }))
     );
   };
@@ -69,20 +74,27 @@ const Notifications = () => {
   }, []);
 
   return (
-    <Stack spacing={2} sx={{ py: 2 }}>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Typography variant="h6" color="text.primary">
-          Notifications
-        </Typography>
-        <Button onClick={handleReadAll} variant="outlined">
-          Mark all as read
-        </Button>
-      </Stack>
-      <Divider variant="inset" />
+    <>
+      <Paper variant="outlined" sx={{ p: 2 }} component={Stack}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Typography variant="h6" color="text.primary">
+            Notifications
+          </Typography>
+          <Button onClick={handleReadAll} disableElevation color="primary">
+            Mark all as read
+          </Button>
+        </Stack>
+      </Paper>
+
       {notifications?.length === 0 && <Empty />}
       {notifications.map((el) => (
         <Stack key={el.date}>
-          <Typography color="text.secondary">{dayjs(el.date).format("DD/MM/YYYY")}</Typography>
+          <Stack direction="row" spacing={2} alignItems="center">
+            <FcCalendar />
+            <Typography color="secondary.main" variant="caption" fontWeight={700}>
+              {dayjs(el.date).format("DD/MM/YYYY  HH:MM")}
+            </Typography>
+          </Stack>
           <List>
             {el.notifications.map((el, i) => (
               <Paper variant="outlined" key={el.id} sx={{ my: 0.5 }}>
@@ -95,13 +107,11 @@ const Notifications = () => {
                   }}
                 >
                   <ListItemAvatar>
-                    <Avatar
-                      sx={{ bgcolor: "primary.main", color: "white" }}
-                      src={FILES_BASE_URL + el?.notificationFromUser?.profile?.avatar?.url}
-                      alt={`${el?.notificationFromUser.firstName} ${el?.notificationFromUser.lastName}`}
-                    >
-                      {el.notificationFromUser.firstName.charAt(0)}
-                    </Avatar>
+                    <UserAvatar
+                      name={getUserFullName(el?.notificationFromUser)}
+                      pictureUrl={getUserProfileImageUrl(el?.notificationFromUser)}
+                      handleClick={goToProfile}
+                    />
                   </ListItemAvatar>
                   <ListItemText
                     primary={
@@ -129,7 +139,7 @@ const Notifications = () => {
           </List>
         </Stack>
       ))}
-    </Stack>
+    </>
   );
 };
 

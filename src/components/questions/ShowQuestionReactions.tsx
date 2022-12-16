@@ -1,9 +1,11 @@
+import { FILES_BASE_URL } from "@/config/url";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import { Avatar, Divider } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -11,7 +13,6 @@ import ListItemText from "@mui/material/ListItemText";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { FILES_BASE_URL } from "config/url";
 import React from "react";
 
 const ShowQuestionReactions = ({ reactions }: { reactions: QuestionsReaction[] }) => {

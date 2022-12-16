@@ -1,17 +1,17 @@
+import { FILES_BASE_URL } from "@/config/url";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Button } from "@mui/material";
+import EditIcon from "@mui/icons-material/EditOutlined";
 import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { FILES_BASE_URL } from "config/url";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import relativeTime from "dayjs/plugin/relativeTime";
 import hljs from "highlight.js";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import EditIcon from "@mui/icons-material/EditOutlined";
 import React from "react";
 dayjs.extend(relativeTime);
 

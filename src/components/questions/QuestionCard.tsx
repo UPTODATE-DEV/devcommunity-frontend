@@ -1,19 +1,22 @@
+import PostCardHeader from "@/components/common/PostCardHeader";
+import PostContent from "@/components/common/PostContent";
+import PostTags from "@/components/common/PostTags";
+import Share from "@/components/common/Share";
 import useStore from "@/hooks/useStore";
 import { patchRequest } from "@/lib/api";
 import BookmarkAddSharpIcon from "@mui/icons-material/BookmarkAddSharp";
 import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
-import TagIcon from "@mui/icons-material/Tag";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
-import { Box, Chip, Paper, useMediaQuery, useTheme } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
 import Dialog from "@mui/material/Dialog";
-import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import useTheme from "@mui/system/useTheme";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -23,17 +26,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 dayjs.extend(relativeTime);
-import Share from "@/components/common/Share";
-import PostContent from "@/components/common/PostContent";
-import PostTags from "@/components/common/PostTags";
-import PostCardHeader from "@/components/common/PostCardHeader";
 
 import { CallToActionSkeleton } from "@/components/middle/Skeleton";
-import { FILES_BASE_URL } from "config/url";
-import ShowQuestionReactions from "./ShowQuestionReactions";
+import { useGoToPost, useGoToUserProfile } from "@/hooks/posts";
 import useSocket from "@/hooks/useSocket";
 import { getContent, parseDate } from "@/lib/posts";
-import { useGoToPost, useGoToUserProfile } from "../../hooks/posts";
+import ShowQuestionReactions from "./ShowQuestionReactions";
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
   loading: () => <CallToActionSkeleton />,
@@ -74,8 +72,8 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   }, [author?.email]);
 
   const handleGoToPost = useCallback(() => {
-    goToPost(data?.slug);
-  }, [data?.slug]);
+    goToPost(data);
+  }, [data]);
 
   const onReact = async (type: QuestionReactionType) => {
     if (user?.id) {

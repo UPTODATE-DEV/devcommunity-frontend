@@ -1,12 +1,11 @@
 import Menu from "@/components/menu/Menu";
-import { CallToActionSkeleton, HomeFeedSkeleton } from "@/components/middle/Skeleton";
+import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 import { TagsSkeleton } from "@/components/tags/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
-import { Paper, Stack } from "@mui/material";
-import Divider from "@mui/material/Divider";
+import Paper from "@mui/material/Paper";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
@@ -50,13 +49,10 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
       <Menu />
       <MainContainer>
         {!session?.user && <CallToAction />}
-        <Paper variant="outlined" sx={{ p: 2 }}>
-          <Stack spacing={2}>
-            {showTagsFilters ? <Filters /> : <Search />}
-            <Divider />
-            <Tags />
-          </Stack>
+        <Paper variant="outlined" sx={{ p: 2, position: "sticky", top: 70, zIndex: 999 }}>
+          {showTagsFilters ? <Filters /> : <Search />}
         </Paper>
+        <Tags />
       </MainContainer>
     </>
   );

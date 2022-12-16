@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import hljs from "highlight.js";
 import React, { useCallback, useLayoutEffect, useRef } from "react";
 

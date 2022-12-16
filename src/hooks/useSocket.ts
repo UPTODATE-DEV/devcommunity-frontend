@@ -1,14 +1,14 @@
 import { BASE_API_URL } from "@/config/url";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import { useEffect } from "react";
 import io from "socket.io-client";
-import useStore from "./useStore";
+// import useStore from "./useStore";
 
 const socket = io(BASE_API_URL);
 
 const useSocket = () => {
-  const { locale } = useRouter();
-  const session = useStore((state) => state.session?.user);
+  // const { locale } = useRouter();
+  // const session = useStore((state) => state.session?.user);
 
   useEffect(() => {
     // Notification.requestPermission().then((result) => {

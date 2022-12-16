@@ -1,5 +1,5 @@
 import useStore from "@/hooks/useStore";
-import { Paper } from "@mui/material";
+import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import hljs from "highlight.js";

@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { IconButton } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 
 interface Props {
   icon?: any;

@@ -1,10 +1,10 @@
+import { FILES_BASE_URL } from "@/config/url";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Image from "next/image";
-import React from "react";
 import dayjs from "dayjs";
-import { FILES_BASE_URL } from "config/url";
+import Image from "next/image";
 import { useRouter } from "next/router";
+import React from "react";
 
 const PostHeader: React.FC<{ data: Post }> = ({ data }) => {
   const { push, locale } = useRouter();

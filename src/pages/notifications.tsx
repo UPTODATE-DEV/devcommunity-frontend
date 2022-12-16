@@ -4,7 +4,6 @@ import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
-import { Paper, Stack } from "@mui/material";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
@@ -40,12 +39,8 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
 
       <Menu />
       <MainContainer>
-        <Paper variant="outlined" sx={{ p: 2 }}>
-          <Stack spacing={2}>
-            {!session?.user && <CallToAction />}
-            <Notifications />
-          </Stack>
-        </Paper>
+        {!session?.user && <CallToAction />}
+        <Notifications />
       </MainContainer>
     </>
   );

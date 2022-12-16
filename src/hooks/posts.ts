@@ -24,8 +24,9 @@ export const useGoToPost = () => {
   const router = useRouter();
 
   const navigate = useCallback(
-    (slug?: string) => {
-      if (slug) return router.push(`/articles/${slug}`);
+    (post?: Post) => {
+      if (post?.type === "ARTICLE")
+        return router.push(`/${post?.type === "ARTICLE" ? "articles" : "posts"}/${post?.slug}`);
     },
     [router]
   );

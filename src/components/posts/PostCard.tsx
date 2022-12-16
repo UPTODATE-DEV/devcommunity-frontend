@@ -4,16 +4,17 @@ import PostReaction from "@/components/common/PostReaction";
 import Share from "@/components/common/Share";
 import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 import { useGoToPost, useGoToUserProfile } from "@/hooks/posts";
-import useSocket from "@/hooks/useSocket";
 import useStore from "@/hooks/useStore";
 import { getArticleImageUrl, getContent, parseDate } from "@/lib/posts";
 import CommentIcon from "@mui/icons-material/Comment";
-import { Paper, useMediaQuery, useTheme } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import useTheme from "@mui/system/useTheme";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -62,8 +63,8 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   }, [author?.email]);
 
   const handleGoToPost = useCallback(() => {
-    goToPost(data?.slug);
-  }, [data?.slug]);
+    goToPost(data);
+  }, [data]);
 
   return (
     <Paper variant="outlined" sx={{ p: 2 }}>

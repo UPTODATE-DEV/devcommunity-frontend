@@ -1,6 +1,6 @@
 import useStore from "@/hooks/useStore";
 import { getRequest } from "@/lib/api";
-import { Paper } from "@mui/material";
+import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import Stack from "@mui/material/Stack";
@@ -45,7 +45,7 @@ const RightSideBar = () => {
         <Divider />
         <List sx={{ width: { xs: "100%" }, bgcolor: "background.paper" }}>
           {posts?.topArticlesOfTheWeek?.length === 0 && <Empty />}
-          {posts?.topArticlesOfTheWeek.map((item, i) => (
+          {posts?.topArticlesOfTheWeek?.map((item, i) => (
             <ListItems
               key={item.id}
               item={item}
@@ -61,7 +61,7 @@ const RightSideBar = () => {
         <Divider />
         <List sx={{ width: "100%", bgcolor: "background.paper" }}>
           {posts?.topQuestionsOfTheWeek?.length === 0 && <Empty />}
-          {posts?.topQuestionsOfTheWeek.map((item, i) => (
+          {posts?.topQuestionsOfTheWeek?.map((item, i) => (
             <ListItems
               key={item.id}
               item={item}

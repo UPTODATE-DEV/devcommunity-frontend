@@ -1,45 +1,24 @@
 import { useI18n } from "@/hooks/useI18n";
 import useStore from "@/hooks/useStore";
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import BlurOnIcon from "@mui/icons-material/BlurOn";
-import BookmarkSharpIcon from "@mui/icons-material/BookmarkSharp";
-import BusinessIcon from "@mui/icons-material/Business";
-import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
-import HomeSharpIcon from "@mui/icons-material/HomeSharp";
-import ManageAccounts from "@mui/icons-material/ManageAccountsSharp";
-import QuestionAnswer from "@mui/icons-material/QuestionAnswerSharp";
-import TagSharpIcon from "@mui/icons-material/TagSharp";
+import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import Paper from "@mui/material/Paper";
 import { useRouter } from "next/router";
 import React from "react";
-
-import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
-import HistoryEduTwoToneIcon from "@mui/icons-material/HistoryEduTwoTone";
-import QuestionAnswerTwoToneIcon from "@mui/icons-material/QuestionAnswerTwoTone";
-import TagTwoToneIcon from "@mui/icons-material/TagTwoTone";
-import CurrencyBitcoinTwoToneIcon from "@mui/icons-material/CurrencyBitcoinTwoTone";
-import AutoAwesomeTwoToneIcon from "@mui/icons-material/AutoAwesomeTwoTone";
-import ConnectWithoutContactTwoToneIcon from "@mui/icons-material/ConnectWithoutContactTwoTone";
-
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import Box from "@mui/material/Box";
-import { Stack } from "@mui/system";
-import { Paper } from "@mui/material";
 import {
-  FcHome,
-  FcNook,
-  FcSms,
-  FcMindMap,
-  FcPositiveDynamic,
+  FcAbout,
   FcAddressBook,
   FcBookmark,
+  FcHome,
+  FcMindMap,
+  FcNook,
+  FcPositiveDynamic,
   FcSettings,
-  FcAbout,
+  FcSms,
 } from "react-icons/fc";
 
 const LeftSideBar = () => {

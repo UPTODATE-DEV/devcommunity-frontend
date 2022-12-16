@@ -1,25 +1,17 @@
-import React from "react";
-import Stack from "@mui/material/Stack";
-import Input from "@/components/common/Input";
-import Image from "next/image";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import InputBase from "@mui/material/InputBase";
-import { Button, Divider } from "@mui/material";
-import Chip from "@mui/material/Chip";
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
-import SaveIcon from "@mui/icons-material/Save";
-import Fab from "@mui/material/Fab";
-import NavigationIcon from "@mui/icons-material/Navigation";
-import { getRequest, patchRequest, postRequest } from "@/lib/api";
-import { toast } from "react-toastify";
-import useStore from "@/hooks/useStore";
-import dynamic from "next/dynamic";
-import CancelIcon from "@mui/icons-material/CancelOutlined";
-import { useState } from "react";
-import { FILES_BASE_URL } from "config/url";
-import { useRouter } from "next/router";
 import RichTextEditor from "@/components/common/RichTextEditor";
+import { FILES_BASE_URL } from "@/config/url";
+import useStore from "@/hooks/useStore";
+import { getRequest, patchRequest, postRequest } from "@/lib/api";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import Autocomplete from "@mui/material/Autocomplete";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import React from "react";
+import { toast } from "react-toastify";
 
 const AddPostForm = ({ data }: { data?: Post }) => {
   const getImage = data?.article?.image.id;

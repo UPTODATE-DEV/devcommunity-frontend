@@ -1,6 +1,5 @@
-import { Paper } from "@mui/material";
-import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import dynamic from "next/dynamic";
@@ -52,7 +51,7 @@ const CallToAction = () => {
         },
       }}
     >
-      <Image src="/signup.jpg" alt="" layout="fill" objectFit="cover" />
+      <Image src="/signup.jpg" alt="" layout="fill" objectFit="cover" priority />
 
       <Container sx={{ position: "relative", zIndex: 1 }}>
         <Stack spacing={2} sx={{ minHeight: 200 }} justifyContent="center">

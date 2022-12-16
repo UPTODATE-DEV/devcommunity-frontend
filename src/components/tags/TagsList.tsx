@@ -1,6 +1,6 @@
 import useStore from "@/hooks/useStore";
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
 import dynamic from "next/dynamic";
 import { HomeFeedSkeleton } from "../middle/Skeleton";
 import Tag from "./Tag";
@@ -19,7 +19,7 @@ const TagsList = () => {
       {showTagsFilters ? (
         <HomeFeed />
       ) : (
-        <Box sx={{ pb: 4 }}>
+        <Paper variant="outlined" sx={{ py: 4, px: 2, minHeight: "80vh" }}>
           <Grid container spacing={1}>
             {tags.map((el, i) => (
               <Grid item xs="auto" key={i} onClick={() => setTagsFilters(el)}>
@@ -27,7 +27,7 @@ const TagsList = () => {
               </Grid>
             ))}
           </Grid>
-        </Box>
+        </Paper>
       )}
     </>
   );

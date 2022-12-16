@@ -1,9 +1,13 @@
+import Share from "@/components/common/Share";
+import { CallToActionSkeleton } from "@/components/middle/Skeleton";
+import useSocket from "@/hooks/useSocket";
 import useStore from "@/hooks/useStore";
 import { patchRequest } from "@/lib/api";
 import BookmarkAddSharpIcon from "@mui/icons-material/BookmarkAddSharp";
 import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
+import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
@@ -11,15 +15,11 @@ import Typography from "@mui/material/Typography";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import relativeTime from "dayjs/plugin/relativeTime";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-toastify";
 dayjs.extend(relativeTime);
-import { CallToActionSkeleton } from "@/components/middle/Skeleton";
-import dynamic from "next/dynamic";
-import { Dialog } from "@mui/material";
-import { useRouter } from "next/router";
-import Share from "@/components/common/Share";
-import useSocket from "@/hooks/useSocket";
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,

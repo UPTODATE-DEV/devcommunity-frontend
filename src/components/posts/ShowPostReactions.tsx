@@ -1,20 +1,20 @@
-import React from "react";
+import { FILES_BASE_URL } from "@/config/url";
 import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
 import LightbulbSharpIcon from "@mui/icons-material/LightbulbSharp";
 import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import { Avatar, Divider, Stack } from "@mui/material";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+import List from "@mui/material/List";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemText from "@mui/material/ListItemText";
-import { FILES_BASE_URL } from "config/url";
-import { useRouter } from "next/router";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import React from "react";
 
 const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
   const [tab, setTab] = React.useState<ArticleReactionType>("LIKE");

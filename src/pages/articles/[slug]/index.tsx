@@ -1,3 +1,4 @@
+import SEO from "@/components/common/SEO";
 import Menu from "@/components/menu/Menu";
 import Post from "@/components/posts/Post";
 import useStore from "@/hooks/useStore";
@@ -6,9 +7,7 @@ import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
 import hljs from "highlight.js";
 import type { GetServerSideProps, NextPage } from "next";
-import Head from "next/head";
 import React from "react";
-import SEO from "@/components/common/SEO";
 
 const Home: NextPage<{ session: Session; post: Post }> = ({ session, post }) => {
   const setSession = useStore((state) => state.setSession);
@@ -47,10 +46,10 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(async (cont
   const { req } = context;
   const post = await getRequest({ endpoint: `/posts/${context.params?.slug}` });
 
-  if (post.data.type !== "ARTICLE") {
+  if (post.data?.type !== "ARTICLE") {
     return { notFound: true };
   }
-  
+
   return {
     props: {
       session: req?.session?.user || null,

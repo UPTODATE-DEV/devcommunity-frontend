@@ -5,7 +5,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AppBar from "@mui/material/AppBar";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
-import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -13,10 +12,11 @@ import React, { useState } from "react";
 import { IconsSkeletons, LogoSkeleton, ProfileSkeleton } from "./Skeleton";
 
 import { getRequest } from "@/lib/api";
-import { Grid, IconButton } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
 import { IconSearch } from "@tabler/icons";
+import { getUserFullName, getUserProfileImageUrl } from "@/lib/posts";
 import Mobile from "./Mobile";
-import { getUserFullName, getUserProfileImageUrl } from "../../lib/posts";
 
 const Auth = dynamic(() => import("./Auth"), {
   ssr: false,
@@ -128,12 +128,7 @@ const Menu: React.FC = () => {
             </Stack>
           </Grid>
           <Grid item lg={3} alignItems="center" sx={{ height: 1, display: { xs: "none", lg: "flex" } }}>
-            <Stack
-              direction="row"
-              spacing={2}
-              alignItems="center"
-              sx={{ height: 60, width: 1 }}
-            >
+            <Stack direction="row" spacing={2} alignItems="center" sx={{ height: 60, width: 1 }}>
               <Stack>
                 {user ? (
                   <UserAvatar

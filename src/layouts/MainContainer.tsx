@@ -1,15 +1,12 @@
-import React, { PropsWithChildren } from "react";
-import Menu from "@/components/menu/Menu";
-import Stack from "@mui/material/Stack";
+import { LeftBarSkeleton, RightBarSkeleton } from "@/components/sideBars/Skeleton";
+import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import Divider from "@mui/material/Divider";
-import Box from "@mui/material/Box";
-import CallToAction from "@/components/middle/CallToAction";
+import Stack from "@mui/material/Stack";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import dynamic from "next/dynamic";
-import { LeftBarSkeleton, RightBarSkeleton } from "@/components/sideBars/Skeleton";
-import { useMediaQuery, useTheme } from "@mui/material";
+import React, { PropsWithChildren } from "react";
 
 const RightSideBar = dynamic(import("@/components/sideBars/RightSideBar"), {
   ssr: false,

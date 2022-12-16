@@ -12,16 +12,33 @@ const withPWA = require("next-pwa")({
 
 const nextConfig = {
   reactStrictMode: true,
-  // productionBrowserSourceMaps: true,
+  productionBrowserSourceMaps: true,
   swcMinify: true,
+  compiler: {
+    removeConsole: true,
+  },
   images: {
-    domains: ["localhost", "api-community.updevtest.com", "api.updevcommunity.com"],
     formats: ["image/avif", "image/webp"],
+    domains: ["localhost", "api-community.updevtest.com", "api.updevcommunity.com"],
+    minimumCacheTTL: 60,
   },
   i18n: {
     locales: ["en", "fr"],
     defaultLocale: "fr",
     localeDetection: true,
+  },
+  experimental: {
+    modularizeImports: {
+      "@mui/material/?(((\\w*)?/?)*)": {
+        transform: "@mui/material/{{ matches.[1] }}/{{member}}",
+      },
+      "@mui/icons-material/?(((\\w*)?/?)*)": {
+        transform: "@mui/icons-material/{{ matches.[1] }}/{{member}}",
+      },
+      "@mui/lab/?(((\\w*)?/?)*)": {
+        transform: "@mui/lab/{{ matches.[1] }}/{{member}}",
+      },
+    },
   },
   async headers() {
     return [

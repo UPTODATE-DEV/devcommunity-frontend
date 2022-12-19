@@ -87,139 +87,146 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   }, []);
 
   return (
-    user?.id && (
-      <>
-        <Paper variant="outlined" component={Stack} spacing={2} sx={{ p: 2 }}>
-          <Stack direction="row" justifyContent="space-between" sx={{ position: "relative" }}>
-            <Stack direction="row" spacing={1} alignItems="center" justifyContent="center">
-              <Avatar
-                sx={{ width: { xs: 40, md: 60 }, height: { xs: 40, md: 60 }, bgcolor: "primary.main", color: "white" }}
-                alt={`${user?.firstName} ${user?.lastName}`}
-                src={`${FILES_BASE_URL}${user?.profile?.avatar?.url}`}
-              >
-                {user?.firstName[0]}
-              </Avatar>
-              <Stack>
-                <Typography variant="h6" sx={{ fontSize: { xs: 14, md: 16 } }} color="text.primary" fontWeight={700}>
-                  {getUserFullName(user)}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  {user?.email}
-                </Typography>
-                <Typography flexWrap="nowrap" variant="caption" color="text.secondary" noWrap sx={{ width: 1 }}>
-                  {user?.profile?.job}
-                </Typography>
-                <Typography variant="caption" fontSize={10} color="text.secondary">
-                  {locale === "en" ? "Member Since" : "Membre depuis"} {dayjs(user?.createdAt).format("YYYY")}
-                </Typography>
-              </Stack>
-            </Stack>
-
-            <Stack
-              spacing={2}
-              alignItems="flex-end"
-              flexShrink={1}
-              sx={{ position: "absolute", right: 1, top: "-10px" }}
-            >
-              {!currentUser && (
-                <IconButton
-                  aria-label="more"
-                  id="long-button"
-                  aria-controls={openMenu ? "long-menu" : undefined}
-                  aria-expanded={openMenu ? "true" : undefined}
-                  aria-haspopup="true"
-                  onClick={handleOpenMenu}
+    <>
+      {user?.id && (
+        <>
+          <Paper variant="outlined" component={Stack} spacing={2} sx={{ p: 2 }}>
+            <Stack direction="row" justifyContent="space-between" sx={{ position: "relative" }}>
+              <Stack direction="row" spacing={1} alignItems="center" justifyContent="center">
+                <Avatar
+                  sx={{
+                    width: { xs: 40, md: 60 },
+                    height: { xs: 40, md: 60 },
+                    bgcolor: "primary.main",
+                    color: "white",
+                  }}
+                  alt={`${user?.firstName} ${user?.lastName}`}
+                  src={`${FILES_BASE_URL}${user?.profile?.avatar?.url}`}
                 >
-                  <MoreVertIcon />
-                </IconButton>
-              )}
-
-              <Stack direction="row" spacing={{ xs: 1, md: 2 }}>
-                {user?.profile?.gitHub && (
-                  <a href={user?.profile?.gitHub} target="_blank" rel="noreferrer noopener">
-                    <IconButton>
-                      <GitHubIcon />
-                    </IconButton>
-                  </a>
-                )}
-                {user?.profile?.linkedIn && (
-                  <a href={user?.profile?.linkedIn} target="_blank" rel="noreferrer noopener">
-                    <IconButton>
-                      <LinkedInIcon />
-                    </IconButton>
-                  </a>
-                )}
-                {user?.profile?.twitter && (
-                  <a href={user?.profile?.twitter} target="_blank" rel="noreferrer noopener">
-                    <IconButton>
-                      <TwitterIcon />
-                    </IconButton>
-                  </a>
-                )}
+                  {user?.firstName[0]}
+                </Avatar>
+                <Stack>
+                  <Typography variant="h6" sx={{ fontSize: { xs: 14, md: 16 } }} color="text.primary" fontWeight={700}>
+                    {getUserFullName(user)}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    {user?.email}
+                  </Typography>
+                  <Typography flexWrap="nowrap" variant="caption" color="text.secondary" noWrap sx={{ width: 1 }}>
+                    {user?.profile?.job}
+                  </Typography>
+                  <Typography variant="caption" fontSize={10} color="text.secondary">
+                    {locale === "en" ? "Member Since" : "Membre depuis"} {dayjs(user?.createdAt).format("YYYY")}
+                  </Typography>
+                </Stack>
               </Stack>
 
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={openMenu}
-                onClose={handleCloseMenu}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
+              <Stack
+                spacing={2}
+                alignItems="flex-end"
+                flexShrink={1}
+                sx={{ position: "absolute", right: 1, top: "-10px" }}
               >
-                <MenuItem onClick={handleEditProfile}>
-                  <ListItemIcon>
-                    <EditIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText>{locale === "en" ? "Edit Profile" : "Modifier le profil"}</ListItemText>
-                </MenuItem>
-                <MenuItem onClick={handleClickOpen}>
-                  <ListItemIcon>
-                    <PowerSettingsNewIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText>{locale === "en" ? "Log out" : "Déconnexion"}</ListItemText>
-                </MenuItem>
-              </Menu>
+                {!currentUser && (
+                  <IconButton
+                    aria-label="more"
+                    id="long-button"
+                    aria-controls={openMenu ? "long-menu" : undefined}
+                    aria-expanded={openMenu ? "true" : undefined}
+                    aria-haspopup="true"
+                    onClick={handleOpenMenu}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                )}
+
+                <Stack direction="row" spacing={{ xs: 1, md: 2 }}>
+                  {user?.profile?.gitHub && (
+                    <a href={user?.profile?.gitHub} target="_blank" rel="noreferrer noopener">
+                      <IconButton>
+                        <GitHubIcon />
+                      </IconButton>
+                    </a>
+                  )}
+                  {user?.profile?.linkedIn && (
+                    <a href={user?.profile?.linkedIn} target="_blank" rel="noreferrer noopener">
+                      <IconButton>
+                        <LinkedInIcon />
+                      </IconButton>
+                    </a>
+                  )}
+                  {user?.profile?.twitter && (
+                    <a href={user?.profile?.twitter} target="_blank" rel="noreferrer noopener">
+                      <IconButton>
+                        <TwitterIcon />
+                      </IconButton>
+                    </a>
+                  )}
+                </Stack>
+
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={openMenu}
+                  onClose={handleCloseMenu}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                  }}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                >
+                  <MenuItem onClick={handleEditProfile}>
+                    <ListItemIcon>
+                      <EditIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>{locale === "en" ? "Edit Profile" : "Modifier le profil"}</ListItemText>
+                  </MenuItem>
+                  <MenuItem onClick={handleClickOpen}>
+                    <ListItemIcon>
+                      <PowerSettingsNewIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>{locale === "en" ? "Log out" : "Déconnexion"}</ListItemText>
+                  </MenuItem>
+                </Menu>
+              </Stack>
             </Stack>
-          </Stack>
 
-          <Typography color="text.secondary">{user?.profile?.bio}</Typography>
+            <Typography color="text.secondary">{user?.profile?.bio}</Typography>
 
-          <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title">
-              {locale === "en" ? "Confirm Logout" : "Confirmer la déconnexion"}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                {locale === "en" ? "Are you sure you want to log out?" : "Êtes-vous sûr de vouloir vous déconnecter?"}
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button sx={{ px: 4 }} color="error" variant="outlined" disableElevation onClick={onLogout}>
-                {locale === "en" ? "Log out" : "Déconnexion"}
-              </Button>
-              <Button sx={{ px: 4 }} disableElevation variant="contained" onClick={handleClose} autoFocus>
-                {locale === "en" ? "Cancel" : "Annuler"}
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </Paper>
-        {editProfile ? <ProfileEditForm user={user} /> : <ProfileTabs currentUser={currentUser} />}
-      </>
-    )
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {locale === "en" ? "Confirm Logout" : "Confirmer la déconnexion"}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  {locale === "en" ? "Are you sure you want to log out?" : "Êtes-vous sûr de vouloir vous déconnecter?"}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button sx={{ px: 4 }} color="error" variant="outlined" disableElevation onClick={onLogout}>
+                  {locale === "en" ? "Log out" : "Déconnexion"}
+                </Button>
+                <Button sx={{ px: 4 }} disableElevation variant="contained" onClick={handleClose} autoFocus>
+                  {locale === "en" ? "Cancel" : "Annuler"}
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Paper>
+          {editProfile ? <ProfileEditForm user={user} /> : <ProfileTabs currentUser={currentUser} />}
+        </>
+      )}
+    </>
   );
 };
 

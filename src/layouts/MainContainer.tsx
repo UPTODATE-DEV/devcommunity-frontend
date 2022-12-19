@@ -5,7 +5,10 @@ import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import dayjs from "dayjs";
+import "dayjs/locale/fr";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import React, { PropsWithChildren } from "react";
 
 const RightSideBar = dynamic(import("@/components/sideBars/RightSideBar"), {
@@ -19,6 +22,10 @@ const LeftSideBar = dynamic(import("@/components/sideBars/LeftSideBar"), {
 
 const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
   const theme = useTheme();
+  const { locale } = useRouter();
+
+  locale === "en" ? dayjs.locale("en") : dayjs.locale("fr");
+
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Box sx={{ bgcolor: "background.default", minHeight: "100vh" }}>

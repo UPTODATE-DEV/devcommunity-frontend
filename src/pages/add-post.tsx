@@ -1,16 +1,12 @@
 import Menu from "@/components/menu/Menu";
-import AddPost from "@/components/posts/AddPost";
-import CallToAction from "@/components/middle/CallToAction";
-import PostList from "@/components/posts/PostsList";
+import AddPostForm from "@/components/posts/AddPostForm";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { withSessionSsr } from "@/lib/withSession";
-import Divider from "@mui/material/Divider";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import * as React from "react";
-import AddPostForm from "@/components/posts/AddPostForm";
 
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);

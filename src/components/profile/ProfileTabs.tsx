@@ -122,7 +122,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
         )}
       </TabList>
       <TabPanel sx={{ p: 0 }} value={"0"}>
-        <Stack spacing={5}>
+        <Stack spacing={2}>
           {questions.length === 0 && <Empty />}
           {questions?.map((item, index) => (
             <React.Fragment key={item.id}>

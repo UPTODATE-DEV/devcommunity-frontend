@@ -39,7 +39,6 @@ const HomeFeed = () => {
   const params = qs.stringify({
     perPage,
     type,
-    draft: false,
   });
 
   const handleClose = () => setOpen(false);

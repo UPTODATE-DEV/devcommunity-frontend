@@ -140,7 +140,7 @@ const AddComment: React.FC<{ data: Post }> = ({ data }) => {
 
         {comments?.map((el) => (
           <React.Fragment key={el.id}>
-            <Comment data={el as unknown as Post} />
+            <Comment data={el} />
           </React.Fragment>
         ))}
       </Stack>

@@ -1,14 +1,15 @@
+import useStore from "@/hooks/useStore";
+import useStoreNoPersist from "@/hooks/useStoreNoPersist";
 import { patchRequest } from "@/lib/api";
+import BookmarkAddSharpIcon from "@mui/icons-material/BookmarkAddSharp";
+import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import { useEffect } from "react";
-import useStoreNoPersist from "@/hooks/useStoreNoPersist";
-import BookmarkAddSharpIcon from "@mui/icons-material/BookmarkAddSharp";
-import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
+import { useEffect, useState } from "react";
 
-const Bookmark = ({ post, userId }: { post: Post; userId?: string }) => {
+const Bookmark = ({ post }: { post: Post }) => {
+  const userId = useStore((state) => state.session?.user?.id);
   const [bookmarked, setBookmarked] = useState(false);
   const { setOpenLoginModal } = useStoreNoPersist();
   const { locale } = useRouter();

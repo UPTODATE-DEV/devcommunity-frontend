@@ -1,17 +1,17 @@
-import React from "react";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemText from "@mui/material/ListItemText";
+import useStore from "@/hooks/useStore";
 import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
-import useStore from "@/hooks/useStore";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-import { useRouter } from "next/router";
-import { TopSkeleton } from "./Skeleton";
-import dynamic from "next/dynamic";
+import List from "@mui/material/List";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import React from "react";
+import { TopSkeleton } from "./Skeleton";
 
 const Empty = dynamic(import("@/components/common/Empty"), {
   ssr: false,
@@ -27,10 +27,11 @@ const TopPosts = () => {
   };
 
   return (
-    <Paper variant="outlined" sx={{ p: 2 }}>
-      <Stack spacing={2} sx={{ py: 2 }}>
+    <Stack spacing={2}>
+      <Paper variant="outlined" sx={{ p: 2 }}>
         <Typography variant="h6">{locale === "en" ? "Top Posts" : "Meilleurs posts"}</Typography>
-        <Divider variant="inset" />
+      </Paper>
+      <Paper variant="outlined" sx={{ p: 2 }}>
         {topPosts?.length === 0 && <Empty />}
         <List>
           {topPosts?.map((el, i) => (
@@ -85,12 +86,12 @@ const TopPosts = () => {
                   }
                 />
               </ListItemButton>
-              <Divider variant="inset" component="li" />
+              {i < topPosts.length - 1 && <Divider variant="inset" component="li" />}
             </React.Fragment>
           ))}
         </List>
-      </Stack>
-    </Paper>
+      </Paper>
+    </Stack>
   );
 };
 

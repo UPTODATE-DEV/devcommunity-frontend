@@ -1,5 +1,5 @@
+import PostContent from "@/components/common/Content";
 import PostCardHeader from "@/components/common/PostCardHeader";
-import PostContent from "@/components/common/PostContent";
 import PostTags from "@/components/common/PostTags";
 import { useGoToPost, useGoToUserProfile } from "@/hooks/posts";
 import useStore from "@/hooks/useStore";

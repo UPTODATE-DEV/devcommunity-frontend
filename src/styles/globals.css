@@ -67,3 +67,7 @@ iframe.ql-video {
 .content a {
   text-decoration: underline;
 }
+
+.ql-editor {
+  min-height: 250px;
+}

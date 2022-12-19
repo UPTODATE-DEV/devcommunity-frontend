@@ -3,12 +3,12 @@ import { useGoToUserProfile } from "@/hooks/posts";
 import useStore from "@/hooks/useStore";
 import useUser from "@/hooks/useUser";
 import { getUserFullName, getUserProfileImageUrl } from "@/lib";
+import PostAddIcon from "@mui/icons-material/PostAdd";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import React, { useCallback } from "react";
-import PostAddIcon from "@mui/icons-material/PostAdd";
 
 interface Props {
   label: string;
@@ -57,7 +57,9 @@ const AddPost: React.FC<Props> = ({ label, handleClick }) => {
         <Typography variant="caption" color="text.secondary">
           {label}
         </Typography>
-        <IconButton><PostAddIcon/></IconButton>
+        <IconButton>
+          <PostAddIcon />
+        </IconButton>
       </Stack>
     </Paper>
   );

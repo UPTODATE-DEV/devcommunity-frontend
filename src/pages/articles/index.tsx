@@ -3,15 +3,13 @@ import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 import { PostsListSkeleton } from "@/components/posts/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
-import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
-import hljs from "highlight.js";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import React from "react";
 import { useRouter } from "next/router";
+import React from "react";
 
 const AddPost = dynamic(import("@/components/common/AddPost"), { ssr: false, loading: () => null });
 
@@ -27,26 +25,11 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setPosts = useStore((state) => state.setPosts);
   const { push, locale } = useRouter();
 
-  React.useEffect(() => {
-    document.querySelectorAll("pre").forEach((el) => {
-      hljs.highlightElement(el);
-    });
-  }, []);
-
   const handleGoToAddPage = () => {
     push("/articles/add");
   };
 
   React.useEffect(() => {
-    const getPosts = async () => {
-      const posts = await getRequest({ endpoint: "/posts" });
-      if (!posts.error) {
-        setPosts(posts.data);
-      }
-    };
-
-    getPosts();
-
     setSession(session);
   }, []);
 

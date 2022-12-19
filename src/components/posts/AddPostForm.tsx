@@ -6,6 +6,7 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import Autocomplete from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Image from "next/image";
@@ -119,7 +120,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
   }, []);
 
   return (
-    <Stack spacing={2} sx={{ py: 1, pb: 4 }}>
+    <Paper variant="outlined" component={Stack} spacing={2} sx={{ py: 1, p: 2 }}>
       <Stack
         justifyContent="center"
         alignItems="center"
@@ -189,13 +190,13 @@ const AddPostForm = ({ data }: { data?: Post }) => {
       <Stack spacing={2} direction="row" alignItems="center">
         <Button
           disableElevation
-          color="inherit"
-          variant="outlined"
-          disabled={loading}
+          color="primary"
+          variant="contained"
+          disabled={!post.title || !post.content || !post.tags?.length || loading}
           sx={{ px: 4, borderRadius: 50 }}
-          onClick={() => push({ pathname: "/posts" }, undefined, { shallow: true })}
+          onClick={onPublish}
         >
-          {locale === "en" ? "Cancel" : "Annuler"}
+          {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Publish" : "Publier"}
         </Button>
 
         <Button
@@ -211,16 +212,16 @@ const AddPostForm = ({ data }: { data?: Post }) => {
 
         <Button
           disableElevation
-          color="primary"
-          variant="contained"
-          disabled={!post.title || !post.content || !post.tags?.length || loading}
+          color="inherit"
+          variant="outlined"
+          disabled={loading}
           sx={{ px: 4, borderRadius: 50 }}
-          onClick={onPublish}
+          onClick={() => push({ pathname: "/posts" }, undefined, { shallow: true })}
         >
-          {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Publish" : "Publier"}
+          {locale === "en" ? "Cancel" : "Annuler"}
         </Button>
       </Stack>
-    </Stack>
+    </Paper>
   );
 };
 

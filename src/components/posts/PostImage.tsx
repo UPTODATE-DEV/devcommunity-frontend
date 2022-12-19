@@ -5,16 +5,18 @@ const PostImage = ({
   articleUrl = "",
   title = "",
   handleClick,
+  height = 140,
 }: {
   articleUrl?: string;
   title?: string;
   handleClick: () => void;
+  height?: number;
 }) => {
   return (
     <Stack
       sx={{
         width: 1,
-        height: 140,
+        height: { height },
         position: "relative",
         borderRadius: 2,
         cursor: "pointer",

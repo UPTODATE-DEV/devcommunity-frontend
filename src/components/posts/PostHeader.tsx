@@ -1,27 +1,39 @@
-import { FILES_BASE_URL } from "@/config/url";
+import { useGoToUserProfile } from "@/hooks/posts";
+import { getArticleImageUrl, getUserFullName, parseDate } from "@/lib";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import dayjs from "dayjs";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import React from "react";
+import React, { useCallback } from "react";
+import PostImage from "./PostImage";
 
 const PostHeader: React.FC<{ data: Post }> = ({ data }) => {
-  const { push, locale } = useRouter();
-  locale === "en" ? dayjs.locale("en") : dayjs.locale("fr");
+  const { author } = data;
+
+  const goToProfile = useGoToUserProfile();
+
+  const handleClick = useCallback(() => {}, []);
+
+  const handleGoToProfile = useCallback(() => {
+    goToProfile(author?.email);
+  }, [author?.email]);
 
   return (
-    <Stack
+    <Paper
+      variant="outlined"
       sx={{
         width: 1,
-        height: 300,
         position: "relative",
         overflow: "hidden",
         borderTopLeftRadius: 6,
         borderTopRightRadius: 6,
       }}
     >
-      <Image src={FILES_BASE_URL + data?.article?.image?.url} alt="Post" layout="fill" objectFit="cover" />
+      <PostImage
+        height={300}
+        handleClick={handleClick}
+        title={data?.title}
+        articleUrl={getArticleImageUrl(data?.article)}
+      />
       <Stack
         sx={{
           px: 2,
@@ -41,7 +53,7 @@ const PostHeader: React.FC<{ data: Post }> = ({ data }) => {
         <Typography
           variant="body2"
           color="#d8d8d8"
-          onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}
+          onClick={handleGoToProfile}
           sx={{
             "&:hover": {
               color: "primary.main",
@@ -49,13 +61,13 @@ const PostHeader: React.FC<{ data: Post }> = ({ data }) => {
             cursor: "pointer",
           }}
         >
-          {data?.author?.firstName} {data?.author?.lastName}
+          {getUserFullName(author)}
         </Typography>
         <Typography variant="body2" color="#d8d8d8">
-          {dayjs(data?.createdAt).format("MMM DD, YYYY")}
+          {parseDate({ date: data?.publishedOn })}
         </Typography>
       </Stack>
-    </Stack>
+    </Paper>
   );
 };
 

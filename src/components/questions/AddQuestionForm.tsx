@@ -5,6 +5,7 @@ import { getRequest, patchRequest, postRequest } from "@/lib/api";
 import Autocomplete from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import { useRouter } from "next/router";
@@ -44,11 +45,34 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
     const response = data?.id
       ? await patchRequest({
           endpoint: `/posts/${data?.id}`,
-          data: { ...post, author: user?.id, type: "QUESTION" },
+          data: { ...post, author: user?.id, type: "QUESTION", draft: true },
         })
       : await postRequest({
           endpoint: "/posts",
-          data: { ...post, author: user?.id, type: "QUESTION" },
+          data: { ...post, author: user?.id, type: "QUESTION", draft: true },
+        });
+    if (response.error) {
+      setLoading(false);
+      toast.error(response.error?.message);
+    }
+    if (response.data) {
+      setLoading(false);
+      toast.success(data?.title ? "Post updated" : "Post created");
+      replace(`/posts/${response.data?.slug}`);
+    }
+  };
+
+  const onPublish = async (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+    const response = data?.id
+      ? await patchRequest({
+          endpoint: `/posts/${data?.id}`,
+          data: { ...post, author: user?.id, type: "QUESTION", draft: false },
+        })
+      : await postRequest({
+          endpoint: "/posts",
+          data: { ...post, author: user?.id, type: "QUESTION", draft: false },
         });
     if (response.error) {
       setLoading(false);
@@ -77,7 +101,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
   }, []);
 
   return (
-    <Stack spacing={2} sx={{ py: 1, pb: 4, minHeight: "100vh" }}>
+    <Paper variant="outlined" component={Stack} spacing={2} sx={{ py: 1, p: 2 }}>
       <TextField
         name="title"
         variant="filled"
@@ -123,7 +147,29 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
           ["image", "video", "strike"],
         ]}
       />
-      <Stack spacing={2} direction="row" alignItems="center">
+      <Stack spacing={2} rowGap={2} direction="row" flexWrap="wrap" justifyContent="center" alignItems="center">
+        <Button
+          disableElevation
+          color="primary"
+          variant="contained"
+          disabled={!post.title || !post.content || !post.tags?.length || loading}
+          sx={{ px: 4, borderRadius: 50 }}
+          onClick={onPublish}
+        >
+          {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Publish" : "Publier"}
+        </Button>
+
+        <Button
+          disableElevation
+          color="success"
+          variant="outlined"
+          disabled={!post.title || !post.content || !post.tags?.length || loading}
+          sx={{ px: 4, borderRadius: 50 }}
+          onClick={onSubmit}
+        >
+          {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Save" : "Enregistrer"}
+        </Button>
+
         <Button
           disableElevation
           color="inherit"
@@ -134,30 +180,8 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
         >
           {locale === "en" ? "Cancel" : "Annuler"}
         </Button>
-
-        <Button
-          disableElevation
-          color="success"
-          variant="outlined"
-          disabled={!post.title || !post.content || !post.tags?.length || loading}
-          sx={{ px: 4, borderRadius: 50 }}
-          onClick={() => push({ pathname: "/posts" }, undefined, { shallow: true })}
-        >
-          {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Save" : "Enregistrer"}
-        </Button>
-
-        <Button
-          disableElevation
-          color="primary"
-          variant="contained"
-          disabled={!post.title || !post.content || !post.tags?.length || loading}
-          sx={{ px: 4, borderRadius: 50 }}
-          onClick={() => push({ pathname: "/posts" }, undefined, { shallow: true })}
-        >
-          {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Publish" : "Publier"}
-        </Button>
       </Stack>
-    </Stack>
+    </Paper>
   );
 };
 

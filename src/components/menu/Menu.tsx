@@ -12,10 +12,12 @@ import React, { useState } from "react";
 import { IconsSkeletons, LogoSkeleton, ProfileSkeleton } from "./Skeleton";
 
 import { getRequest } from "@/lib/api";
+import { getUserFullName, getUserProfileImageUrl } from "@/lib/posts";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { IconSearch } from "@tabler/icons";
-import { getUserFullName, getUserProfileImageUrl } from "@/lib/posts";
 import Mobile from "./Mobile";
 
 const Auth = dynamic(() => import("./Auth"), {
@@ -43,6 +45,8 @@ const Menu: React.FC = () => {
   const { push, locale } = useRouter();
   const { openMobileMenu, setOpenMobileMenu } = useStore((state) => state);
   const [posts, setPosts] = useState<Post[] | []>([]);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const actions: SpotlightAction[] =
     posts?.map((_, index) => ({
@@ -86,14 +90,17 @@ const Menu: React.FC = () => {
     >
       <Mobile />
       <Container maxWidth="xl" sx={{ py: 1 }}>
-        <Grid container alignItems="center" spacing={2}>
-          <Grid item md={3} lg={2} justifyContent="center" alignItems="center" sx={{ height: 65 }}>
-            <Logo />
-            <IconButton sx={{ display: { md: "none" } }} onClick={toggleDrawer()}>
-              <MenuIcon />
-            </IconButton>
+        <Grid container alignItems="center" spacing={{ xs: 0, md: 2 }}>
+          <Grid item xs={2} md={3} lg={2} justifyContent="center" alignItems="center" sx={{ height: 65 }}>
+            {isMobile ? (
+              <IconButton sx={{ width: 1, height: 1 }} onClick={toggleDrawer()}>
+                <MenuIcon />
+              </IconButton>
+            ) : (
+              <Logo />
+            )}
           </Grid>
-          <Grid item md={9} lg={7} justifyContent="center" alignItems="center" sx={{ height: 1 }}>
+          <Grid item xs={7} md={9} lg={7} justifyContent="center" alignItems="center" sx={{ height: 1 }}>
             <Stack sx={{ height: 1 }} justifyContent="center">
               <SpotlightProvider
                 actions={actions}
@@ -127,19 +134,27 @@ const Menu: React.FC = () => {
               </SpotlightProvider>
             </Stack>
           </Grid>
-          <Grid item lg={3} alignItems="center" sx={{ height: 1, display: { xs: "none", lg: "flex" } }}>
-            <Stack direction="row" spacing={2} alignItems="center" sx={{ height: 60, width: 1 }}>
-              <Stack>
-                {user ? (
-                  <UserAvatar
-                    name={getUserFullName(user)}
-                    pictureUrl={getUserProfileImageUrl(user)}
-                    handleClick={handleClickGoToProfile}
-                  />
-                ) : (
-                  <Auth />
-                )}
-              </Stack>
+          <Grid item xs={3} md={0} lg={3} alignItems="center" sx={{ height: 1, display: { md: "none", lg: "flex" } }}>
+            <Stack
+              direction="row"
+              spacing={2}
+              alignItems="center"
+              justifyContent={{ xs: "flex-end", md: "flex-start" }}
+              sx={{ height: 60, width: 1 }}
+            >
+              {!isMobile && (
+                <Stack sx={{ display: { xs: "none", lg: "flex" } }}>
+                  {user ? (
+                    <UserAvatar
+                      name={getUserFullName(user)}
+                      pictureUrl={getUserProfileImageUrl(user)}
+                      handleClick={handleClickGoToProfile}
+                    />
+                  ) : (
+                    <Auth />
+                  )}
+                </Stack>
+              )}
               <Icons />
             </Stack>
           </Grid>

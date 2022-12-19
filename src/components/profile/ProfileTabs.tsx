@@ -1,27 +1,25 @@
-import { FILES_BASE_URL } from "@/config/url";
 import useStore from "@/hooks/useStore";
-import useUser from "@/hooks/useUser";
-import { deleteRequest, getRequest } from "@/lib/api";
-import CommentIcon from "@mui/icons-material/Comment";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { deleteRequest, getRequest, patchRequest } from "@/lib/api";
+import DraftsIcon from "@mui/icons-material/Drafts";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import QuestionAnswer from "@mui/icons-material/QuestionAnswerSharp";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import TagIcon from "@mui/icons-material/Tag";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
+import Chip from "@mui/material/Chip";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Tab from "@mui/material/Tab";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-toastify";
+import DraftCard from "./DraftCard";
 import PostCard from "./PostCard";
 import QuestionCard from "./QuestionCard";
 
@@ -33,12 +31,9 @@ const Empty = dynamic(import("@/components/common/Empty"), {
 const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
   const [tab, setTab] = React.useState("0");
   const [posts, setPosts] = React.useState<Post[] | []>([]);
+  const [followedTags, setFollowedTags] = React.useState<Tags[] | []>([]);
   const sessionUser = useStore((state) => state.session?.user);
-  const { push, locale } = useRouter();
-  const [comments, setComments] = React.useState<PostComment[] | []>([]);
-
-  const useUserData = useUser(sessionUser?.username);
-  const user = currentUser || useUserData;
+  const { locale } = useRouter();
 
   const tabs = [
     {
@@ -55,9 +50,15 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
     },
     {
       id: 2,
-      label: locale === "en" ? "Comments" : "commentaires",
+      label: "Drafts",
       show: currentUser ? false : true,
-      icon: <CommentIcon />,
+      icon: <DraftsIcon />,
+    },
+    {
+      id: 2,
+      label: "Tags",
+      show: currentUser ? false : true,
+      icon: <TagIcon />,
     },
   ];
 
@@ -68,18 +69,9 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
     setTab(newValue);
   };
 
-  const handleViewPost = (data: Post) => {
-    push(`${data?.type === "ARTICLE" ? "/articles" : "/posts"}/${data?.slug}`);
-  };
-
-  const handleDeleteComment = async (id: string) => {
-    const response = await deleteRequest({ endpoint: `/comments/${id}` });
-    if (response.error) {
-      toast.error(response.error?.message);
-    }
-    if (response.data) {
-      setComments((state) => state.filter((el) => el.id !== id));
-    }
+  const handleTagClick = async (tag: string) => {
+    await patchRequest({ endpoint: `/tags/follow/${tag}/${sessionUser?.id}` });
+    setFollowedTags((state) => state.filter((el) => el.tag.name !== tag));
   };
 
   const handleDeletePost = async (id: string) => {
@@ -94,12 +86,11 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
 
   const fetchData = async () => {
     const getPosts = getRequest({ endpoint: `/posts/author/${currentUser?.id || sessionUser?.id}` });
-    const getComments = getRequest({ endpoint: `/comments/author/${currentUser?.id || sessionUser?.id}` });
-
-    const [posts, comments] = await Promise.all([getPosts, getComments]);
+    const getFollowedTags = getRequest({ endpoint: `/tags/followed/${sessionUser?.id}` });
+    const [posts, followedTags] = await Promise.all([getPosts, getFollowedTags]);
 
     setPosts(posts.data);
-    setComments(comments.data);
+    setFollowedTags(followedTags.data);
   };
 
   React.useEffect(() => {
@@ -113,8 +104,8 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
         scrollButtons
         allowScrollButtonsMobile
         variant={useMediaQuery("(min-width:600px)") ? "fullWidth" : "scrollable"}
-        aria-label="lab API tabs example"
-        sx={{ borderBottom: 1, borderColor: "divider", bgcolor: "action.hover" }}
+        aria-label="Show reactions"
+        sx={{ border: 1, borderColor: "divider", bgcolor: "background.paper" }}
       >
         {tabs.map(
           (item, i) =>
@@ -136,94 +127,56 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
           {questions?.map((item, index) => (
             <React.Fragment key={item.id}>
               <QuestionCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
-              {posts.length !== index && <Divider />}
             </React.Fragment>
           ))}
         </Stack>
-        {/* <Stack sx={{ display: "flex", width: 1, my: 6 }} alignItems="center">
-          <CircularProgress />
-        </Stack> */}
       </TabPanel>
       <TabPanel sx={{ p: 0 }} value={"1"}>
-        <Stack spacing={5}>
+        <Stack spacing={2}>
           {articles.length === 0 && <Empty />}
           {articles?.map((item, index) => (
             <React.Fragment key={item.id}>
               <PostCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
-              {posts.length !== index && <Divider />}
             </React.Fragment>
           ))}
         </Stack>
       </TabPanel>
       {!currentUser && (
-        <TabPanel sx={{ p: 0 }} value={"2"}>
-          <Stack spacing={1}>
-            {comments.length === 0 && <Empty />}
-            {comments.map((el, index) => (
-              <React.Fragment key={el.id}>
-                <Stack direction="row" spacing={2}>
-                  <IconButton onClick={() => push(`/profile/@${user?.email.split("@")[0]}`)}>
-                    <Avatar
-                      sx={{ bgcolor: "primary.main", color: "white" }}
-                      alt={`${user?.firstName} ${user?.lastName}`}
-                      src={`${FILES_BASE_URL}${user?.profile?.avatar?.url}`}
+        <>
+          <TabPanel sx={{ p: 0 }} value={"2"}>
+            <Stack spacing={2}>
+              {articles.length === 0 && <Empty />}
+              {articles?.map((item, index) => (
+                <React.Fragment key={item.id}>
+                  <DraftCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
+                </React.Fragment>
+              ))}
+            </Stack>
+          </TabPanel>
+          <TabPanel sx={{ p: 0 }} value={"3"}>
+            {followedTags.length === 0 && <Empty />}
+            <Paper variant="outlined" sx={{ py: 4, px: 2, minHeight: "300px" }}>
+              <Grid container spacing={1}>
+                {followedTags.map((el, i) => (
+                  <Grid item xs="auto" key={el.tag.name}>
+                    <Tooltip
+                      arrow
+                      title={locale === "en" ? "Click to unfollow this tag" : "Cliquer pour ne plus suivre ce tag"}
                     >
-                      {user?.firstName?.charAt(0)}
-                    </Avatar>
-                  </IconButton>
-                  <Stack sx={{ position: "relative", width: 1 }}>
-                    <Typography
-                      color="text.primary"
-                      onClick={() => push(`/profile/@${user?.email.split("@")[0]}`)}
-                      sx={{
-                        "&:hover": {
-                          color: "primary.main",
-                        },
-                        cursor: "pointer",
-                      }}
-                      fontWeight={700}
-                    >
-                      {user?.firstName} {user?.lastName}
-                    </Typography>
-
-                    <Typography
-                      variant="body1"
-                      color="text.secondary"
-                      className="content"
-                      dangerouslySetInnerHTML={{
-                        __html: el.content,
-                      }}
-                    />
-                    <Stack direction="row" flexWrap="wrap" spacing={1} alignItems="center" sx={{ mt: 1 }}>
-                      <Button
+                      <Chip
                         size="small"
-                        variant="outlined"
-                        color="primary"
+                        onClick={() => handleTagClick(el.tag.name)}
+                        icon={<TagIcon fontSize="small" />}
                         sx={{ px: 2 }}
-                        onClick={() => handleViewPost(el.post)}
-                        startIcon={<RemoveRedEyeIcon />}
-                      >
-                        {locale === "en" ? "View post" : "Voir le post"}
-                      </Button>
-
-                      <Button
-                        size="small"
-                        variant="outlined"
-                        color="error"
-                        sx={{ px: 2 }}
-                        onClick={() => handleDeleteComment(el.id)}
-                        startIcon={<DeleteIcon />}
-                      >
-                        {locale === "en" ? "Delete" : "Supprimer"}
-                      </Button>
-                    </Stack>
-                  </Stack>
-                </Stack>
-                <Divider />
-              </React.Fragment>
-            ))}
-          </Stack>
-        </TabPanel>
+                        label={`${el.tag.name} (${el.tag._count.posts})`}
+                      />
+                    </Tooltip>
+                  </Grid>
+                ))}
+              </Grid>
+            </Paper>
+          </TabPanel>
+        </>
       )}
     </TabContext>
   );

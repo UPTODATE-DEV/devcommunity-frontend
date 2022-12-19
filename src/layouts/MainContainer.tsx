@@ -41,8 +41,8 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
               <LeftSideBar />
             </Grid>
           )}
-          <Grid item md={9} lg={7} sx={{ mt: 1.9 }}>
-            <Stack sx={{ position: "relative", minHeight: "100vh" }} spacing={2}>
+          <Grid item md={9} lg={7} sx={{ position: "relative", minHeight: "100vh", my: { xs: 2, md: 3.3, lg: 1.9 } }}>
+            <Stack sx={{ position: "relative" }} spacing={2}>
               {children}
             </Stack>
           </Grid>

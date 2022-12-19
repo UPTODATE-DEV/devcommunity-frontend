@@ -1,19 +1,17 @@
 import { PostsListSkeleton } from "@/components/posts/Skeleton";
 import { QuestionsListSkeleton } from "@/components/questions/Skeleton";
+import { API } from "@/config/url";
 import useStore from "@/hooks/useStore";
 import AddIcon from "@mui/icons-material/Add";
-import Divider from "@mui/material/Divider";
+import CircularProgress from "@mui/material/CircularProgress";
 import Fab from "@mui/material/Fab";
 import Stack from "@mui/material/Stack";
-import dynamic from "next/dynamic";
-import React, { useEffect } from "react";
-import { HomeFeedSkeleton } from "./Skeleton";
-import useSWR from "swr";
-import useSWRInfinite from "swr/infinite";
 import axios from "axios";
+import dynamic from "next/dynamic";
 import qs from "qs";
-import { API } from "@/config/url";
-import CircularProgress from "@mui/material/CircularProgress";
+import React, { useEffect } from "react";
+import useSWRInfinite from "swr/infinite";
+import { HomeFeedSkeleton } from "./Skeleton";
 
 const ModalCreation = dynamic(import("@/components/common/ModalCreation"), {
   ssr: false,
@@ -41,6 +39,7 @@ const HomeFeed = () => {
   const params = qs.stringify({
     perPage,
     type,
+    draft: false,
   });
 
   const handleClose = () => setOpen(false);
@@ -79,7 +78,7 @@ const HomeFeed = () => {
   }, [currentPage]);
 
   return (
-    <Stack spacing={2} sx={{ pb: 2 }}>
+    <Stack spacing={2}>
       {size === 0 && <Empty />}
       {isLoading && <HomeFeedSkeleton />}
       <ModalCreation open={open} handleClose={handleClose} />

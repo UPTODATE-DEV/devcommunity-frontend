@@ -1,18 +1,16 @@
 import QuestionCard from "@/components/questions/QuestionCard";
-import useStore from "@/hooks/useStore";
-import Divider from "@mui/material/Divider";
-import Stack from "@mui/material/Stack";
-import dynamic from "next/dynamic";
-import React, { useEffect } from "react";
-import Fab from "@mui/material/Fab";
-import AddIcon from "@mui/icons-material/Add";
-import { QuestionsListSkeleton } from "./Skeleton";
-import qs from "qs";
-import useSWR from "swr";
-import useSWRInfinite from "swr/infinite";
-import axios from "axios";
 import { API } from "@/config/url";
+import useStore from "@/hooks/useStore";
+import AddIcon from "@mui/icons-material/Add";
 import CircularProgress from "@mui/material/CircularProgress";
+import Fab from "@mui/material/Fab";
+import Stack from "@mui/material/Stack";
+import axios from "axios";
+import dynamic from "next/dynamic";
+import qs from "qs";
+import React, { useEffect } from "react";
+import useSWRInfinite from "swr/infinite";
+import { QuestionsListSkeleton } from "./Skeleton";
 
 const Empty = dynamic(import("@/components/common/Empty"), {
   ssr: false,
@@ -73,7 +71,7 @@ const QuestionsList = () => {
   }, [currentPage]);
 
   return (
-    <Stack spacing={2} sx={{ pb: 2 }}>
+    <Stack spacing={2}>
       <ModalCreation open={open} handleClose={handleClose} />
       {size === 0 && <Empty />}
       {isLoading && <QuestionsListSkeleton />}

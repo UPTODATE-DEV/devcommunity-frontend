@@ -1,22 +1,15 @@
 import SEO from "@/components/common/SEO";
 import Menu from "@/components/menu/Menu";
+import Question from "@/components/questions/Question";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
 import type { GetServerSideProps, NextPage } from "next";
 import React from "react";
-import Question from "@/components/questions/Question";
-import hljs from "highlight.js";
 
 const Home: NextPage<{ session: Session; post: Post }> = ({ session, post }) => {
   const setSession = useStore((state) => state.setSession);
-
-  React.useEffect(() => {
-    document.querySelectorAll("pre").forEach((el) => {
-      hljs.highlightElement(el);
-    });
-  }, []);
 
   React.useEffect(() => {
     setSession(session);

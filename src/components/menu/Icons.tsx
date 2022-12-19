@@ -3,24 +3,24 @@ import useSocket from "@/hooks/useSocket";
 import useStore from "@/hooks/useStore";
 import { getRequest } from "@/lib/api";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
+import ArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Badge, { BadgeProps } from "@mui/material/Badge";
 import Button from "@mui/material/Button";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import Grow from "@mui/material/Grow";
 import IconButton from "@mui/material/IconButton";
+import MenuItem from "@mui/material/MenuItem";
+import MenuList from "@mui/material/MenuList";
+import Paper from "@mui/material/Paper";
+import Popper from "@mui/material/Popper";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import { useDarkMode } from "next-dark-mode";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
-import ArrowDown from "@mui/icons-material/KeyboardArrowDown";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
-import Grow from "@mui/material/Grow";
-import MenuItem from "@mui/material/MenuItem";
-import MenuList from "@mui/material/MenuList";
-import Paper from "@mui/material/Paper";
-import Popper from "@mui/material/Popper";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -122,7 +122,7 @@ const Icons = () => {
         aria-expanded={open ? "true" : undefined}
         onClick={handleToggle}
         color="inherit"
-        sx={{ display: { xs: "none", md: "flex" }, px: 1 }}
+        sx={{ display: { xs: "none", md: "flex" }, px: 2, borderRadius: 50 }}
         startIcon={
           locale === "fr" ? (
             <Stack
@@ -145,7 +145,7 @@ const Icons = () => {
           )
         }
       >
-        <ArrowDown />
+        <ArrowDown color="primary" />
       </Button>
       <Popper
         open={open}

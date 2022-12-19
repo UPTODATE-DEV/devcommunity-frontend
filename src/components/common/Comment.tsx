@@ -1,7 +1,5 @@
+import PostContent from "@/components/common/Content";
 import PostCardHeader from "@/components/common/PostCardHeader";
-import PostContent from "@/components/common/PostContent";
-import PostTags from "@/components/common/PostTags";
-import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 import useSocket from "@/hooks/useSocket";
 import useStore from "@/hooks/useStore";
 import { patchRequest } from "@/lib/api";
@@ -11,107 +9,79 @@ import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
 import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import useTheme from "@mui/system/useTheme";
-import dayjs from "dayjs";
-import "dayjs/locale/fr";
-import relativeTime from "dayjs/plugin/relativeTime";
-import hljs from "highlight.js";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
-import { useGoToPost, useGoToUserProfile } from "../../hooks/posts";
+import { useGoToUserProfile } from "../../hooks/posts";
+import useStoreNoPersist from "../../hooks/useStoreNoPersist";
 import ShowQuestionReactions from "../questions/ShowQuestionReactions";
-dayjs.extend(relativeTime);
-const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
-  ssr: false,
-  loading: () => <CallToActionSkeleton />,
-});
 
-const Comment: React.FC<{ data: Post }> = ({ data }) => {
+const Comment: React.FC<{ data: PostComment }> = ({ data }) => {
   const user = useStore((state) => state.session?.user);
   const { push, locale } = useRouter();
-  const { setPosts, posts } = useStore((state) => state);
+  const { setOpenLoginModal } = useStoreNoPersist();
   const [userReaction, setUserReaction] = React.useState<QuestionReactionType | undefined>();
-  const [openLogin, setOpenLogin] = React.useState(false);
   const [openReaction, setOpenReaction] = React.useState(false);
+  const [likes, setLikes] = React.useState(0);
+  const [unLikes, setUnLikes] = React.useState(0);
+
   const socket = useSocket();
-  const theme = useTheme();
   const { author } = data;
   const goToProfile = useGoToUserProfile();
-  const goToPost = useGoToPost();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
-  locale === "fr" ? dayjs.locale("fr") : dayjs.locale("en");
-
-  const handleCloseLogin = () => {
-    setOpenLogin(false);
-  };
 
   const handleCloseReaction = () => {
     setOpenReaction(false);
-  };
-
-  const handleViewQuestion = () => {
-    push(`/posts/${data.slug}`);
   };
 
   const handleGoToProfile = useCallback(() => {
     goToProfile(author?.email);
   }, [author?.email]);
 
-  const handleGoToPost = useCallback(() => {
-    goToPost(data?.slug);
-  }, [data?.slug]);
-
   const onReact = async (type: QuestionReactionType) => {
-    if (user?.id) {
-      const post = await patchRequest({ endpoint: `/posts/${data?.id}/reactions/${type}/${user?.id}/question` });
-      // update posts
-      const updatedPosts = posts.map((el) => {
-        if (el.id === post.data?.id) {
-          return post.data;
-        }
-        return el;
-      });
-
-      socket.emit("notification", { notificationFromUser: user, id: Date.now().toString(), post: post.data, type });
-
-      return setPosts(updatedPosts as Post[]);
-    }
-    setOpenLogin(true);
-  };
-
-  // on add to bookmarks
-  const onAddToBookmarks = async () => {
-    if (user?.id) {
-      const post = await patchRequest({ endpoint: `/posts/${data?.id}/bookmarks/${user?.id}` });
-      // update posts
-      const updatedPosts = posts.map((el) => {
-        if (el.id === post.data?.id) {
-          return post.data;
-        }
-        return el;
-      });
-
-      return setPosts(updatedPosts as Post[]);
-    }
-    setOpenLogin(true);
-  };
-
-  React.useEffect(() => {
-    document.querySelectorAll("pre").forEach((el) => {
-      hljs.highlightElement(el);
-    });
-  }, []);
-
-  React.useEffect(() => {
     if (user) {
-      const reaction = data?.question?.reactions?.find((reaction) => {
+      if (type === "DISLIKE") {
+        if (userReaction === "DISLIKE") {
+          setUserReaction(undefined);
+          setUnLikes((state) => state - 1);
+        } else if (userReaction === "LIKE") {
+          setUserReaction("DISLIKE");
+          setUnLikes((state) => state + 1);
+          setLikes((state) => state - 1);
+        } else {
+          setUserReaction("DISLIKE");
+          setUnLikes((state) => state + 1);
+        }
+      } else {
+        if (userReaction === "LIKE") {
+          setUserReaction(undefined);
+          setLikes((state) => state - 1);
+        } else if (userReaction === "DISLIKE") {
+          setUserReaction("LIKE");
+          setLikes((state) => state + 1);
+          setUnLikes((state) => state - 1);
+        } else {
+          setUserReaction("LIKE");
+          setLikes((state) => state + 1);
+        }
+      }
+
+      await patchRequest({ endpoint: `/comments/${data?.id}/reactions/${type}/${user?.id}` });
+      // socket.emit("notification", { notificationFromUser: user, id: Date.now().toString(), post, type });
+      return;
+    }
+    setOpenLoginModal(true);
+  };
+
+  React.useEffect(() => {
+    setLikes(data?.reactions?.filter((el) => el.type === "LIKE").length);
+    setUnLikes(data?.reactions?.filter((el) => el.type === "DISLIKE").length);
+
+    if (user) {
+      const reaction = data?.reactions?.find((reaction) => {
         return reaction?.user?.id === user?.id;
       });
       if (reaction) {
@@ -120,34 +90,24 @@ const Comment: React.FC<{ data: Post }> = ({ data }) => {
         setUserReaction(undefined);
       }
     }
-  }, [data?.question?.reactions, user]);
+  }, [data?.reactions, user]);
 
   return (
-    <>
-      <Dialog
-        open={openLogin}
-        onClose={handleCloseLogin}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <CallToAction />
-      </Dialog>
-
+    <Paper variant="outlined" sx={{ p: 2 }}>
       <Dialog
         open={openReaction}
         onClose={handleCloseReaction}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <ShowQuestionReactions reactions={data?.question?.reactions} />
+        <ShowQuestionReactions reactions={data?.reactions} />
       </Dialog>
       <PostCardHeader
         handleClickGoToProfile={handleGoToProfile}
-        date={parseDate({ date: data?.publishedOn, type: "relative" })}
+        date={parseDate({ date: data?.createdAt, type: "relative" })}
         author={author}
       />
       <PostContent content={data?.content} />
-      <PostTags tags={data?.tags} />
       <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between" sx={{ mt: 1 }}>
         <Stack direction="row" spacing={2}>
           <Stack direction="row" alignItems="center">
@@ -164,7 +124,7 @@ const Comment: React.FC<{ data: Post }> = ({ data }) => {
             >
               <IconButton onClick={() => setOpenReaction(true)}>
                 <Typography variant="caption" color="text.primary" fontWeight={700}>
-                  {data?.question?.reactions?.filter((el) => el.type === "LIKE").length}
+                  {likes}
                 </Typography>
               </IconButton>
             </Tooltip>
@@ -182,7 +142,7 @@ const Comment: React.FC<{ data: Post }> = ({ data }) => {
             >
               <IconButton onClick={() => setOpenReaction(true)}>
                 <Typography variant="caption" color="text.primary" fontWeight={700}>
-                  {data?.question?.reactions?.filter((el) => el.type === "DISLIKE").length}
+                  {unLikes}
                 </Typography>
               </IconButton>
             </Tooltip>
@@ -190,18 +150,18 @@ const Comment: React.FC<{ data: Post }> = ({ data }) => {
         </Stack>
         <Stack direction="row" spacing={2}>
           <Stack direction="row" spacing={1} alignItems="center">
-            <Link href={`/posts/${data?.slug}/#comments`} passHref>
+            <Link href={`/#comments`} passHref>
               <IconButton>
                 <QuestionAnswerIcon fontSize="small" />
               </IconButton>
             </Link>
             <Typography variant="caption" color="text.secondary" fontWeight={700}>
-              {data?.comments?.length || 0}
+              {data?.childrenComments?.length || 0}
             </Typography>
           </Stack>
         </Stack>
       </Stack>
-    </>
+    </Paper>
   );
 };
 

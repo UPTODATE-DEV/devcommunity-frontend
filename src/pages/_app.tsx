@@ -1,18 +1,18 @@
+import ToastNotification from "@/components/common/Toast";
+import { BASE_API_URL } from "@/config/url";
+import SEO from "@/utils/next-seo.config";
 import { theme } from "@/utils/theme";
+import { MantineProvider } from "@mantine/core";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
+import "highlight.js/styles/tokyo-night-dark.css";
 import withDarkMode, { useDarkMode } from "next-dark-mode";
+import { DefaultSeo } from "next-seo";
 import type { AppProps } from "next/app";
 import NextNprogress from "nextjs-progressbar";
-import "../styles/globals.css";
-import "highlight.js/styles/tokyo-night-dark.css";
-import { MantineProvider } from "@mantine/core";
-import ToastNotification from "@/components/common/Toast";
-import { DefaultSeo } from "next-seo";
-import React, { useEffect } from "react";
-import SEO from "@/utils/next-seo.config";
+import { useEffect } from "react";
 import io from "socket.io-client";
-import { BASE_API_URL } from "@/config/url";
+import "../styles/globals.css";
 
 const socket = io(BASE_API_URL);
 
@@ -38,7 +38,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       withNormalizeCSS
       theme={{
         colorScheme: mode,
-        fontFamily: "Roboto",
+        fontFamily: "Inter",
         colors: {
           dark: [
             "#C1C2C5",
@@ -46,11 +46,11 @@ function MyApp({ Component, pageProps }: AppProps) {
             "#909296",
             "#5C5F66",
             "#373A40",
-            "#2C2E33",
             "#17212b",
-            "#000d21",
-            "#141517",
-            "#101113",
+            "#192734",
+            "#17212b",
+            "#192734",
+            "#192734",
           ],
         },
       }}

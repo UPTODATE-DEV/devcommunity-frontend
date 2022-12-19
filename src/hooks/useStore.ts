@@ -27,6 +27,7 @@ interface Store {
   tagsFilters: Tag[] | [];
   setTagsFilters: (tags: Tag) => void;
   clearTagsFilters: () => void;
+  setMultiTagsFilters: (tags: Tag[]) => void;
   showTagsFilters: boolean;
   setShowTagsFilters: (state: boolean) => void;
   post: Post | null;
@@ -91,6 +92,9 @@ const useStore = create<Store>()(
       },
       clearTagsFilters: () => {
         return set((state) => ({ ...state, tagsFilters: [] }));
+      },
+      setMultiTagsFilters: (tags: Tag[]) => {
+        return set((state) => ({ ...state, tagsFilters: tags }));
       },
       showTagsFilters: false,
       setShowTagsFilters: (showTagsFilters: boolean) => {

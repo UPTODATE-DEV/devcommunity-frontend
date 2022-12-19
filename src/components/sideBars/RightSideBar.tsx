@@ -1,19 +1,14 @@
+import Empty from "@/components/common/Empty";
 import useStore from "@/hooks/useStore";
 import { getRequest } from "@/lib/api";
-import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
 import ListItems from "./ListItems";
-
-const Empty = dynamic(import("@/components/common/Empty"), {
-  ssr: false,
-  loading: () => null,
-});
 
 const RightSideBar = () => {
   const { push, locale } = useRouter();
@@ -37,7 +32,7 @@ const RightSideBar = () => {
   }, []);
 
   return (
-    <Stack spacing={2} sx={{ width: 1 }}>
+    <Stack spacing={2} sx={{ width: 1, pb: 5 }}>
       <Paper variant="outlined" sx={{ position: "relative", width: 1 }}>
         <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
           {locale === "en" ? "Top articles of the Week" : "Meilleurs articles de la semaine"}

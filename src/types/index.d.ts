@@ -43,13 +43,27 @@ interface Post {
   question: Question;
   comments: PostComment[];
   bookmarks: Bookmarks[];
+  _count: { comments: number };
 }
 
 interface PostComment {
   id: string;
+  createdAt: Date;
+  updatedAt: Date;
   content: string;
   author: User;
+  parentComment?: PostComment;
   post: Post;
+  reactions: CommentReaction[];
+  childrenComments: PostComment[];
+  _count: { comments: number };
+}
+
+interface CommentReaction {
+  id: string;
+  question: string;
+  user: User;
+  type: QuestionReactionType;
 }
 
 interface Profile {

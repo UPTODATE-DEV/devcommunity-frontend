@@ -1,13 +1,12 @@
 import Bookmark from "@/components/common/Bookmark";
-import PostContent from "@/components/common/PostContent";
-import PostReaction from "@/components/common/PostReaction";
+import Content from "@/components/common/Content";
+import PostCardHeader from "@/components/common/PostCardHeader";
+import PostTags from "@/components/common/PostTags";
 import Share from "@/components/common/Share";
-import { CallToActionSkeleton } from "@/components/middle/Skeleton";
+import PostReaction from "@/components/posts/PostReaction";
 import { useGoToPost, useGoToUserProfile } from "@/hooks/posts";
-import useStore from "@/hooks/useStore";
 import { getArticleImageUrl, getContent, parseDate } from "@/lib/posts";
 import CommentIcon from "@mui/icons-material/Comment";
-import Dialog from "@mui/material/Dialog";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
@@ -15,49 +14,19 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useTheme from "@mui/system/useTheme";
-import dayjs from "dayjs";
-import "dayjs/locale/fr";
-import relativeTime from "dayjs/plugin/relativeTime";
-import hljs from "highlight.js";
-import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { useCallback } from "react";
-import PostCardHeader from "../common/PostCardHeader";
-import PostTags from "../common/PostTags";
 import PostImage from "./PostImage";
-dayjs.extend(relativeTime);
-
-const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
-  ssr: false,
-  loading: () => <CallToActionSkeleton />,
-});
 
 const PostCard: React.FC<{ data: Post }> = ({ data }) => {
-  const user = useStore((state) => state.session?.user);
-  const { locale } = useRouter();
-  const [openLogin, setOpenLogin] = React.useState(false);
-
-  locale === "en" ? dayjs.locale("en") : dayjs.locale("fr");
-
-  const handleCloseLogin = () => {
-    setOpenLogin(false);
-  };
-
-  React.useEffect(() => {
-    document.querySelectorAll("pre").forEach((el) => {
-      hljs.highlightElement(el);
-    });
-  }, []);
-
   const { author } = data;
-  const goToProfile = useGoToUserProfile();
   const goToPost = useGoToPost();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const postContent = getContent(data?.content, isMobile ? 180 : 220);
 
+  const goToProfile = useGoToUserProfile();
   const handleGoToProfile = useCallback(() => {
     goToProfile(author?.email);
   }, [author?.email]);
@@ -68,16 +37,8 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
 
   return (
     <Paper variant="outlined" sx={{ p: 2 }}>
-      <Dialog
-        open={openLogin}
-        onClose={handleCloseLogin}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <CallToAction />
-      </Dialog>
       <Grid container spacing={{ xs: 0, sm: 2, lg: 4 }}>
-        <Grid item xs={12} sm={8}>
+        <Grid item xs={12} sm={8} spacing={2}>
           <PostCardHeader
             handleClickGoToProfile={handleGoToProfile}
             date={parseDate({ date: data?.publishedOn, type: "relative" })}
@@ -99,7 +60,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
           >
             {data?.title}
           </Typography>
-          <PostContent content={postContent} />
+          <Content content={postContent} />
           {isMobile && (
             <PostImage
               handleClick={handleGoToPost}
@@ -129,7 +90,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
         justifyContent="space-between"
         sx={{ mt: 1 }}
       >
-        <PostReaction post={data} userId={user?.id} />
+        <PostReaction post={data} />
         <Stack direction="row" spacing={2}>
           <Stack direction="row" alignItems="center">
             <Link href={`/articles/${data?.slug}/#comments`} passHref>
@@ -138,11 +99,11 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
               </IconButton>
             </Link>
             <Typography variant="caption" color="text.secondary" fontWeight={700}>
-              {data?.comments?.length || 0}
+              {data?._count?.comments}
             </Typography>
           </Stack>
 
-          <Bookmark post={data} userId={user?.id} />
+          <Bookmark post={data} />
           <Share data={data} />
         </Stack>
       </Stack>

@@ -53,7 +53,7 @@ const LeftSideBar = () => {
   ];
 
   return (
-    <Paper variant="outlined" sx={{ position: "relative", width: 1 }}>
+    <Paper variant="outlined" sx={{ position: "relative", width: 1, height: { xs: "100vh", md: "auto" } }}>
       <List sx={{ width: 1 }}>
         {main.map(({ path, icon, label }) => (
           <ListItemButton

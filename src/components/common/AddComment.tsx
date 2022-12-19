@@ -1,24 +1,19 @@
+import AddPost from "@/components/common/AddPost";
 import Comment from "@/components/common/Comment";
 import RichTextEditor from "@/components/common/RichTextEditor";
 import { CallToActionSkeleton } from "@/components/middle/Skeleton";
-import { FILES_BASE_URL } from "@/config/url";
 import useSocket from "@/hooks/useSocket";
 import useStore from "@/hooks/useStore";
 import useUser from "@/hooks/useUser";
 import { deleteRequest, getRequest, postRequest } from "@/lib/api";
-import CommentIcon from "@mui/icons-material/Comment";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import Divider from "@mui/material/Divider";
-import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import hljs from "highlight.js";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useCallback } from "react";
 import { toast } from "react-toastify";
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
@@ -26,7 +21,7 @@ const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   loading: () => <CallToActionSkeleton />,
 });
 
-const PostComment: React.FC<{ data: Post }> = ({ data }) => {
+const AddComment: React.FC<{ data: Post }> = ({ data }) => {
   const session = useStore((state) => state.session?.user);
   const user = useUser(session?.username);
   const [showCommentForm, setShowCommentForm] = React.useState(false);
@@ -45,13 +40,13 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
     setShowCommentForm(false);
   };
 
-  const handleShowComment = () => {
-    if (user?.id) {
+  const handleShowComment = useCallback(() => {
+    if (session?.id) {
       setShowCommentForm(true);
     } else {
       setOpen(true);
     }
-  };
+  }, []);
 
   const handleDeleteComment = async (id: string) => {
     const response = await deleteRequest({ endpoint: `/comments/${id}` });
@@ -95,12 +90,6 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
     getComment();
   }, []);
 
-  React.useEffect(() => {
-    document.querySelectorAll("pre, code").forEach((el: any) => {
-      hljs.highlightElement(el);
-    });
-  }, [comments.length]);
-
   return (
     <>
       <Dialog
@@ -115,14 +104,14 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
         <Typography variant="h6" color="text.primary">
           {locale === "en" ? "Comments" : "Commentaires"} ({comments.length})
         </Typography>
-        {comments?.map((el) => (
-          <React.Fragment key={el.id}>
-            <Comment data={el as unknown as Post} />
-            <Divider />
-          </React.Fragment>
-        ))}
+
         {showCommentForm ? (
-          <>
+          <Paper
+            variant="outlined"
+            sx={{ p: 2, position: "sticky", top: 75, zIndex: 999 }}
+            component={Stack}
+            spacing={2}
+          >
             <RichTextEditor
               value={comment}
               controls={[
@@ -141,46 +130,22 @@ const PostComment: React.FC<{ data: Post }> = ({ data }) => {
                 {locale === "en" ? "Comment" : "Commenter"}
               </Button>
             </Stack>
-          </>
+          </Paper>
         ) : (
-          <Grid container sx={{ py: 2 }} justifyContent="center" alignItems="center">
-            <Grid item xs={2} sm={1} md={2} lg={1.2}>
-              <Avatar
-                sx={{ bgcolor: "primary.main", color: "white" }}
-                alt={`${user?.firstName} ${user?.lastName}`}
-                src={FILES_BASE_URL + user?.profile?.avatar?.url}
-              >
-                {user?.firstName?.charAt(0)}
-              </Avatar>
-            </Grid>
-            <Grid item xs={10} sm={11} md={10} lg={10.8}>
-              <Stack
-                alignItems="center"
-                direction="row"
-                onClick={handleShowComment}
-                justifyContent="space-between"
-                sx={{
-                  borderRadius: 10,
-                  bgcolor: "action.hover",
-                  width: 1,
-                  height: 40,
-                  px: 2,
-                  cursor: "pointer",
-                }}
-              >
-                <Typography variant="caption" color="text.secondary">
-                  {locale === "en" ? "Leave a comment" : "Laisser un commentaire"}
-                </Typography>
-                <IconButton>
-                  <CommentIcon fontSize="small" />
-                </IconButton>
-              </Stack>
-            </Grid>
-          </Grid>
+          <AddPost
+            label={locale === "en" ? "Leave a comment" : "Laisser un commentaire"}
+            handleClick={handleShowComment}
+          />
         )}
+
+        {comments?.map((el) => (
+          <React.Fragment key={el.id}>
+            <Comment data={el as unknown as Post} />
+          </React.Fragment>
+        ))}
       </Stack>
     </>
   );
 };
 
-export default PostComment;
+export default AddComment;

@@ -21,6 +21,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { googleLogout } from "@react-oauth/google";
@@ -28,6 +29,7 @@ import dayjs from "dayjs";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
+import { getUserFullName } from "../../lib";
 import { ProfileQuestionTabsSkeleton } from "./Skeleton";
 
 const ProfileTabs = dynamic(import("@/components/profile/ProfileTabs"), {
@@ -85,9 +87,9 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   }, []);
 
   return (
-    <>
-      {user?.id && (
-        <Stack spacing={2}>
+    user?.id && (
+      <>
+        <Paper variant="outlined" component={Stack} spacing={2} sx={{ p: 2 }}>
           <Stack direction="row" justifyContent="space-between" sx={{ position: "relative" }}>
             <Stack direction="row" spacing={1} alignItems="center" justifyContent="center">
               <Avatar
@@ -99,7 +101,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
               </Avatar>
               <Stack>
                 <Typography variant="h6" sx={{ fontSize: { xs: 14, md: 16 } }} color="text.primary" fontWeight={700}>
-                  {user?.firstName} {user?.lastName}
+                  {getUserFullName(user)}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
                   {user?.email}
@@ -191,8 +193,6 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
 
           <Typography color="text.secondary">{user?.profile?.bio}</Typography>
 
-          {editProfile ? <ProfileEditForm user={user} /> : <ProfileTabs currentUser={currentUser} />}
-
           <Dialog
             open={open}
             onClose={handleClose}
@@ -216,9 +216,10 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
               </Button>
             </DialogActions>
           </Dialog>
-        </Stack>
-      )}
-    </>
+        </Paper>
+        {editProfile ? <ProfileEditForm user={user} /> : <ProfileTabs currentUser={currentUser} />}
+      </>
+    )
   );
 };
 

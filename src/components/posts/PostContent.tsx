@@ -1,44 +1,37 @@
+import Bookmark from "@/components/common/Bookmark";
+import PostTags from "@/components/common/PostTags";
+import useStore from "@/hooks/useStore";
+import Divider from "@mui/material/Divider";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import dynamic from "next/dynamic";
 import React from "react";
-import Grid from "@mui/material/Grid";
-import Chip from "@mui/material/Chip";
-import TagIcon from "@mui/icons-material/Tag";
+
+const Content = dynamic(import("@/components/common/Content"), { ssr: false });
+const PostReaction = dynamic(import("@/components/posts/PostReaction"), { ssr: false });
 
 const PostContent: React.FC<{ data: Post }> = ({ data }) => {
-  const wrapCode = (html: any) => {
-    const removeStyles = (html: string) => html.replace(/style="[^"]*"/g, "");
-    const wrapCode = (html: string) => html.replace(/<code>([^<]*)<\/code>/g, "<pre><code>$1</code></pre>");
-
-    return wrapCode(removeStyles(html));
-  };
-
   return (
-    <Stack spacing={2} sx={{ px: 2 }}>
-      <Typography variant="h4" color="text.primary" fontWeight={700} gutterBottom>
+    <Paper variant="outlined" spacing={2} sx={{ p: 2 }} component={Stack}>
+      <Typography variant="h4" color="text.primary" sx={{ mb: "-8px" }} fontWeight={700} gutterBottom>
         {data?.title}
       </Typography>
-
-      <Typography
-        color="text.secondary"
-        component="div"
-        fontSize={16}
-        className="content"
-        gutterBottom
-        sx={{ lineHeight: 1.65 }}
-        dangerouslySetInnerHTML={{
-          __html: wrapCode(data?.content),
-        }}
-      />
-
-      <Grid container spacing={1} sx={{ pb: 1 }} direction="row">
-        {data?.tags?.map((el) => (
-          <Grid item xs="auto" key={el.tag.id}>
-            <Chip size="small" icon={<TagIcon fontSize="small" />} sx={{ px: 2 }} label={el.tag.name} />
-          </Grid>
-        ))}
-      </Grid>
-    </Stack>
+      <Content content={data?.content} fontSize={17} />
+      <PostTags tags={data?.tags} />
+      <Divider />
+      <Stack
+        direction="row"
+        flexWrap="wrap"
+        spacing={1}
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ mt: 1 }}
+      >
+        <PostReaction post={data} />
+        <Bookmark post={data} />
+      </Stack>
+    </Paper>
   );
 };
 

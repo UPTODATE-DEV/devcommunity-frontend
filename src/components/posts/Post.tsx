@@ -1,16 +1,13 @@
+import SuggestionViewMore from "@/components/common/SuggestionViewMore";
 import PostContent from "@/components/posts/PostContent";
 import PostHeader from "@/components/posts/PostHeader";
 import useStore from "@/hooks/useStore";
-import Divider from "@mui/material/Divider";
-import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import hljs from "highlight.js";
 import dynamic from "next/dynamic";
 import React from "react";
 
-const PostComment = dynamic(import("@/components/posts/PostComment"), { ssr: false, loading: () => null });
-const PostReactions = dynamic(import("@/components/posts/PostReactions"), { ssr: false, loading: () => null });
-const PostSuggestions = dynamic(import("@/components/posts/PostSuggestions"), { ssr: false, loading: () => null });
+const AddComment = dynamic(import("@/components/common/AddComment"), { ssr: false });
+const Suggestions = dynamic(import("@/components/common/Suggestions"), { ssr: false });
 
 const Post: React.FC<{ data: Post }> = ({ data }) => {
   const { setCurrentPost } = useStore((state) => state);
@@ -19,24 +16,15 @@ const Post: React.FC<{ data: Post }> = ({ data }) => {
     setCurrentPost(data);
   }, []);
 
-  React.useEffect(() => {
-    document.querySelectorAll("pre").forEach((el) => {
-      hljs.highlightElement(el);
-    });
-  }, []);
-
   return (
-    <Paper variant="outlined" sx={{ p: 2 }}>
-      <Stack spacing={2}>
-        <PostHeader data={data} />
-        <PostContent data={data} />
-        <Divider />
-        <PostReactions />
-        <div id="comments"></div>
-        <PostComment data={data} />
-        <PostSuggestions data={data} />
-      </Stack>
-    </Paper>
+    <Stack spacing={2}>
+      <PostHeader data={data} />
+      <PostContent data={data} />
+      <div id="comments"></div>
+      <AddComment data={data} />
+      <Suggestions data={data} type="ARTICLE" />
+      <SuggestionViewMore tags={data?.tags} />
+    </Stack>
   );
 };
 

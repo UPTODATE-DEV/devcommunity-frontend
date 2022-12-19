@@ -1,13 +1,10 @@
 import Menu from "@/components/menu/Menu";
 import CallToAction from "@/components/middle/CallToAction";
-import Search from "@/components/tags/Search";
-import { TagsSkeleton } from "@/components/tags/Skeleton";
 import { TopSkeleton } from "@/components/topPosts/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
-import Divider from "@mui/material/Divider";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";

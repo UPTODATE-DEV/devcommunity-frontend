@@ -8,7 +8,7 @@ const UserAvatar = ({
 }: {
   name?: string;
   pictureUrl?: string;
-  handleClick: () => void;
+  handleClick?: () => void;
 }) => {
   return (
     <IconButton onClick={handleClick} sx={{ p: 0 }}>
@@ -17,6 +17,7 @@ const UserAvatar = ({
       ) : (
         <Avatar sx={{ bgcolor: "primary.main", color: "white" }} alt={name}>
           {name.charAt(0)}
+          {name.split(" ")[1].charAt(0)}
         </Avatar>
       )}
     </IconButton>

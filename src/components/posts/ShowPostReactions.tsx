@@ -1,11 +1,10 @@
-import { FILES_BASE_URL } from "@/config/url";
+import { getUserFullName, getUserProfileImageUrl } from "@/lib";
 import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
 import LightbulbSharpIcon from "@mui/icons-material/LightbulbSharp";
 import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -15,6 +14,8 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import React from "react";
+import { useGoToUserProfile } from "@/hooks";
+import UserAvatar from "@/components/common/UserAvatar";
 
 const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
   const [tab, setTab] = React.useState<ArticleReactionType>("LIKE");
@@ -37,6 +38,8 @@ const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
     },
   ];
 
+  const goToProfile = useGoToUserProfile();
+
   const handleTabChange = (event: React.SyntheticEvent, newValue: ArticleReactionType) => {
     setTab(newValue);
   };
@@ -46,7 +49,7 @@ const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
       <TabList
         onChange={handleTabChange}
         variant={useMediaQuery("(min-width:600px)") ? "fullWidth" : "scrollable"}
-        aria-label="lab API tabs example"
+        aria-label="Show reactions"
         sx={{ borderBottom: 1, borderColor: "divider", bgcolor: "action.hover" }}
       >
         {tabs.map((item, i) => (
@@ -74,19 +77,17 @@ const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
                 <React.Fragment key={i}>
                   <ListItemButton>
                     <ListItemAvatar>
-                      <Avatar
-                        sx={{ bgcolor: "primary.main", color: "white" }}
-                        src={FILES_BASE_URL + el?.user?.profile?.avatar?.url}
-                        alt={`${el.user.firstName} ${el.user.lastName}`}
-                      >
-                        {el.user.firstName.charAt(0)}
-                      </Avatar>
+                      <UserAvatar
+                        name={getUserFullName(el.user)}
+                        pictureUrl={getUserProfileImageUrl(el.user)}
+                        handleClick={() => goToProfile(el.user.email)}
+                      />
                     </ListItemAvatar>
                     <ListItemText
                       primary={
                         <React.Fragment>
                           <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
-                            {`${el.user.firstName} ${el.user.lastName}`}
+                            {getUserFullName(el.user)}
                           </Typography>
                         </React.Fragment>
                       }

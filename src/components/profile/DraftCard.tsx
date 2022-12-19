@@ -1,30 +1,24 @@
-import Bookmark from "@/components/common/Bookmark";
 import PostContent from "@/components/common/Content";
 import PostCardHeader from "@/components/common/PostCardHeader";
 import PostTags from "@/components/common/PostTags";
-import Share from "@/components/common/Share";
-import QuestionReactions from "@/components/questions/QuestionReactions";
 import { useGoToPost, useGoToUserProfile } from "@/hooks/posts";
 import { getContent, parseDate } from "@/lib/posts";
-import CommentIcon from "@mui/icons-material/Comment";
-import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import PublishIcon from "@mui/icons-material/Publish";
 import IconButton from "@mui/material/IconButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useTheme from "@mui/system/useTheme";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 
-const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }> = ({ data, handleDeletePost }) => {
+const DraftCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }> = ({ data, handleDeletePost }) => {
   const { push, asPath, locale } = useRouter();
   const username = asPath.split("/profile/")[1];
   const theme = useTheme();
@@ -93,9 +87,9 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
         </MenuItem>
         <MenuItem onClick={() => handleDeletePost(data?.id)}>
           <ListItemIcon>
-            <DeleteIcon fontSize="small" />
+            <PublishIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>{locale === "fr" ? "Supprimer" : "Delete"}</ListItemText>
+          <ListItemText>{locale === "fr" ? "Publier" : "Publish"}</ListItemText>
         </MenuItem>
       </Menu>
       <PostCardHeader
@@ -121,33 +115,8 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
       </Typography>
       <PostContent content={postContent} />
       <PostTags tags={data?.tags} />
-      <Stack
-        direction="row"
-        flexWrap="wrap"
-        spacing={1}
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{ mt: 1 }}
-      >
-        <QuestionReactions post={data} />
-        <Stack direction="row" spacing={2}>
-          <Stack direction="row" alignItems="center">
-            <Link href={`/articles/${data?.slug}/#comments`} passHref>
-              <IconButton>
-                <CommentIcon fontSize="small" />
-              </IconButton>
-            </Link>
-            <Typography variant="caption" color="text.secondary" fontWeight={700}>
-              {data?._count?.comments}
-            </Typography>
-          </Stack>
-
-          <Bookmark post={data} />
-          <Share data={data} />
-        </Stack>
-      </Stack>
     </Paper>
   );
 };
 
-export default QuestionCard;
+export default DraftCard;

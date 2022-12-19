@@ -1,22 +1,20 @@
+import { Like, Love, Useful } from "@/components/common/Reactions";
+import ShowReactions from "@/components/posts/ShowPostReactions";
 import useSocket from "@/hooks/useSocket";
+import useStore from "@/hooks/useStore";
 import useStoreNoPersist from "@/hooks/useStoreNoPersist";
 import { patchRequest } from "@/lib/api";
+import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import dayjs from "dayjs";
-import "dayjs/locale/fr";
-import Dialog from "@mui/material/Dialog";
-import relativeTime from "dayjs/plugin/relativeTime";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { Like, Love, Useful } from "./Reactions";
-import ShowPostReactions from "@/components/posts/ShowPostReactions";
-dayjs.extend(relativeTime);
 
-const PostReaction = ({ userId, post }: { userId?: string; post: Post }) => {
+const PostReaction = ({ post }: { post: Post }) => {
   const [openReaction, setOpenReaction] = React.useState(false);
+  const userId = useStore((state) => state.session?.user?.id);
   const { setOpenLoginModal } = useStoreNoPersist();
   const [userReaction, setUserReaction] = React.useState<ArticleReactionType | undefined>();
   const socket = useSocket();
@@ -76,14 +74,14 @@ const PostReaction = ({ userId, post }: { userId?: string; post: Post }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <ShowPostReactions reactions={post?.article?.reactions} />
+        <ShowReactions reactions={post?.article?.reactions} />
       </Dialog>
       <Stack direction="row" alignItems="center">
         {reaction()}
         <Tooltip title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"} placement="bottom" arrow>
           <IconButton onClick={() => setOpenReaction(true)}>
             <Typography variant="caption" color="text.primary" fontWeight={700}>
-              {post.article?.reactions?.length}
+              {post.article?.reactions?.length || 0}
             </Typography>
           </IconButton>
         </Tooltip>

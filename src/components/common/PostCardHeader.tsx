@@ -34,7 +34,7 @@ const PostHeader = ({
         >
           {getUserFullName(author)}
         </Typography>
-        <Typography variant="caption" color="text.secondary" sx={{ textTransform: "capitalize" }}>
+        <Typography variant="caption" color="text.secondary">
           {date}
         </Typography>
       </Stack>

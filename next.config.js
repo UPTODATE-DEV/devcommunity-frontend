@@ -15,7 +15,7 @@ const nextConfig = {
   productionBrowserSourceMaps: true,
   swcMinify: true,
   compiler: {
-    removeConsole: true,
+    removeConsole: process.env.NODE_ENV === "production",
   },
   images: {
     formats: ["image/avif", "image/webp"],

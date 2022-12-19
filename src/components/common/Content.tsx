@@ -1,8 +1,8 @@
 import Typography from "@mui/material/Typography";
 import hljs from "highlight.js";
-import React, { useCallback, useLayoutEffect, useRef } from "react";
+import { useCallback, useLayoutEffect, useRef } from "react";
 
-const PostContent = ({ content }: { content: string }) => {
+const Content = ({ content, fontSize = 14 }: { content: string; fontSize?: number }) => {
   const preElements = useRef([]);
 
   const wrapCode = (html: any) => {
@@ -31,6 +31,7 @@ const PostContent = ({ content }: { content: string }) => {
       component="div"
       className="content"
       variant="body2"
+      fontSize={fontSize}
       dangerouslySetInnerHTML={{
         __html: wrapCode(content),
       }}
@@ -38,4 +39,4 @@ const PostContent = ({ content }: { content: string }) => {
   );
 };
 
-export default PostContent;
+export default Content;

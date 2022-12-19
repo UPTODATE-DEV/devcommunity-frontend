@@ -3,9 +3,7 @@ import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 import { QuestionsListSkeleton } from "@/components/questions/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
-import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
-import hljs from "highlight.js";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
@@ -26,29 +24,13 @@ const QuestionsList = dynamic(import("@/components/questions/QuestionsList"), {
 
 const Home: NextPage<{ session: Session; locale: string }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
-  const setPosts = useStore((state) => state.setPosts);
   const { push, locale } = useRouter();
-
-  React.useEffect(() => {
-    document.querySelectorAll("pre").forEach((el) => {
-      hljs.highlightElement(el);
-    });
-  }, []);
 
   const handleGoToAddPage = () => {
     push("/posts/add");
   };
-
+  
   React.useEffect(() => {
-    const getPosts = async () => {
-      const posts = await getRequest({ endpoint: "/posts" });
-      if (!posts.error) {
-        setPosts(posts.data);
-      }
-    };
-
-    getPosts();
-
     setSession(session);
   }, []);
 

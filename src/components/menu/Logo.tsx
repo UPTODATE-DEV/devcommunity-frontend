@@ -1,4 +1,3 @@
-import React from "react";
 import Stack from "@mui/material/Stack";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -20,7 +19,7 @@ const Logo = () => {
       }}
       onClick={handleGoHome}
     >
-      <Image src="/logo.svg" layout="fill" objectFit="contain" />
+      <Image src="/logo.png" layout="fill" objectFit="contain" />
     </Stack>
   );
 };

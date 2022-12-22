@@ -85,12 +85,6 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
   };
 
   React.useEffect(() => {
-    document.querySelectorAll("pre, code").forEach((el: any) => {
-      hljs.highlightElement(el);
-    });
-  }, [comments.length]);
-
-  React.useEffect(() => {
     async function getComment() {
       const res = await getRequest({ endpoint: `/comments/${data.id}/post-comments` });
       if (res.error) {

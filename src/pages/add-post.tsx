@@ -8,6 +8,7 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import * as React from "react";
 
+
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
 

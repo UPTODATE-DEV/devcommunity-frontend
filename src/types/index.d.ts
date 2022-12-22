@@ -54,9 +54,10 @@ interface PostComment {
   author: User;
   parentComment?: PostComment;
   post: Post;
+  depth: number;
   reactions: CommentReaction[];
   childrenComments: PostComment[];
-  _count: { comments: number };
+  _count: { comments: number; childrenComments: number };
 }
 
 interface CommentReaction {

@@ -1,30 +1,33 @@
 import SEO from "@/components/common/SEO";
 import Menu from "@/components/menu/Menu";
-import Question from "@/components/questions/Question";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
 import type { GetServerSideProps, NextPage } from "next";
+import dynamic from "next/dynamic";
 import React from "react";
 
-const Home: NextPage<{ session: Session; post: Post; comments: PostComment[] }> = ({ session, post, comments }) => {
+const Comment = dynamic(import("@/components/comments/Comment"), { ssr: false, loading: () => null });
+
+const Home: NextPage<{ session: Session; comment: PostComment; post: Post }> = ({ session, comment, post }) => {
   const setSession = useStore((state) => state.setSession);
   const { setCurrentPost, setComments, setCurrentComment } = useStore((state) => state);
 
   React.useEffect(() => {
     setCurrentPost(post);
-    setComments(comments);
-    setCurrentComment(null);
-
-    return () => {
-      setComments([]);
-    };
-  }, [post.id]);
-
-  React.useEffect(() => {
     setSession(session);
   }, []);
+
+  React.useEffect(() => {
+    setComments(comment.childrenComments);
+    setCurrentComment(comment);
+
+    return () => {
+      setCurrentComment(null);
+      setComments([]);
+    };
+  }, [comment.id]);
 
   return (
     <>
@@ -32,6 +35,7 @@ const Home: NextPage<{ session: Session; post: Post; comments: PostComment[] }> 
         title={post?.title}
         description={post?.content?.substring(0, 180)}
         authors={post?.author}
+        image={post?.article?.image}
         modifiedTime={post?.updatedAt?.toString()}
         publishedTime={post?.createdAt?.toString()}
         tags={post?.tags?.map((el) => el.tag.name)}
@@ -39,7 +43,7 @@ const Home: NextPage<{ session: Session; post: Post; comments: PostComment[] }> 
       />
       <Menu />
       <MainContainer>
-        <Question data={post} comments={comments} />
+        <Comment comment={comment} />
       </MainContainer>
     </>
   );
@@ -47,21 +51,22 @@ const Home: NextPage<{ session: Session; post: Post; comments: PostComment[] }> 
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
   const { req, params } = context;
+  const post = await getRequest({ endpoint: `/posts/${params?.slug}` });
+  const comment = await getRequest({ endpoint: `/comments/${params?.commentId}` });
 
-  const [postData, commentsData] = await Promise.all([
-    getRequest({ endpoint: `/posts/${params?.slug}` }),
-    getRequest({ endpoint: `/comments/${params?.slug}/post-comments` }),
-  ]);
+  if (post.data?.type !== "QUESTION") {
+    return { notFound: true };
+  }
 
-  if (postData.data?.type !== "QUESTION") {
+  if (!comment?.data?.id) {
     return { notFound: true };
   }
 
   return {
     props: {
       session: req?.session?.user || null,
-      post: postData.data,
-      comments: commentsData.data,
+      comment: comment.data,
+      post: post.data,
     },
   };
 });

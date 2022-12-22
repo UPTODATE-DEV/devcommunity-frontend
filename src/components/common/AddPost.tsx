@@ -3,7 +3,6 @@ import { useGoToUserProfile } from "@/hooks/posts";
 import useStore from "@/hooks/useStore";
 import useUser from "@/hooks/useUser";
 import { getUserFullName, getUserProfileImageUrl } from "@/lib";
-import PostAddIcon from "@mui/icons-material/PostAdd";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
@@ -13,9 +12,10 @@ import React, { useCallback } from "react";
 interface Props {
   label: string;
   handleClick: () => void;
+  icon: React.ReactElement;
 }
 
-const AddPost: React.FC<Props> = ({ label, handleClick }) => {
+const AddPost: React.FC<Props> = ({ label, icon, handleClick }) => {
   const session = useStore((state) => state.session?.user);
   const user = useUser(session?.username);
 
@@ -33,7 +33,20 @@ const AddPost: React.FC<Props> = ({ label, handleClick }) => {
       justifyContent="center"
       alignItems="center"
       variant="outlined"
-      sx={{ p: 2, position: "sticky", top: 70, zIndex: 999 }}
+      sx={{
+        p: 2,
+        position: "sticky",
+        top: 90,
+        zIndex: 999,
+        "&:before": {
+          width: "102%",
+          height: 20,
+          bgcolor: "background.default",
+          content: "''",
+          position: "absolute",
+          top: "-21px",
+        },
+      }}
       component={Stack}
     >
       <UserAvatar
@@ -57,9 +70,7 @@ const AddPost: React.FC<Props> = ({ label, handleClick }) => {
         <Typography variant="caption" color="text.secondary">
           {label}
         </Typography>
-        <IconButton>
-          <PostAddIcon />
-        </IconButton>
+        <IconButton>{icon}</IconButton>
       </Stack>
     </Paper>
   );

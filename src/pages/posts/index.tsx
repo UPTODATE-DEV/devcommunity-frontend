@@ -11,6 +11,8 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 
+import PostAddIcon from "@mui/icons-material/PostAdd";
+
 const AddPost = dynamic(import("@/components/common/AddPost"), { ssr: false, loading: () => null });
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
@@ -29,7 +31,7 @@ const Home: NextPage<{ session: Session; locale: string }> = ({ session }) => {
   const handleGoToAddPage = () => {
     push("/posts/add");
   };
-  
+
   React.useEffect(() => {
     setSession(session);
   }, []);
@@ -50,6 +52,7 @@ const Home: NextPage<{ session: Session; locale: string }> = ({ session }) => {
                 : "Partagez vos questions, astuces et idées ici"
             }
             handleClick={handleGoToAddPage}
+            icon={<PostAddIcon />}
           />
         ) : (
           <CallToAction />

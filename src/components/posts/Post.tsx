@@ -6,10 +6,11 @@ import Stack from "@mui/material/Stack";
 import dynamic from "next/dynamic";
 import React from "react";
 
-const AddComment = dynamic(import("@/components/common/AddComment"), { ssr: false });
+const CommentsList = dynamic(import("@/components/comments/CommentsList"), { ssr: false });
 const Suggestions = dynamic(import("@/components/common/Suggestions"), { ssr: false });
+const AddComment = dynamic(import("@/components/comments/AddComment"), { ssr: false });
 
-const Post: React.FC<{ data: Post }> = ({ data }) => {
+const Post: React.FC<{ data: Post; comments: PostComment[] }> = ({ data, comments }) => {
   const { setCurrentPost } = useStore((state) => state);
 
   React.useEffect(() => {
@@ -21,7 +22,7 @@ const Post: React.FC<{ data: Post }> = ({ data }) => {
       <PostHeader data={data} />
       <PostContent data={data} />
       <div id="comments"></div>
-      <AddComment data={data} />
+      <CommentsList addComment={<AddComment data={data} />} comments={comments} />
       <Suggestions data={data} type="ARTICLE" />
       <SuggestionViewMore tags={data?.tags} />
     </Stack>

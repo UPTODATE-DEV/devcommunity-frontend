@@ -22,7 +22,6 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   const goToProfile = useGoToUserProfile();
   const goToPost = useGoToPost();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
   const postContent = getContent(data?.content, isMobile ? 180 : 220);
 
   const handleGoToProfile = useCallback(() => {

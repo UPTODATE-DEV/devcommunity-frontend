@@ -4,6 +4,7 @@ import { PostsListSkeleton } from "@/components/posts/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { withSessionSsr } from "@/lib/withSession";
+import PostAddIcon from "@mui/icons-material/PostAdd";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
@@ -22,7 +23,6 @@ const PostList = dynamic(import("@/components/posts/PostsList"), { ssr: false, l
 
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
-  const setPosts = useStore((state) => state.setPosts);
   const { push, locale } = useRouter();
 
   const handleGoToAddPage = () => {
@@ -47,6 +47,7 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
           <AddPost
             label={locale === "en" ? "Start an article..." : "Commencer un article..."}
             handleClick={handleGoToAddPage}
+            icon={<PostAddIcon />}
           />
         ) : (
           <CallToAction />

@@ -1,24 +1,24 @@
 import useStore from "@/hooks/useStore";
+import useUser from "@/hooks/useUser";
+import { getRequest } from "@/lib/api";
+import { getUserFullName, getUserProfileImageUrl } from "@/lib/posts";
 import type { SpotlightAction } from "@mantine/spotlight";
 import { openSpotlight, SpotlightProvider } from "@mantine/spotlight";
 import MenuIcon from "@mui/icons-material/Menu";
 import AppBar from "@mui/material/AppBar";
 import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { IconSearch } from "@tabler/icons";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { IconsSkeletons, LogoSkeleton, ProfileSkeleton } from "./Skeleton";
-
-import { getRequest } from "@/lib/api";
-import { getUserFullName, getUserProfileImageUrl } from "@/lib/posts";
-import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { IconSearch } from "@tabler/icons";
 import Mobile from "./Mobile";
+import { IconsSkeletons, LogoSkeleton, ProfileSkeleton } from "./Skeleton";
 
 const Auth = dynamic(() => import("./Auth"), {
   ssr: false,
@@ -41,7 +41,8 @@ const Logo = dynamic(() => import("./Logo"), {
 });
 
 const Menu: React.FC = () => {
-  const user = useStore((state) => state.session?.user);
+  const session = useStore((state) => state.session?.user);
+  const user = useUser(session?.username);
   const { push, locale } = useRouter();
   const { openMobileMenu, setOpenMobileMenu } = useStore((state) => state);
   const [posts, setPosts] = useState<Post[] | []>([]);

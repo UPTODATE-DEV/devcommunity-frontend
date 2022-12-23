@@ -33,6 +33,7 @@ interface Post {
   createdAt: Date;
   updatedAt: Date;
   title: string;
+  draft: boolean;
   content: string;
   publishedOn: Date;
   author: User;

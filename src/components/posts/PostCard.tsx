@@ -38,7 +38,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   return (
     <Paper variant="outlined" sx={{ p: 2 }}>
       <Grid container spacing={{ xs: 0, sm: 2, lg: 4 }}>
-        <Grid item xs={12} sm={8} spacing={2}>
+        <Grid item xs={12} sm={8}>
           <PostCardHeader
             handleClickGoToProfile={handleGoToProfile}
             date={parseDate({ date: data?.publishedOn, type: "relative" })}

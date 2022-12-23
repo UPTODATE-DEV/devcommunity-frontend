@@ -1,6 +1,6 @@
 import SEO from "@/components/common/SEO";
 import Menu from "@/components/menu/Menu";
-import Post from "@/components/posts/Post";
+import PostDraft from "@/components/posts/PostDraft";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { getRequest } from "@/lib/api";
@@ -8,15 +8,13 @@ import { withSessionSsr } from "@/lib/withSession";
 import type { GetServerSideProps, NextPage } from "next";
 import React from "react";
 
-const Home: NextPage<{ session: Session; post: Post; comments: PostComment[] }> = ({ session, post, comments }) => {
+const Home: NextPage<{ session: Session; post: Post }> = ({ session, post }) => {
   const setSession = useStore((state) => state.setSession);
-  const { setCurrentPost, setComments, setCurrentComment } = useStore((state) => state);
+  const { setCurrentPost, setComments } = useStore((state) => state);
 
   React.useEffect(() => {
     setCurrentPost(post);
     setSession(session);
-    setComments(comments.filter((el) => !el.depth));
-    setCurrentComment(null);
 
     return () => {
       setComments([]);
@@ -37,7 +35,7 @@ const Home: NextPage<{ session: Session; post: Post; comments: PostComment[] }> 
       />
       <Menu />
       <MainContainer>
-        <Post data={post} comments={comments} />
+        <PostDraft data={post} />
       </MainContainer>
     </>
   );
@@ -46,12 +44,9 @@ const Home: NextPage<{ session: Session; post: Post; comments: PostComment[] }> 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
   const { req, params } = context;
 
-  const [postData, commentsData] = await Promise.all([
-    getRequest({ endpoint: `/posts/${params?.slug}` }),
-    getRequest({ endpoint: `/comments/${params?.slug}/post-comments` }),
-  ]);
+  const [postData] = await Promise.all([getRequest({ endpoint: `/posts/${params?.slug}` })]);
 
-  if (postData.data?.type !== "ARTICLE" || postData.data.draft) {
+  if (postData.data?.type !== "ARTICLE" || !postData.data.draft) {
     return { notFound: true };
   }
 
@@ -59,7 +54,6 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(async (cont
     props: {
       session: req?.session?.user || null,
       post: postData.data,
-      comments: commentsData.data,
     },
   };
 });

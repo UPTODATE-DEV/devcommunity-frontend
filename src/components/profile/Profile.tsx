@@ -75,16 +75,14 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
     handleCloseMenu();
   };
 
+  console.log("editProfile", editProfile);
+
   const onLogout = async () => {
     googleLogout();
     handleClose();
     await postLocalRequest({ endpoint: "/api/logout" });
     reload();
   };
-
-  React.useEffect(() => {
-    return () => setEditProfile(false);
-  }, []);
 
   return (
     <>
@@ -181,13 +179,13 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                     horizontal: "right",
                   }}
                 >
-                  <MenuItem onClick={handleEditProfile}>
+                  <MenuItem onClick={handleEditProfile} key="edit">
                     <ListItemIcon>
                       <EditIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText>{locale === "en" ? "Edit Profile" : "Modifier le profil"}</ListItemText>
                   </MenuItem>
-                  <MenuItem onClick={handleClickOpen}>
+                  <MenuItem onClick={handleClickOpen} key="logout">
                     <ListItemIcon>
                       <PowerSettingsNewIcon fontSize="small" />
                     </ListItemIcon>

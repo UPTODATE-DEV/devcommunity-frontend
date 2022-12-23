@@ -6,10 +6,8 @@ import React from "react";
 import QuestionContent from "./QuestionContent";
 
 const Suggestions = dynamic(import("@/components/common/Suggestions"), { ssr: false });
-const CommentsList = dynamic(import("@/components/comments/CommentsList"), { ssr: false });
-const AddComment = dynamic(import("@/components/comments/AddComment"), { ssr: false, loading: () => null });
 
-const Question: React.FC<{ data: Post; comments: PostComment[] }> = ({ data, comments }) => {
+const QuestionDraft: React.FC<{ data: Post }> = ({ data }) => {
   const { setCurrentPost } = useStore((state) => state);
 
   React.useEffect(() => {
@@ -19,12 +17,10 @@ const Question: React.FC<{ data: Post; comments: PostComment[] }> = ({ data, com
   return (
     <Stack spacing={2}>
       <QuestionContent data={data} />
-      <div id="comments"></div>
-      <CommentsList addComment={<AddComment data={data} />} />
       <Suggestions data={data} type="QUESTION" />
       <SuggestionViewMore tags={data?.tags} />
     </Stack>
   );
 };
 
-export default Question;
+export default QuestionDraft;

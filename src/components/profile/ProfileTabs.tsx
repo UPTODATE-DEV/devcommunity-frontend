@@ -55,7 +55,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
       icon: <DraftsIcon />,
     },
     {
-      id: 2,
+      id: 3,
       label: "Tags",
       show: currentUser ? false : true,
       icon: <TagIcon />,
@@ -64,6 +64,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
 
   const questions = posts.filter((el) => el.type === "QUESTION");
   const articles = posts.filter((el) => el.type === "ARTICLE");
+  const drafts = posts.filter((el) => el.draft);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
@@ -145,8 +146,8 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
         <>
           <TabPanel sx={{ p: 0 }} value={"2"}>
             <Stack spacing={2}>
-              {articles.length === 0 && <Empty />}
-              {articles?.map((item, index) => (
+              {drafts.length === 0 && <Empty />}
+              {drafts?.map((item, index) => (
                 <React.Fragment key={item.id}>
                   <DraftCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
                 </React.Fragment>

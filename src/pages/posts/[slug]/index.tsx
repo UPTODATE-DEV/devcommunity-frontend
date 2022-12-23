@@ -53,7 +53,7 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(async (cont
     getRequest({ endpoint: `/comments/${params?.slug}/post-comments` }),
   ]);
 
-  if (postData.data?.type !== "QUESTION") {
+  if (postData.data?.type !== "QUESTION" || postData.data.draft) {
     return { notFound: true };
   }
 

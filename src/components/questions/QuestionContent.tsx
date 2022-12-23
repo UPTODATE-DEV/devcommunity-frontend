@@ -37,18 +37,22 @@ const PostContent: React.FC<{ data: Post }> = ({ data }) => {
       </Typography>
       <Content content={data?.content} fontSize={17} />
       <PostTags tags={data?.tags} />
-      <Divider />
-      <Stack
-        direction="row"
-        flexWrap="wrap"
-        spacing={1}
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{ mt: 1 }}
-      >
-        <QuestionReactions post={data} />
-        <Bookmark post={data} />
-      </Stack>
+      {!data?.draft && (
+        <>
+          <Divider />
+          <Stack
+            direction="row"
+            flexWrap="wrap"
+            spacing={1}
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ mt: 1 }}
+          >
+            <QuestionReactions post={data} />
+            <Bookmark post={data} />
+          </Stack>
+        </>
+      )}
     </Paper>
   );
 };

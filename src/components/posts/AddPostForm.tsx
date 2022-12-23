@@ -63,7 +63,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
     setLoading(true);
     const response = data?.id
       ? await patchRequest({
-          endpoint: `/posts/${data?.id}`,
+          endpoint: `/posts/${data?.id}/preview`,
           data: { ...post, image, author: user?.id, type: "ARTICLE" },
         })
       : await postRequest({
@@ -201,8 +201,8 @@ const AddPostForm = ({ data }: { data?: Post }) => {
 
         <Button
           disableElevation
-          color="success"
-          variant="outlined"
+          color="secondary"
+          variant="contained"
           disabled={!post.title || !post.content || !post.tags?.length || loading}
           sx={{ px: 4, borderRadius: 50 }}
           onClick={onSubmit}

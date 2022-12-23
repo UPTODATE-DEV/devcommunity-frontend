@@ -1,3 +1,4 @@
+import AddPost from "@/components/common/AddPost";
 import RichTextEditor from "@/components/common/RichTextEditor";
 import useSocket from "@/hooks/useSocket";
 import useStore from "@/hooks/useStore";
@@ -10,7 +11,6 @@ import Stack from "@mui/material/Stack";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import { toast } from "react-toastify";
-import AddPost from "../common/AddPost";
 
 const AddComment: React.FC<{ data: Post | PostComment }> = ({ data }) => {
   const session = useStore((state) => state.session?.user);

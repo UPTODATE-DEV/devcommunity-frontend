@@ -75,8 +75,6 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
     handleCloseMenu();
   };
 
-  console.log("editProfile", editProfile);
-
   const onLogout = async () => {
     googleLogout();
     handleClose();

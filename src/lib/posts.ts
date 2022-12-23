@@ -5,7 +5,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
 export const getUserFullName = (user?: User) => {
-  return `${user?.firstName} ${user?.lastName}`;
+  return user && `${user?.firstName} ${user?.lastName}`;
 };
 
 export const getUserProfileImageUrl = (user?: User) => {

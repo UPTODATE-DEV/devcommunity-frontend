@@ -1,6 +1,9 @@
+import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 import { LeftBarSkeleton, RightBarSkeleton } from "@/components/sideBars/Skeleton";
+import useStoreNoPersist from "@/hooks/useStoreNoPersist";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import Dialog from "@mui/material/Dialog";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import { useTheme } from "@mui/material/styles";
@@ -20,15 +23,34 @@ const LeftSideBar = dynamic(import("@/components/sideBars/LeftSideBar"), {
   loading: () => <LeftBarSkeleton />,
 });
 
+const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
+  ssr: false,
+  loading: () => <CallToActionSkeleton />,
+});
+
 const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
   const theme = useTheme();
   const { locale } = useRouter();
+  const { setOpenLoginModal, openLoginModal } = useStoreNoPersist();
 
   locale === "en" ? dayjs.locale("en") : dayjs.locale("fr");
 
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const handleClose = () => {
+    setOpenLoginModal(false);
+  };
+
   return (
     <Box sx={{ bgcolor: "background.default", minHeight: "100vh" }}>
+      <Dialog
+        open={openLoginModal}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <CallToAction />
+      </Dialog>
       <Container maxWidth="xl">
         <Grid container spacing={2}>
           {!isMobile && (

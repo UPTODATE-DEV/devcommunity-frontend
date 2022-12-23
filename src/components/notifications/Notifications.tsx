@@ -102,8 +102,8 @@ const Notifications = () => {
                   onClick={() => handleReadNotification(el)}
                   sx={{
                     borderRadius: 1,
-                    my: 0.2,
-                    bgcolor: !el.read ? (theme) => alpha(theme.palette.primary.main, 0.3) : "inherit",
+                    m: 0.2,
+                    bgcolor: !el.read ? (theme) => alpha(theme.palette.secondary.main, 0.2) : "inherit",
                   }}
                 >
                   <ListItemAvatar>

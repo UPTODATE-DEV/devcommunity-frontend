@@ -1,6 +1,5 @@
 import PostCardHeader from "@/components/common/PostCardHeader";
 import { useGoToUserProfile } from "@/hooks";
-import useStore from "@/hooks/useStore";
 import { parseDate } from "@/lib";
 import Divider from "@mui/material/Divider";
 import Paper from "@mui/material/Paper";
@@ -12,15 +11,8 @@ const Content = dynamic(import("@/components/common/Content"), { ssr: false });
 const CommentReactions = dynamic(import("@/components/comments/CommentReactions"), { ssr: false });
 
 const CommentContent: React.FC<{ data: PostComment }> = ({ data }) => {
-  const user = useStore((state) => state.session?.user);
-  const [openReaction, setOpenReaction] = React.useState(false);
-
   const { author } = data;
   const goToProfile = useGoToUserProfile();
-
-  const handleCloseReaction = () => {
-    setOpenReaction(false);
-  };
 
   const handleGoToProfile = useCallback(() => {
     goToProfile(author?.email);

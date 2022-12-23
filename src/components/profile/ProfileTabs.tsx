@@ -149,7 +149,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
               {drafts.length === 0 && <Empty />}
               {drafts?.map((item, index) => (
                 <React.Fragment key={item.id}>
-                  <DraftCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
+                  <DraftCard data={item} />
                 </React.Fragment>
               ))}
             </Stack>

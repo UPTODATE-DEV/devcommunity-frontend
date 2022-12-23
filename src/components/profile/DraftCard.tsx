@@ -5,7 +5,7 @@ import { useGoToPost, useGoToUserProfile } from "@/hooks/posts";
 import { getContent, parseDate } from "@/lib/posts";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import PublishIcon from "@mui/icons-material/Publish";
+import PublishIcon from "@mui/icons-material/RemoveRedEye";
 import IconButton from "@mui/material/IconButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -18,7 +18,7 @@ import useTheme from "@mui/system/useTheme";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 
-const DraftCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }> = ({ data, handleDeletePost }) => {
+const DraftCard: React.FC<{ data: Post }> = ({ data }) => {
   const { push, asPath, locale } = useRouter();
   const username = asPath.split("/profile/")[1];
   const theme = useTheme();
@@ -85,11 +85,11 @@ const DraftCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }
           </ListItemIcon>
           <ListItemText>{locale === "fr" ? "Modifier" : "Edit"}</ListItemText>
         </MenuItem>
-        <MenuItem onClick={() => handleDeletePost(data?.id)}>
+        <MenuItem onClick={handleGoToPost}>
           <ListItemIcon>
             <PublishIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>{locale === "fr" ? "Publier" : "Publish"}</ListItemText>
+          <ListItemText>{locale === "fr" ? "Prévisualiser" : "Preview"}</ListItemText>
         </MenuItem>
       </Menu>
       <PostCardHeader

@@ -2,7 +2,7 @@ import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 
 const UserAvatar = ({
-  name = "",
+  name,
   pictureUrl,
   handleClick,
 }: {
@@ -10,6 +10,10 @@ const UserAvatar = ({
   pictureUrl?: string;
   handleClick?: () => void;
 }) => {
+  if (!name) {
+    return null;
+  }
+
   return (
     <IconButton onClick={handleClick} sx={{ p: 0 }}>
       {pictureUrl ? (

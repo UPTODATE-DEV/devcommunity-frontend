@@ -4,7 +4,7 @@ import useStoreNoPersist from "@/hooks/useStoreNoPersist";
 import useUser from "@/hooks/useUser";
 import { getRequest, patchRequest, postLocalRequest } from "@/lib/api";
 import AddIcon from "@mui/icons-material/Add";
-import DoneIcon from "@mui/icons-material/Done";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
@@ -101,24 +101,26 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   };
 
   const handleToggleFollow = async () => {
-    setLoading(true);
-    const response = await patchRequest({ endpoint: `/users/${session?.id}/follow/${useUserData?.id}` });
-    if (response.data) {
-      setFollow((state) => !state);
+    if (currentUser !== undefined) {
+      setLoading(true);
+      const response = await patchRequest({ endpoint: `/users/${session?.id}/follow/${currentUser?.id}` });
+      if (response.data) {
+        setFollow((state) => !state);
+      }
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   React.useEffect(() => {
     async function getFollowings() {
-      const response = await getRequest({ endpoint: `/users/${useUserData?.id}/following` });
+      const response = await getRequest({ endpoint: `/users/${user?.id}/followers` });
       if (response.data) {
         setFollowings(response.data);
       }
     }
 
     async function getFollowers() {
-      const response = await getRequest({ endpoint: `/users/${useUserData?.id}/followers` });
+      const response = await getRequest({ endpoint: `/users/${user?.id}/following` });
       if (response.data) {
         setFollowers(response.data);
       }
@@ -131,7 +133,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
       getFollowers();
       setLoading(false);
     }
-  }, [useUserData, followers]);
+  }, [useUserData]);
 
   return (
     <>
@@ -204,11 +206,11 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                   {currentUser !== undefined && user?.role === "AUTHOR" && user?.id !== session?.id && (
                     <Button
                       disableElevation
-                      variant="contained"
                       sx={{ borderRadius: 50, px: 2 }}
                       onClick={handleToggleFollow}
                       disabled={loading}
-                      endIcon={follow ? <DoneIcon /> : <AddIcon />}
+                      endIcon={follow ? <CheckCircleIcon /> : <AddIcon />}
+                      variant={follow ? "contained" : "outlined"}
                     >
                       {loading ? (locale === "fr" ? "Chargement..." : "Loading...") : follow ? "Following" : "Follow"}
                     </Button>

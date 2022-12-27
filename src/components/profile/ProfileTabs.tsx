@@ -37,7 +37,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
   const [posts, setPosts] = React.useState<Post[] | []>([]);
   const [followedTags, setFollowedTags] = React.useState<Tags[] | []>([]);
   const sessionUser = useStore((state) => state.session?.user);
-  const user = useUser(currentUser?.username);
+  const user = useUser(sessionUser?.username);
   const { locale } = useRouter();
 
   const tabs = [

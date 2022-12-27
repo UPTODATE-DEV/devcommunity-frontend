@@ -19,7 +19,7 @@ const UserAvatar = ({
       {pictureUrl ? (
         <Avatar sx={{ bgcolor: "primary.main", color: "white" }} src={pictureUrl} alt={name} />
       ) : (
-        <Avatar sx={{ bgcolor: "primary.main", color: "white" }} alt={name}>
+        <Avatar sx={{ bgcolor: "primary.main", color: "white", fontSize: 14, fontWeight: 700 }} alt={name}>
           {name.charAt(0)}
           {name.split(" ")[1].charAt(0)}
         </Avatar>

@@ -21,6 +21,7 @@ import { useDarkMode } from "next-dark-mode";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
+import useUser from "../../hooks/useUser";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -35,7 +36,8 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
 const Icons = () => {
   const { darkModeActive, switchToDarkMode, switchToLightMode } = useDarkMode();
   const [fullscreen, setFullscreen] = React.useState(false);
-  const user = useStore((state) => state.session?.user);
+  const session = useStore((state) => state.session?.user);
+  const user = useUser(session?.username);
   const { push, locale } = useRouter();
   const [notifications, setNotifications] = React.useState(0);
   const socket = useSocket();
@@ -100,7 +102,7 @@ const Icons = () => {
 
   return (
     <Stack direction="row" alignItems="center" spacing={{ xs: 0, md: 1 }}>
-      {user && (
+      {user?.id && (
         <IconButton aria-label="cart" onClick={() => push("/notifications")}>
           <StyledBadge badgeContent={notifications} max={99} color="secondary">
             <NotificationsIcon />

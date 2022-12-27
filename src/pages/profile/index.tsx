@@ -2,7 +2,6 @@ import Menu from "@/components/menu/Menu";
 import { ProfileSkeleton } from "@/components/profile/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
-import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
@@ -14,18 +13,8 @@ const Profile = dynamic(import("@/components/profile/Profile"), { ssr: false, lo
 
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
-  const setPosts = useStore((state) => state.setPosts);
 
   React.useEffect(() => {
-    const getPosts = async () => {
-      const posts = await getRequest({ endpoint: "/posts" });
-      if (!posts.error) {
-        setPosts(posts.data);
-      }
-    };
-
-    getPosts();
-
     setSession(session);
   }, []);
 

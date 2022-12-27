@@ -12,6 +12,7 @@ interface Session {
 
 interface User {
   id: string;
+  userId: string;
   createdAt: Date;
   updatedAt: Date;
   avatar: File;
@@ -26,6 +27,12 @@ interface User {
   role: Role;
   posts: Post[];
   comments: PostComment[];
+  authorRequest: {
+    status: "PENDING" | "ACCEPTED" | "REJECTED";
+    user: User;
+  }[];
+  followers: any[];
+  followings: any[];
 }
 
 interface Post {

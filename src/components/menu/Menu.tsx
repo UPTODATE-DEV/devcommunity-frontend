@@ -145,7 +145,7 @@ const Menu: React.FC = () => {
             >
               {!isMobile && (
                 <Stack sx={{ display: { xs: "none", lg: "flex" } }}>
-                  {user ? (
+                  {session?.id ? (
                     <UserAvatar
                       name={getUserFullName(user)}
                       pictureUrl={getUserProfileImageUrl(user)}

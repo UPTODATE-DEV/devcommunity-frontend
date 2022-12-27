@@ -1,5 +1,7 @@
 import useStore from "@/hooks/useStore";
+import useUser from "@/hooks/useUser";
 import { deleteRequest, getRequest, patchRequest } from "@/lib/api";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import DraftsIcon from "@mui/icons-material/Drafts";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import QuestionAnswer from "@mui/icons-material/QuestionAnswerSharp";
@@ -28,11 +30,14 @@ const Empty = dynamic(import("@/components/common/Empty"), {
   loading: () => null,
 });
 
+const Dashboard = dynamic(import("./Dashboard"), { ssr: false });
+
 const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
   const [tab, setTab] = React.useState("0");
   const [posts, setPosts] = React.useState<Post[] | []>([]);
   const [followedTags, setFollowedTags] = React.useState<Tags[] | []>([]);
   const sessionUser = useStore((state) => state.session?.user);
+  const user = useUser(currentUser?.username);
   const { locale } = useRouter();
 
   const tabs = [
@@ -40,25 +45,31 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
       id: 0,
       label: "Posts",
       show: true,
-      icon: <QuestionAnswer />,
+      icon: <QuestionAnswer fontSize="small" />,
     },
     {
       id: 1,
       label: "Articles",
       show: true,
-      icon: <HistoryEduIcon />,
+      icon: <HistoryEduIcon fontSize="small" />,
     },
     {
       id: 2,
       label: "Drafts",
       show: currentUser ? false : true,
-      icon: <DraftsIcon />,
+      icon: <DraftsIcon fontSize="small" />,
     },
     {
       id: 3,
       label: "Tags",
       show: currentUser ? false : true,
-      icon: <TagIcon />,
+      icon: <TagIcon fontSize="small" />,
+    },
+    {
+      id: 4,
+      label: "Dashboard",
+      show: currentUser === undefined && user?.role === "AUTHOR",
+      icon: <DashboardIcon fontSize="small" />,
     },
   ];
 
@@ -116,7 +127,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
                 key={item.id}
                 iconPosition="start"
                 sx={{ minHeight: 50 }}
-                label={<Typography>{item.label}</Typography>}
+                label={<Typography textTransform="capitalize">{item.label}</Typography>}
                 value={i.toString()}
               />
             )
@@ -175,6 +186,11 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
                   </Grid>
                 ))}
               </Grid>
+            </Paper>
+          </TabPanel>
+          <TabPanel sx={{ p: 0 }} value={"4"}>
+            <Paper variant="outlined" sx={{ p: 2, minHeight: "200px" }}>
+              <Dashboard />
             </Paper>
           </TabPanel>
         </>

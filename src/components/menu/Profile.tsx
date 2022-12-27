@@ -1,11 +1,9 @@
-import React from "react";
-import Avatar from "@mui/material/Avatar";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import { useRouter } from "next/router";
-import IconButton from "@mui/material/IconButton";
 import useStore from "@/hooks/useStore";
 import useUser from "@/hooks/useUser";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import { useRouter } from "next/router";
 
 const Profile = () => {
   const { push } = useRouter();
@@ -28,7 +26,6 @@ const Profile = () => {
           {user?.firstName?.charAt(0)}
         </Avatar>
       </IconButton>
-     
     </Stack>
   );
 };

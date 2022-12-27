@@ -2,13 +2,16 @@ import { FILES_BASE_URL } from "@/config/url";
 import useStore from "@/hooks/useStore";
 import useStoreNoPersist from "@/hooks/useStoreNoPersist";
 import useUser from "@/hooks/useUser";
-import { postLocalRequest } from "@/lib/api";
+import { getRequest, patchRequest, postLocalRequest } from "@/lib/api";
+import AddIcon from "@mui/icons-material/Add";
+import DoneIcon from "@mui/icons-material/Done";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import TwitterIcon from "@mui/icons-material/Twitter";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -45,10 +48,16 @@ const ProfileEditForm = dynamic(import("@/components/profile/ProfileEditForm"), 
 const Profile = ({ currentUser }: { currentUser?: User }) => {
   const session = useStore((state) => state.session?.user);
   const useUserData = useUser(session?.username);
+  const [followings, setFollowings] = React.useState<User[]>([]);
+  const [followers, setFollowers] = React.useState<User[]>([]);
   const user = currentUser || useUserData;
   const { reload, locale } = useRouter();
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
   const { editProfile, setEditProfile } = useStoreNoPersist((state) => state);
+  const [status, setStatus] = React.useState<"PENDING" | "ACCEPTED" | "REJECTED" | "idle">("idle");
+
+  const [follow, setFollow] = React.useState(false);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
@@ -82,6 +91,48 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
     reload();
   };
 
+  const handleRequestCreator = async () => {
+    setLoading(true);
+    const response = await patchRequest({ endpoint: `/users/${session?.id}/request-author` });
+    if (response.data) {
+      setStatus((state) => (state === "PENDING" ? "idle" : "PENDING"));
+    }
+    setLoading(false);
+  };
+
+  const handleToggleFollow = async () => {
+    setLoading(true);
+    const response = await patchRequest({ endpoint: `/users/${session?.id}/follow/${useUserData?.id}` });
+    if (response.data) {
+      setFollow((state) => !state);
+    }
+    setLoading(false);
+  };
+
+  React.useEffect(() => {
+    async function getFollowings() {
+      const response = await getRequest({ endpoint: `/users/${useUserData?.id}/following` });
+      if (response.data) {
+        setFollowings(response.data);
+      }
+    }
+
+    async function getFollowers() {
+      const response = await getRequest({ endpoint: `/users/${useUserData?.id}/followers` });
+      if (response.data) {
+        setFollowers(response.data);
+      }
+    }
+
+    if (useUserData) {
+      setStatus(useUserData?.authorRequest[0]?.status);
+      setFollow(followers?.some((follower) => follower.userId === session?.id));
+      getFollowings();
+      getFollowers();
+      setLoading(false);
+    }
+  }, [useUserData, followers]);
+
   return (
     <>
       {user?.id && (
@@ -89,22 +140,48 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
           <Paper variant="outlined" component={Stack} spacing={2} sx={{ p: 2 }}>
             <Stack direction="row" justifyContent="space-between" sx={{ position: "relative" }}>
               <Stack direction="row" spacing={1} alignItems="center" justifyContent="center">
-                <Avatar
-                  sx={{
-                    width: { xs: 40, md: 60 },
-                    height: { xs: 40, md: 60 },
-                    bgcolor: "primary.main",
-                    color: "white",
-                  }}
-                  alt={`${user?.firstName} ${user?.lastName}`}
-                  src={`${FILES_BASE_URL}${user?.profile?.avatar?.url}`}
-                >
-                  {user?.firstName[0]}
-                </Avatar>
+                {user?.firstName && user?.lastName && (
+                  <>
+                    {user?.profile?.avatar ? (
+                      <Avatar
+                        sx={{
+                          width: { xs: 40, md: 60 },
+                          height: { xs: 40, md: 60 },
+                          bgcolor: "primary.main",
+                          color: "white",
+                        }}
+                        alt={`${user?.firstName} ${user?.lastName}`}
+                        src={`${FILES_BASE_URL}${user?.profile?.avatar?.url}`}
+                      >
+                        {`${user?.firstName[0]} ${user?.lastName[0]}`}
+                      </Avatar>
+                    ) : (
+                      <Avatar
+                        sx={{
+                          width: { xs: 40, md: 60 },
+                          height: { xs: 40, md: 60 },
+                          bgcolor: "primary.main",
+                          color: "white",
+                        }}
+                        alt={`${user?.firstName} ${user?.lastName}`}
+                      >
+                        {`${user?.firstName[0]} ${user?.lastName[0]}`}
+                      </Avatar>
+                    )}
+                  </>
+                )}
                 <Stack>
-                  <Typography variant="h6" sx={{ fontSize: { xs: 14, md: 16 } }} color="text.primary" fontWeight={700}>
-                    {getUserFullName(user)}
-                  </Typography>
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Typography
+                      variant="h6"
+                      sx={{ fontSize: { xs: 14, md: 16 } }}
+                      color="text.primary"
+                      fontWeight={700}
+                    >
+                      {getUserFullName(user)}
+                    </Typography>
+                    {user?.role === "AUTHOR" && <VerifiedIcon color="primary" />}
+                  </Stack>
                   <Typography variant="caption" color="text.secondary">
                     {user?.email}
                   </Typography>
@@ -121,20 +198,56 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                 spacing={2}
                 alignItems="flex-end"
                 flexShrink={1}
-                sx={{ position: "absolute", right: 1, top: "-10px" }}
+                sx={{ position: "absolute", right: 1, top: "-5px" }}
               >
-                {!currentUser && (
-                  <IconButton
-                    aria-label="more"
-                    id="long-button"
-                    aria-controls={openMenu ? "long-menu" : undefined}
-                    aria-expanded={openMenu ? "true" : undefined}
-                    aria-haspopup="true"
-                    onClick={handleOpenMenu}
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
-                )}
+                <Stack direction="row" spacing={1}>
+                  {currentUser !== undefined && user?.role === "AUTHOR" && user?.id !== session?.id && (
+                    <Button
+                      disableElevation
+                      variant="contained"
+                      sx={{ borderRadius: 50, px: 2 }}
+                      onClick={handleToggleFollow}
+                      disabled={loading}
+                      endIcon={follow ? <DoneIcon /> : <AddIcon />}
+                    >
+                      {loading ? (locale === "fr" ? "Chargement..." : "Loading...") : follow ? "Following" : "Follow"}
+                    </Button>
+                  )}
+                  {currentUser === undefined && user?.role !== "AUTHOR" && (
+                    <Button
+                      sx={{ borderRadius: 50, px: 2 }}
+                      disableElevation
+                      variant="contained"
+                      disabled={loading}
+                      color={status === "PENDING" ? "warning" : "primary"}
+                      onClick={handleRequestCreator}
+                    >
+                      {loading
+                        ? locale === "fr"
+                          ? "Chargement..."
+                          : "Loading..."
+                        : status === "PENDING"
+                        ? locale === "fr"
+                          ? "Annuler la demande"
+                          : "Cancel request"
+                        : locale === "fr"
+                        ? "Devenir créateur"
+                        : "Become a creator"}
+                    </Button>
+                  )}
+                  {!currentUser && (
+                    <IconButton
+                      aria-label="more"
+                      id="long-button"
+                      aria-controls={openMenu ? "long-menu" : undefined}
+                      aria-expanded={openMenu ? "true" : undefined}
+                      aria-haspopup="true"
+                      onClick={handleOpenMenu}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                  )}
+                </Stack>
 
                 <Stack direction="row" spacing={{ xs: 1, md: 2 }}>
                   {user?.profile?.gitHub && (
@@ -191,6 +304,20 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                   </MenuItem>
                 </Menu>
               </Stack>
+            </Stack>
+
+            <Stack direction="row" spacing={2} alignItems="center">
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Typography color="text.primary">{followings.length}</Typography>
+                <Typography color="text.secondary">{locale === "fr" ? "Abonnements" : "Followings"}</Typography>
+              </Stack>
+
+              {user?.role === "AUTHOR" && (
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <Typography color="text.primary">{followers.length}</Typography>
+                  <Typography color="text.secondary">{locale === "fr" ? "Abonnés" : "Followers"}</Typography>
+                </Stack>
+              )}
             </Stack>
 
             <Typography color="text.secondary">{user?.profile?.bio}</Typography>

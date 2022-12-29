@@ -11,7 +11,7 @@ import dynamic from "next/dynamic";
 import qs from "qs";
 import React, { useEffect } from "react";
 import useSWRInfinite from "swr/infinite";
-import { HomeFeedSkeleton } from "./Skeleton";
+import { HomeFeedSkeleton } from "../middle/Skeleton";
 
 const ModalCreation = dynamic(import("@/components/common/ModalCreation"), {
   ssr: false,
@@ -28,17 +28,18 @@ const Empty = dynamic(import("@/components/common/Empty"), {
   loading: () => <HomeFeedSkeleton />,
 });
 
-const HomeFeed = () => {
+const FilterByTagsResult = () => {
   const [open, setOpen] = React.useState(false);
   const session = useStore((state) => state.session?.user);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [endOfPage, setEndOfPage] = React.useState(false);
   const [perPage, setPerPage] = React.useState(10);
   const [type, setType] = React.useState<"QUESTION" | "ARTICLE" | undefined>();
+  const { setTags, setPosts, tagsFilters, setMultiTagsFilters } = useStore((state) => state);
 
   const params = qs.stringify({
     perPage,
-    type,
+    tags: tagsFilters.map((el) => el.name),
   });
 
   const handleClose = () => setOpen(false);
@@ -55,7 +56,7 @@ const HomeFeed = () => {
       setEndOfPage(true);
       return null;
     }
-    return `/users/${session?.id}/feed?page=${pageIndex + 1}&${params}`;
+    return `/posts/by/tags/?page=${pageIndex + 1}&${params}`;
   };
 
   const { data, size, setSize, isLoading, error, isValidating } = useSWRInfinite<Post[], any>(getKey, fetcher);
@@ -69,7 +70,9 @@ const HomeFeed = () => {
       }
     };
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, [currentPage]);
 
   useEffect(() => {
@@ -78,7 +81,7 @@ const HomeFeed = () => {
 
   return (
     <Stack spacing={2}>
-      {size === 0 && <Empty />}
+      {!isValidating && data && data[0]?.length === 0 && <Empty />}
       {isLoading && <HomeFeedSkeleton />}
       <ModalCreation open={open} handleClose={handleClose} />
 
@@ -110,4 +113,4 @@ const HomeFeed = () => {
   );
 };
 
-export default HomeFeed;
+export default FilterByTagsResult;

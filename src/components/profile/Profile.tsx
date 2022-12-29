@@ -94,12 +94,11 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   };
 
   const handleRequestCreator = async () => {
-    setLoading(true);
     const response = await patchRequest({ endpoint: `/users/${session?.id}/request-author` });
     if (response.data) {
       setStatus((state) => (state === "PENDING" ? "idle" : "PENDING"));
     }
-    setLoading(false);
+    handleCloseMenu();
   };
 
   const handleToggleFollow = async () => {
@@ -132,11 +131,11 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
       const [followings, followers] = await Promise.all([getFollowings(), getFollowers()]);
       setFollowings(followings);
       setFollowers(followers);
+      setFollow(followers?.some((follower: any) => follower?.userId === session?.id));
     }
 
     if (useUserData) {
       setStatus(useUserData?.authorRequest[0]?.status);
-      setFollow(followers?.some((follower) => follower.userId === session?.id));
       getFollowingsAndFollowers();
       setLoading(false);
     }
@@ -148,9 +147,9 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
         <>
           <Paper variant="outlined" component={Stack} spacing={2} sx={{ p: 2 }}>
             <Stack direction="row" justifyContent="space-between" sx={{ position: "relative" }}>
-              <Stack direction="row" spacing={1} alignItems="center" justifyContent="center">
+              <Stack direction="row" spacing={1} justifyContent="center">
                 {user?.firstName && user?.lastName && (
-                  <>
+                  <Stack>
                     {user?.profile?.avatar ? (
                       <Avatar
                         sx={{
@@ -171,13 +170,15 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                           height: { xs: 40, md: 60 },
                           bgcolor: "primary.main",
                           color: "white",
+                          fontSize: 16,
+                          fontWeight: 700,
                         }}
                         alt={`${user?.firstName} ${user?.lastName}`}
                       >
                         {`${user?.firstName[0]} ${user?.lastName[0]}`}
                       </Avatar>
                     )}
-                  </>
+                  </Stack>
                 )}
                 <Stack>
                   <Stack direction="row" spacing={1} alignItems="center">
@@ -203,47 +204,22 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                 </Stack>
               </Stack>
 
-              <Stack
-                spacing={2}
-                alignItems="flex-end"
-                flexShrink={1}
-                sx={{ position: "absolute", right: 1, top: "-5px" }}
-              >
+              <Stack spacing={2} alignItems="flex-end" flexShrink={1} sx={{ position: "absolute", right: 1, top: 0 }}>
                 <Stack direction="row" spacing={1}>
                   {currentUser !== undefined && user?.role === "AUTHOR" && user?.id !== session?.id && (
                     <Button
                       disableElevation
-                      sx={{ borderRadius: 50, px: 2 }}
+                      sx={{ borderRadius: 50, px: 2, fontSize: { xs: 8, md: 12 } }}
                       onClick={handleToggleFollow}
                       disabled={loading}
+                      size="small"
                       endIcon={follow ? <CheckCircleIcon /> : <AddIcon />}
                       variant={follow ? "contained" : "outlined"}
                     >
                       {loading ? (locale === "fr" ? "Chargement..." : "Loading...") : follow ? "Following" : "Follow"}
                     </Button>
                   )}
-                  {currentUser === undefined && user?.role !== "AUTHOR" && (
-                    <Button
-                      sx={{ borderRadius: 50, px: 2 }}
-                      disableElevation
-                      variant="contained"
-                      disabled={loading}
-                      color={status === "PENDING" ? "warning" : "primary"}
-                      onClick={handleRequestCreator}
-                    >
-                      {loading
-                        ? locale === "fr"
-                          ? "Chargement..."
-                          : "Loading..."
-                        : status === "PENDING"
-                        ? locale === "fr"
-                          ? "Annuler la demande"
-                          : "Cancel request"
-                        : locale === "fr"
-                        ? "Devenir créateur"
-                        : "Become a creator"}
-                    </Button>
-                  )}
+
                   {!currentUser && (
                     <IconButton
                       aria-label="more"
@@ -305,6 +281,16 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                     </ListItemIcon>
                     <ListItemText>{locale === "en" ? "Edit Profile" : "Modifier le profil"}</ListItemText>
                   </MenuItem>
+
+                  {currentUser === undefined && user?.role !== "AUTHOR" && status !== "PENDING" && (
+                    <MenuItem onClick={handleRequestCreator} key="edit">
+                      <ListItemIcon>
+                        <VerifiedIcon fontSize="small" />
+                      </ListItemIcon>
+                      <ListItemText>{locale === "fr" ? "Devenir créateur" : "Become a creator"}</ListItemText>
+                    </MenuItem>
+                  )}
+
                   <MenuItem onClick={handleClickOpen} key="logout">
                     <ListItemIcon>
                       <PowerSettingsNewIcon fontSize="small" />

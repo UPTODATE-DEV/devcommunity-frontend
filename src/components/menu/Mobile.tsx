@@ -1,14 +1,12 @@
 import useStore from "@/hooks/useStore";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Drawer from "@mui/material/Drawer";
 import dynamic from "next/dynamic";
 import * as React from "react";
-import { LeftBarSkeleton } from "../sideBars/Skeleton";
 
 const LeftSideBar = dynamic(import("@/components/sideBars/LeftSideBar"), {
   ssr: false,
-  loading: () => <LeftBarSkeleton />,
+  loading: () => null,
 });
 
 export default function Mobile() {

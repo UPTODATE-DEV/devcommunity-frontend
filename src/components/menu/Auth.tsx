@@ -1,13 +1,13 @@
-import useStore from "@/hooks/useStore";
 import useStoreNoPersist from "@/hooks/useStoreNoPersist";
 import { postLocalRequest } from "@/lib/api";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 
 const Auth = () => {
+  const { reload } = useRouter();
   const { authLoading, setAuthLoading } = useStoreNoPersist((state) => state);
-  const setSession = useStore((state) => state.setSession);
 
   const onLogin = async (token?: string) => {
     setAuthLoading(true);
@@ -18,8 +18,7 @@ const Auth = () => {
       console.log(res);
       setAuthLoading(false);
     }
-    setSession(res.data);
-    setAuthLoading(false);
+    reload();
   };
 
   return (

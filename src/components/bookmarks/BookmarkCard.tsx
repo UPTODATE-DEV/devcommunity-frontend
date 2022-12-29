@@ -29,7 +29,7 @@ const BookmarkCard: React.FC<{ data: Post }> = ({ data }) => {
   const goToPost = useGoToPost();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const postContent = getContent(data?.content, isMobile ? 180 : 220);
+  const postContent = getContent(data?.content, isMobile ? 180 : 220, locale);
 
   const handleViewPost = () => {
     push(`${data?.type === "ARTICLE" ? "/articles" : "/posts"}/${data?.slug}`);
@@ -75,7 +75,9 @@ const BookmarkCard: React.FC<{ data: Post }> = ({ data }) => {
       >
         {data?.title}
       </Typography>
-      <PostContent content={postContent} />
+      <Stack sx={{ cursor: "pointer" }} onClick={handleGoToPost}>
+        <PostContent content={postContent} />
+      </Stack>
       <PostTags tags={data?.tags} />
 
       <Stack>

@@ -35,7 +35,7 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
 
-  const postContent = getContent(data?.content, isMobile ? 180 : 220);
+  const postContent = getContent(data?.content, isMobile ? 180 : 220, locale);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -119,7 +119,9 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
       >
         {data?.title}
       </Typography>
-      <PostContent content={postContent} />
+      <Stack sx={{ cursor: "pointer" }} onClick={handleGoToPost}>
+        <PostContent content={postContent} />
+      </Stack>
       <PostTags tags={data?.tags} />
       <Stack
         direction="row"

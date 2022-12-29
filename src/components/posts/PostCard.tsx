@@ -15,6 +15,7 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useTheme from "@mui/system/useTheme";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import PostImage from "./PostImage";
 
@@ -22,9 +23,10 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   const { author } = data;
   const goToPost = useGoToPost();
   const theme = useTheme();
+  const { locale } = useRouter();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const postContent = getContent(data?.content, isMobile ? 180 : 220);
+  const postContent = getContent(data?.content, isMobile ? 180 : 220, locale);
 
   const goToProfile = useGoToUserProfile();
   const handleGoToProfile = useCallback(() => {
@@ -60,7 +62,9 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
           >
             {data?.title}
           </Typography>
-          <Content content={postContent} />
+          <Stack sx={{ cursor: "pointer" }} onClick={handleGoToPost}>
+            <Content content={postContent} />
+          </Stack>
           {isMobile && (
             <PostImage
               handleClick={handleGoToPost}

@@ -3,36 +3,26 @@ import CallToAction from "@/components/middle/CallToAction";
 import { HomeFeedSkeleton } from "@/components/middle/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
-import { getRequest, postRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
-import Divider from "@mui/material/Divider";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import React from "react";
 
-const HomeFeed = dynamic(import("@/components/middle/HomeFeed"), {
+const FilterByTagsResult = dynamic(import("@/components/tags/FilterByTagsResult"), {
   ssr: false,
   loading: () => <HomeFeedSkeleton />,
 });
 
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
-  const setPosts = useStore((state) => state.setPosts);
+  const { setMultiTagsFilters } = useStore((state) => state);
 
   React.useEffect(() => {
-    setPosts([]);
-    const getPosts = async () => {
-      const posts = await postRequest({ endpoint: "/posts/tags", data: ["blockchain"] });
-      if (!posts.error) {
-        setPosts(posts.data);
-      }
-    };
-
-    getPosts();
-
     setSession(session);
+    setMultiTagsFilters([{ _count: { posts: 0 }, id: "ckuq7q7xw0000jx9x9q7q7xwz", name: "blockchain" }]);
+    return () => setMultiTagsFilters([]);
   }, []);
 
   return (
@@ -46,7 +36,7 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
       <Menu />
       <MainContainer>
         {!session?.user && <CallToAction />}
-        <HomeFeed />
+        <FilterByTagsResult />
       </MainContainer>
     </>
   );

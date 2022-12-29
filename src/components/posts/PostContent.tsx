@@ -7,8 +7,8 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import dynamic from "next/dynamic";
 import React, { useCallback } from "react";
-import { useGoToUserProfile } from "../../hooks";
-import { parseDate } from "../../lib";
+import { useGoToUserProfile } from "@/hooks";
+import { parseDate } from "@/lib";
 
 const Content = dynamic(import("@/components/common/Content"), { ssr: false });
 const PostReaction = dynamic(import("@/components/posts/PostReaction"), { ssr: false });

@@ -1,6 +1,7 @@
+import Divider from "@mui/material/Divider";
+import Paper from "@mui/material/Paper";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
-import Divider from "@mui/material/Divider";
 
 export function LeftBarSkeleton() {
   const SkeletonSection = ({ list }: { list: number[] }) => {
@@ -17,11 +18,11 @@ export function LeftBarSkeleton() {
   };
 
   return (
-    <Stack spacing={4} sx={{ py: 1 }}>
-      <SkeletonSection list={[80, 50, 70, 90]} />
+    <Paper variant="outlined" sx={{ p: 2, width: 1 }} component={Stack} spacing={4}>
+      <SkeletonSection list={[80, 50, 70, 50, 90]} />
       <Divider sx={{ width: 1 }} />
       <SkeletonSection list={[40, 70, 90]} />
-    </Stack>
+    </Paper>
   );
 }
 
@@ -51,10 +52,10 @@ export function RightBarSkeleton() {
   );
 
   return (
-    <Stack>
+    <Paper variant="outlined" sx={{ p: 2 }} component={Stack}>
       {[...Array(2)].map((_, index) => (
         <SkeletonSection key={index} />
       ))}
-    </Stack>
+    </Paper>
   );
 }

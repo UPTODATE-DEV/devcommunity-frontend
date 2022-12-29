@@ -53,45 +53,49 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
       </Dialog>
       <Container maxWidth="xl">
         <Grid container spacing={2}>
-          {!isMobile && (
-            <Grid
-              item
-              md={3}
-              lg={2}
-              className="hide-scrollbar"
-              sx={{
-                position: "sticky",
-                top: 76,
-                height: 1,
-                overflow: "auto",
-                display: { sm: "none", md: "flex" },
-              }}
-            >
-              <LeftSideBar />
-            </Grid>
-          )}
-          <Grid item md={9} lg={7} sx={{ position: "relative", minHeight: "100vh", my: { xs: 2, md: 3.3, lg: 1.9 } }}>
+          <Grid
+            item
+            xs
+            md={3}
+            lg={2}
+            className="hide-scrollbar"
+            sx={{
+              position: "sticky",
+              top: 76,
+              height: 1,
+              overflow: "auto",
+              display: { xs: "none", md: "flex" },
+            }}
+          >
+            <LeftSideBar />
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={9}
+            lg={7}
+            sx={{ position: "relative", minHeight: "100vh", my: { xs: 2, md: 3.3, lg: 1.9 } }}
+          >
             <Stack sx={{ position: "relative" }} spacing={2}>
               {children}
             </Stack>
           </Grid>
-          {!isMobile && (
-            <Grid
-              item
-              lg={3}
-              className="hide-scrollbar"
-              sx={{
-                position: "sticky",
-                top: 76,
-                height: "100vh",
-                overflow: "auto",
-                width: 1,
-                display: { xs: "none", lg: "flex" },
-              }}
-            >
-              <RightSideBar />
-            </Grid>
-          )}
+          <Grid
+            item
+            xs
+            lg={3}
+            className="hide-scrollbar"
+            sx={{
+              position: "sticky",
+              top: 76,
+              height: "100vh",
+              overflow: "auto",
+              width: 1,
+              display: { xs: "none", lg: "flex" },
+            }}
+          >
+            <RightSideBar />
+          </Grid>
         </Grid>
       </Container>
     </Box>

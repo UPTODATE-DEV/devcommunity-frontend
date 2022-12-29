@@ -4,6 +4,7 @@ import PostCard from "@/components/posts/PostCard";
 import QuestionCard from "@/components/questions/QuestionCard";
 import useStore from "@/hooks/useStore";
 import { getRequest } from "@/lib";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import dynamic from "next/dynamic";
 import React from "react";
@@ -35,7 +36,9 @@ const ParentsComment = ({ comments }: { comments: PostComment[] }) => {
             },
           }}
         >
-          <CommentCard data={el} />
+          <Paper variant="outlined" sx={{ p: 2 }}>
+            <CommentCard data={el} />
+          </Paper>
         </Stack>
       ))}
     </>

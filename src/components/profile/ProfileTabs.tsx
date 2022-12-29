@@ -166,27 +166,30 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
             </Stack>
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value={"3"}>
-            {followedTags.length === 0 && <Empty />}
-            <Paper variant="outlined" sx={{ py: 4, px: 2, minHeight: "300px" }}>
-              <Grid container spacing={1}>
-                {followedTags.map((el, i) => (
-                  <Grid item xs="auto" key={el.tag.name}>
-                    <Tooltip
-                      arrow
-                      title={locale === "en" ? "Click to unfollow this tag" : "Cliquer pour ne plus suivre ce tag"}
-                    >
-                      <Chip
-                        size="small"
-                        onClick={() => handleTagClick(el.tag.name)}
-                        icon={<TagIcon fontSize="small" />}
-                        sx={{ px: 2 }}
-                        label={`${el.tag.name} (${el.tag._count.posts})`}
-                      />
-                    </Tooltip>
-                  </Grid>
-                ))}
-              </Grid>
-            </Paper>
+            {followedTags.length === 0 ? (
+              <Empty />
+            ) : (
+              <Paper variant="outlined" sx={{ py: 4, px: 2, minHeight: "300px" }}>
+                <Grid container spacing={1}>
+                  {followedTags.map((el, i) => (
+                    <Grid item xs="auto" key={el.tag.name}>
+                      <Tooltip
+                        arrow
+                        title={locale === "en" ? "Click to unfollow this tag" : "Cliquer pour ne plus suivre ce tag"}
+                      >
+                        <Chip
+                          size="small"
+                          onClick={() => handleTagClick(el.tag.name)}
+                          icon={<TagIcon fontSize="small" />}
+                          sx={{ px: 2 }}
+                          label={`${el.tag.name} (${el.tag._count.posts})`}
+                        />
+                      </Tooltip>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Paper>
+            )}
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value={"4"}>
             <Paper variant="outlined" sx={{ p: 2, minHeight: "200px" }}>

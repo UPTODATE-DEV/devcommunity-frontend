@@ -47,7 +47,7 @@ const QuestionsList = () => {
       setEndOfPage(true);
       return null;
     }
-    return `/posts?page=${pageIndex + 1}&${params}`;
+    return `/users/${session?.id}/feed?page=${pageIndex + 1}&${params}`;
   };
 
   const { data, size, setSize, isLoading, error, isValidating } = useSWRInfinite<Post[], any>(getKey, fetcher);

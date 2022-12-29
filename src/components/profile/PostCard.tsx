@@ -37,7 +37,7 @@ const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }>
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
 
-  const postContent = getContent(data?.content, isMobile ? 180 : 220);
+  const postContent = getContent(data?.content, isMobile ? 180 : 220, locale);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -102,7 +102,7 @@ const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }>
         </MenuItem>
       </Menu>
       <Grid container spacing={{ xs: 0, sm: 2, lg: 4 }}>
-        <Grid item xs={12} sm={8} spacing={2}>
+        <Grid item xs={12} sm={8}>
           <PostCardHeader
             handleClickGoToProfile={handleGoToProfile}
             date={parseDate({ date: data?.publishedOn, type: "relative" })}
@@ -124,7 +124,9 @@ const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }>
           >
             {data?.title}
           </Typography>
-          <Content content={postContent} />
+          <Stack sx={{ cursor: "pointer" }} onClick={handleGoToPost}>
+            <Content content={postContent} />
+          </Stack>
           {isMobile && (
             <PostImage
               handleClick={handleGoToPost}

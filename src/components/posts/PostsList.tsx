@@ -1,18 +1,16 @@
 import PostCard from "@/components/posts/PostCard";
-import useStore from "@/hooks/useStore";
-import Fab from "@mui/material/Fab";
-import AddIcon from "@mui/icons-material/Add";
-import Divider from "@mui/material/Divider";
-import Stack from "@mui/material/Stack";
-import dynamic from "next/dynamic";
-import React, { useEffect } from "react";
-import { PostsListSkeleton } from "./Skeleton";
-import qs from "qs";
-import useSWR from "swr";
-import useSWRInfinite from "swr/infinite";
-import axios from "axios";
 import { API } from "@/config/url";
+import useStore from "@/hooks/useStore";
+import AddIcon from "@mui/icons-material/Add";
 import CircularProgress from "@mui/material/CircularProgress";
+import Fab from "@mui/material/Fab";
+import Stack from "@mui/material/Stack";
+import axios from "axios";
+import dynamic from "next/dynamic";
+import qs from "qs";
+import React, { useEffect } from "react";
+import useSWRInfinite from "swr/infinite";
+import { PostsListSkeleton } from "./Skeleton";
 
 const Empty = dynamic(import("@/components/common/Empty"), {
   ssr: false,
@@ -49,7 +47,7 @@ const PostsList = () => {
       setEndOfPage(true);
       return null;
     }
-    return `/posts?page=${pageIndex + 1}&${params}`;
+    return `/users/${session?.id}/feed?page=${pageIndex + 1}&${params}`;
   };
 
   const { data, size, setSize, isLoading, error, isValidating } = useSWRInfinite<Post[], any>(getKey, fetcher);

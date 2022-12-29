@@ -12,6 +12,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useTheme from "@mui/system/useTheme";
@@ -29,7 +30,7 @@ const DraftCard: React.FC<{ data: Post }> = ({ data }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
 
-  const postContent = getContent(data?.content, isMobile ? 180 : 220);
+  const postContent = getContent(data?.content, isMobile ? 180 : 220, locale);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -113,7 +114,9 @@ const DraftCard: React.FC<{ data: Post }> = ({ data }) => {
       >
         {data?.title}
       </Typography>
-      <PostContent content={postContent} />
+      <Stack sx={{ cursor: "pointer" }} onClick={handleGoToPost}>
+        <PostContent content={postContent} />
+      </Stack>
       <PostTags tags={data?.tags} />
     </Paper>
   );

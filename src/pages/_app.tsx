@@ -38,7 +38,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       withNormalizeCSS
       theme={{
         colorScheme: mode,
-        fontFamily: "Roboto",
+        fontFamily: "Inter",
         colors: {
           dark: [
             "#C1C2C5",

@@ -1,35 +1,30 @@
 import PostContent from "@/components/common/Content";
 import PostCardHeader from "@/components/common/PostCardHeader";
-import useSocket from "@/hooks/useSocket";
+import { useGoToUserProfile } from "@/hooks/posts";
 import useStore from "@/hooks/useStore";
 import { getContent, parseDate } from "@/lib/posts";
 import ReplyIcon from "@mui/icons-material/Reply";
 import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
-import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useTheme from "@mui/system/useTheme";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
-import { useGoToUserProfile } from "../../hooks/posts";
-import useStoreNoPersist from "../../hooks/useStoreNoPersist";
 import ShowQuestionReactions from "../questions/ShowQuestionReactions";
 import CommentReactions from "./CommentReactions";
 
 const CommentCard: React.FC<{ data: PostComment }> = ({ data }) => {
   const user = useStore((state) => state.session?.user);
-  const { setCurrentComment, currentPost } = useStore((state) => state);
-  const { push } = useRouter();
-  const { setOpenLoginModal } = useStoreNoPersist();
-  const [userReaction, setUserReaction] = React.useState<QuestionReactionType | undefined>();
+  const { currentPost } = useStore((state) => state);
+  const { push, locale } = useRouter();
+  const [, setUserReaction] = React.useState<QuestionReactionType | undefined>();
   const [openReaction, setOpenReaction] = React.useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const postContent = getContent(data?.content, isMobile ? 180 : 220);
+  const postContent = getContent(data?.content, isMobile ? 180 : 220, locale);
 
-  const socket = useSocket();
   const { author } = data;
   const goToProfile = useGoToUserProfile();
 
@@ -59,7 +54,7 @@ const CommentCard: React.FC<{ data: PostComment }> = ({ data }) => {
   }, [data?.reactions, user]);
 
   return (
-    <Paper variant="outlined" sx={{ p: 2 }}>
+    <>
       <Dialog
         open={openReaction}
         onClose={handleCloseReaction}
@@ -89,7 +84,7 @@ const CommentCard: React.FC<{ data: PostComment }> = ({ data }) => {
           </Stack>
         </Stack>
       </Stack>
-    </Paper>
+    </>
   );
 };
 

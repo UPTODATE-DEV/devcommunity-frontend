@@ -7,10 +7,7 @@ import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-// import { useRouter } from "next/router";
 import * as React from "react";
-
-// const AddPost = dynamic(import("@/components/common/AddPost"), { ssr: false, loading: () => null });
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
@@ -45,7 +42,7 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
   const { req, res } = context;
-  // res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
+  res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
 
   return {
     props: {

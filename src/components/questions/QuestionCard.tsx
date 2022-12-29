@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useTheme from "@mui/system/useTheme";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import Bookmark from "../common/Bookmark";
 import Share from "../common/Share";
@@ -19,10 +20,11 @@ import QuestionReactions from "./QuestionReactions";
 const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   const theme = useTheme();
   const { author } = data;
+  const { locale } = useRouter();
   const goToProfile = useGoToUserProfile();
   const goToPost = useGoToPost();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const postContent = getContent(data?.content, isMobile ? 180 : 220);
+  const postContent = getContent(data?.content, isMobile ? 180 : 220, locale);
 
   const handleGoToProfile = useCallback(() => {
     goToProfile(author?.email);
@@ -55,7 +57,9 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
       >
         {data?.title}
       </Typography>
-      <PostContent content={postContent} />
+      <Stack sx={{ cursor: "pointer" }} onClick={handleGoToPost}>
+        <PostContent content={postContent} />
+      </Stack>
       <PostTags tags={data?.tags} />
       <Stack
         direction="row"

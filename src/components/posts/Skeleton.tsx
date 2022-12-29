@@ -1,13 +1,12 @@
+import Paper from "@mui/material/Paper";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
-import React from "react";
-import Divider from "@mui/material/Divider";
 
 export function PostsListSkeleton() {
   return (
     <Stack spacing={2}>
       {[...Array(3)].map((_, i) => (
-        <React.Fragment key={i}>
+        <Paper variant="outlined" sx={{ p: 2 }} key={i}>
           <Stack direction="row" spacing={2} sx={{ py: 2, px: 1 }} key={i}>
             <Skeleton variant="circular" width={40} height={40} sx={{ flexShrink: 0 }} />
             <Stack spacing={2} sx={{ width: 1 }}>
@@ -18,8 +17,7 @@ export function PostsListSkeleton() {
             </Stack>
           </Stack>
           <Skeleton variant="rectangular" width="100%" height={240} sx={{ borderRadius: 2 }} />
-          <Divider />
-        </React.Fragment>
+        </Paper>
       ))}
     </Stack>
   );

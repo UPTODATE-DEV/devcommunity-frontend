@@ -303,13 +303,13 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
 
             <Stack direction="row" spacing={2} alignItems="center">
               <Stack direction="row" spacing={1} alignItems="center">
-                <Typography color="text.primary">{followings.length}</Typography>
+                <Typography color="text.primary">{followings?.length}</Typography>
                 <Typography color="text.secondary">{locale === "fr" ? "Abonnements" : "Followings"}</Typography>
               </Stack>
 
               {user?.role === "AUTHOR" && (
                 <Stack direction="row" spacing={1} alignItems="center">
-                  <Typography color="text.primary">{followers.length}</Typography>
+                  <Typography color="text.primary">{followers?.length}</Typography>
                   <Typography color="text.secondary">{locale === "fr" ? "Abonnés" : "Followers"}</Typography>
                 </Stack>
               )}

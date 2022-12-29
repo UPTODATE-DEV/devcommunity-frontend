@@ -13,9 +13,12 @@ import {
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { getRequest } from "../../lib";
+import { getRequest } from "@/lib";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Filler, Legend);
+ChartJS.defaults.font = {
+   family: "Segoe UI",
+ };
 
 export function ViewsDaysChart() {
   const { locale } = useRouter();

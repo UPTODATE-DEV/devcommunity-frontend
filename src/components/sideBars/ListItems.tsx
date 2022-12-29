@@ -1,4 +1,3 @@
-import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -40,9 +39,14 @@ const ListItems = ({
         </ListItemAvatar>
         <ListItemText
           primary={item.title}
+          primaryTypographyProps={{
+            variant: "body1",
+            lineHeight: 1.5,
+            fontSize: "0.9rem",
+          }}
           secondary={
             <Stack sx={{ width: 1 }} component="span">
-              <Typography sx={{ display: "inline" }} component="span" variant="caption" color="text.primary">
+              <Typography sx={{ display: "inline" }} component="span" variant="caption" color="text.secondary">
                 {locale === "en" ? "By" : "Par"} {`${item.author.firstName} ${item.author.lastName}`}
               </Typography>
             </Stack>

@@ -24,8 +24,7 @@ const Dashboard = () => {
       <TabList
         sx={{
           "& .MuiTabs-indicator": {
-            bgcolor: "red",
-            display: "none",
+            mb: 0.5,
           },
         }}
         onChange={handleTabChange}

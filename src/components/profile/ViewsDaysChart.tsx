@@ -1,64 +1,30 @@
 import useStore from "@/hooks/useStore";
-import {
-  CategoryScale,
-  Chart as ChartJS,
-  Filler,
-  Legend,
-  LinearScale,
-  LineElement,
-  PointElement,
-  Title,
-  Tooltip,
-} from "chart.js";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { Line } from "react-chartjs-2";
 import { getRequest } from "@/lib";
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Filler, Legend);
+import { useEffect, useState } from "react";
+import ChartComponent from "./ChartComponent";
 
 export function ViewsDaysChart() {
-  const { locale } = useRouter();
   const user = useStore((state) => state.session?.user);
   const [views, setViews] = useState<number[]>([]);
+  const [reactions, setReactions] = useState<number[]>([]);
 
   const labels = Object.keys(views).map((el) => el.substring(0, 10));
 
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-  };
-
-  const data = {
-    labels,
-    datasets: [
-      {
-        fill: true,
-        label: locale === "en" ? "Views number" : "Nombre de vues",
-        data: views,
-        borderColor: "#0179bb",
-        backgroundColor: "#0179bb57",
-      },
-    ],
-  };
-
   useEffect(() => {
-    async function getUserViews(userId: string) {
-      const response = await getRequest({ endpoint: `/users/${userId}/monthly-views` });
-      if (!response.error) {
-        setViews(Object.values(response.data));
-      }
+    async function getUserStats(userId: string) {
+      const [reactions, views] = await Promise.all([
+        getRequest({ endpoint: `/users/${userId}/monthly-views` }),
+        getRequest({ endpoint: `/users/${userId}/monthly-reactions` }),
+      ]);
+      if (!views.error) setViews(Object.values(views.data));
+      if (!reactions.error) setReactions(Object.values(reactions.data));
     }
     if (user) {
-      getUserViews(user.id);
+      getUserStats(user.id);
     }
   }, []);
 
-  return <Line options={options} data={data} height={100} />;
+  return <ChartComponent views={views} reactions={reactions} labels={labels} />;
 }
 
 export default ViewsDaysChart;

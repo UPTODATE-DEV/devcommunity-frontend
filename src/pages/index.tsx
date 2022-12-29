@@ -23,9 +23,6 @@ const HomeFeed = dynamic(import("@/components/middle/HomeFeed"), {
 
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
-  // const { locale } = useRouter();
-
-  // const handleGoToAddPage = () => {};
 
   React.useEffect(() => {
     setSession(session);
@@ -40,18 +37,6 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
       <Menu />
       <MainContainer>
         {!session?.user && <CallToAction />}
-        {/* {session?.user ? (
-          <AddPost
-            label={
-              locale === "en"
-                ? "Share your questions, quick tips and ideas here"
-                : "Partagez vos questions, astuces et idées ici"
-            }
-            handleClick={handleGoToAddPage}
-          />
-        ) : (
-          <CallToAction />
-        )} */}
         <HomeFeed />
       </MainContainer>
     </>
@@ -60,7 +45,7 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
   const { req, res } = context;
-  res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
+  // res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
 
   return {
     props: {

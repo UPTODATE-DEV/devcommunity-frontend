@@ -29,8 +29,7 @@ export const theme = (mode: "light" | "dark") =>
       },
     },
     typography: {
-      fontFamily: ["Inter", "sans-serif"].join(","),
-      fontSize: 14,
+      fontFamily: ["Roboto", "sans-serif"].join(","),
     },
     components: {
       MuiButton: {

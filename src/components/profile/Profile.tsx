@@ -47,11 +47,12 @@ const ProfileEditForm = dynamic(import("@/components/profile/ProfileEditForm"), 
 
 const Profile = ({ currentUser }: { currentUser?: User }) => {
   const session = useStore((state) => state.session?.user);
+  const setSession = useStore((state) => state.setSession);
   const useUserData = useUser(session?.username);
   const [followings, setFollowings] = React.useState<User[]>([]);
   const [followers, setFollowers] = React.useState<User[]>([]);
   const user = currentUser || useUserData;
-  const { reload, locale } = useRouter();
+  const { replace, locale } = useRouter();
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const { editProfile, setEditProfile } = useStoreNoPersist((state) => state);
@@ -86,9 +87,10 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
 
   const onLogout = async () => {
     googleLogout();
-    handleClose();
     await postLocalRequest({ endpoint: "/api/logout" });
-    reload();
+    setSession({ isLoggedIn: false, user: undefined, jwt: "" });
+    handleClose();
+    replace("/");
   };
 
   const handleRequestCreator = async () => {
@@ -111,26 +113,31 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
     }
   };
 
-  React.useEffect(() => {
-    async function getFollowings() {
-      const response = await getRequest({ endpoint: `/users/${user?.id}/followers` });
-      if (response.data) {
-        setFollowings(response.data);
-      }
+  async function getFollowings() {
+    const response = await getRequest({ endpoint: `/users/${user?.id}/followings` });
+    if (response.data) {
+      return response.data;
     }
+  }
 
-    async function getFollowers() {
-      const response = await getRequest({ endpoint: `/users/${user?.id}/following` });
-      if (response.data) {
-        setFollowers(response.data);
-      }
+  async function getFollowers() {
+    const response = await getRequest({ endpoint: `/users/${user?.id}/followers` });
+    if (response.data) {
+      return response.data;
+    }
+  }
+
+  React.useEffect(() => {
+    async function getFollowingsAndFollowers() {
+      const [followings, followers] = await Promise.all([getFollowings(), getFollowers()]);
+      setFollowings(followings);
+      setFollowers(followers);
     }
 
     if (useUserData) {
       setStatus(useUserData?.authorRequest[0]?.status);
       setFollow(followers?.some((follower) => follower.userId === session?.id));
-      getFollowings();
-      getFollowers();
+      getFollowingsAndFollowers();
       setLoading(false);
     }
   }, [useUserData]);

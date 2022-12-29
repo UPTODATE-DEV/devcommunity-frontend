@@ -14,7 +14,7 @@ const useUser = (username?: string): User | undefined => {
       setUSer(await response.data);
     }
     getUser();
-  }, []);
+  }, [username]);
   return user;
 };
 

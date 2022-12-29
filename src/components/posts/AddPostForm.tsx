@@ -181,7 +181,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
         onImageUpload={handleImageUpload}
         id="rte"
         controls={[
-          ["bold", "italic", "underline", "link", "code"],
+          ["h3","bold", "italic", "underline", "link", "code"],
           ["unorderedList", "orderedList", "sup", "sub"],
           ["codeBlock", "blockquote", "link"],
           ["image", "video", "strike"],

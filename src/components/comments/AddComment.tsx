@@ -87,7 +87,7 @@ const AddComment: React.FC<{ data: Post | PostComment }> = ({ data }) => {
       <RichTextEditor
         value={comment}
         controls={[
-          ["bold", "italic", "underline", "link", "codeBlock"],
+          ["h3", "bold", "italic", "underline", "link", "codeBlock"],
           ["unorderedList", "orderedList", "sup", "sub", "code"],
         ]}
         onChange={(value) => setComment(value)}

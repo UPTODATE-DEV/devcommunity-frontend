@@ -11,6 +11,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
 import React from "react";
+import { shortenNumber } from "@/lib/shorterNumber";
 
 const CommentReactions = ({ comment }: { comment: PostComment }) => {
   const [openReaction, setOpenReaction] = React.useState(false);
@@ -51,7 +52,7 @@ const CommentReactions = ({ comment }: { comment: PostComment }) => {
     <Tooltip title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"} placement="bottom" arrow>
       <IconButton onClick={() => setOpenReaction(true)}>
         <Typography variant="caption" color="text.primary" fontWeight={700}>
-          {comment?.reactions?.filter((el) => el.type === type).length || 0}
+          {shortenNumber(comment?.reactions?.filter((el) => el.type === type).length || 0)}
         </Typography>
       </IconButton>
     </Tooltip>

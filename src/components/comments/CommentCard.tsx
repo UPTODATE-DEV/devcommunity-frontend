@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import ShowQuestionReactions from "../questions/ShowQuestionReactions";
 import CommentReactions from "./CommentReactions";
+import { shortenNumber } from "@/lib/shorterNumber";
 
 const CommentCard: React.FC<{ data: PostComment }> = ({ data }) => {
   const user = useStore((state) => state.session?.user);
@@ -79,7 +80,7 @@ const CommentCard: React.FC<{ data: PostComment }> = ({ data }) => {
               <ReplyIcon fontSize="small" />
             </IconButton>
             <Typography variant="caption" color="text.secondary" fontWeight={700}>
-              {data?._count?.childrenComments}
+              {shortenNumber(data?._count?.childrenComments)}
             </Typography>
           </Stack>
         </Stack>

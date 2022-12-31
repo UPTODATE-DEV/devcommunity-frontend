@@ -1,3 +1,9 @@
+import { shortenNumber } from "@/lib/shorterNumber";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import useTheme from "@mui/system/useTheme";
 import { CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Tooltip } from "chart.js";
 import { useRouter } from "next/router";
 import { memo } from "react";
@@ -16,11 +22,14 @@ export function ViewsDaysChart({
 }) {
   const { locale } = useRouter();
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const options = {
     responsive: true,
     plugins: {
       legend: {
-        display: true,
+        display: false,
       },
     },
   };
@@ -43,7 +52,25 @@ export function ViewsDaysChart({
     ],
   };
 
-  return <Line options={options} data={configData} height={110} />;
+  return (
+    <Stack spacing={2} sx={{ py: 2 }}>
+      <Stack spacing={2} direction="row">
+        <Paper sx={{ p: 2, width: 1 }} variant="outlined">
+          <Typography variant="h4" color="primary.main" fontWeight={700}>
+            {shortenNumber(views.reduce((a, b) => a + b, 0))}
+          </Typography>
+          <Typography color="text.secondary">{locale === "en" ? "Views number" : "Nombre de vues"}</Typography>
+        </Paper>
+        <Paper sx={{ p: 2, width: 1 }} variant="outlined">
+          <Typography variant="h4" color="secondary.main" fontWeight={700}>
+            {shortenNumber(reactions.reduce((a, b) => a + b, 0))}
+          </Typography>
+          <Typography color="text.secondary">{locale === "en" ? "Reactions number" : "Nombre de reactions"}</Typography>
+        </Paper>
+      </Stack>
+      <Line options={options} data={configData} height={isMobile ? 250 : 110} />
+    </Stack>
+  );
 }
 
 export default memo(ViewsDaysChart);

@@ -27,6 +27,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 
+import { shortenNumber } from "@/lib/shorterNumber";
+
 const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }> = ({ data, handleDeletePost }) => {
   const { push, asPath, locale } = useRouter();
   const username = asPath.split("/profile/")[1];
@@ -165,7 +167,7 @@ const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }>
               </IconButton>
             </Link>
             <Typography variant="caption" color="text.secondary" fontWeight={700}>
-              {data?._count?.comments}
+              {shortenNumber(data?._count?.comments || 0)}
             </Typography>
           </Stack>
 

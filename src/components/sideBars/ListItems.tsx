@@ -1,3 +1,4 @@
+import VerifiedIcon from "@mui/icons-material/Verified";
 import Divider from "@mui/material/Divider";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -45,9 +46,12 @@ const ListItems = ({
             fontSize: "0.9rem",
           }}
           secondary={
-            <Stack sx={{ width: 1 }} component="span">
+            <Stack sx={{ width: 1 }} component="span" justifyContent="center">
               <Typography sx={{ display: "inline" }} component="span" variant="caption" color="text.secondary">
-                {locale === "en" ? "By" : "Par"} {`${item.author.firstName} ${item.author.lastName}`}
+                {locale === "en" ? "By" : "Par"} {`${item.author.firstName} ${item.author.lastName}`}{" "}
+                {item.author?.role === "AUTHOR" && (
+                  <VerifiedIcon color="primary" sx={{ fontSize: 11, position: "relative", top: 2 }} />
+                )}
               </Typography>
             </Stack>
           }

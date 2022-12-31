@@ -43,7 +43,7 @@ export function ViewsMonthsChart() {
 
   useEffect(() => {
     async function getUserStats(userId: string) {
-      const [reactions, views] = await Promise.all([
+      const [views, reactions] = await Promise.all([
         getRequest({ endpoint: `/users/${userId}/yearly-views` }),
         getRequest({ endpoint: `/users/${userId}/yearly-reactions` }),
       ]);

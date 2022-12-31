@@ -16,6 +16,7 @@ import React, { useCallback } from "react";
 import Bookmark from "../common/Bookmark";
 import Share from "../common/Share";
 import QuestionReactions from "./QuestionReactions";
+import { shortenNumber } from "@/lib/shorterNumber";
 
 const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   const theme = useTheme();
@@ -78,7 +79,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
               </IconButton>
             </Link>
             <Typography variant="caption" color="text.secondary" fontWeight={700}>
-              {data?._count?.comments}
+              {shortenNumber(data?._count?.comments || 0)}
             </Typography>
           </Stack>
 

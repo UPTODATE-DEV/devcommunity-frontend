@@ -24,6 +24,7 @@ import { toast } from "react-toastify";
 import DraftCard from "./DraftCard";
 import PostCard from "./PostCard";
 import QuestionCard from "./QuestionCard";
+import { shortenNumber } from "@/lib/shorterNumber";
 
 const Empty = dynamic(import("@/components/common/Empty"), {
   ssr: false,
@@ -115,7 +116,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
         onChange={handleTabChange}
         scrollButtons
         allowScrollButtonsMobile
-        variant={useMediaQuery("(min-width:600px)") ? "fullWidth" : "scrollable"}
+        variant={useMediaQuery("(min-width:760px)") ? "fullWidth" : "scrollable"}
         aria-label="Show reactions"
         sx={{ border: 1, borderColor: "divider", bgcolor: "background.paper" }}
       >
@@ -182,7 +183,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
                           onClick={() => handleTagClick(el.tag.name)}
                           icon={<TagIcon fontSize="small" />}
                           sx={{ px: 2 }}
-                          label={`${el.tag.name} (${el.tag._count.posts})`}
+                          label={`${el.tag.name} (${shortenNumber(el.tag._count.posts)})`}
                         />
                       </Tooltip>
                     </Grid>

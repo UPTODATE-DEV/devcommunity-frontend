@@ -12,7 +12,7 @@ export function ViewsDaysChart() {
 
   useEffect(() => {
     async function getUserStats(userId: string) {
-      const [reactions, views] = await Promise.all([
+      const [views, reactions] = await Promise.all([
         getRequest({ endpoint: `/users/${userId}/monthly-views` }),
         getRequest({ endpoint: `/users/${userId}/monthly-reactions` }),
       ]);
@@ -24,7 +24,9 @@ export function ViewsDaysChart() {
     }
   }, []);
 
-  return <ChartComponent views={views} reactions={reactions} labels={labels} />;
+  return (
+      <ChartComponent views={views} reactions={reactions} labels={labels} />
+  )
 }
 
 export default ViewsDaysChart;

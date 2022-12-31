@@ -23,10 +23,10 @@ const BookmarkCard: React.FC<{ data: Post }> = ({ data }) => {
   const user = useStore((state) => state.session?.user);
   const { setBookmarks, bookmarks } = useStore((state) => state);
   const { push, locale } = useRouter();
-  const theme = useTheme();
   const author = data?.author;
   const goToProfile = useGoToUserProfile();
   const goToPost = useGoToPost();
+  const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const postContent = getContent(data?.content, isMobile ? 180 : 220, locale);

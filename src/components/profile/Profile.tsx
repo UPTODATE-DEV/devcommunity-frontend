@@ -52,7 +52,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   const [followings, setFollowings] = React.useState<User[]>([]);
   const [followers, setFollowers] = React.useState<User[]>([]);
   const user = currentUser || useUserData;
-  const { replace, locale } = useRouter();
+  const { reload, locale } = useRouter();
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const { editProfile, setEditProfile } = useStoreNoPersist((state) => state);
@@ -90,7 +90,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
     await postLocalRequest({ endpoint: "/api/logout" });
     setSession({ isLoggedIn: false, user: undefined, jwt: "" });
     handleClose();
-    replace("/");
+    reload();
   };
 
   const handleRequestCreator = async () => {

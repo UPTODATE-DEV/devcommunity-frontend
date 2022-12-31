@@ -11,6 +11,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
+import { shortenNumber } from "@/lib/shorterNumber";
 
 const PostReaction = ({ post }: { post: Post }) => {
   const [openReaction, setOpenReaction] = React.useState(false);
@@ -81,7 +82,7 @@ const PostReaction = ({ post }: { post: Post }) => {
         <Tooltip title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"} placement="bottom" arrow>
           <IconButton onClick={() => setOpenReaction(true)}>
             <Typography variant="caption" color="text.primary" fontWeight={700}>
-              {post.article?.reactions?.length || 0}
+              {shortenNumber(post.article?.reactions?.length || 0)}
             </Typography>
           </IconButton>
         </Tooltip>

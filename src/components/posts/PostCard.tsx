@@ -19,6 +19,8 @@ import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import PostImage from "./PostImage";
 
+import { shortenNumber } from "@/lib/shorterNumber";
+
 const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   const { author } = data;
   const goToPost = useGoToPost();
@@ -103,7 +105,7 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
               </IconButton>
             </Link>
             <Typography variant="caption" color="text.secondary" fontWeight={700}>
-              {data?._count?.comments}
+              {shortenNumber(data?._count?.comments || 0)}
             </Typography>
           </Stack>
 

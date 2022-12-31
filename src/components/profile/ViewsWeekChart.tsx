@@ -17,7 +17,7 @@ export function ViewsWeekChart() {
 
   useEffect(() => {
     async function getUserStats(userId: string) {
-      const [reactions, views] = await Promise.all([
+      const [views, reactions] = await Promise.all([
         getRequest({ endpoint: `/users/${userId}/weekly-views` }),
         getRequest({ endpoint: `/users/${userId}/weekly-reactions` }),
       ]);

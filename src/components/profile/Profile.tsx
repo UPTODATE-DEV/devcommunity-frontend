@@ -2,9 +2,11 @@ import { FILES_BASE_URL } from "@/config/url";
 import useStore from "@/hooks/useStore";
 import useStoreNoPersist from "@/hooks/useStoreNoPersist";
 import useUser from "@/hooks/useUser";
+import { getUserFullName } from "@/lib";
 import { getRequest, patchRequest, postLocalRequest } from "@/lib/api";
 import AddIcon from "@mui/icons-material/Add";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
@@ -32,7 +34,6 @@ import dayjs from "dayjs";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
-import { getUserFullName } from "../../lib";
 import { ProfileQuestionTabsSkeleton } from "./Skeleton";
 
 const ProfileTabs = dynamic(import("@/components/profile/ProfileTabs"), {
@@ -57,14 +58,24 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   const [loading, setLoading] = React.useState(true);
   const { editProfile, setEditProfile } = useStoreNoPersist((state) => state);
   const [status, setStatus] = React.useState<"PENDING" | "ACCEPTED" | "REJECTED" | "idle">("idle");
-
+  const [openRequestModal, setOpenRequestModal] = React.useState(false);
+  const [openRequestApprovedModal, setOpenRequestApprovedModal] = React.useState(false);
   const [follow, setFollow] = React.useState(false);
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseRequestApprovedModal = () => {
+    setOpenRequestApprovedModal(false);
+    handleCloseMenu();
+  };
+
+  const handleCloseRequestModal = () => {
+    setOpenRequestModal(false);
+    handleCloseMenu();
   };
 
   const handleCloseMenu = () => {
@@ -94,11 +105,18 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   };
 
   const handleRequestCreator = async () => {
-    const response = await patchRequest({ endpoint: `/users/${session?.id}/request-author` });
-    if (response.data) {
-      setStatus((state) => (state === "PENDING" ? "idle" : "PENDING"));
+    const days = dayjs(new Date()).diff(user?.createdAt, "days");
+
+    if (user && user?.posts?.length >= 10 && days >= 14) {
+      const response = await patchRequest({ endpoint: `/users/${session?.id}/request-author` });
+      if (response.data) {
+        setStatus((state) => (state === "PENDING" ? "idle" : "PENDING"));
+      }
+      setOpenRequestApprovedModal(true);
+      handleCloseMenu();
+      return;
     }
-    handleCloseMenu();
+    setOpenRequestModal(true);
   };
 
   const handleToggleFollow = async () => {
@@ -283,7 +301,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                   </MenuItem>
 
                   {currentUser === undefined && user?.role !== "AUTHOR" && status !== "PENDING" && (
-                    <MenuItem onClick={handleRequestCreator} key="edit">
+                    <MenuItem onClick={handleRequestCreator} key="request">
                       <ListItemIcon>
                         <VerifiedIcon fontSize="small" />
                       </ListItemIcon>
@@ -339,6 +357,50 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                   {locale === "en" ? "Cancel" : "Annuler"}
                 </Button>
               </DialogActions>
+            </Dialog>
+
+            <Dialog
+              open={openRequestModal}
+              onClose={handleCloseRequestModal}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {locale === "en"
+                  ? "Votre compte n'est pas encore éligible à devenir créateur"
+                  : "Votre compte n'est pas encore éligible à devenir créateur"}
+              </DialogTitle>
+              <DialogContent sx={{ alignItems: "center", textAlign: "center" }}>
+                <DialogContentText sx={{ fontWeight: 700 }} id="alert-dialog-description">
+                  {locale === "en" ? "To be eligible" : "Pour être éligible"}
+                </DialogContentText>
+                <DialogContentText id="alert-dialog-description">
+                  {locale === "en"
+                    ? "You must have joined Updev Community for at least 14 days"
+                    : "Vous devez avoir rejoint Updev Community au moins depuis 14 jours"}
+                </DialogContentText>
+                <DialogContentText id="alert-dialog-description">
+                  {locale === "en"
+                    ? "You must have published at least 10 articles or posts"
+                    : "Vous devez avoir publié au moins 10 articles ou posts"}
+                </DialogContentText>
+              </DialogContent>
+            </Dialog>
+
+            <Dialog
+              open={openRequestApprovedModal}
+              onClose={handleCloseRequestApprovedModal}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogContent sx={{ alignItems: "center", textAlign: "center" }}>
+                <CheckCircleTwoToneIcon color="success" fontSize="large" sx={{ mb: 2, fontSize: { xs: 34, md: 56 } }} />
+                <DialogContentText id="alert-dialog-description">
+                  {locale === "en"
+                    ? "Your request to become a creator has been sent successfully. We reserve the right to verify the authenticity of your account and to assess the relevance of your content. You will be notified if your account is validated or not as a creator."
+                    : "Votre requête à devenir créateur a été envoyée avec succès. Nous nous réservons de vérifier l'authenticité de votre compte et d'évaluer la pertinence de votre contenu. Vous serez notifié en cas de validation ou non de votre compte en tant que créateur"}
+                </DialogContentText>
+              </DialogContent>
             </Dialog>
           </Paper>
           {editProfile ? <ProfileEditForm user={user} /> : <ProfileTabs currentUser={currentUser} />}

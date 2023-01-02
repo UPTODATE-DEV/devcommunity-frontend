@@ -36,7 +36,7 @@ const Dashboard = dynamic(import("./Dashboard"), { ssr: false });
 const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
   const sessionUser = useStore((state) => state.session?.user);
   const user = useUser(sessionUser?.username);
-  const [tab, setTab] = React.useState(currentUser === undefined && user?.role === "USER" ? "articles" : "dashboard");
+  const [tab, setTab] = React.useState("articles");
   const [posts, setPosts] = React.useState<Post[] | []>([]);
   const [followedTags, setFollowedTags] = React.useState<Tags[] | []>([]);
   const { locale } = useRouter();
@@ -109,6 +109,12 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
   React.useEffect(() => {
     fetchData();
   }, []);
+
+  React.useEffect(() => {
+    if (currentUser === undefined && user?.role === "AUTHOR") {
+      setTab("dashboard");
+    }
+  }, [user?.role]);
 
   return (
     <TabContext value={tab}>
@@ -191,11 +197,13 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
               </Paper>
             )}
           </TabPanel>
-          <TabPanel sx={{ p: 0 }} value={"dashboard"}>
-            <Paper variant="outlined" sx={{ p: 2, minHeight: "200px" }}>
-              <Dashboard />
-            </Paper>
-          </TabPanel>
+          {currentUser === undefined && user?.role === "AUTHOR" && (
+            <TabPanel sx={{ p: 0 }} value={"dashboard"}>
+              <Paper variant="outlined" sx={{ p: 2, minHeight: "200px" }}>
+                <Dashboard />
+              </Paper>
+            </TabPanel>
+          )}
         </>
       )}
     </TabContext>

@@ -32,6 +32,10 @@ export function ViewsDaysChart({
         display: false,
       },
     },
+    yAxis: {
+      min: 10,
+      max: 100,
+    },
   };
 
   const configData = {

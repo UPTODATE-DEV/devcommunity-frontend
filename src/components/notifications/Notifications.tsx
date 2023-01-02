@@ -92,7 +92,7 @@ const Notifications = () => {
           <Stack direction="row" spacing={2} alignItems="center">
             <FcCalendar />
             <Typography color="secondary.main" variant="caption" fontWeight={700}>
-              {dayjs(el.date).format("DD/MM/YYYY  HH:MM")}
+              {dayjs(el.date).format("DD/MM/YYYY")}
             </Typography>
           </Stack>
           <List>

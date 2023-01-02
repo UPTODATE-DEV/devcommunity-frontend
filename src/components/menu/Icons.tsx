@@ -86,16 +86,13 @@ const Icons = () => {
   }
 
   React.useEffect(() => {
-    const getNotifications = async () => {
-      const notifications = await getRequest({ endpoint: `/notifications/${user?.id}/count` });
-      if (!notifications.error) {
-        setNotifications(notifications.data);
-      }
-    };
-
-    getNotifications();
-
     socket.on("notification", () => {
+      const getNotifications = async () => {
+        const notifications = await getRequest({ endpoint: `/notifications/${user?.id}/count` });
+        if (!notifications.error) {
+          setNotifications(notifications.data);
+        }
+      };
       getNotifications();
     });
   }, []);

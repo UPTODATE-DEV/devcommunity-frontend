@@ -29,7 +29,7 @@ const CommentReactions = ({ comment }: { comment: PostComment }) => {
     if (userId) {
       setUserReaction((state) => (state === type ? undefined : type));
       await patchRequest({ endpoint: `/comments/${comment?.id}/reactions/${type}/${userId}` });
-      // socket.emit("notification", { notificationFromUser: userId, id: Date.now().toString(), comment, type });
+      socket.emit("notification", { notificationFromUser: userId, id: Date.now().toString(), comment, type });
       return;
     }
     setOpenLoginModal(true);

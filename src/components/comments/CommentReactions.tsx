@@ -4,6 +4,7 @@ import useSocket from "@/hooks/useSocket";
 import useStore from "@/hooks/useStore";
 import useStoreNoPersist from "@/hooks/useStoreNoPersist";
 import { patchRequest } from "@/lib/api";
+import { shortenNumber } from "@/lib/shorterNumber";
 import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
@@ -11,14 +12,15 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
 import React from "react";
-import { shortenNumber } from "@/lib/shorterNumber";
 
 const CommentReactions = ({ comment }: { comment: PostComment }) => {
   const [openReaction, setOpenReaction] = React.useState(false);
   const userId = useStore((state) => state.session?.user?.id);
+  const user = useStore((state) => state.session?.user);
   const { setOpenLoginModal } = useStoreNoPersist();
   const [userReaction, setUserReaction] = React.useState<QuestionReactionType | undefined>();
   const { locale } = useRouter();
+  const [commentReactions, setCommentReactions] = React.useState<QuestionsReaction[]>([]);
   const socket = useSocket();
 
   const handleCloseReaction = () => {
@@ -26,8 +28,16 @@ const CommentReactions = ({ comment }: { comment: PostComment }) => {
   };
 
   const onReact = async (type: QuestionReactionType) => {
-    if (userId) {
+    if (userId && user) {
       setUserReaction((state) => (state === type ? undefined : type));
+      setCommentReactions((state) => {
+        const reaction = state?.find((reaction) => reaction?.user?.id === userId);
+        if (reaction) {
+          return state?.filter((reaction) => reaction?.user?.id !== userId);
+        }
+        return [...commentReactions, { type, user, id: "temp", question: "" }];
+      });
+
       await patchRequest({ endpoint: `/comments/${comment?.id}/reactions/${type}/${userId}` });
       socket.emit("notification", { notificationFromUser: userId, id: Date.now().toString(), comment, type });
       return;
@@ -48,11 +58,17 @@ const CommentReactions = ({ comment }: { comment: PostComment }) => {
     }
   }, [comment, userId]);
 
+  React.useEffect(() => {
+    if (comment?.reactions) {
+      setCommentReactions(comment.reactions);
+    }
+  }, [comment]);
+
   const SeeAllReaction = ({ type }: { type: QuestionReactionType }) => (
     <Tooltip title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"} placement="bottom" arrow>
       <IconButton onClick={() => setOpenReaction(true)}>
         <Typography variant="caption" color="text.primary" fontWeight={700}>
-          {shortenNumber(comment?.reactions?.filter((el) => el.type === type).length || 0)}
+          {shortenNumber(commentReactions?.filter((el) => el.type === type).length || 0)}
         </Typography>
       </IconButton>
     </Tooltip>

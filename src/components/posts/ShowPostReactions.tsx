@@ -1,3 +1,5 @@
+import UserAvatar from "@/components/common/UserAvatar";
+import { useGoToUserProfile } from "@/hooks";
 import { getUserFullName, getUserProfileImageUrl } from "@/lib";
 import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
 import LightbulbSharpIcon from "@mui/icons-material/LightbulbSharp";
@@ -14,8 +16,6 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import React from "react";
-import { useGoToUserProfile } from "@/hooks";
-import UserAvatar from "@/components/common/UserAvatar";
 
 const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
   const [tab, setTab] = React.useState<ArticleReactionType>("LIKE");
@@ -59,7 +59,7 @@ const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
             iconPosition="start"
             sx={{ width: { xs: "auto", md: 700 } }}
             label={
-              <Typography>{`${reactions.filter((reaction) => reaction.type === item.id).length} ${
+              <Typography>{`${reactions?.filter((reaction) => reaction.type === item.id).length} ${
                 item.label
               }`}</Typography>
             }
@@ -72,7 +72,7 @@ const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
         <TabPanel key={tab.id} sx={{ p: 0, height: 400 }} value={tab.id}>
           <List>
             {reactions
-              .filter((reaction) => reaction.type === tab.id)
+              ?.filter((reaction) => reaction.type === tab.id)
               .map((el, i) => (
                 <React.Fragment key={i}>
                   <ListItemButton>
@@ -97,7 +97,7 @@ const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
                       }}
                     />
                   </ListItemButton>
-                  {i !== reactions.filter((reaction) => reaction.type === tab.id).length - 1 && (
+                  {i !== reactions?.filter((reaction) => reaction.type === tab.id).length - 1 && (
                     <Divider variant="inset" component="li" />
                   )}
                 </React.Fragment>

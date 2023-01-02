@@ -357,7 +357,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                   {locale === "en" ? "Cancel" : "Annuler"}
                 </Button>
               </DialogActions>
-            </Dialog>
+            </Dialog> 
 
             <Dialog
               open={openRequestModal}

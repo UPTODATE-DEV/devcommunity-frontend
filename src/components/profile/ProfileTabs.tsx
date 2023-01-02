@@ -1,6 +1,7 @@
 import useStore from "@/hooks/useStore";
 import useUser from "@/hooks/useUser";
 import { deleteRequest, getRequest, patchRequest } from "@/lib/api";
+import { shortenNumber } from "@/lib/shorterNumber";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import DraftsIcon from "@mui/icons-material/Drafts";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
@@ -24,7 +25,6 @@ import { toast } from "react-toastify";
 import DraftCard from "./DraftCard";
 import PostCard from "./PostCard";
 import QuestionCard from "./QuestionCard";
-import { shortenNumber } from "@/lib/shorterNumber";
 
 const Empty = dynamic(import("@/components/common/Empty"), {
   ssr: false,
@@ -34,43 +34,43 @@ const Empty = dynamic(import("@/components/common/Empty"), {
 const Dashboard = dynamic(import("./Dashboard"), { ssr: false });
 
 const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
-  const [tab, setTab] = React.useState("0");
-  const [posts, setPosts] = React.useState<Post[] | []>([]);
-  const [followedTags, setFollowedTags] = React.useState<Tags[] | []>([]);
   const sessionUser = useStore((state) => state.session?.user);
   const user = useUser(sessionUser?.username);
+  const [tab, setTab] = React.useState(currentUser === undefined && user?.role === "USER" ? "articles" : "dashboard");
+  const [posts, setPosts] = React.useState<Post[] | []>([]);
+  const [followedTags, setFollowedTags] = React.useState<Tags[] | []>([]);
   const { locale } = useRouter();
 
   const tabs = [
     {
-      id: 0,
-      label: "Posts",
-      show: true,
-      icon: <QuestionAnswer fontSize="small" />,
+      id: "dashboard",
+      label: "Dashboard",
+      show: currentUser === undefined && user?.role === "AUTHOR",
+      icon: <DashboardIcon fontSize="small" />,
     },
     {
-      id: 1,
+      id: "articles",
       label: "Articles",
       show: true,
       icon: <HistoryEduIcon fontSize="small" />,
     },
     {
-      id: 2,
-      label: "Drafts",
-      show: currentUser ? false : true,
-      icon: <DraftsIcon fontSize="small" />,
+      id: "posts",
+      label: "Posts",
+      show: true,
+      icon: <QuestionAnswer fontSize="small" />,
     },
     {
-      id: 3,
+      id: "tags",
       label: "Tags",
       show: currentUser ? false : true,
       icon: <TagIcon fontSize="small" />,
     },
     {
-      id: 4,
-      label: "Dashboard",
-      show: currentUser === undefined && user?.role === "AUTHOR",
-      icon: <DashboardIcon fontSize="small" />,
+      id: "drafts",
+      label: "Drafts",
+      show: currentUser ? false : true,
+      icon: <DraftsIcon fontSize="small" />,
     },
   ];
 
@@ -120,21 +120,20 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
         aria-label="Show reactions"
         sx={{ border: 1, borderColor: "divider", bgcolor: "background.paper" }}
       >
-        {tabs.map(
-          (item, i) =>
-            item.show && (
-              <Tab
-                icon={item.icon}
-                key={item.id}
-                iconPosition="start"
-                sx={{ minHeight: 50 }}
-                label={<Typography textTransform="capitalize">{item.label}</Typography>}
-                value={i.toString()}
-              />
-            )
-        )}
+        {tabs
+          .filter((el) => el.show)
+          .map((item, i) => (
+            <Tab
+              icon={item.icon}
+              key={item.id}
+              iconPosition="start"
+              sx={{ minHeight: 50 }}
+              label={<Typography textTransform="capitalize">{item.label}</Typography>}
+              value={item.id}
+            />
+          ))}
       </TabList>
-      <TabPanel sx={{ p: 0 }} value={"0"}>
+      <TabPanel sx={{ p: 0 }} value={"posts"}>
         <Stack spacing={2}>
           {questions.length === 0 && <Empty />}
           {questions?.map((item, index) => (
@@ -144,7 +143,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
           ))}
         </Stack>
       </TabPanel>
-      <TabPanel sx={{ p: 0 }} value={"1"}>
+      <TabPanel sx={{ p: 0 }} value={"articles"}>
         <Stack spacing={2}>
           {articles.length === 0 && <Empty />}
           {articles?.map((item, index) => (
@@ -156,7 +155,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
       </TabPanel>
       {!currentUser && (
         <>
-          <TabPanel sx={{ p: 0 }} value={"2"}>
+          <TabPanel sx={{ p: 0 }} value={"drafts"}>
             <Stack spacing={2}>
               {drafts.length === 0 && <Empty />}
               {drafts?.map((item, index) => (
@@ -166,7 +165,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
               ))}
             </Stack>
           </TabPanel>
-          <TabPanel sx={{ p: 0 }} value={"3"}>
+          <TabPanel sx={{ p: 0 }} value={"tags"}>
             {followedTags.length === 0 ? (
               <Empty />
             ) : (
@@ -192,7 +191,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
               </Paper>
             )}
           </TabPanel>
-          <TabPanel sx={{ p: 0 }} value={"4"}>
+          <TabPanel sx={{ p: 0 }} value={"dashboard"}>
             <Paper variant="outlined" sx={{ p: 2, minHeight: "200px" }}>
               <Dashboard />
             </Paper>

@@ -7,8 +7,7 @@ export function ViewsDaysChart() {
   const user = useStore((state) => state.session?.user);
   const [views, setViews] = useState<number[]>([]);
   const [reactions, setReactions] = useState<number[]>([]);
-
-  const labels = Object.keys(views).map((el) => el.substring(0, 10));
+  const [labels, setLabels] = useState<string[]>([]);
 
   useEffect(() => {
     async function getUserStats(userId: string) {
@@ -17,6 +16,7 @@ export function ViewsDaysChart() {
         getRequest({ endpoint: `/users/${userId}/monthly-reactions` }),
       ]);
       if (!views.error) setViews(Object.values(views.data));
+      if (!views.error) setLabels(Object.keys(views.data));
       if (!reactions.error) setReactions(Object.values(reactions.data));
     }
     if (user) {
@@ -24,9 +24,7 @@ export function ViewsDaysChart() {
     }
   }, []);
 
-  return (
-      <ChartComponent views={views} reactions={reactions} labels={labels} />
-  )
+  return <ChartComponent views={views} reactions={reactions} labels={labels} />;
 }
 
 export default ViewsDaysChart;

@@ -20,14 +20,16 @@ const CommentsList: React.FC<{ addComment: React.ReactElement }> = ({ addComment
 
       {addComment}
 
-      <Paper variant="outlined" sx={{ p: 2 }} component={Stack} spacing={2}>
-        {comments?.map((el, i) => (
-          <React.Fragment key={el.id}>
-            <Comment data={el} />
-            {i !== comments.length - 1 && <Divider />}
-          </React.Fragment>
-        ))}
-      </Paper>
+      {comments.length > 0 && (
+        <Paper variant="outlined" sx={{ p: 2 }} component={Stack} spacing={2}>
+          {comments?.map((el, i) => (
+            <React.Fragment key={el.id}>
+              <Comment data={el} />
+              {i !== comments.length - 1 && <Divider />}
+            </React.Fragment>
+          ))}
+        </Paper>
+      )}
     </Stack>
   );
 };

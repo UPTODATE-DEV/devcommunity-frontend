@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import ChartComponent from "./ChartComponent";
 
 const labelsEn = [
+  "December",
   "January",
   "February",
   "March",
@@ -16,9 +17,9 @@ const labelsEn = [
   "September",
   "October",
   "November",
-  "December",
 ];
 const labelsFr = [
+  "Décembre",
   "Janvier",
   "Février",
   "Mars",
@@ -30,7 +31,6 @@ const labelsFr = [
   "Septembre",
   "Octobre",
   "Novembre",
-  "Décembre",
 ];
 
 export function ViewsMonthsChart() {

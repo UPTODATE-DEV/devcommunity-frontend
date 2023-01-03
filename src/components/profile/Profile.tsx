@@ -357,7 +357,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                   {locale === "en" ? "Cancel" : "Annuler"}
                 </Button>
               </DialogActions>
-            </Dialog> 
+            </Dialog>
 
             <Dialog
               open={openRequestModal}
@@ -367,7 +367,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
             >
               <DialogTitle id="alert-dialog-title">
                 {locale === "en"
-                  ? "Votre compte n'est pas encore éligible à devenir créateur"
+                  ? "Your account is not yet eligible to become a creator"
                   : "Votre compte n'est pas encore éligible à devenir créateur"}
               </DialogTitle>
               <DialogContent sx={{ alignItems: "center", textAlign: "center" }}>

@@ -81,7 +81,7 @@ const Notifications = () => {
             Notifications
           </Typography>
           <Button onClick={handleReadAll} disableElevation color="primary">
-            Mark all as read
+            {locale === "en" ? "Mark all as read" : "Marquez tout comme lu"}
           </Button>
         </Stack>
       </Paper>

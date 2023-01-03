@@ -40,6 +40,7 @@ const Icons = () => {
   const user = useUser(session?.username);
   const { push, locale } = useRouter();
   const [notifications, setNotifications] = React.useState(0);
+  console.log("🚀 ~ file: Icons.tsx:43 ~ Icons ~ notifications", notifications);
   const socket = useSocket();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
@@ -86,13 +87,16 @@ const Icons = () => {
   }
 
   React.useEffect(() => {
+    const getNotifications = async () => {
+      const notifications = await getRequest({ endpoint: `/notifications/${user?.id}/count` });
+      if (!notifications.error) {
+        setNotifications(notifications.data);
+      }
+    };
+
+    getNotifications();
+
     socket.on("notification", () => {
-      const getNotifications = async () => {
-        const notifications = await getRequest({ endpoint: `/notifications/${user?.id}/count` });
-        if (!notifications.error) {
-          setNotifications(notifications.data);
-        }
-      };
       getNotifications();
     });
   }, []);

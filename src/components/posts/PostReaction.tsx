@@ -3,8 +3,9 @@ import ShowReactions from "@/components/posts/ShowPostReactions";
 import useSocket from "@/hooks/useSocket";
 import useStore from "@/hooks/useStore";
 import useStoreNoPersist from "@/hooks/useStoreNoPersist";
-import { patchRequest } from "@/lib/api";
+import { getRequest, patchRequest } from "@/lib/api";
 import { shortenNumber } from "@/lib/shorterNumber";
+import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
@@ -21,6 +22,7 @@ const PostReaction = ({ post }: { post: Post }) => {
   const [userReaction, setUserReaction] = React.useState<ArticleReactionType | undefined>();
   const socket = useSocket();
   const { locale } = useRouter();
+  const [loading, setLoading] = React.useState(false);
   const [reactions, setReactions] = React.useState<ArticleReaction[]>([]);
 
   const handleCloseReaction = () => {
@@ -29,17 +31,14 @@ const PostReaction = ({ post }: { post: Post }) => {
 
   const onReact = async (type: ArticleReactionType) => {
     if (userId && user) {
-      setUserReaction((state) => (state ? undefined : type));
-      setReactions((state) => {
-        const reaction = state?.find((reaction) => reaction?.user?.id === userId);
-        if (reaction) {
-          return state?.filter((reaction) => reaction?.user?.id !== userId);
-        }
-        return [...reactions, { type, user, id: "temp", article: "" }];
-      });
-
-      await patchRequest({ endpoint: `/posts/${post?.id}/reactions/${type}/${userId}/article` });
-      socket.emit("notification", { notificationFromUser: userId, id: Date.now().toString(), post, type });
+      setLoading(true);
+      const response = await patchRequest({ endpoint: `/posts/${post?.id}/reactions/${type}/${userId}/article` });
+      if (response?.data) {
+        socket.emit("notification", { notificationFromUser: userId, id: Date.now().toString(), post, type });
+        setReactions(response.data?.article?.reactions);
+        setUserReaction((state) => (state === type ? undefined : type));
+        setLoading(false);
+      }
       return;
     }
     setOpenLoginModal(true);
@@ -66,19 +65,23 @@ const PostReaction = ({ post }: { post: Post }) => {
   };
 
   useEffect(() => {
-    if (userId) {
-      const reaction = post?.article?.reactions?.find((reaction) => {
-        return reaction?.user?.id === userId;
-      });
-      if (reaction) {
-        setUserReaction(reaction.type);
+    async function getReactions() {
+      const response = await getRequest({ endpoint: `/posts/${post?.id}/reactions/posts` });
+      if (response?.data) {
+        setReactions(response.data?.reactions);
+        const reaction = response.data?.reactions?.find((reaction: QuestionsReaction) => {
+          return reaction?.user?.id === userId;
+        });
+        if (reaction) {
+          setUserReaction(reaction.type);
+        } else {
+          setUserReaction(undefined);
+        }
       }
     }
-  }, [userId]);
 
-  useEffect(() => {
-    setReactions(post.article?.reactions);
-  }, [post]);
+    getReactions().then(() => setLoading(false));
+  }, []);
 
   return (
     <>
@@ -89,18 +92,22 @@ const PostReaction = ({ post }: { post: Post }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <ShowReactions reactions={post?.article?.reactions} />
+        <ShowReactions reactions={reactions} />
       </Dialog>
-      <Stack direction="row" alignItems="center">
-        {reaction()}
-        <Tooltip title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"} placement="bottom" arrow>
-          <IconButton onClick={() => setOpenReaction(true)}>
-            <Typography variant="caption" color="text.primary" fontWeight={700}>
-              {shortenNumber(reactions?.length || 0)}
-            </Typography>
-          </IconButton>
-        </Tooltip>
-      </Stack>
+      {loading ? (
+        <CircularProgress size={16} />
+      ) : (
+        <Stack direction="row" alignItems="center">
+          {reaction()}
+          <Tooltip title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"} placement="bottom" arrow>
+            <IconButton onClick={() => setOpenReaction(true)}>
+              <Typography variant="caption" color="text.primary" fontWeight={700}>
+                {shortenNumber(reactions?.length || 0)}
+              </Typography>
+            </IconButton>
+          </Tooltip>
+        </Stack>
+      )}
     </>
   );
 };

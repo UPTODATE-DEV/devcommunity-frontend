@@ -17,13 +17,13 @@ const AddComment: React.FC<{ data: Post | PostComment }> = ({ data }) => {
   const user = useUser(session?.username);
   const { currentComment, currentPost, comments, setComments } = useStore((state) => state);
   const [showCommentForm, setShowCommentForm] = React.useState(false);
-  const [comment, setComment] = React.useState("");
+  const [comment, setComment] = React.useState<string | undefined>();
   const [open, setOpen] = React.useState(false);
   const { push, locale, pathname } = useRouter();
   const socket = useSocket();
 
   const handleCleanComment = () => {
-    setComment("");
+    setComment(undefined);
     setShowCommentForm(false);
   };
 
@@ -98,7 +98,7 @@ const AddComment: React.FC<{ data: Post | PostComment }> = ({ data }) => {
         <Button variant="outlined" sx={{ px: 2 }} disableElevation onClick={() => setShowCommentForm(false)}>
           {locale === "en" ? "Cancel" : "Annuler"}
         </Button>
-        <Button variant="contained" sx={{ px: 2 }} disableElevation onClick={onSubmit}>
+        <Button disabled={!comment} variant="contained" sx={{ px: 2 }} disableElevation onClick={onSubmit}>
           {locale === "en" ? "Comment" : "Commenter"}
         </Button>
       </Stack>

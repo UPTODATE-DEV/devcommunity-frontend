@@ -1,14 +1,15 @@
 import Bookmark from "@/components/common/Bookmark";
 import PostCardHeader from "@/components/common/PostCardHeader";
 import PostTags from "@/components/common/PostTags";
+import Share from "@/components/common/Share";
+import { useGoToUserProfile } from "@/hooks";
+import { parseDate } from "@/lib";
 import Divider from "@mui/material/Divider";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import dynamic from "next/dynamic";
 import React, { useCallback } from "react";
-import { useGoToUserProfile } from "@/hooks";
-import { parseDate } from "@/lib";
 
 const Content = dynamic(import("@/components/common/Content"), { ssr: false });
 const PostReaction = dynamic(import("@/components/posts/PostReaction"), { ssr: false });
@@ -45,7 +46,10 @@ const PostContent: React.FC<{ data: Post }> = ({ data }) => {
             sx={{ mt: 1 }}
           >
             <PostReaction post={data} />
-            <Bookmark post={data} />
+            <Stack direction="row" spacing={1}>
+              <Bookmark post={data} />
+              <Share data={data} />
+            </Stack>
           </Stack>
         </>
       )}

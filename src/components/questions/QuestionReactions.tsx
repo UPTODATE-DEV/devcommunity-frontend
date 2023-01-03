@@ -3,15 +3,16 @@ import ShowReactions from "@/components/questions/ShowQuestionReactions";
 import useSocket from "@/hooks/useSocket";
 import useStore from "@/hooks/useStore";
 import useStoreNoPersist from "@/hooks/useStoreNoPersist";
-import { patchRequest } from "@/lib/api";
+import { getRequest, patchRequest } from "@/lib/api";
 import { shortenNumber } from "@/lib/shorterNumber";
+import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 
 const QuestionReactions = ({ post }: { post: Post }) => {
   const [openReaction, setOpenReaction] = React.useState(false);
@@ -21,6 +22,7 @@ const QuestionReactions = ({ post }: { post: Post }) => {
   const [userReaction, setUserReaction] = React.useState<QuestionReactionType | undefined>();
   const { locale } = useRouter();
   const socket = useSocket();
+  const [loading, setLoading] = React.useState(true);
   const [reactions, setReactions] = React.useState<QuestionsReaction[]>([]);
 
   const handleCloseReaction = () => {
@@ -29,40 +31,37 @@ const QuestionReactions = ({ post }: { post: Post }) => {
 
   const onReact = async (type: QuestionReactionType) => {
     if (userId && user) {
-      setUserReaction((state) => (state === type ? undefined : type));
-      setReactions((state) => {
-        const reaction = state?.find((reaction) => reaction?.user?.id === userId);
-        if (reaction) {
-          return state?.filter((reaction) => reaction?.user?.id !== userId);
-        }
-        return [...reactions, { type, user, question: "", id: "tmp" }];
-      });
-
-      await patchRequest({ endpoint: `/posts/${post?.id}/reactions/${type}/${userId}/question` });
-      socket.emit("notification", { notificationFromUser: userId, id: Date.now().toString(), post, type });
+      setLoading(true);
+      const response = await patchRequest({ endpoint: `/posts/${post?.id}/reactions/${type}/${userId}/question` });
+      if (response?.data) {
+        socket.emit("notification", { notificationFromUser: userId, id: Date.now().toString(), post, type });
+        setReactions(response.data?.question?.reactions);
+        setUserReaction((state) => (state === type ? undefined : type));
+        setLoading(false);
+      }
       return;
     }
     setOpenLoginModal(true);
   };
 
-  React.useEffect(() => {
-    if (userId) {
-      const reaction = post?.question?.reactions?.find((reaction) => {
-        return reaction?.user?.id === userId;
-      });
-      if (reaction) {
-        setUserReaction(reaction.type);
-      } else {
-        setUserReaction(undefined);
+  useEffect(() => {
+    async function getReactions() {
+      const response = await getRequest({ endpoint: `/posts/${post?.id}/reactions/posts` });
+      if (response?.data) {
+        setReactions(response.data?.reactions);
+        const reaction = response.data?.reactions?.find((reaction: QuestionsReaction) => {
+          return reaction?.user?.id === userId;
+        });
+        if (reaction) {
+          setUserReaction(reaction.type);
+        } else {
+          setUserReaction(undefined);
+        }
       }
-    }
-  }, [post, userId]);
+    } 
 
-  React.useEffect(() => {
-    if (post?.question?.reactions) {
-      setReactions(post?.question?.reactions);
-    }
-  }, [post]);
+    getReactions().then(() => setLoading(false));
+  }, []);
 
   const SeeAllReaction = ({ type }: { type: QuestionReactionType }) => (
     <Tooltip title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"} placement="bottom" arrow>
@@ -83,21 +82,25 @@ const QuestionReactions = ({ post }: { post: Post }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <ShowReactions reactions={post?.question?.reactions} />
+        <ShowReactions reactions={reactions} />
       </Dialog>
-      <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between" sx={{ mt: 1 }}>
-        <Stack direction="row" spacing={2}>
-          <Stack direction="row" alignItems="center">
-            <Endorse handleClick={onReact} liked={userReaction === "LIKE"} />
-            <SeeAllReaction type="LIKE" />
-          </Stack>
+      {loading ? (
+        <CircularProgress size={16} />
+      ) : (
+        <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between" sx={{ mt: 1 }}>
+          <Stack direction="row" spacing={2}>
+            <Stack direction="row" alignItems="center">
+              <Endorse handleClick={onReact} liked={userReaction === "LIKE"} />
+              <SeeAllReaction type="LIKE" />
+            </Stack>
 
-          <Stack direction="row" alignItems="center">
-            <Disapprove handleClick={onReact} disliked={userReaction === "DISLIKE"} />
-            <SeeAllReaction type="DISLIKE" />
+            <Stack direction="row" alignItems="center">
+              <Disapprove handleClick={onReact} disliked={userReaction === "DISLIKE"} />
+              <SeeAllReaction type="DISLIKE" />
+            </Stack>
           </Stack>
         </Stack>
-      </Stack>
+      )}
     </>
   );
 };

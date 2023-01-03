@@ -1,6 +1,7 @@
 import { PostsListSkeleton } from "@/components/posts/Skeleton";
 import { QuestionsListSkeleton } from "@/components/questions/Skeleton";
 import { API } from "@/config/url";
+import useSocket from "@/hooks/useSocket";
 import useStore from "@/hooks/useStore";
 import AddIcon from "@mui/icons-material/Add";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -35,6 +36,7 @@ const HomeFeed = () => {
   const [endOfPage, setEndOfPage] = React.useState(false);
   const [perPage, setPerPage] = React.useState(10);
   const [type, setType] = React.useState<"QUESTION" | "ARTICLE" | undefined>();
+  const socket = useSocket();
 
   const params = qs.stringify({
     perPage,
@@ -58,7 +60,7 @@ const HomeFeed = () => {
     return `/users/${session?.id}/feed?page=${pageIndex + 1}&${params}`;
   };
 
-  const { data, size, setSize, isLoading, error, isValidating } = useSWRInfinite<Post[], any>(getKey, fetcher);
+  const { data, size, setSize, isLoading, isValidating, mutate } = useSWRInfinite<Post[], any>(getKey, fetcher);
 
   useEffect(() => {
     const handleScroll = () => {

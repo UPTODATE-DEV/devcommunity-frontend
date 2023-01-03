@@ -1,6 +1,7 @@
 import Bookmark from "@/components/common/Bookmark";
 import PostCardHeader from "@/components/common/PostCardHeader";
 import PostTags from "@/components/common/PostTags";
+import Share from "@/components/common/Share";
 import { useGoToUserProfile } from "@/hooks";
 import useStore from "@/hooks/useStore";
 import { parseDate } from "@/lib";
@@ -13,7 +14,6 @@ import React, { useCallback } from "react";
 import QuestionReactions from "./QuestionReactions";
 
 const Content = dynamic(import("@/components/common/Content"), { ssr: false });
-const PostReaction = dynamic(import("@/components/posts/PostReaction"), { ssr: false });
 
 const PostContent: React.FC<{ data: Post }> = ({ data }) => {
   const user = useStore((state) => state.session?.user);
@@ -49,7 +49,10 @@ const PostContent: React.FC<{ data: Post }> = ({ data }) => {
             sx={{ mt: 1 }}
           >
             <QuestionReactions post={data} />
-            <Bookmark post={data} />
+            <Stack direction="row" spacing={1}>
+              <Bookmark post={data} />
+              <Share data={data} />
+            </Stack>
           </Stack>
         </>
       )}

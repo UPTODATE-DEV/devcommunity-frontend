@@ -2885,6 +2885,11 @@
   "resolved" "https://registry.npmjs.org/depd/-/depd-1.1.2.tgz"
   "version" "1.1.2"
 
+"dequal@^2.0.2":
+  "integrity" "sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA=="
+  "resolved" "https://registry.npmjs.org/dequal/-/dequal-2.0.3.tgz"
+  "version" "2.0.3"
+
 "detect-libc@^2.0.0", "detect-libc@^2.0.1":
   "integrity" "sha512-463v3ZeIrcWtdgIg6vI6XUncguvr2TnGl4SzDXinkt9mSLpBJKXT3mW6xT3VQdDN11+WVs29pgvivTc4Lp8v+w=="
   "resolved" "https://registry.npmjs.org/detect-libc/-/detect-libc-2.0.1.tgz"
@@ -6554,6 +6559,14 @@
   "integrity" "sha512-GLMG0Jc/jiKov/3Ulid1wbv3r54K9HlMW29IWcDFPEqFkSO2nS0MuefWgMJpeHQ9YJeXDL3ZUF+P3jdXlZX/cQ=="
   "resolved" "https://registry.npmjs.org/use-composed-ref/-/use-composed-ref-1.3.0.tgz"
   "version" "1.3.0"
+
+"use-deep-compare-effect@^1.8.1":
+  "integrity" "sha512-kbeNVZ9Zkc0RFGpfMN3MNfaKNvcLNyxOAAd9O4CBZ+kCBXXscn9s/4I+8ytUER4RDpEYs5+O6Rs4PqiZ+rHr5Q=="
+  "resolved" "https://registry.npmjs.org/use-deep-compare-effect/-/use-deep-compare-effect-1.8.1.tgz"
+  "version" "1.8.1"
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    "dequal" "^2.0.2"
 
 "use-isomorphic-layout-effect@^1.1.1":
   "integrity" "sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA=="

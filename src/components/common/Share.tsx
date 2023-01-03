@@ -11,6 +11,7 @@ import Popover from "@mui/material/Popover";
 import Tooltip from "@mui/material/Tooltip";
 import { useRouter } from "next/router";
 import React from "react";
+import TwitterIcon from '@mui/icons-material/Twitter';
 
 const Share = ({ data }: { data: Post | null }) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
@@ -73,7 +74,7 @@ const Share = ({ data }: { data: Post | null }) => {
                 disableElevation
                 variant="contained"
                 color="secondary"
-                startIcon={<WhatsAppIcon />}
+                startIcon={<TwitterIcon />}
                 onClick={() => {
                   window.open(
                     `https://twitter.com/intent/tweet?text=${NEXT_PUBLIC_URL}/${

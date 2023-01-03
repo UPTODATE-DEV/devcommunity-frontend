@@ -48,6 +48,7 @@
     "sharp": "^0.31.0",
     "socket.io-client": "^4.5.4",
     "swr": "^2.0.0",
+    "use-deep-compare-effect": "^1.8.1",
     "zustand": "^4.1.1"
   },
   "devDependencies": {

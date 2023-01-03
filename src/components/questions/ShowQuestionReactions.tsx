@@ -14,18 +14,22 @@ import ListItemText from "@mui/material/ListItemText";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useRouter } from "next/router";
 import React from "react";
 
 const ShowQuestionReactions = ({ reactions }: { reactions?: QuestionsReaction[] }) => {
   const [tab, setTab] = React.useState<QuestionReactionType>("LIKE");
+  const { locale } = useRouter();
 
-  const tabs: { id: QuestionReactionType; icon: any }[] = [
+  const tabs: { id: QuestionReactionType; icon: any; label: string }[] = [
     {
       id: "LIKE",
+      label: locale === "en" ? "Endorse" : "Approuver",
       icon: <ThumbUpSharpIcon />,
     },
     {
       id: "DISLIKE",
+      label: locale === "en" ? "Disapprove" : "Désapprouver",
       icon: <ThumbDownOffAltIcon />,
     },
   ];
@@ -49,8 +53,12 @@ const ShowQuestionReactions = ({ reactions }: { reactions?: QuestionsReaction[] 
             icon={item.icon}
             key={item.id}
             iconPosition="start"
-            sx={{ width: { xs: "auto", md: 700 } }}
-            label={<Typography>{reactions?.filter((reaction) => reaction.type === item.id).length}</Typography>}
+            sx={{ width: { xs: "auto", md: 400 } }}
+            label={
+              <Typography textTransform="capitalize">{`${
+                reactions?.filter((reaction) => reaction.type === item.id).length
+              } ${item.label}`}</Typography>
+            }
             value={item.id}
           />
         ))}

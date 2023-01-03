@@ -34,7 +34,9 @@ export const theme = (mode: "light" | "dark") =>
     components: {
       MuiButton: {
         styleOverrides: {
-          text: { textTransform: "capitalize" },
+          root: {
+            textTransform: "none",
+          },
         },
       },
     },

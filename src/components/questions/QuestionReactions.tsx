@@ -58,6 +58,12 @@ const QuestionReactions = ({ post }: { post: Post }) => {
     }
   }, [post, userId]);
 
+  React.useEffect(() => {
+    if (post?.question?.reactions) {
+      setReactions(post?.question?.reactions);
+    }
+  }, [post]);
+
   const SeeAllReaction = ({ type }: { type: QuestionReactionType }) => (
     <Tooltip title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"} placement="bottom" arrow>
       <IconButton onClick={() => setOpenReaction(true)}>

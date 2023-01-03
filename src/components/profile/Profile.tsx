@@ -234,7 +234,17 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                       endIcon={follow ? <CheckCircleIcon /> : <AddIcon />}
                       variant={follow ? "contained" : "outlined"}
                     >
-                      {loading ? (locale === "fr" ? "Chargement..." : "Loading...") : follow ? "Following" : "Follow"}
+                      {loading
+                        ? locale === "fr"
+                          ? "Chargement..."
+                          : "Loading..."
+                        : follow
+                        ? locale === "en"
+                          ? "Following"
+                          : "Abonné"
+                        : locale === "en"
+                        ? "Follow"
+                        : "Suivre"}
                     </Button>
                   )}
 

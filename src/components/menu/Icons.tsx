@@ -40,7 +40,6 @@ const Icons = () => {
   const user = useUser(session?.username);
   const { push, locale } = useRouter();
   const [notifications, setNotifications] = React.useState(0);
-  console.log("🚀 ~ file: Icons.tsx:43 ~ Icons ~ notifications", notifications);
   const socket = useSocket();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
@@ -99,7 +98,7 @@ const Icons = () => {
     socket.on("notification", () => {
       getNotifications();
     });
-  }, []);
+  }, [user?.id]);
 
   return (
     <Stack direction="row" alignItems="center" spacing={{ xs: 0, md: 1 }}>

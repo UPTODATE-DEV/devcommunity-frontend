@@ -4,7 +4,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import TagIcon from "@mui/icons-material/Tag";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
-import Tooltip from "@mui/material/Tooltip";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Snackbar from "@mui/material/Snackbar";
@@ -53,15 +52,7 @@ const PostTags = ({ tags }: { tags?: Tags[] }) => {
       <Grid container spacing={1} sx={{ py: 1 }} direction="row">
         {tags?.map((el) => (
           <Grid item xs="auto" key={el.tag.name}>
-            <Tooltip arrow title={locale === "en" ? "Clic to follow this tag" : "Cliquer pour suivre le tag"}>
-              <Chip
-                size="small"
-                onClick={() => handleTagClick(el.tag.name)}
-                icon={<TagIcon fontSize="small" />}
-                sx={{ px: 2 }}
-                label={el.tag.name}
-              />
-            </Tooltip>
+            <Chip size="small" icon={<TagIcon fontSize="small" />} sx={{ px: 2 }} label={el.tag.name} />
           </Grid>
         ))}
       </Grid>

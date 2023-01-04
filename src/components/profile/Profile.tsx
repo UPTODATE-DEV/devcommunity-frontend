@@ -99,7 +99,6 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   const onLogout = async () => {
     googleLogout();
     await postLocalRequest({ endpoint: "/api/logout" });
-    setSession({ isLoggedIn: false, user: undefined, jwt: "" });
     handleClose();
     reload();
   };

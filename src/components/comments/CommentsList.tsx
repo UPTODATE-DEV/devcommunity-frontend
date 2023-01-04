@@ -9,7 +9,6 @@ import React from "react";
 
 const CommentsList: React.FC<{ addComment: React.ReactElement }> = ({ addComment }) => {
   const { locale } = useRouter();
-
   const { comments } = useStore((state) => state);
 
   return (

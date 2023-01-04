@@ -3,17 +3,20 @@ import CommentContent from "@/components/comments/CommentContent";
 import PostCard from "@/components/posts/PostCard";
 import QuestionCard from "@/components/questions/QuestionCard";
 import useStore from "@/hooks/useStore";
-import { getRequest } from "@/lib";
+import { deleteRequest, getRequest } from "@/lib";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import dynamic from "next/dynamic";
 import React from "react";
+import { toast } from "react-toastify";
 
 const CommentsList = dynamic(import("@/components/comments/CommentsList"), { ssr: false });
 const AddComment = dynamic(import("@/components/comments/AddComment"), { ssr: false });
 
 const ParentsComment = ({ comments }: { comments: PostComment[] }) => {
+
   if (!comments.length) return null;
+
   return (
     <>
       {comments.map((el, i) => (

@@ -1,6 +1,6 @@
 import useStore from "@/hooks/useStore";
 import { getRequest, patchRequest } from "@/lib";
-import PlaylistAddCheckTwoToneIcon from "@mui/icons-material/PlaylistAddCheckTwoTone";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PlaylistAddTwoToneIcon from "@mui/icons-material/PlaylistAddTwoTone";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
@@ -10,7 +10,6 @@ import dynamic from "next/dynamic";
 import React from "react";
 import { HomeFeedSkeleton } from "../middle/Skeleton";
 import Tag from "./Tag";
-
 
 const FilterByTagsResult = dynamic(import("./FilterByTagsResult"), {
   ssr: false,
@@ -55,7 +54,7 @@ const TagsList = () => {
                   </div>
                   <IconButton size="small" onClick={() => handleTagClick(el.name)}>
                     {followedTags.some((follow) => follow.tag.name === el.name) ? (
-                      <PlaylistAddCheckTwoToneIcon fontSize="small" color="success" />
+                      <CheckCircleIcon fontSize="small" color="success" />
                     ) : (
                       <PlaylistAddTwoToneIcon fontSize="small" />
                     )}

@@ -60,10 +60,6 @@ a {
   max-width: 100%;
 }
 
-p {
-  word-break: break-all;
-}
-
 .content pre,
 .content code {
   padding: 12px 30px;
@@ -73,8 +69,16 @@ p {
 }
 
 .content pre {
-  max-width: 100%;
   overflow: auto;
+}
+
+.content code {
+  background-color: #1a1b26;
+  padding: 5px 8px;
+  border-radius: 4px;
+  line-height: 1;
+  font-size: 14;
+  line-break: anywhere;
 }
 
 iframe.ql-video {

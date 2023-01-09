@@ -7,9 +7,7 @@ const Content = ({ content, fontSize = 14 }: { content: string; fontSize?: numbe
 
   const wrapCode = (html: any) => {
     const removeStyles = (html: string) => html.replace(/style="[^"]*"/g, "");
-    const wrapCode = (html: string) => html.replace(/<code>([^<]*)<\/code>/g, "<pre><code>$1</code></pre>");
-
-    return wrapCode(removeStyles(html));
+    return removeStyles(html)
   };
 
   const highlightPreElements = useCallback<any>(() => {

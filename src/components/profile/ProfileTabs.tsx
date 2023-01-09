@@ -74,8 +74,8 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
     },
   ];
 
-  const questions = posts.filter((el) => el.type === "QUESTION");
-  const articles = posts.filter((el) => el.type === "ARTICLE");
+  const questions = posts.filter((el) => !el.draft && el.type === "QUESTION");
+  const articles = posts.filter((el) => !el.draft && el.type === "ARTICLE");
   const drafts = posts.filter((el) => el.draft);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {

@@ -63,8 +63,8 @@ const AddPostForm = ({ data }: { data?: Post }) => {
     setLoading(true);
     const response = data?.id
       ? await patchRequest({
-          endpoint: `/posts/${data?.id}/preview`,
-          data: { ...post, image, author: user?.id, type: "ARTICLE" },
+          endpoint: `/posts/${data?.id}`,
+          data: { ...post, image, author: user?.id, type: "ARTICLE", draft: true },
         })
       : await postRequest({
           endpoint: "/posts",
@@ -76,8 +76,8 @@ const AddPostForm = ({ data }: { data?: Post }) => {
     }
     if (response.data) {
       setLoading(false);
-      toast.success(data?.title ? "Post updated" : "Post created");
-      replace(`/articles/${response.data?.slug}`);
+      toast.success(data?.title ? "Post updated" : "Post saved");
+      replace(`/articles/${data?.id}/preview`);
     }
   };
 

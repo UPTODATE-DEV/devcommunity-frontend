@@ -28,6 +28,8 @@ interface Store {
   setOpenMobileMenu: (open: boolean) => void;
   notifications: Notifications[] | [];
   setNotifications: (notifications: Notifications[]) => void;
+  notificationsCount: number;
+  setNotificationsCount: (notificationsCount: number) => void;
   tagsFilters: Tag[] | [];
   setTagsFilters: (tags: Tag) => void;
   clearTagsFilters: () => void;
@@ -84,6 +86,10 @@ const useStore = create<Store>()(
       notifications: [],
       setNotifications: (notifications: Notifications[]) => {
         return set((state) => ({ ...state, notifications }));
+      },
+      notificationsCount: 0,
+      setNotificationsCount: (notificationsCount: number) => {
+        return set((state) => ({ ...state, notificationsCount }));
       },
       currentPost: null,
       setCurrentPost: (currentPost: Post | null) => {

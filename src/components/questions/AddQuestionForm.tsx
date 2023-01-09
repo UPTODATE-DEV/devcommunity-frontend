@@ -58,7 +58,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
     if (response.data) {
       setLoading(false);
       toast.success(data?.title ? "Post updated" : "Post saved");
-      replace(`/posts/${data?.id}/preview`);
+      replace(`/posts/${response.data?.slug}/preview`);
     }
   };
 

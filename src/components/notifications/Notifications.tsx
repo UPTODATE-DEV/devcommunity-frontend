@@ -30,6 +30,7 @@ const Empty = dynamic(import("@/components/common/Empty"), {
 const Notifications = () => {
   const notifications = useStore((state) => state.notifications);
   const setNotifications = useStore((state) => state.setNotifications);
+  const { setNotificationsCount } = useStore((state) => state);
   const { push, locale } = useRouter();
   const session = useStore((state) => state.session?.user);
   const socket = useSocket();
@@ -58,6 +59,7 @@ const Notifications = () => {
         notifications: el.notifications.map((notification) => ({ ...notification, read: true })),
       }))
     );
+    setNotificationsCount(0);
   };
 
   React.useEffect(() => {

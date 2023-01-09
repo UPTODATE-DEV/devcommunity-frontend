@@ -77,7 +77,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
     if (response.data) {
       setLoading(false);
       toast.success(data?.title ? "Post updated" : "Post saved");
-      replace(`/articles/${data?.id}/preview`);
+      replace(`/articles/${response.data?.slug}/preview`);
     }
   };
 

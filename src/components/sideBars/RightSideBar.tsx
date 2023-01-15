@@ -5,13 +5,22 @@ import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/router";
 import React from "react";
 import ListItems from "./ListItems";
 
 const RightSideBar = () => {
   const { push, locale } = useRouter();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  if (isMobile) {
+    return null;
+  }
 
   const handleView = (path: string, type: "posts" | "articles") => {
     push(`/${type}/${path}`);
@@ -22,7 +31,7 @@ const RightSideBar = () => {
 
   React.useEffect(() => {
     const getPosts = async () => {
-      const posts = await getRequest({ endpoint: "/posts/top/posts-week" });
+      const posts = await getRequest({ endpoint: "/posts/top/posts-sidebar" });
       if (!posts.error) {
         setTopPosts(posts.data);
       }

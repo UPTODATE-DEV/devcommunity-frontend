@@ -3,7 +3,6 @@ import CallToAction from "@/components/middle/CallToAction";
 import { TopSkeleton } from "@/components/topPosts/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
-import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
@@ -15,18 +14,8 @@ const TopPosts = dynamic(import("@/components/topPosts/TopPosts"), { ssr: false,
 
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
-  const setTopPosts = useStore((state) => state.setTopPosts);
 
   React.useEffect(() => {
-    const getTopPosts = async () => {
-      const authors = await getRequest({ endpoint: "/posts/top/posts" });
-      if (!authors.error) {
-        setTopPosts(authors.data);
-      }
-    };
-
-    getTopPosts();
-
     setSession(session);
   }, []);
 

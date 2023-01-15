@@ -65,22 +65,18 @@ const PostReaction = ({ post }: { post: Post }) => {
   };
 
   useEffect(() => {
-    async function getReactions() {
-      const response = await getRequest({ endpoint: `/posts/${post?.id}/reactions/posts` });
-      if (response?.data) {
-        setReactions(response.data?.reactions);
-        const reaction = response.data?.reactions?.find((reaction: QuestionsReaction) => {
-          return reaction?.user?.id === userId;
-        });
-        if (reaction) {
-          setUserReaction(reaction.type);
-        } else {
-          setUserReaction(undefined);
-        }
-      }
+    setLoading(true);
+    setReactions(post.article?.reactions);
+    const reaction = post.article?.reactions?.find((reaction: ArticleReaction) => {
+      return reaction?.user?.id === userId;
+    });
+    if (reaction) {
+      setUserReaction(reaction.type);
+    } else {
+      setUserReaction(undefined);
     }
 
-    getReactions().then(() => setLoading(false));
+    setLoading(false);
   }, []);
 
   return (

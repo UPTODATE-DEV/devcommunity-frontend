@@ -1,5 +1,3 @@
-import Menu from "@/components/menu/Menu";
-import { CallToActionSkeleton, HomeFeedSkeleton } from "@/components/middle/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { withSessionSsr } from "@/lib/withSession";
@@ -8,6 +6,15 @@ import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import * as React from "react";
+
+const CallToActionSkeleton = dynamic(
+  () => import("@/components/middle/Skeleton").then((mod) => mod.CallToActionSkeleton),
+  { ssr: false }
+);
+const HomeFeedSkeleton = dynamic(() => import("@/components/middle/Skeleton").then((mod) => mod.HomeFeedSkeleton), {
+  ssr: false,
+});
+const Menu = dynamic(import("@/components/menu/Menu"), { ssr: false });
 
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,

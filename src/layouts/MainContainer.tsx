@@ -1,5 +1,3 @@
-import { CallToActionSkeleton } from "@/components/middle/Skeleton";
-import { LeftBarSkeleton, RightBarSkeleton } from "@/components/sideBars/Skeleton";
 import useStoreNoPersist from "@/hooks/useStoreNoPersist";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -13,6 +11,17 @@ import "dayjs/locale/fr";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { PropsWithChildren } from "react";
+
+const CallToActionSkeleton = dynamic(
+  () => import("@/components/middle/Skeleton").then((mod) => mod.CallToActionSkeleton),
+  { ssr: false }
+);
+const RightBarSkeleton = dynamic(() => import("@/components/sideBars/Skeleton").then((mod) => mod.RightBarSkeleton), {
+  ssr: false,
+});
+const LeftBarSkeleton = dynamic(() => import("@/components/sideBars/Skeleton").then((mod) => mod.LeftBarSkeleton), {
+  ssr: false,
+});
 
 const RightSideBar = dynamic(import("@/components/sideBars/RightSideBar"), {
   ssr: false,
@@ -29,12 +38,12 @@ const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
 });
 
 const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
-  const theme = useTheme();
   const { locale } = useRouter();
   const { setOpenLoginModal, openLoginModal } = useStoreNoPersist();
 
   locale === "en" ? dayjs.locale("en") : dayjs.locale("fr");
 
+  const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleClose = () => {
@@ -53,22 +62,24 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
       </Dialog>
       <Container maxWidth="xl">
         <Grid container spacing={2}>
-          <Grid
-            item
-            xs
-            md={3}
-            lg={2}
-            className="hide-scrollbar"
-            sx={{
-              position: "sticky",
-              top: 76,
-              height: 1,
-              overflow: "auto",
-              display: { xs: "none", md: "flex" },
-            }}
-          >
-            <LeftSideBar />
-          </Grid>
+          {!isMobile && (
+            <Grid
+              item
+              xs
+              md={3}
+              lg={2}
+              className="hide-scrollbar"
+              sx={{
+                position: "sticky",
+                top: 76,
+                height: 1,
+                overflow: "auto",
+                display: { xs: "none", md: "flex" },
+              }}
+            >
+              <LeftSideBar />
+            </Grid>
+          )}
           <Grid
             item
             xs={12}
@@ -80,22 +91,24 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
               {children}
             </Stack>
           </Grid>
-          <Grid
-            item
-            xs
-            lg={3}
-            className="hide-scrollbar"
-            sx={{
-              position: "sticky",
-              top: 76,
-              height: "100vh",
-              overflow: "auto",
-              width: 1,
-              display: { xs: "none", lg: "flex" },
-            }}
-          >
-            <RightSideBar />
-          </Grid>
+          {!isMobile && (
+            <Grid
+              item
+              xs
+              lg={3}
+              className="hide-scrollbar"
+              sx={{
+                position: "sticky",
+                top: 76,
+                height: "100vh",
+                overflow: "auto",
+                width: 1,
+                display: { xs: "none", lg: "flex" },
+              }}
+            >
+              <RightSideBar />
+            </Grid>
+          )}
         </Grid>
       </Container>
     </Box>

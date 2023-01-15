@@ -5,6 +5,8 @@ import { theme } from "@/utils/theme";
 import { MantineProvider } from "@mantine/core";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import "highlight.js/styles/tokyo-night-dark.css";
 import withDarkMode, { useDarkMode } from "next-dark-mode";
 import { DefaultSeo } from "next-seo";
@@ -68,7 +70,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
         <DefaultSeo {...SEO} />
         <ToastNotification />
-        <Component {...pageProps} />
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <Component {...pageProps} />
+        </LocalizationProvider>
       </ThemeProvider>
     </MantineProvider>
   );

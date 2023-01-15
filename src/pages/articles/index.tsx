@@ -59,7 +59,8 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
-  const { req } = context;
+  const { req, res } = context;
+  res.setHeader("Cache-Control", "public, s-maxage=10, stale-while-revalidate=59");
 
   return {
     props: {

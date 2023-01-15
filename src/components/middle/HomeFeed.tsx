@@ -1,7 +1,4 @@
-import { PostsListSkeleton } from "@/components/posts/Skeleton";
-import { QuestionsListSkeleton } from "@/components/questions/Skeleton";
 import { API } from "@/config/url";
-import useSocket from "@/hooks/useSocket";
 import useStore from "@/hooks/useStore";
 import AddIcon from "@mui/icons-material/Add";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -12,16 +9,25 @@ import dynamic from "next/dynamic";
 import qs from "qs";
 import React, { useEffect } from "react";
 import useSWRInfinite from "swr/infinite";
-import { HomeFeedSkeleton } from "./Skeleton";
 
+const HomeFeedSkeleton = dynamic(
+  import("@/components/middle/Skeleton").then((mod) => mod.HomeFeedSkeleton),
+  { ssr: false }
+);
+const PostsListSkeleton = dynamic(() => import("@/components/posts/Skeleton").then((mod) => mod.PostsListSkeleton), {
+  ssr: false,
+});
+const QuestionsListSkeleton = dynamic(
+  () => import("@/components/questions/Skeleton").then((mod) => mod.QuestionsListSkeleton),
+  { ssr: false }
+);
 const ModalCreation = dynamic(import("@/components/common/ModalCreation"), {
   ssr: false,
   loading: () => <PostsListSkeleton />,
 });
-const PostCard = dynamic(import("@/components/posts/PostCard"), { ssr: false, loading: () => <PostsListSkeleton /> });
+const PostCard = dynamic(import("@/components/posts/PostCard"), { ssr: false });
 const QuestionCard = dynamic(import("@/components/questions/QuestionCard"), {
   ssr: false,
-  loading: () => <QuestionsListSkeleton />,
 });
 
 const Empty = dynamic(import("@/components/common/Empty"), {
@@ -34,14 +40,8 @@ const HomeFeed = () => {
   const session = useStore((state) => state.session?.user);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [endOfPage, setEndOfPage] = React.useState(false);
-  const [perPage, setPerPage] = React.useState(10);
+  const [perPage, setPerPage] = React.useState(5);
   const [type, setType] = React.useState<"QUESTION" | "ARTICLE" | undefined>();
-  const socket = useSocket();
-
-  const params = qs.stringify({
-    perPage,
-    type,
-  });
 
   const handleClose = () => setOpen(false);
 
@@ -53,6 +53,7 @@ const HomeFeed = () => {
   };
 
   const getKey = (pageIndex: number, previousPageData: Post[]) => {
+    const params = qs.stringify({ perPage, type });
     if (previousPageData && !previousPageData.length) {
       setEndOfPage(true);
       return null;

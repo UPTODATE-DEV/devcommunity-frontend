@@ -11,6 +11,7 @@ import React from "react";
 const Banner = dynamic(import("@/components/landingPage/Banner"));
 const Value = dynamic(import("@/components/landingPage/Value"));
 const Contributors = dynamic(import("@/components/landingPage/Contributors"));
+const Partners = dynamic(import("@/components/landingPage/Partners"));
 const Widget = dynamic(import("@/components/landingPage/Widget"));
 const Widget2 = dynamic(import("@/components/landingPage/Widget2"));
 const Widget3 = dynamic(import("@/components/landingPage/Widget3"));
@@ -38,6 +39,7 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
         <Widget />
         <Widget2 />
         <Widget3 />
+        <Partners />
         <FAQ />
         <Contributors />
         <Footer />

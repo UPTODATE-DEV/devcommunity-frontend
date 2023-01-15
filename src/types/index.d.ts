@@ -43,6 +43,7 @@ interface Post {
   draft: boolean;
   content: string;
   publishedOn: Date;
+  locale: "FR" | "EN";
   author: User;
   tags: Tags[];
   slug: string;
@@ -186,3 +187,27 @@ interface Notifications {
   date: string;
   notifications: Notification[];
 }
+
+type DateRangePickerProps = {
+  startDate: Date | null;
+  endDate: Date | null;
+  onChangeStartDate: (newValue: Date | null) => void;
+  onChangeEndDate: (newValue: Date | null) => void;
+  //
+  open: boolean;
+  onOpen?: VoidFunction;
+  onClose: VoidFunction;
+  onReset?: VoidFunction;
+  //
+  isSelected?: boolean;
+  isError?: boolean;
+  //
+  label?: string;
+  shortLabel?: string;
+  //
+  title?: string;
+  variant?: "calendar" | "input";
+  //
+  setStartDate?: React.Dispatch<React.SetStateAction<Date | null>>;
+  setEndDate?: React.Dispatch<React.SetStateAction<Date | null>>;
+};

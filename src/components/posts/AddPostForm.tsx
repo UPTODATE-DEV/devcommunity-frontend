@@ -14,6 +14,11 @@ import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-toastify";
 
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+
 const AddPostForm = ({ data }: { data?: Post }) => {
   const getImage = data?.article?.image.id;
   const getPreview = data?.article?.image.url;
@@ -22,10 +27,11 @@ const AddPostForm = ({ data }: { data?: Post }) => {
   const [tags, setTags] = React.useState<Tag[]>([{ id: "0", name: "default", _count: { posts: 0 } }]);
   const [image, setImage] = React.useState(getImage || "");
   const [preview, setPreview] = React.useState<string>(getPreview ? FILES_BASE_URL + getPreview : "");
-  const [post, setPost] = React.useState<{ title?: string; content?: string; tags: string[] | null }>({
+  const [post, setPost] = React.useState<{ title?: string; locale: string; content?: string; tags: string[] | null }>({
     title: data?.title || "",
     content: data?.content || "",
     tags: data?.tags?.map((el) => el.tag.name) || [],
+    locale: data?.locale || "FR",
   });
 
   const { push, locale, replace } = useRouter();
@@ -53,6 +59,10 @@ const AddPostForm = ({ data }: { data?: Post }) => {
     }
     return FILES_BASE_URL + response.data?.url;
   }, []);
+
+  const handleLocaleChange = (event: SelectChangeEvent) => {
+    setPost({ ...post, locale: event.target.value });
+  };
 
   const handleChange = (event: { target: { value: string; name: string } }) => {
     setPost({ ...post, [event.target.name]: event.target.value });
@@ -87,7 +97,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
     const response = data?.id
       ? await patchRequest({
           endpoint: `/posts/${data?.id}`,
-          data: { ...post, image, author: user?.id, type: "ARTICLE" },
+          data: { ...post, image, author: user?.id, type: "ARTICLE", draft: false },
         })
       : await postRequest({
           endpoint: "/posts",
@@ -172,8 +182,20 @@ const AddPostForm = ({ data }: { data?: Post }) => {
         value={post.title}
         placeholder={locale === "en" ? "Title" : "Titre"}
         onChange={handleChange}
-        sx={{ "&.MuiTextField-root > .MuiFilledInput-root": { px: 2, pb: 1 } }}
+        sx={{ "&.MuiTextField-root > .MuiFilledInput-root": { px: 2, pb: 1 }, width: 1 }}
       />
+      <FormControl variant="filled">
+        <InputLabel id="demo-simple-select-filled-label">{locale === "fr" ? "Langue" : "Language"}</InputLabel>
+        <Select
+          labelId="demo-simple-select-filled-label"
+          id="demo-simple-select-filled"
+          value={post.locale}
+          onChange={handleLocaleChange}
+        >
+          <MenuItem value="FR">{locale === "fr" ? "Français" : "French"}</MenuItem>
+          <MenuItem value="EN">{locale === "fr" ? "Anglais" : "English"}</MenuItem>
+        </Select>
+      </FormControl>
       <RichTextEditor
         value={post.content}
         onChange={(value) => setPost((state) => ({ ...state, content: value }))}

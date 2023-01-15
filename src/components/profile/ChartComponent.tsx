@@ -32,9 +32,12 @@ export function ViewsDaysChart({
         display: false,
       },
     },
-    yAxis: {
-      min: 10,
-      max: 100,
+    y: {
+      beginAtZero: false,
+      min: 0,
+      ticks: {
+        stepSize: 4,
+      },
     },
   };
 

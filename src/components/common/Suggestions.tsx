@@ -20,7 +20,8 @@ const Suggestions: React.FC<{ data: Post; type: "ARTICLE" | "QUESTION" }> = ({ d
       if (res.error) {
         console.log(res.error);
       }
-      setPosts(res.data?.filter((el: any) => el?.id !== currentPost?.id));
+      console.log("currentPost?.slug", currentPost?.slug);
+      setPosts(res.data?.filter((el: any) => el?.slug !== currentPost?.slug));
     }
     getSuggestions();
   }, []);

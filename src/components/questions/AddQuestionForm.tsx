@@ -12,15 +12,21 @@ import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-toastify";
 
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+
 const AddQuestionForm = ({ data }: { data?: Post }) => {
   const [loading, setLoading] = React.useState(false);
   const user = useStore((state) => state.session?.user);
   const [tags, setTags] = React.useState<Tag[]>([{ id: "0", name: "default", _count: { posts: 0 } }]);
   const [preview, setPreview] = React.useState("");
-  const [post, setPost] = React.useState<{ title?: string; content?: string; tags: string[] | null }>({
+  const [post, setPost] = React.useState<{ title?: string; locale: string; content?: string; tags: string[] | null }>({
     title: data?.title || "",
     content: data?.content || "",
     tags: data?.tags?.map((el) => el.tag.name) || [],
+    locale: data?.locale || "FR",
   });
 
   const { push, locale, replace } = useRouter();
@@ -37,6 +43,10 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
 
   const handleChange = (event: { target: { value: string; name: string } }) => {
     setPost({ ...post, [event.target.name]: event.target.value });
+  };
+
+  const handleLocaleChange = (event: SelectChangeEvent) => {
+    setPost({ ...post, locale: event.target.value });
   };
 
   const onSubmit = async (e: any) => {
@@ -133,6 +143,19 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
           />
         )}
       />
+
+      <FormControl variant="filled">
+        <InputLabel id="demo-simple-select-filled-label">{locale === "fr" ? "Langue" : "Language"}</InputLabel>
+        <Select
+          labelId="demo-simple-select-filled-label"
+          id="demo-simple-select-filled"
+          value={post.locale}
+          onChange={handleLocaleChange}
+        >
+          <MenuItem value="FR">{locale === "fr" ? "Français" : "French"}</MenuItem>
+          <MenuItem value="EN">{locale === "fr" ? "Anglais" : "English"}</MenuItem>
+        </Select>
+      </FormControl>
 
       <RichTextEditor
         value={post.content}

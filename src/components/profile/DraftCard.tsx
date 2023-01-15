@@ -80,7 +80,13 @@ const DraftCard: React.FC<{ data: Post }> = ({ data }) => {
           horizontal: "right",
         }}
       >
-        <MenuItem onClick={() => push({ pathname: `/posts/${data?.slug}/edit` }, undefined, { shallow: true })}>
+        <MenuItem
+          onClick={() =>
+            push({ pathname: `/${data?.type === "ARTICLE" ? "articles" : "posts"}/${data?.slug}/edit` }, undefined, {
+              shallow: true,
+            })
+          }
+        >
           <ListItemIcon>
             <EditIcon fontSize="small" />
           </ListItemIcon>

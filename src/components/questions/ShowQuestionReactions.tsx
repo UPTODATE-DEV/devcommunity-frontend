@@ -11,6 +11,7 @@ import List from "@mui/material/List";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import Stack from "@mui/material/Stack";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -66,39 +67,46 @@ const ShowQuestionReactions = ({ reactions }: { reactions?: QuestionsReaction[] 
 
       {tabs.map((tab) => (
         <TabPanel key={tab.id} sx={{ p: 0, height: 400 }} value={tab.id}>
-          <List>
-            {reactions
-              ?.filter((reaction) => reaction.type === tab.id)
-              .map((el, i) => (
-                <React.Fragment key={i}>
-                  <ListItemButton>
-                    <ListItemAvatar>
-                      <UserAvatar
-                        name={getUserFullName(el.user)}
-                        pictureUrl={getUserProfileImageUrl(el.user)}
-                        handleClick={() => goToProfile(el.user.email)}
+          <Stack sx={{ height: 1, overflow: "auto" }}>
+            <List>
+              {reactions
+                ?.filter((reaction) => reaction.type === tab.id)
+                .map((el, i) => (
+                  <React.Fragment key={i}>
+                    <ListItemButton>
+                      <ListItemAvatar>
+                        <UserAvatar
+                          name={getUserFullName(el.user)}
+                          pictureUrl={getUserProfileImageUrl(el.user)}
+                          handleClick={() => goToProfile(el.user.email)}
+                        />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <React.Fragment>
+                            <Typography
+                              sx={{ display: "inline" }}
+                              component="span"
+                              variant="body2"
+                              color="text.primary"
+                            >
+                              {getUserFullName(el.user)}
+                            </Typography>
+                          </React.Fragment>
+                        }
+                        primaryTypographyProps={{
+                          fontWeight: 700,
+                          color: "text.primary",
+                        }}
                       />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={
-                        <React.Fragment>
-                          <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
-                            {getUserFullName(el.user)}
-                          </Typography>
-                        </React.Fragment>
-                      }
-                      primaryTypographyProps={{
-                        fontWeight: 700,
-                        color: "text.primary",
-                      }}
-                    />
-                  </ListItemButton>
-                  {i !== reactions?.filter((reaction) => reaction.type === tab.id).length - 1 && (
-                    <Divider variant="inset" component="li" />
-                  )}
-                </React.Fragment>
-              ))}
-          </List>
+                    </ListItemButton>
+                    {i !== reactions?.filter((reaction) => reaction.type === tab.id).length - 1 && (
+                      <Divider variant="inset" component="li" />
+                    )}
+                  </React.Fragment>
+                ))}
+            </List>
+          </Stack>
         </TabPanel>
       ))}
     </TabContext>

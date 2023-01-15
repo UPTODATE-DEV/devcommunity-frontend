@@ -21,6 +21,7 @@ const ListItems = ({
   handleViewPost: (path: string) => void;
 }) => {
   const { locale } = useRouter();
+  
 
   const goToProfile = useGoToUserProfile();
 

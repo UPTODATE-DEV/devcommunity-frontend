@@ -3,7 +3,7 @@ import ShowReactions from "@/components/questions/ShowQuestionReactions";
 import useSocket from "@/hooks/useSocket";
 import useStore from "@/hooks/useStore";
 import useStoreNoPersist from "@/hooks/useStoreNoPersist";
-import { getRequest, patchRequest } from "@/lib/api";
+import { patchRequest } from "@/lib/api";
 import { shortenNumber } from "@/lib/shorterNumber";
 import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
@@ -45,22 +45,15 @@ const QuestionReactions = ({ post }: { post: Post }) => {
   };
 
   useEffect(() => {
-    async function getReactions() {
-      const response = await getRequest({ endpoint: `/posts/${post?.id}/reactions/posts` });
-      if (response?.data) {
-        setReactions(response.data?.reactions);
-        const reaction = response.data?.reactions?.find((reaction: QuestionsReaction) => {
-          return reaction?.user?.id === userId;
-        });
-        if (reaction) {
-          setUserReaction(reaction.type);
-        } else {
-          setUserReaction(undefined);
-        }
-      }
-    } 
-
-    getReactions().then(() => setLoading(false));
+    setLoading(true);
+    setReactions(post.question?.reactions);
+    const reaction = post.question?.reactions?.find((reaction: QuestionsReaction) => {
+      return reaction?.user?.id === userId;
+    });
+    if (reaction) {
+      setUserReaction(reaction.type);
+    }
+    setLoading(false);
   }, []);
 
   const SeeAllReaction = ({ type }: { type: QuestionReactionType }) => (

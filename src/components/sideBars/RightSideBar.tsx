@@ -5,9 +5,7 @@ import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/router";
 import React from "react";
 import ListItems from "./ListItems";
@@ -16,13 +14,6 @@ const RightSideBar = () => {
   const { push, locale } = useRouter();
   const setTopPosts = useStore((state) => state.setTopPostsOfTheWeek);
   const posts = useStore((state) => state.topPostsOfTheWeek);
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
-  if (isMobile) {
-    return null;
-  }
 
   const handleView = (path: string, type: "posts" | "articles") => {
     push(`/${type}/${path}`);

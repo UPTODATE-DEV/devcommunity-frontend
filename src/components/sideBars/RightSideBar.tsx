@@ -14,6 +14,8 @@ import ListItems from "./ListItems";
 
 const RightSideBar = () => {
   const { push, locale } = useRouter();
+  const setTopPosts = useStore((state) => state.setTopPostsOfTheWeek);
+  const posts = useStore((state) => state.topPostsOfTheWeek);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -25,9 +27,6 @@ const RightSideBar = () => {
   const handleView = (path: string, type: "posts" | "articles") => {
     push(`/${type}/${path}`);
   };
-
-  const setTopPosts = useStore((state) => state.setTopPostsOfTheWeek);
-  const posts = useStore((state) => state.topPostsOfTheWeek);
 
   React.useEffect(() => {
     const getPosts = async () => {

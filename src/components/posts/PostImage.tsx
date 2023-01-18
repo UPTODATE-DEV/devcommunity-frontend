@@ -5,7 +5,6 @@ const PostImage = ({
   articleUrl = "",
   title = "",
   handleClick,
-  height = 140,
 }: {
   articleUrl?: string;
   title?: string;
@@ -16,9 +15,9 @@ const PostImage = ({
     <Stack
       sx={{
         width: 1,
-        height: { height },
+        paddingTop: "56.25%",
         position: "relative",
-        borderRadius: 2,
+        borderRadius: 1,
         cursor: "pointer",
         overflow: "hidden",
         bgcolor: "action.hover",

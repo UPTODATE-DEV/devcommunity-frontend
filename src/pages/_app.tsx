@@ -16,23 +16,9 @@ import { useEffect } from "react";
 import io from "socket.io-client";
 import "../styles/globals.css";
 
-const socket = io(BASE_API_URL);
-
 function MyApp({ Component, pageProps }: AppProps) {
   const { darkModeActive } = useDarkMode();
   const mode = darkModeActive ? "dark" : "light";
-
-  useEffect(() => {
-    // Notification.requestPermission().then((result) => {
-    //   console.log("NOTIFICATIONS:" + result);
-    // });
-
-    return () => {
-      socket.off("connect");
-      socket.off("disconnect");
-      socket.off("notification");
-    };
-  }, []);
 
   return (
     <MantineProvider
@@ -57,7 +43,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         },
       }}
     >
-      <ThemeProvider theme={theme(mode)}>
+      <ThemeProvider theme={theme("light")}>
         <CssBaseline />
         <NextNprogress
           color={theme(mode).palette.primary.main}

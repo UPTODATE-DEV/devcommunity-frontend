@@ -38,6 +38,8 @@ interface Store {
   setShowTagsFilters: (state: boolean) => void;
   post: Post | null;
   setPost: (post: Post) => void;
+  profileTab: string | undefined;
+  setProfileTab: (tab: string) => void;
 }
 
 const useStore = create<Store>()(
@@ -125,6 +127,10 @@ const useStore = create<Store>()(
       post: null,
       setPost: (post: Post) => {
         return set((state) => ({ ...state, post }));
+      },
+      profileTab: undefined,
+      setProfileTab: (tab: string) => {
+        return set((state) => ({ ...state, profileTab: tab }));
       },
     }))
   )

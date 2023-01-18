@@ -2,15 +2,18 @@ import useStore from "@/hooks/useStore";
 import useUser from "@/hooks/useUser";
 import { deleteRequest, getRequest, patchRequest } from "@/lib/api";
 import { shortenNumber } from "@/lib/shorterNumber";
+import AddIcon from "@mui/icons-material/Add";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import DraftsIcon from "@mui/icons-material/Drafts";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import QuestionAnswer from "@mui/icons-material/QuestionAnswerSharp";
 import TagIcon from "@mui/icons-material/Tag";
+import WebStoriesIcon from "@mui/icons-material/WebStories";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Chip from "@mui/material/Chip";
+import Fab from "@mui/material/Fab";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
@@ -31,15 +34,21 @@ const Empty = dynamic(import("@/components/common/Empty"), {
   loading: () => null,
 });
 
+const CreateSeries = dynamic(import("./CreateSeries"), { ssr: false });
+
 const Dashboard = dynamic(import("./Dashboard"), { ssr: false });
 
 const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
   const sessionUser = useStore((state) => state.session?.user);
   const user = useUser(sessionUser?.username);
-  const [tab, setTab] = React.useState("articles");
+  const { profileTab, setProfileTab } = useStore((state) => state);
   const [posts, setPosts] = React.useState<Post[] | []>([]);
   const [followedTags, setFollowedTags] = React.useState<Tags[] | []>([]);
   const { locale } = useRouter();
+  const [series, setSeries] = React.useState<any[] | []>([]);
+  const [showCreateSeries, setShowCreateSeries] = React.useState<boolean>(false);
+
+  const isMobile = useMediaQuery("(min-width:760px)");
 
   const tabs = [
     {
@@ -61,6 +70,12 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
       icon: <QuestionAnswer fontSize="small" />,
     },
     {
+      id: "series",
+      label: locale === "en" ? "Series" : "Séries",
+      show: true,
+      icon: <WebStoriesIcon fontSize="small" />,
+    },
+    {
       id: "tags",
       label: "Tags",
       show: currentUser ? false : true,
@@ -79,7 +94,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
   const drafts = posts.filter((el) => el.draft);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
-    setTab(newValue);
+    setProfileTab(newValue);
   };
 
   const handleTagClick = async (tag: string) => {
@@ -97,6 +112,12 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
     }
   };
 
+  function HandleShowCreateSeries() {
+    setShowCreateSeries(true);
+  }
+
+  const handleCreateSeries = async () => {};
+
   const fetchData = async () => {
     const getPosts = getRequest({ endpoint: `/posts/author/${currentUser?.id || sessionUser?.id}` });
     const getFollowedTags = getRequest({ endpoint: `/tags/followed/${sessionUser?.id}` });
@@ -111,18 +132,28 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
   }, []);
 
   React.useEffect(() => {
-    if (currentUser === undefined && user?.role === "AUTHOR") {
-      setTab("dashboard");
+    if (!profileTab) {
+      if (currentUser === undefined && user?.role === "AUTHOR") {
+        setProfileTab("dashboard");
+      } else {
+        setProfileTab("articles");
+      }
     }
   }, [user?.role]);
 
+  if (!user || !profileTab) return null;
+
+  if (showCreateSeries) {
+    return <CreateSeries />;
+  }
+
   return (
-    <TabContext value={tab}>
+    <TabContext value={profileTab}>
       <TabList
         onChange={handleTabChange}
         scrollButtons
         allowScrollButtonsMobile
-        variant={useMediaQuery("(min-width:760px)") ? "fullWidth" : "scrollable"}
+        variant={isMobile ? "fullWidth" : "scrollable"}
         aria-label="Show reactions"
         sx={{ border: 1, borderColor: "divider", bgcolor: "background.paper" }}
       >
@@ -157,6 +188,28 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
               <PostCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
             </React.Fragment>
           ))}
+        </Stack>
+      </TabPanel>
+      <TabPanel sx={{ p: 0 }} value={"series"}>
+        <Stack spacing={2} sx={{ position: "relative" }}>
+          {articles.length === 0 && <Empty />}
+
+          {articles?.map((item, index) => (
+            <React.Fragment key={item.id}>
+              <PostCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
+            </React.Fragment>
+          ))}
+
+          {sessionUser?.id && (
+            <Fab
+              color="primary"
+              onClick={HandleShowCreateSeries}
+              aria-label="add"
+              sx={{ position: "sticky", bottom: 20, alignSelf: "center" }}
+            >
+              <AddIcon />
+            </Fab>
+          )}
         </Stack>
       </TabPanel>
       {!currentUser && (

@@ -90,6 +90,12 @@ iframe.ql-video {
   text-decoration: underline;
 }
 
+.see-more {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #0179bb;
+}
+
 .ql-editor {
   min-height: 250px;
 }

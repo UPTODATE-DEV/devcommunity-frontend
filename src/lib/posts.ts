@@ -18,7 +18,7 @@ export const getArticleImageUrl = (article?: Article) => {
 
 export const getContent = (content: string, limit: number, locale: string | undefined) => {
   if (limit && content.length > limit) {
-    return `${content.substring(0, limit)}... <a href="#">${locale === "en" ? "See more" : "Voir plus"}</a>`;
+    return `${content.substring(0, limit)}... <span class="see-more">${locale === "en" ? "See more" : "Voir plus"}</span>`;
   }
   return content;
 };

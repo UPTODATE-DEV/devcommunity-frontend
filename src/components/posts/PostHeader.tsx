@@ -18,7 +18,7 @@ const PostHeader: React.FC<{ data: Post }> = ({ data }) => {
       }}
     >
       <PostImage
-        height={300}
+        height={420}
         handleClick={handleClick}
         title={data?.title}
         articleUrl={getArticleImageUrl(data?.article)}

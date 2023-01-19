@@ -1,13 +1,11 @@
 import useStore from "@/hooks/useStore";
 import { getRequest } from "@/lib";
-import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import SearchIcon from "@mui/icons-material/Search";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import Divider from "@mui/material/Divider";
 import InputBase from "@mui/material/InputBase";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
@@ -15,14 +13,9 @@ import Typography from "@mui/material/Typography";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useDebounce } from "use-debounce";
-
-import Checkbox from "@mui/material/Checkbox";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import SeriesCard from "./SeriesCard";
 
 const Empty = dynamic(import("@/components/common/Empty"), {
   ssr: false,
@@ -36,6 +29,7 @@ const CreateSeries = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<Post[]>([]);
   const [checked, setChecked] = useState<Post[]>([]);
+  const [series, setSeries] = useState<Post[]>([]);
 
   const handleAddPostModalClose = () => {
     setOpenAddPostModal(false);
@@ -58,8 +52,6 @@ const CreateSeries = () => {
     setOpenAddPostModal(true);
   };
 
-  const [value] = useDebounce(searchTerm, 500);
-
   const handleSearch = (e: { target: { value: string } }) => {
     const value = e.target.value;
     setSearchTerm(value);
@@ -70,20 +62,19 @@ const CreateSeries = () => {
       const response = await getRequest({ endpoint: `/posts?&userId=${session.user?.id}&page=1&perPage=1000` });
       setSearchResults(response.data);
     }
-  }, []);
-
-  useEffect(() => {
-    async function getPosts(searchTerm: string) {
+    async function handleFilter(searchTerm: string) {
       const results = searchResults.filter((post) => post.title.toLowerCase().includes(searchTerm.toLowerCase()));
       setSearchResults(results);
     }
-    if (value) {
-      getPosts(value);
+    if (searchTerm) {
+      handleFilter(searchTerm);
+    } else {
+      getPosts();
     }
-  }, [value]);
+  }, [searchTerm]);
 
   return (
-    <>
+    <DndProvider backend={HTML5Backend}>
       <Dialog
         open={openAddPostModal}
         onClose={handleAddPostModalClose}
@@ -91,80 +82,63 @@ const CreateSeries = () => {
         aria-describedby="alert-dialog-description"
         fullWidth
       >
-        <DialogTitle>{locale === "en" ? "Pick a post" : "Choisit un article"}</DialogTitle>
-        <DialogContent>
+        <DialogTitle>{locale === "en" ? "Select post to add" : "Sélectionner les posts à ajouter"}</DialogTitle>
+        <DialogContent dividers>
           <InputBase
             placeholder={locale === "en" ? "Search for a post..." : "Rechercher un post..."}
-            endAdornment={<ManageSearchIcon color="disabled" />}
+            startAdornment={<SearchIcon color="disabled" sx={{ mr: 1 }} />}
             inputProps={{ "aria-label": "search" }}
             onChange={handleSearch}
             name="search"
-            sx={{ width: 1, borderBottom: 1, borderColor: "divider" }}
+            sx={{ width: 1 }}
           />
-
-          <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-            {searchResults.map((value) => {
-              const labelId = `checkbox-list-label-${value}`;
-
-              return (
-                <ListItem key={value.id} disablePadding>
-                  <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
-                    <ListItemIcon>
-                      <Checkbox
-                        edge="start"
-                        checked={checked.findIndex(el => el.id === value.id) !== -1}
-                        tabIndex={-1}
-                        disableRipple
-                        inputProps={{ "aria-labelledby": labelId }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      id={labelId}
-                      primary={value.title}
-                      secondary={
-                        <Typography
-                          sx={{ display: "inline" }}
-                          component="span"
-                          variant="body2"
-                          color="text.secondary"
-                          dangerouslySetInnerHTML={{ __html: value.content.substring(0, 100) }}
-                        />
-                      }
-                    />
-                  </ListItemButton>
-                </ListItem>
-              );
-            })}
-          </List>
+          <Stack spacing={2} sx={{ pt: 2, pb: 4 }}>
+            {(searchResults.length > 0 &&
+              searchResults.map((el) => (
+                <SeriesCard
+                  key={el.id}
+                  handleCheck={handleToggle(el)}
+                  checked={checked.findIndex((checked) => checked.id === el.id) !== -1}
+                  data={el}
+                />
+              ))) || <Empty />}
+          </Stack>
         </DialogContent>
-        <DialogActions></DialogActions>
       </Dialog>
-      <Paper component={Stack} spacing={2} variant="outlined" sx={{ py: 4, px: 2, minHeight: "300px" }}>
+      <Paper component={Stack} spacing={2} variant="outlined" sx={{ p: 2 }}>
         <Typography variant="h6" color="text.primary">
           {locale === "en" ? "Create a series" : "Créer une série"}
         </Typography>
-        <Divider />
-        <Empty />
-        {searchResults.length > 0 && (
-          <Stack spacing={2}>
-            {searchResults.map((post) => (
-              <Paper key={post.id} component={Stack} spacing={2} variant="outlined" sx={{ py: 4, px: 2 }}>
-                <Typography variant="h6" color="text.primary">
-                  {post.title}
-                </Typography>
-                <Divider />
-                <Typography variant="body2" color="text.secondary">
-                  {post.content.substring(0, 100)}...
-                </Typography>
-              </Paper>
-            ))}
-          </Stack>
-        )}
-        <Button variant="outlined" color="primary" startIcon={<PlaylistAddIcon />} onClick={handleOpenAddModal}>
-          {locale === "en" ? "Add post" : "Ajouter un post"}
+      </Paper>
+      <Paper component={Stack} spacing={2} variant="outlined" sx={{ py: 4, px: 2, minHeight: "240px" }}>
+        <Stack spacing={2} sx={{ py: 2 }}>
+          {(series.concat(checked).length > 0 &&
+            checked.map((el) => (
+              <SeriesCard
+                key={el.id}
+                handleCheck={handleToggle(el)}
+                checked={checked.findIndex((checked) => checked.id === el.id) !== -1}
+                data={el}
+                showDragIcon
+              />
+            ))) || <Empty />}
+        </Stack>
+        <Button
+          variant={checked.length > 0 ? "contained" : "outlined"}
+          color="primary"
+          startIcon={<PlaylistAddIcon />}
+          onClick={handleOpenAddModal}
+        >
+          {checked.length > 0
+            ? locale === "en"
+              ? "Save"
+              : "Enregistrer"
+            : locale === "en"
+            ? "Select posts"
+            : "Sélectionner des posts"}
         </Button>
       </Paper>
-    </>
+    </DndProvider>
   );
 };
 

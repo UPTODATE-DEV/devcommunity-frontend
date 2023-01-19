@@ -9,7 +9,7 @@ const Empty = () => {
   const { locale } = useRouter();
   return (
     <Stack
-      sx={{ width: 1, height: 1, minHeight: 240, position: "relative" }}
+      sx={{ width: 1, height: 1, minHeight: 220, position: "relative" }}
       justifyContent="center"
       alignItems="center"
     >

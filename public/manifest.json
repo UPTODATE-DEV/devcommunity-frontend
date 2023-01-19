@@ -2,7 +2,7 @@
   "theme_color": "#0179bb",
   "background_color": "#0179bb",
   "display": "standalone",
-  "scope": "/",
+"scope": "/",
   "start_url": "/",
   "name": "Updev Community",
   "short_name": "Updev",

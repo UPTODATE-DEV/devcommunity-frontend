@@ -1,129 +1,86 @@
 import PostContent from "@/components/common/Content";
-import PostCardHeader from "@/components/common/PostCardHeader";
-import PostTags from "@/components/common/PostTags";
 import { useGoToPost, useGoToUserProfile } from "@/hooks/posts";
-import { getContent, parseDate } from "@/lib/posts";
-import EditIcon from "@mui/icons-material/EditOutlined";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import PublishIcon from "@mui/icons-material/RemoveRedEye";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import IconButton from "@mui/material/IconButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
+import { alpha } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useTheme from "@mui/system/useTheme";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
+import { useDrag } from "react-dnd";
 
-const SeriesCard: React.FC<{ data: Post }> = ({ data }) => {
-  const { push, asPath, locale } = useRouter();
-  const username = asPath.split("/profile/")[1];
+const SeriesCard: React.FC<{
+  data: Post;
+  checked?: boolean;
+  handleCheck: () => void;
+  showDragIcon?: boolean;
+}> = ({ data, checked = false, handleCheck, showDragIcon = false }) => {
+  const { asPath, locale } = useRouter();
+  const [isDragging, setIsDragging] = React.useState(false);
   const theme = useTheme();
   const { author } = data;
   const goToProfile = useGoToUserProfile();
   const goToPost = useGoToPost();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const openMenu = Boolean(anchorEl);
 
-  const postContent = getContent(data?.content, isMobile ? 180 : 220, locale);
+  const [{ opacity }, dragRef] = useDrag(
+    () => ({
+      type: data.id,
+      item: data,
+      collect: (monitor) => ({
+        opacity: monitor.isDragging() ? 0.5 : 1,
+      }),
+    }),
+    []
+  );
 
-  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
-
-  const handleGoToProfile = useCallback(() => {
-    goToProfile(author?.email);
-  }, [author?.email]);
-
-  const handleGoToPost = useCallback(() => {
-    goToPost(data);
-  }, [data]);
+  const handleDrag = useCallback((e: any) => {
+    e.stopPropagation();
+    setIsDragging(true);
+  }, []);
 
   return (
-    <Paper variant="outlined" sx={{ p: 2, position: "relative" }}>
-      {!username && (
-        <IconButton
-          aria-label="more"
-          id="long-button"
-          aria-controls={openMenu ? "long-menu" : undefined}
-          aria-expanded={openMenu ? "true" : undefined}
-          aria-haspopup="true"
-          onClick={handleOpenMenu}
-          sx={{ position: "absolute", right: 1, top: 4 }}
-        >
-          <MoreVertIcon />
-        </IconButton>
-      )}
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={openMenu}
-        onClose={handleCloseMenu}
-        MenuListProps={{
-          "aria-labelledby": "basic-button",
-        }}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-      >
-        <MenuItem
-          onClick={() =>
-            push({ pathname: `/${data?.type === "ARTICLE" ? "articles" : "posts"}/${data?.slug}/edit` }, undefined, {
-              shallow: true,
-            })
-          }
-        >
-          <ListItemIcon>
-            <EditIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>{locale === "fr" ? "Modifier" : "Edit"}</ListItemText>
-        </MenuItem>
-        <MenuItem onClick={handleGoToPost}>
-          <ListItemIcon>
-            <PublishIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>{locale === "fr" ? "Prévisualiser" : "Preview"}</ListItemText>
-        </MenuItem>
-      </Menu>
-      <PostCardHeader
-        handleClickGoToProfile={handleGoToProfile}
-        date={parseDate({ date: data?.publishedOn, type: "relative" })}
-        author={author}
-      />
-      <Typography
-        fontWeight={700}
-        color="text.primary"
-        variant="h6"
-        onClick={handleGoToPost}
-        sx={{
-          "&:hover": {
-            color: "primary.main",
-          },
-          cursor: "pointer",
-          mb: "-8px",
-          mt: 1,
-        }}
-      >
-        {data?.title}
-      </Typography>
-      <Stack sx={{ cursor: "pointer" }} onClick={handleGoToPost}>
-        <PostContent content={postContent} />
+    <Paper
+      ref={dragRef}
+      variant="outlined"
+      sx={{
+        px: 2,
+        py: 1.5,
+        position: "relative",
+        opacity,
+        borderColor: checked ? "primary.main" : "divider",
+        bgcolor: (theme) => (checked ? alpha(theme.palette.primary.main, 0.1) : "background.paper"),
+      }}
+      component={Stack}
+      direction="row"
+      justifyContent="space-between"
+      spacing={2}
+      alignItems="flex-start"
+    >
+      <IconButton size="small" onClick={handleCheck} onDrag={handleDrag}>
+        {checked ? <CheckCircleIcon color="primary" /> : <RadioButtonUncheckedIcon />}
+      </IconButton>
+      <Stack>
+        <Typography fontWeight={700} color="text.primary">
+          {data?.title}
+        </Typography>
+        <Stack sx={{ cursor: "pointer" }} onClick={handleCheck}>
+          <PostContent content={`${data?.content.substring(0, 130)}...`} fontSize={13} />
+        </Stack>
       </Stack>
-      <PostTags tags={data?.tags} />
+      <Stack alignItems="center">
+        {showDragIcon && (
+          <Stack onClick={handleCheck} sx={{ cursor: "move", height: 80, width: 30 }}>
+            <DragIndicatorIcon />
+          </Stack>
+        )}
+      </Stack>
     </Paper>
   );
 };

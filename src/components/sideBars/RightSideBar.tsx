@@ -21,7 +21,7 @@ const RightSideBar = () => {
 
   React.useEffect(() => {
     const getPosts = async () => {
-      const posts = await getRequest({ endpoint: "/posts/top/posts-sidebar" });
+      const posts = await getRequest({ endpoint: "/posts/top/posts-week" });
       if (!posts.error) {
         setTopPosts(posts.data);
       }
@@ -34,7 +34,7 @@ const RightSideBar = () => {
     <Stack spacing={2} sx={{ width: 1, pb: 5 }}>
       <Paper variant="outlined" sx={{ position: "relative", width: 1 }}>
         <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
-          {locale === "en" ? "Top articles of the Week" : "Meilleurs articles de la semaine"}
+          {locale === "en" ? "Trending articles" : "Articles tendances"}
         </Typography>
         <Divider />
         <List sx={{ width: { xs: "100%" }, bgcolor: "background.paper" }}>
@@ -50,7 +50,7 @@ const RightSideBar = () => {
         </List>
         <Divider />
         <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
-          {locale === "en" ? "Top Posts of the Week" : "Meilleurs posts de la semaine"}
+          {locale === "en" ? "Trending post" : "Post tendances"}
         </Typography>
         <Divider />
         <List sx={{ width: "100%", bgcolor: "background.paper" }}>

@@ -50,3 +50,7 @@ sitemap-0.xml
 
 # Robots.txt
 robots.txt
+
+#yarn
+yarn.lock
+package-lock.json

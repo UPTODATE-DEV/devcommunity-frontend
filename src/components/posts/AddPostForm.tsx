@@ -3,21 +3,25 @@ import { FILES_BASE_URL } from "@/config/url";
 import useStore from "@/hooks/useStore";
 import { getRequest, patchRequest, postRequest } from "@/lib/api";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Autocomplete from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import Chip from "@mui/material/Chip";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import FormControl from "@mui/material/FormControl";
+import Grow from "@mui/material/Grow";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
+import Popper from "@mui/material/Popper";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-toastify";
-
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 const AddPostForm = ({ data }: { data?: Post }) => {
   const getImage = data?.article?.image.id;
@@ -33,8 +37,22 @@ const AddPostForm = ({ data }: { data?: Post }) => {
     tags: data?.tags?.map((el) => el.tag.name) || [],
     locale: data?.locale || "FR",
   });
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef<HTMLDivElement>(null);
 
   const { push, locale, replace } = useRouter();
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event: Event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const handleImageChange = async (e: any) => {
     setPreview(URL?.createObjectURL(e.target.files[0]));
@@ -130,7 +148,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
   }, []);
 
   return (
-    <Paper variant="outlined" component={Stack} spacing={2} sx={{ py: 1, p: 2 }}>
+    <Paper variant="outlined" component={Stack} spacing={2} sx={{ px: 2, pt: 2, pb: 6 }}>
       <Stack
         justifyContent="center"
         alignItems="center"
@@ -210,27 +228,73 @@ const AddPostForm = ({ data }: { data?: Post }) => {
         ]}
       />
       <Stack spacing={2} direction="row" alignItems="center">
-        <Button
-          disableElevation
-          color="primary"
-          variant="contained"
-          disabled={!post.title || !post.content || !post.tags?.length || loading}
-          sx={{ px: 4, borderRadius: 50 }}
-          onClick={onPublish}
-        >
-          {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Publish" : "Publier"}
-        </Button>
-
-        <Button
-          disableElevation
-          color="secondary"
-          variant="contained"
-          disabled={!post.title || !post.content || !post.tags?.length || loading}
-          sx={{ px: 4, borderRadius: 50 }}
-          onClick={onSubmit}
-        >
-          {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Save" : "Enregistrer"}
-        </Button>
+        <Stack sx={{ position: "relative" }}>
+          <ButtonGroup
+            variant="contained"
+            ref={anchorRef}
+            disableElevation
+            aria-label="split button"
+            sx={{ borderRadius: 50 }}
+            disabled={!post.title || !post.content || !post.tags?.length || loading}
+          >
+            <Button sx={{ px: 4, borderRadius: 50 }} onClick={onPublish}>
+              {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Publish" : "Publier"}
+            </Button>
+            <Button
+              size="small"
+              aria-controls={open ? "split-button-menu" : undefined}
+              aria-expanded={open ? "true" : undefined}
+              aria-label="select merge strategy"
+              aria-haspopup="menu"
+              sx={{ px: 2, borderRadius: 50 }}
+              onClick={handleToggle}
+            >
+              <ArrowDropDownIcon />
+            </Button>
+          </ButtonGroup>
+          <Popper
+            open={open}
+            sx={{
+              zIndex: 1,
+            }}
+            anchorEl={anchorRef.current}
+            role={undefined}
+            transition
+            disablePortal
+            nonce={undefined}
+            onResize={undefined}
+            onResizeCapture={undefined}
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                style={{
+                  transformOrigin: placement === "bottom" ? "left top" : "left bottom",
+                }}
+              >
+                <div>
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <Button
+                      sx={{ px: 4, borderRadius: 50, my: 0.5 }}
+                      variant="contained"
+                      color="secondary"
+                      disableElevation
+                      onClick={onSubmit}
+                    >
+                      {loading
+                        ? locale === "en"
+                          ? "Loading..."
+                          : "Chargement"
+                        : locale === "en"
+                        ? "Save"
+                        : "Enregistrer"}
+                    </Button>
+                  </ClickAwayListener>
+                </div>
+              </Grow>
+            )}
+          </Popper>
+        </Stack>
 
         <Button
           disableElevation

@@ -16,8 +16,10 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs, { Dayjs } from "dayjs";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import qs from "qs";
 import React from "react";
 import { getRequest } from "../../lib";
+import { ListItemsSkeleton } from "../sideBars/Skeleton";
 import { TopSkeleton } from "./Skeleton";
 
 const Empty = dynamic(import("@/components/common/Empty"), {
@@ -28,12 +30,17 @@ const Empty = dynamic(import("@/components/common/Empty"), {
 type Filters = "all" | "week" | "month" | "year" | "date";
 
 const TopPosts = () => {
-  const [topPosts, setTopPosts] = React.useState<TopPosts[]>([]);
+  const [topPosts, setTopPosts] = React.useState<TopPosts[] | null>(null);
   const { push, locale } = useRouter();
   const [filter, setFilter] = React.useState<Filters>("all");
   const [byDate, setByDate] = React.useState(false);
   const [startDate, setStartDate] = React.useState<Dayjs | null>(dayjs(new Date()));
   const [endDate, setEndDate] = React.useState<Dayjs | null>(dayjs(new Date()));
+
+  const today = new Date();
+  const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const lastMonth = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+  const lastYear = new Date(today.getTime() - 365 * 24 * 60 * 60 * 1000);
 
   const handleFilter = (value: Filters) => {
     if (value === "date") {
@@ -53,24 +60,27 @@ const TopPosts = () => {
   // filter with locale
   const filters: { label: string; value: Filters }[] = [
     { label: locale === "en" ? "All times" : "Tous les temps", value: "all" },
-    { label: locale === "en" ? "This week" : "Cette semaine", value: "week" },
-    { label: locale === "en" ? "This month" : "Ce mois-ci", value: "month" },
-    { label: locale === "en" ? "This year" : "Cette année", value: "year" },
+    { label: locale === "en" ? "Past 7 days" : "7 derniers jours", value: "week" },
+    { label: locale === "en" ? "Past 30 days" : "30 derniers jours", value: "month" },
+    { label: locale === "en" ? "Past 365 days" : "365 derniers jours", value: "year" },
     { label: locale === "en" ? "By date" : "Par date", value: "date" },
   ];
 
-  const getEndPoint = (filter: Filters) => {
-    if (filter === "week") return "/posts/top/posts-week";
-    if (filter === "month") return "/posts/top/posts-month";
-    if (filter === "year") return "/posts/top/posts-year";
-    if (filter === "date")
-      return `/posts/top/posts-period?startDate=${startDate?.toISOString()}&endDate=${endDate?.toISOString()}`;
-    return "/posts/top/posts";
+  const getInterval = (filter: Filters) => {
+    if (filter === "week") return { startDate: lastWeek, endDate: today.toISOString() };
+    if (filter === "month") return { startDate: lastMonth, endDate: today.toISOString() };
+    if (filter === "year") return { startDate: lastYear, endDate: today.toISOString() };
+    if (filter === "date") return { startDate: startDate?.toISOString(), endDate: endDate?.toISOString() };
+    return { startDate: null, endDate: null };
+  };
+
+  const getQuery = (filter: Filters) => {
+    return qs.stringify({ limit: 20, ...getInterval(filter) });
   };
 
   React.useEffect(() => {
     async function getTopPosts() {
-      const response = await getRequest({ endpoint: getEndPoint(filter) });
+      const response = await getRequest({ endpoint: `/posts/get/top?${getQuery(filter)}` });
       if (response.error) return [];
       setTopPosts(response.data);
     }
@@ -81,7 +91,7 @@ const TopPosts = () => {
   return (
     <Stack spacing={2}>
       <Paper variant="outlined" sx={{ p: 2 }}>
-        <Typography variant="h6">{locale === "en" ? "Top Posts" : "Meilleurs posts"}</Typography>
+        <Typography variant="h6">{locale === "en" ? "Top 20 Posts" : "Meilleurs 20 posts"}</Typography>
       </Paper>
 
       <Paper variant="outlined" sx={{ p: 2 }}>
@@ -172,8 +182,9 @@ const TopPosts = () => {
         )}
       </Paper>
 
-      <Paper variant="outlined" sx={{ p: 2 }}>
-        {topPosts?.length === 0 && <Empty />}
+      <Paper variant="outlined" sx={{ p: 2, minHeight: 400 }}>
+        {!topPosts && <ListItemsSkeleton />}
+        {topPosts && topPosts.length === 0 && <Empty />}
         <List>
           {topPosts?.map((el, i) => (
             <React.Fragment key={i}>

@@ -28,6 +28,7 @@ import { toast } from "react-toastify";
 import DraftCard from "./DraftCard";
 import PostCard from "./PostCard";
 import QuestionCard from "./QuestionCard";
+import SeriesListCard from "./SeriesListCard";
 
 const Empty = dynamic(import("@/components/common/Empty"), {
   ssr: false,
@@ -45,7 +46,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
   const [posts, setPosts] = React.useState<Post[] | []>([]);
   const [followedTags, setFollowedTags] = React.useState<Tags[] | []>([]);
   const { locale } = useRouter();
-  const [series, setSeries] = React.useState<any[] | []>([]);
+  const [series, setSeries] = React.useState<{ id: ""; posts: Series[] }[] | []>([]);
   const [showCreateSeries, setShowCreateSeries] = React.useState<boolean>(false);
 
   const isMobile = useMediaQuery("(min-width:760px)");
@@ -121,10 +122,12 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
   const fetchData = async () => {
     const getPosts = getRequest({ endpoint: `/posts/author/${currentUser?.id || sessionUser?.id}` });
     const getFollowedTags = getRequest({ endpoint: `/tags/followed/${sessionUser?.id}` });
-    const [posts, followedTags] = await Promise.all([getPosts, getFollowedTags]);
+    const getSeries = getRequest({ endpoint: `/posts/series?userId=${currentUser?.id || sessionUser?.id}` });
+    const [posts, followedTags, series] = await Promise.all([getPosts, getFollowedTags, getSeries]);
 
     setPosts(posts.data);
     setFollowedTags(followedTags.data);
+    setSeries(series.data);
   };
 
   React.useEffect(() => {
@@ -192,11 +195,11 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
       </TabPanel>
       <TabPanel sx={{ p: 0 }} value={"series"}>
         <Stack spacing={2} sx={{ position: "relative" }}>
-          {articles.length === 0 && <Empty />}
+          {series.length === 0 && <Empty />}
 
-          {articles?.map((item, index) => (
+          {series?.map((item, index) => (
             <React.Fragment key={item.id}>
-              <PostCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
+              <SeriesListCard data={item.posts[0].post} />
             </React.Fragment>
           ))}
 

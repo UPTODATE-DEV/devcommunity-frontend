@@ -4,7 +4,11 @@ import React, { useCallback } from "react";
 import PostImage from "./PostImage";
 
 const PostHeader: React.FC<{ data: Post }> = ({ data }) => {
-  const handleClick = useCallback(() => {}, []);
+  const handleClick = useCallback(() => {
+    if (data?.type === "ARTICLE") {
+      window.open(getArticleImageUrl(data?.article), "_blank");
+    }
+  }, []);
 
   return (
     <Paper

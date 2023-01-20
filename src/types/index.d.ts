@@ -55,6 +55,11 @@ interface Post {
   _count: { comments: number };
 }
 
+interface Series {
+  id: string;
+  module: number;
+  post: Post;
+}
 interface PostComment {
   id: string;
   createdAt: Date;

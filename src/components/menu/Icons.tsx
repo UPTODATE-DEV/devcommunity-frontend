@@ -149,6 +149,7 @@ const Icons = () => {
       >
         <ArrowDown color="primary" />
       </Button>
+      {/* @ts-ignore */}
       <Popper
         open={open}
         anchorEl={anchorRef.current}

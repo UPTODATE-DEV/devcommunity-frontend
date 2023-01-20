@@ -252,11 +252,12 @@ const AddPostForm = ({ data }: { data?: Post }) => {
               <ArrowDropDownIcon />
             </Button>
           </ButtonGroup>
+          {/* @ts-ignore */}
           <Popper
-            open={open}
             sx={{
               zIndex: 1,
             }}
+            open={open}
             anchorEl={anchorRef.current}
             role={undefined}
             transition

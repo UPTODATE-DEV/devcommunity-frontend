@@ -43,7 +43,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         },
       }}
     >
-      <ThemeProvider theme={theme("light")}>
+      <ThemeProvider theme={theme(mode)}>
         <CssBaseline />
         <NextNprogress
           color={theme(mode).palette.primary.main}

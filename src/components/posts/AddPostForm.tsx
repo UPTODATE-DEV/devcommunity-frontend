@@ -261,9 +261,6 @@ const AddPostForm = ({ data }: { data?: Post }) => {
             role={undefined}
             transition
             disablePortal
-            nonce={undefined}
-            onResize={undefined}
-            onResizeCapture={undefined}
           >
             {({ TransitionProps, placement }) => (
               <Grow

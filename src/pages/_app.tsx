@@ -1,5 +1,4 @@
 import ToastNotification from "@/components/common/Toast";
-import { BASE_API_URL } from "@/config/url";
 import SEO from "@/utils/next-seo.config";
 import { theme } from "@/utils/theme";
 import { MantineProvider } from "@mantine/core";
@@ -12,8 +11,6 @@ import withDarkMode, { useDarkMode } from "next-dark-mode";
 import { DefaultSeo } from "next-seo";
 import type { AppProps } from "next/app";
 import NextNprogress from "nextjs-progressbar";
-import { useEffect } from "react";
-import io from "socket.io-client";
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps) {

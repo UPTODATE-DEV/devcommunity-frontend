@@ -10,6 +10,7 @@ import * as React from "react";
 const ViewsMonthsChart = dynamic(import("@/components/profile/ViewsMonthsChart"), { ssr: false });
 const ViewsDaysChart = dynamic(import("@/components/profile/ViewsDaysChart"), { ssr: false });
 const ViewsWeekChart = dynamic(import("@/components/profile/ViewsWeekChart"), { ssr: false });
+const ViewsDateChart = dynamic(import("@/components/profile/ViewsDateChart"), { ssr: false });
 
 const Dashboard = () => {
   const [value, setValue] = React.useState("0");
@@ -55,6 +56,14 @@ const Dashboard = () => {
             </Typography>
           }
         />
+        <Tab
+          value="3"
+          label={
+            <Typography variant="caption" textTransform="capitalize">
+              {locale === "en" ? "By date" : "Par date"}
+            </Typography>
+          }
+        />
       </TabList>
       <TabPanel sx={{ p: 0 }} value={"0"}>
         <ViewsWeekChart />
@@ -64,6 +73,9 @@ const Dashboard = () => {
       </TabPanel>
       <TabPanel sx={{ p: 0 }} value={"2"}>
         <ViewsMonthsChart />
+      </TabPanel>
+      <TabPanel sx={{ p: 0 }} value={"3"}>
+        <ViewsDateChart />
       </TabPanel>
     </TabContext>
   );

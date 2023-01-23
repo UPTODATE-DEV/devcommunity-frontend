@@ -7,7 +7,7 @@ import ChartComponent from "./ChartComponent";
 const labelsEn = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const labelsFr = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
 
-export function ViewsWeekChart() {
+function ViewsWeekChart() {
   const { locale } = useRouter();
   const user = useStore((state) => state.session?.user);
   const [views, setViews] = useState<number[]>([]);

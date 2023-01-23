@@ -33,7 +33,7 @@ const labelsFr = [
   "Novembre",
 ];
 
-export function ViewsMonthsChart() {
+function ViewsMonthsChart() {
   const { locale } = useRouter();
   const user = useStore((state) => state.session?.user);
   const [views, setViews] = useState<number[]>([]);

@@ -35,6 +35,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
 import { ProfileQuestionTabsSkeleton } from "./Skeleton";
+import UserFollowers from "./UserFollowers";
 
 const ProfileTabs = dynamic(import("@/components/profile/ProfileTabs"), {
   ssr: false,
@@ -50,8 +51,8 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   const session = useStore((state) => state.session?.user);
   const setSession = useStore((state) => state.setSession);
   const useUserData = useUser(session?.username);
-  const [followings, setFollowings] = React.useState<User[]>([]);
-  const [followers, setFollowers] = React.useState<User[]>([]);
+  const [followings, setFollowings] = React.useState<{ user: User }[]>([]);
+  const [followers, setFollowers] = React.useState<{ user: User }[]>([]);
   const user = currentUser || useUserData;
   const { reload, locale } = useRouter();
   const [open, setOpen] = React.useState(false);
@@ -63,6 +64,8 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   const [follow, setFollow] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
+  const [viewFollowingsFollowersDialog, setViewFollowingsFollowersDialog] = React.useState(false);
+  const [viewType, setViewType] = React.useState<"followers" | "followings">("followers");
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -94,6 +97,15 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   const handleClose = () => {
     setOpen(false);
     handleCloseMenu();
+  };
+
+  const handleViewFollowingsFollowersDialog = (type: "followers" | "followings") => {
+    setViewType(type);
+    setViewFollowingsFollowersDialog(true);
+  };
+
+  const handleViewFollowingsFollowersDialogClose = () => {
+    setViewFollowingsFollowersDialog(false);
   };
 
   const onLogout = async () => {
@@ -160,6 +172,11 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
 
   return (
     <>
+      <UserFollowers
+        open={viewFollowingsFollowersDialog}
+        handleClose={handleViewFollowingsFollowersDialogClose}
+        data={viewType === "followers" ? followers : followings}
+      />
       {user?.id && (
         <>
           <Paper variant="outlined" component={Stack} spacing={2} sx={{ p: 2 }}>
@@ -329,13 +346,26 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
             </Stack>
 
             <Stack direction="row" spacing={2} alignItems="center">
-              <Stack direction="row" spacing={1} alignItems="center">
+              <Stack
+                direction="row"
+                sx={{ cursor: "pointer" }}
+                spacing={1}
+                alignItems="center"
+                onClick={() => handleViewFollowingsFollowersDialog("followings")}
+              >
                 <Typography color="text.primary">{followings?.length || 0}</Typography>
+
                 <Typography color="text.secondary">{locale === "fr" ? "Abonnements" : "Followings"}</Typography>
               </Stack>
 
               {user?.role === "AUTHOR" && (
-                <Stack direction="row" spacing={1} alignItems="center">
+                <Stack
+                  direction="row"
+                  sx={{ cursor: "pointer" }}
+                  spacing={1}
+                  alignItems="center"
+                  onClick={() => handleViewFollowingsFollowersDialog("followers")}
+                >
                   <Typography color="text.primary">{followers?.length || 0}</Typography>
                   <Typography color="text.secondary">{locale === "fr" ? "Abonnés" : "Followers"}</Typography>
                 </Stack>

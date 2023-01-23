@@ -40,6 +40,10 @@ const SeriesCard: React.FC<{
     []
   );
 
+  const handleGoToPost = useCallback(() => {
+    goToPost(data);
+  }, [data]);
+
   const handleDrag = useCallback((e: any) => {
     e.stopPropagation();
     setIsDragging(true);
@@ -67,7 +71,19 @@ const SeriesCard: React.FC<{
         {checked ? <CheckCircleIcon color="primary" /> : <RadioButtonUncheckedIcon />}
       </IconButton>
       <Stack>
-        <Typography fontWeight={700} color="text.primary">
+        <Typography
+          fontWeight={700}
+          color="text.primary"
+          onClick={handleGoToPost}
+          sx={{
+            "&:hover": {
+              color: "primary.main",
+            },
+            cursor: "pointer",
+            mb: "-8px",
+            mt: 1,
+          }}
+        >
           {data?.title}
         </Typography>
         <Stack sx={{ cursor: "pointer" }} onClick={handleCheck}>

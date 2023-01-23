@@ -3,7 +3,7 @@ import { getRequest } from "@/lib";
 import { useEffect, useState } from "react";
 import ChartComponent from "./ChartComponent";
 
-function ViewsDaysChart() {
+function ViewsDateChart() {
   const user = useStore((state) => state.session?.user);
   const [views, setViews] = useState<number[]>([]);
   const [reactions, setReactions] = useState<number[]>([]);
@@ -12,8 +12,8 @@ function ViewsDaysChart() {
   useEffect(() => {
     async function getUserStats(userId: string) {
       const [views, reactions] = await Promise.all([
-        getRequest({ endpoint: `/users/${userId}/monthly-views` }),
-        getRequest({ endpoint: `/users/${userId}/monthly-reactions` }),
+        getRequest({ endpoint: `/users/${userId}/views-period` }),
+        getRequest({ endpoint: `/users/${userId}/reactions-period` }),
       ]);
       if (!views.error) setViews(Object.values(views.data));
       if (!views.error) setLabels(Object.keys(views.data));
@@ -27,4 +27,4 @@ function ViewsDaysChart() {
   return <ChartComponent views={views} reactions={reactions} labels={labels} />;
 }
 
-export default ViewsDaysChart;
+export default ViewsDateChart;

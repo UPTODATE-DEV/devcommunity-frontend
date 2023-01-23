@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useTheme from "@mui/system/useTheme";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useCallback } from "react";
 
 const SeriesListCard: React.FC<{
   data: Post;
@@ -16,13 +16,25 @@ const SeriesListCard: React.FC<{
   const goToPost = useGoToPost();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const handleGoToPost = useCallback(() => {
+    goToPost(data);
+  }, [data]);
+
   return (
     <Paper
       variant="outlined"
+      onClick={handleGoToPost}
       sx={{
         px: 2,
         py: 1.5,
         position: "relative",
+        cursor: "pointer",
+        "&:hover": {
+          borderColor: "primary.main",
+          "&::after": {
+            borderColor: "primary.main",
+          },
+        },
         "&::before": {
           content: '""',
           position: "absolute",

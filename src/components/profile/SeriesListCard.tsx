@@ -11,10 +11,8 @@ import React, { useCallback } from "react";
 const SeriesListCard: React.FC<{
   data: Post;
 }> = ({ data }) => {
-  const { asPath, locale } = useRouter();
   const theme = useTheme();
   const goToPost = useGoToPost();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleGoToPost = useCallback(() => {
     goToPost(data);

@@ -4,6 +4,7 @@ import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import SearchIcon from "@mui/icons-material/Search";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import InputBase from "@mui/material/InputBase";
@@ -114,8 +115,7 @@ const CreateSeries = () => {
         aria-describedby="alert-dialog-description"
         fullWidth
       >
-        <DialogTitle>{locale === "en" ? "Select post to add" : "Sélectionner les posts à ajouter"}</DialogTitle>
-        <DialogContent dividers>
+        <DialogTitle>
           <InputBase
             placeholder={locale === "en" ? "Search for a post..." : "Rechercher un post..."}
             startAdornment={<SearchIcon color="disabled" sx={{ mr: 1 }} />}
@@ -124,6 +124,9 @@ const CreateSeries = () => {
             name="search"
             sx={{ width: 1 }}
           />
+        </DialogTitle>
+
+        <DialogContent dividers>
           <Stack spacing={2} sx={{ pt: 2, pb: 4 }}>
             {(searchResults.length > 0 &&
               searchResults.map((el) => (
@@ -136,6 +139,11 @@ const CreateSeries = () => {
               ))) || <Empty />}
           </Stack>
         </DialogContent>
+        <DialogActions sx={{ px: 2 }}>
+          <Button variant="outlined" onClick={handleAddPostModalClose} color="primary">
+            {locale === "en" ? "Close" : "Fermer"}
+          </Button>
+        </DialogActions>
       </Dialog>
       <Paper component={Stack} spacing={2} variant="outlined" sx={{ p: 2 }}>
         <Typography variant="h6" color="text.primary">
@@ -144,7 +152,7 @@ const CreateSeries = () => {
       </Paper>
       <Paper component={Stack} spacing={2} variant="outlined" sx={{ py: 4, px: 2, minHeight: "240px" }}>
         <Stack spacing={2} sx={{ py: 2 }}>
-          {(series?.concat(checked).length > 0 &&
+          {(checked.length > 0 &&
             checked.map((el) => (
               <SeriesCard
                 key={el.id}

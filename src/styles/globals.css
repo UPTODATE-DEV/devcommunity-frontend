@@ -74,11 +74,13 @@ a {
 
 .content code {
   background-color: #5a5d865a;
-  padding: 5px 8px;
+  padding: 2px 4px;
   border-radius: 4px;
+  font-size: 12px;
   line-height: 1;
   font-size: 14;
   line-break: anywhere;
+  align-items: center;
 }
 
 iframe.ql-video {

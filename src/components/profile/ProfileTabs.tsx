@@ -3,6 +3,7 @@ import useUser from "@/hooks/useUser";
 import { deleteRequest, getRequest, patchRequest } from "@/lib/api";
 import { shortenNumber } from "@/lib/shorterNumber";
 import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import DraftsIcon from "@mui/icons-material/Drafts";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
@@ -113,8 +114,8 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
     }
   };
 
-  function HandleShowCreateSeries() {
-    setShowCreateSeries(true);
+  function handleShowCreateSeries() {
+    setShowCreateSeries((state) => !state);
   }
 
   const handleCreateSeries = async () => {};
@@ -145,10 +146,6 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
   }, [user?.role]);
 
   if (!user || !profileTab) return null;
-
-  if (showCreateSeries) {
-    return <CreateSeries />;
-  }
 
   return (
     <TabContext value={profileTab}>
@@ -196,21 +193,22 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
       <TabPanel sx={{ p: 0 }} value={"series"}>
         <Stack spacing={2} sx={{ position: "relative" }}>
           {series.length === 0 && <Empty />}
-
-          {series?.map((item, index) => (
-            <React.Fragment key={item.id}>
-              <SeriesListCard data={item.posts[0].post} />
-            </React.Fragment>
-          ))}
+          {showCreateSeries && <CreateSeries />}
+          {!showCreateSeries &&
+            series?.map((item, index) => (
+              <React.Fragment key={item.id}>
+                <SeriesListCard data={item.posts[0].post} />
+              </React.Fragment>
+            ))}
 
           {sessionUser?.id && (
             <Fab
-              color="primary"
-              onClick={HandleShowCreateSeries}
+              color={showCreateSeries ? "error" : "primary"}
+              onClick={handleShowCreateSeries}
               aria-label="add"
-              sx={{ position: "sticky", bottom: 20, alignSelf: "center" }}
+              sx={{ position: "sticky", bottom: 20, alignSelf: "flex-end" }}
             >
-              <AddIcon />
+              {showCreateSeries ? <CloseIcon /> : <AddIcon />}
             </Fab>
           )}
         </Stack>

@@ -13,6 +13,7 @@ import React, { useCallback } from "react";
 
 const Content = dynamic(import("@/components/common/Content"), { ssr: false });
 const PostReaction = dynamic(import("@/components/posts/PostReaction"), { ssr: false });
+const SeriesList = dynamic(import("@/components/posts/SeriesList"), { ssr: false });
 
 const PostContent: React.FC<{ data: Post }> = ({ data }) => {
   const { author } = data;
@@ -33,6 +34,7 @@ const PostContent: React.FC<{ data: Post }> = ({ data }) => {
         {data?.title}
       </Typography>
       <Content content={data?.content} fontSize={17} />
+      {data?.series.length > 1 && <SeriesList series={data?.series as any} />}
       <PostTags tags={data?.tags} />
       {!data?.draft && (
         <>

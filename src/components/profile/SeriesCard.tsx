@@ -71,19 +71,7 @@ const SeriesCard: React.FC<{
         {checked ? <CheckCircleIcon color="primary" /> : <RadioButtonUncheckedIcon />}
       </IconButton>
       <Stack>
-        <Typography
-          fontWeight={700}
-          color="text.primary"
-          onClick={handleGoToPost}
-          sx={{
-            "&:hover": {
-              color: "primary.main",
-            },
-            cursor: "pointer",
-            mb: "-8px",
-            mt: 1,
-          }}
-        >
+        <Typography fontWeight={700} color="text.primary">
           {data?.title}
         </Typography>
         <Stack sx={{ cursor: "pointer" }} onClick={handleCheck}>

@@ -51,6 +51,7 @@ interface Post {
   article: Article;
   question: Question;
   comments: PostComment[];
+  series: Series[];
   bookmarks: Bookmarks[];
   _count: { comments: number };
 }

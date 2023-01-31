@@ -3,9 +3,10 @@ import PostCardHeader from "@/components/common/PostCardHeader";
 import PostTags from "@/components/common/PostTags";
 import { useGoToPost, useGoToUserProfile } from "@/hooks/posts";
 import { getContent, parseDate } from "@/lib/posts";
+import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import PublishIcon from "@mui/icons-material/RemoveRedEye";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import IconButton from "@mui/material/IconButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -19,7 +20,7 @@ import useTheme from "@mui/system/useTheme";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 
-const DraftCard: React.FC<{ data: Post }> = ({ data }) => {
+const DraftCard: React.FC<{ data: Post; handleDeletePost: () => void }> = ({ data, handleDeletePost }) => {
   const { push, asPath, locale } = useRouter();
   const username = asPath.split("/profile/")[1];
   const theme = useTheme();
@@ -94,9 +95,15 @@ const DraftCard: React.FC<{ data: Post }> = ({ data }) => {
         </MenuItem>
         <MenuItem onClick={handleGoToPost}>
           <ListItemIcon>
-            <PublishIcon fontSize="small" />
+            <VisibilityIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>{locale === "fr" ? "Prévisualiser" : "Preview"}</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={handleDeletePost}>
+          <ListItemIcon>
+            <DeleteIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{locale === "fr" ? "Supprimer" : "Delete"}</ListItemText>
         </MenuItem>
       </Menu>
       <PostCardHeader

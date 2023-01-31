@@ -9,7 +9,7 @@ const Profile = () => {
   const { push } = useRouter();
 
   const session = useStore((state) => state.session?.user);
-  const user = useUser(session?.username);
+  const user = useUser(session?.id);
 
   const handleGoProfile = () => {
     push("/profile");

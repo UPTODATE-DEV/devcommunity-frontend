@@ -26,6 +26,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-toastify";
+import useStoreNoPersist from "../../hooks/useStoreNoPersist";
 import DraftCard from "./DraftCard";
 import PostCard from "./PostCard";
 import QuestionCard from "./QuestionCard";
@@ -42,13 +43,12 @@ const Dashboard = dynamic(import("./Dashboard"), { ssr: false });
 
 const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
   const sessionUser = useStore((state) => state.session?.user);
-  const user = useUser(sessionUser?.username);
-  const { profileTab, setProfileTab } = useStore((state) => state);
+  const user = useUser(sessionUser?.id);
+  const { profileTab, setProfileTab, setSeries, series } = useStore((state) => state);
   const [posts, setPosts] = React.useState<Post[] | []>([]);
   const [followedTags, setFollowedTags] = React.useState<Tags[] | []>([]);
   const { locale } = useRouter();
-  const [series, setSeries] = React.useState<{ id: ""; posts: Series[] }[] | []>([]);
-  const [showCreateSeries, setShowCreateSeries] = React.useState<boolean>(false);
+  const { openAddSeries, setToggleAddSeries, setCurrentSeries } = useStoreNoPersist((state) => state);
 
   const isMobile = useMediaQuery("(min-width:760px)");
 
@@ -114,11 +114,27 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
     }
   };
 
+  const handleDeleteSeries = async (id: string) => {
+    const response = await deleteRequest({ endpoint: `/posts/series/${id}` });
+    if (response.error) {
+      toast.error(response.error?.message);
+    }
+    setSeries(series.filter((el) => el.id !== id));
+  };
+
   function handleShowCreateSeries() {
-    setShowCreateSeries((state) => !state);
+    if (openAddSeries) {
+      setCurrentSeries(null);
+    }
+    setToggleAddSeries();
   }
 
   const handleCreateSeries = async () => {};
+
+  const handleEditSeries = (seriesId: string) => {
+    setToggleAddSeries();
+    setCurrentSeries(seriesId);
+  };
 
   const fetchData = async () => {
     const getPosts = getRequest({ endpoint: `/posts/author/${currentUser?.id || sessionUser?.id}` });
@@ -192,23 +208,27 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
       </TabPanel>
       <TabPanel sx={{ p: 0 }} value={"series"}>
         <Stack spacing={2} sx={{ position: "relative" }}>
-          {series.length === 0 && <Empty />}
-          {showCreateSeries && <CreateSeries />}
-          {!showCreateSeries &&
+          {!openAddSeries && series.length === 0 && <Empty />}
+          {openAddSeries && <CreateSeries />}
+          {!openAddSeries &&
             series?.map((item, index) => (
               <React.Fragment key={item.id}>
-                <SeriesListCard data={item.posts[0].post} />
+                <SeriesListCard
+                  handleEditSeries={() => handleEditSeries(item.id)}
+                  handleDeleteSeries={() => handleDeleteSeries(item.id)}
+                  data={item.posts[0]?.post}
+                />
               </React.Fragment>
             ))}
 
           {sessionUser?.id && (
             <Fab
-              color={showCreateSeries ? "error" : "primary"}
+              color={openAddSeries ? "error" : "primary"}
               onClick={handleShowCreateSeries}
               aria-label="add"
               sx={{ position: "sticky", bottom: 20, alignSelf: "flex-end" }}
             >
-              {showCreateSeries ? <CloseIcon /> : <AddIcon />}
+              {openAddSeries ? <CloseIcon /> : <AddIcon />}
             </Fab>
           )}
         </Stack>
@@ -220,7 +240,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
               {drafts.length === 0 && <Empty />}
               {drafts?.map((item, index) => (
                 <React.Fragment key={item.id}>
-                  <DraftCard data={item} />
+                  <DraftCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
                 </React.Fragment>
               ))}
             </Stack>

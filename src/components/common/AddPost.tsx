@@ -17,7 +17,7 @@ interface Props {
 
 const AddPost: React.FC<Props> = ({ label, icon, handleClick }) => {
   const session = useStore((state) => state.session?.user);
-  const user = useUser(session?.username);
+  const user = useUser(session?.id);
 
   const goToProfile = useGoToUserProfile();
 

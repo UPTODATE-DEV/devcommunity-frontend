@@ -37,8 +37,8 @@ const Icons = () => {
   const { darkModeActive, switchToDarkMode, switchToLightMode } = useDarkMode();
   const [fullscreen, setFullscreen] = React.useState(false);
   const session = useStore((state) => state.session?.user);
-  const {notificationsCount, setNotificationsCount} = useStore((state) => state);
-  const user = useUser(session?.username);
+  const { notificationsCount, setNotificationsCount } = useStore((state) => state);
+  const user = useUser(session?.id);
   const { push, locale } = useRouter();
   const socket = useSocket();
   const [open, setOpen] = React.useState(false);

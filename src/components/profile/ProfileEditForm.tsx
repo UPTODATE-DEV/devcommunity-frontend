@@ -14,6 +14,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-toastify";
+import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 
 const ProfileEditForm = ({ user }: { user?: User }) => {
   const { editProfile, setEditProfile } = useStoreNoPersist((state) => state);
@@ -30,6 +31,7 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
     twitter: user?.profile?.twitter,
     gitHub: user?.profile?.gitHub,
     bio: user?.profile?.bio,
+    username: user?.username,
   });
 
   const { reload, locale } = useRouter();
@@ -111,6 +113,15 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
           />
         </Stack>
       </Stack>
+
+      <Input
+        icon={<AlternateEmailIcon />}
+        value={state.username}
+        label={locale === "en" ? "User name" : "Nom d'utilisateur"}
+        placeholder={locale === "en" ? "Enter your user name" : "Entrez votre nom d'utilisateur"}
+        handleChange={handleChange}
+        name="username"
+      />
 
       <Input
         value={state.phone}

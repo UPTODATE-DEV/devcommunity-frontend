@@ -35,7 +35,7 @@ const Home: NextPage<{ session: Session; post: Post; comments: PostComment[] }> 
         modifiedTime={post?.updatedAt?.toString()}
         publishedTime={post?.createdAt?.toString()}
         tags={post?.tags?.map((el) => el.tag.name)}
-        url={`${process.env.NEXT_PUBLIC_URL}/posts/${post?.slug}`}
+        url={``}
       />
       <Menu />
       <MainContainer>

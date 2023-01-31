@@ -8,10 +8,18 @@ interface Store {
   setAuthLoading: (loading: boolean) => void;
   editProfile: boolean;
   setEditProfile: (state: boolean) => void;
+  openAddSeries: boolean;
+  setToggleAddSeries: () => void;
+  currentSeries: string | null;
+  setCurrentSeries: (currentSeries: string | null) => void;
 }
 
 const useStoreNoPersist = create<Store>()(
   devtools((set) => ({
+    openAddSeries: false,
+    setToggleAddSeries: () => {
+      set((state) => ({ openAddSeries: !state.openAddSeries }));
+    },
     authLoading: false,
     setAuthLoading: (loading) => set({ authLoading: loading }),
     openLoginModal: false,
@@ -19,6 +27,10 @@ const useStoreNoPersist = create<Store>()(
     editProfile: false,
     setEditProfile: (editProfile: boolean) => {
       return set((state) => ({ ...state, editProfile }));
+    },
+    currentSeries: null,
+    setCurrentSeries: (currentSeries: string | null) => {
+      return set((state) => ({ ...state, currentSeries }));
     },
   }))
 );

@@ -34,7 +34,7 @@ const PostContent: React.FC<{ data: Post }> = ({ data }) => {
         {data?.title}
       </Typography>
       <Content content={data?.content} fontSize={17} />
-      {data?.series.length > 1 && <SeriesList series={data?.series as any} />}
+      {data?.series.length >= 1 && <SeriesList series={data?.series as any} />}
       <PostTags tags={data?.tags} />
       {!data?.draft && (
         <>

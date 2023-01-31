@@ -1,4 +1,4 @@
-import { FILES_BASE_URL } from "@/config/url";
+import { FILES_BASE_URL, NEXT_PUBLIC_URL } from "@/config/url";
 import useStore from "@/hooks/useStore";
 import useStoreNoPersist from "@/hooks/useStoreNoPersist";
 import useUser from "@/hooks/useUser";
@@ -12,6 +12,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
+import ShareIcon from "@mui/icons-material/Share";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import Avatar from "@mui/material/Avatar";
@@ -34,6 +35,7 @@ import dayjs from "dayjs";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
+import { toast } from "react-toastify";
 import { ProfileQuestionTabsSkeleton } from "./Skeleton";
 import UserFollowers from "./UserFollowers";
 
@@ -49,15 +51,14 @@ const ProfileEditForm = dynamic(import("@/components/profile/ProfileEditForm"), 
 
 const Profile = ({ currentUser }: { currentUser?: User }) => {
   const session = useStore((state) => state.session?.user);
-  const setSession = useStore((state) => state.setSession);
-  const useUserData = useUser(session?.username);
+  const useUserData = useUser(session?.id);
   const [followings, setFollowings] = React.useState<{ user: User }[]>([]);
   const [followers, setFollowers] = React.useState<{ user: User }[]>([]);
   const user = currentUser || useUserData;
   const { reload, locale } = useRouter();
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
-  const { editProfile, setEditProfile } = useStoreNoPersist((state) => state);
+  const { editProfile, setEditProfile, setToggleAddSeries, openAddSeries } = useStoreNoPersist((state) => state);
   const [status, setStatus] = React.useState<"PENDING" | "ACCEPTED" | "REJECTED" | "idle">("idle");
   const [openRequestModal, setOpenRequestModal] = React.useState(false);
   const [openRequestApprovedModal, setOpenRequestApprovedModal] = React.useState(false);
@@ -146,6 +147,12 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
     if (response.data) {
       return response.data;
     }
+  }
+
+  async function handleShareProfile() {
+    navigator.clipboard.writeText(`${NEXT_PUBLIC_URL}/profile/@${useUserData?.username}`);
+    toast.info(locale === "fr" ? "Le du profil copié" : "Profile link copied");
+    handleClose();
   }
 
   async function getFollowers() {
@@ -334,6 +341,13 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                       <ListItemText>{locale === "fr" ? "Devenir créateur" : "Become a creator"}</ListItemText>
                     </MenuItem>
                   )}
+
+                  <MenuItem onClick={handleShareProfile} key="share">
+                    <ListItemIcon>
+                      <ShareIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>{locale === "fr" ? "Partager mon profil" : "Share my profile"}</ListItemText>
+                  </MenuItem>
 
                   <MenuItem onClick={handleClickOpen} key="logout">
                     <ListItemIcon>

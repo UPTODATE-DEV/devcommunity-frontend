@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 
 const AddComment: React.FC<{ data: Post | PostComment }> = ({ data }) => {
   const session = useStore((state) => state.session?.user);
-  const user = useUser(session?.username);
+  const user = useUser(session?.id);
   const { currentComment, currentPost, comments, setComments } = useStore((state) => state);
   const [showCommentForm, setShowCommentForm] = React.useState(false);
   const [comment, setComment] = React.useState<string | undefined>();

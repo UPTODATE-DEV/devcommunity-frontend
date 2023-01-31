@@ -42,7 +42,7 @@ const LeftSideBar = () => {
     {
       path: "/home",
       icon: <FcAbout fontSize={28} />,
-      label: locale === "fr" ? "A propos de nous" : "About Us",
+      label: locale === "fr" ? "A propos" : "About",
     },
   ];
 

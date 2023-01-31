@@ -2,6 +2,7 @@ import { HomeFeedSkeleton } from "@/components/middle/Skeleton";
 import { PostsListSkeleton } from "@/components/posts/Skeleton";
 import { API } from "@/config/url";
 import useStore from "@/hooks/useStore";
+import useUser from "@/hooks/useUser";
 import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
@@ -12,7 +13,6 @@ import { useRouter } from "next/router";
 import qs from "qs";
 import React, { useEffect } from "react";
 import useSWRInfinite from "swr/infinite";
-import useUser from "@/hooks/useUser";
 
 const BookmarkCard = dynamic(import("@/components/bookmarks/BookmarkCard"), {
   ssr: false,
@@ -27,7 +27,7 @@ const Empty = dynamic(import("@/components/common/Empty"), {
 const BookmarkFeed = () => {
   const [open, setOpen] = React.useState(false);
   const session = useStore((state) => state.session?.user);
-  const user = useUser(session?.username);
+  const user = useUser(session?.id);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [endOfPage, setEndOfPage] = React.useState(false);
   const [perPage, setPerPage] = React.useState(10);

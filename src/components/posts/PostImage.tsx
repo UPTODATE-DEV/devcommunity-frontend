@@ -15,7 +15,7 @@ const PostImage = ({
     <Stack
       sx={{
         width: 1,
-        paddingTop: "50%",
+        paddingTop: "52.34%",
         position: "relative",
         borderRadius: 1,
         cursor: "pointer",

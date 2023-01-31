@@ -42,7 +42,7 @@ const Logo = dynamic(() => import("./Logo"), {
 
 const Menu: React.FC = () => {
   const session = useStore((state) => state.session?.user);
-  const user = useUser(session?.username);
+  const user = useUser(session?.id);
   const { push, locale } = useRouter();
   const { openMobileMenu, setOpenMobileMenu } = useStore((state) => state);
   const [posts, setPosts] = useState<Post[] | []>([]);

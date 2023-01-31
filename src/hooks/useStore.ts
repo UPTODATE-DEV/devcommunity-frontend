@@ -40,6 +40,8 @@ interface Store {
   setPost: (post: Post) => void;
   profileTab: string | undefined;
   setProfileTab: (tab: string) => void;
+  series: { id: string; posts: Series[] }[];
+  setSeries: (series: { id: string; posts: Series[] }[]) => void;
 }
 
 const useStore = create<Store>()(
@@ -132,6 +134,10 @@ const useStore = create<Store>()(
         profileTab: undefined,
         setProfileTab: (tab: string) => {
           return set((state) => ({ ...state, profileTab: tab }));
+        },
+        series: [],
+        setSeries: (series: { id: string; posts: Series[] }[]) => {
+          return set((state) => ({ ...state, series }));
         },
       }),
       {

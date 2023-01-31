@@ -18,6 +18,7 @@ import Popper from "@mui/material/Popper";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
@@ -155,7 +156,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
         component="label"
         sx={{
           width: 1,
-          height: image ? 240 : 160,
+          paddingTop: image ? "52.34%" : "34%",
           bgcolor: "action.hover",
           position: "relative",
           cursor: "pointer",
@@ -168,7 +169,12 @@ const AddPostForm = ({ data }: { data?: Post }) => {
         {preview ? (
           <Image src={preview} alt="Updev cmmunity" layout="fill" objectFit="cover" />
         ) : (
-          <AddPhotoAlternateIcon color="primary" sx={{ fontSize: 140, opacity: 0.1 }} />
+          <Stack justifyContent="center" alignItems="center" sx={{ position: "absolute", top: 50 }}>
+            <AddPhotoAlternateIcon color="primary" sx={{ fontSize: 140, opacity: 0.1 }} />
+            <Typography color="primary" textAlign="center">
+              1024x536
+            </Typography>
+          </Stack>
         )}
       </Stack>
       <Autocomplete
@@ -284,8 +290,8 @@ const AddPostForm = ({ data }: { data?: Post }) => {
                           ? "Loading..."
                           : "Chargement"
                         : locale === "en"
-                        ? "Save"
-                        : "Enregistrer"}
+                        ? "Draft"
+                        : "Brouillon"}
                     </Button>
                   </ClickAwayListener>
                 </div>

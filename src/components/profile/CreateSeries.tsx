@@ -1,6 +1,8 @@
 import useStore from "@/hooks/useStore";
-import { getRequest, postRequest } from "@/lib";
+import useStoreNoPersist from "@/hooks/useStoreNoPersist";
+import { getRequest, patchRequest, postRequest } from "@/lib";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import SaveIcon from "@mui/icons-material/Save";
 import SearchIcon from "@mui/icons-material/Search";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -27,10 +29,11 @@ const CreateSeries = () => {
   const { locale } = useRouter();
   const session = useStore((state) => state.session);
   const [openAddPostModal, setOpenAddPostModal] = useState(false);
+  const { profileTab, setProfileTab, setSeries, series } = useStore((state) => state);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<Post[]>([]);
   const [checked, setChecked] = useState<Series[]>([]);
-  const [series, setSeries] = useState<Series[]>([]);
+  const { openAddSeries, setToggleAddSeries, currentSeries, setCurrentSeries } = useStoreNoPersist((state) => state);
 
   const handleAddPostModalClose = () => {
     setOpenAddPostModal(false);
@@ -59,32 +62,32 @@ const CreateSeries = () => {
   };
 
   const handleSave = async () => {
-    const response = await postRequest({
-      endpoint: "/posts/series",
-      data: {
-        posts: checked.map((el, i) => ({ module: i + 1, post: el.id })),
-        user: session.user?.id,
-      },
-    });
-
-    setChecked([]);
-    setSeries((state) => [
-      ...state,
-      ...response.data?.posts.map((el: Series) => ({ id: el.id, module: el.module, post: el.post })),
-    ]);
-  };
-
-  const handleAddButton = () => {
-    if (checked.length > 0) {
-      handleSave();
+    if (currentSeries) {
+      const response = await patchRequest({
+        endpoint: `/posts/series/${currentSeries}`,
+        data: {
+          posts: checked.map((el, i) => ({ module: i + 1, post: el.post.id })),
+        },
+      });
+      setSeries(response.data)
     } else {
-      handleOpenAddModal();
+      const response = await postRequest({
+        endpoint: "/posts/series",
+        data: {
+          posts: checked.map((el, i) => ({ module: i + 1, post: el.post.id })),
+          user: session.user?.id,
+        },
+      });
+      setSeries(response.data)
     }
+    setChecked([]);
+    setCurrentSeries(null);
+    setToggleAddSeries();
   };
 
   useEffect(() => {
     async function getPosts() {
-      const response = await getRequest({ endpoint: `/posts?&userId=${session.user?.id}&page=1&perPage=1000` });
+      const response = await getRequest({ endpoint: `/posts?&userId=${session.user?.id}` });
       setSearchResults(response.data);
     }
     async function handleFilter(searchTerm: string) {
@@ -96,15 +99,20 @@ const CreateSeries = () => {
     } else {
       getPosts();
     }
+    return () => setChecked([]);
   }, [searchTerm]);
 
   useEffect(() => {
     async function getSeries() {
-      const response = await getRequest({ endpoint: `/posts/series?userId=${session.user?.id}` });
-      setSeries(response.data);
+      const response = await getRequest({
+        endpoint: `/posts/series?userId=${session.user?.id}&seriesId=${currentSeries}`,
+      });
+      setChecked(response.data?.posts);
     }
-    getSeries();
-  }, []);
+    if (currentSeries) {
+      getSeries();
+    }
+  }, [currentSeries]);
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -128,12 +136,12 @@ const CreateSeries = () => {
 
         <DialogContent dividers>
           <Stack spacing={2} sx={{ pt: 2, pb: 4 }}>
-            {(searchResults.length > 0 &&
-              searchResults.map((el) => (
+            {(searchResults?.length > 0 &&
+              searchResults?.map((el) => (
                 <SeriesCard
                   key={el.id}
                   handleCheck={handleToggle(el)}
-                  checked={checked.findIndex((checked) => checked.id === el.id) !== -1}
+                  checked={checked?.findIndex((checked) => checked.post.id === el.id) !== -1}
                   data={el}
                 />
               ))) || <Empty />}
@@ -152,31 +160,40 @@ const CreateSeries = () => {
       </Paper>
       <Paper component={Stack} spacing={2} variant="outlined" sx={{ py: 4, px: 2, minHeight: "240px" }}>
         <Stack spacing={2} sx={{ py: 2 }}>
-          {(checked.length > 0 &&
-            checked.map((el) => (
+          {(checked?.length > 0 &&
+            checked?.map((el) => (
               <SeriesCard
                 key={el.id}
                 handleCheck={handleToggle(el.post)}
-                checked={checked.findIndex((checked) => checked.id === el.id) !== -1}
+                checked={checked?.findIndex((checked) => checked.id === el.id) !== -1}
                 data={el.post}
                 showDragIcon
               />
             ))) || <Empty />}
         </Stack>
-        <Button
-          variant={checked.length > 0 ? "contained" : "outlined"}
-          color="primary"
-          startIcon={<PlaylistAddIcon />}
-          onClick={handleAddButton}
-        >
-          {checked.length > 0
-            ? locale === "en"
-              ? "Save"
-              : "Enregistrer"
-            : locale === "en"
-            ? "Select posts"
-            : "Sélectionner des posts"}
-        </Button>
+        <Stack direction="row" spacing={2}>
+          <Button
+            sx={{ width: 1 }}
+            variant="outlined"
+            color="primary"
+            startIcon={<PlaylistAddIcon />}
+            onClick={handleOpenAddModal}
+          >
+            {locale === "en" ? "Select posts" : "Sélectionner des posts"}
+          </Button>
+          {checked?.length > 0 && (
+            <Button
+              disableElevation
+              sx={{ width: 1 }}
+              variant="contained"
+              color="primary"
+              startIcon={<SaveIcon />}
+              onClick={handleSave}
+            >
+              {locale === "en" ? "Save" : "Enregistrer"}
+            </Button>
+          )}
+        </Stack>
       </Paper>
     </DndProvider>
   );

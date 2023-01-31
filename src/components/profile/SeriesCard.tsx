@@ -34,7 +34,7 @@ const SeriesCard: React.FC<{
       type: data.id,
       item: data,
       collect: (monitor) => ({
-        opacity: monitor.isDragging() ? 0.5 : 1,
+        opacity: monitor.isDragging() ? 0.9 : 1,
       }),
     }),
     []

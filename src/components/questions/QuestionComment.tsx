@@ -15,7 +15,6 @@ import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import hljs from "highlight.js";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
@@ -28,7 +27,7 @@ const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
 
 const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
   const session = useStore((state) => state.session?.user);
-  const user = useUser(session?.username);
+  const user = useUser(session?.id);
   const [showCommentForm, setShowCommentForm] = React.useState(false);
   const [comments, setComments] = React.useState<PostComment[] | []>([]);
   const [comment, setComment] = React.useState("");

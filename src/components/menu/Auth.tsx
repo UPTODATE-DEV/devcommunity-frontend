@@ -18,7 +18,13 @@ const Auth = () => {
       console.log(res);
       setAuthLoading(false);
     }
-    reload();
+
+    console.log("res.data", res.data);
+
+    // if (res.data?.new) {
+    //   return alert("new user");
+    // }
+    // reload();
   };
 
   return (

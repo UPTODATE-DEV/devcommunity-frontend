@@ -41,7 +41,7 @@ const CreateSeries = dynamic(import("./CreateSeries"), { ssr: false });
 
 const Dashboard = dynamic(import("./Dashboard"), { ssr: false });
 
-const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
+const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
   const sessionUser = useStore((state) => state.session?.user);
   const user = useUser(sessionUser?.id);
   const { profileTab, setProfileTab, setSeries, series } = useStore((state) => state);
@@ -56,7 +56,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
     {
       id: "dashboard",
       label: "Dashboard",
-      show: currentUser === undefined && user?.role === "AUTHOR",
+      show: showProfileUser === undefined && user?.role === "AUTHOR",
       icon: <DashboardIcon fontSize="small" />,
     },
     {
@@ -80,13 +80,13 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
     {
       id: "tags",
       label: "Tags",
-      show: currentUser ? false : true,
+      show: showProfileUser ? false : true,
       icon: <TagIcon fontSize="small" />,
     },
     {
       id: "drafts",
       label: "Drafts",
-      show: currentUser ? false : true,
+      show: showProfileUser ? false : true,
       icon: <DraftsIcon fontSize="small" />,
     },
   ];
@@ -137,9 +137,9 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
   };
 
   const fetchData = async () => {
-    const getPosts = getRequest({ endpoint: `/posts/author/${currentUser?.id || sessionUser?.id}` });
+    const getPosts = getRequest({ endpoint: `/posts/author/${showProfileUser?.id || sessionUser?.id}` });
     const getFollowedTags = getRequest({ endpoint: `/tags/followed/${sessionUser?.id}` });
-    const getSeries = getRequest({ endpoint: `/posts/series?userId=${currentUser?.id || sessionUser?.id}` });
+    const getSeries = getRequest({ endpoint: `/posts/series?userId=${showProfileUser?.id || sessionUser?.id}` });
     const [posts, followedTags, series] = await Promise.all([getPosts, getFollowedTags, getSeries]);
 
     setPosts(posts.data);
@@ -153,7 +153,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
 
   React.useEffect(() => {
     if (!profileTab) {
-      if (currentUser === undefined && user?.role === "AUTHOR") {
+      if (showProfileUser === undefined && user?.role === "AUTHOR") {
         setProfileTab("dashboard");
       } else {
         setProfileTab("articles");
@@ -221,7 +221,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
               </React.Fragment>
             ))}
 
-          {sessionUser?.id && (
+          {!showProfileUser && sessionUser?.id && (
             <Fab
               color={openAddSeries ? "error" : "primary"}
               onClick={handleShowCreateSeries}
@@ -233,7 +233,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
           )}
         </Stack>
       </TabPanel>
-      {!currentUser && (
+      {!showProfileUser && (
         <>
           <TabPanel sx={{ p: 0 }} value={"drafts"}>
             <Stack spacing={2}>
@@ -271,7 +271,7 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
               </Paper>
             )}
           </TabPanel>
-          {currentUser === undefined && user?.role === "AUTHOR" && (
+          {showProfileUser === undefined && user?.role === "AUTHOR" && (
             <TabPanel sx={{ p: 0 }} value={"dashboard"}>
               <Paper variant="outlined" sx={{ p: 2, minHeight: "200px" }}>
                 <Dashboard />

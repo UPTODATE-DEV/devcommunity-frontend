@@ -18,11 +18,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import PostImage from "./PostImage";
-
 import { shortenNumber } from "@/lib/shorterNumber";
 
 const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   const { author } = data;
+  const cardRef = React.useRef<HTMLDivElement>(null);
   const goToPost = useGoToPost();
   const theme = useTheme();
   const { locale } = useRouter();

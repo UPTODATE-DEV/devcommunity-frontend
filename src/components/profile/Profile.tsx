@@ -456,7 +456,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
               </DialogContent>
             </Dialog>
           </Paper>
-          {editProfile ? <ProfileEditForm user={user} /> : <ProfileTabs currentUser={currentUser} />}
+          {editProfile ? <ProfileEditForm user={user} /> : <ProfileTabs showProfileUser={currentUser} />}
         </>
       )}
     </>

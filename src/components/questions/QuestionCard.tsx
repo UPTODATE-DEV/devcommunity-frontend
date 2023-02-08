@@ -3,6 +3,7 @@ import PostCardHeader from "@/components/common/PostCardHeader";
 import PostTags from "@/components/common/PostTags";
 import { useGoToPost, useGoToUserProfile } from "@/hooks/posts";
 import { getContent, parseDate } from "@/lib/posts";
+import { shortenNumber } from "@/lib/shorterNumber";
 import CommentIcon from "@mui/icons-material/Comment";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
@@ -16,11 +17,11 @@ import React, { useCallback } from "react";
 import Bookmark from "../common/Bookmark";
 import Share from "../common/Share";
 import QuestionReactions from "./QuestionReactions";
-import { shortenNumber } from "@/lib/shorterNumber";
 
 const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   const theme = useTheme();
   const { author } = data;
+  const cardRef = React.useRef<HTMLDivElement>(null);
   const { locale } = useRouter();
   const goToProfile = useGoToUserProfile();
   const goToPost = useGoToPost();
@@ -73,7 +74,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
         <QuestionReactions post={data} />
         <Stack direction="row" spacing={2}>
           <Stack direction="row" alignItems="center">
-            <Link href={`/articles/${data?.slug}/#comments`} passHref>
+            <Link href={`/posts/${data?.slug}/#comments`} passHref>
               <IconButton>
                 <CommentIcon fontSize="small" />
               </IconButton>

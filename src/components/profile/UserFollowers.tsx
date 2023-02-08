@@ -34,21 +34,21 @@ const UserFollowers = ({
       <DialogContent sx={{ alignItems: "center", textAlign: "center" }}>
         <List sx={{ p: 0, minWidth: { xs: 1, md: 450 } }}>
           {data.length < 1 && <Empty />}
-          {data.map((follower, i) => (
-            <React.Fragment key={follower.user.email}>
+          {data.map((el, i) => (
+            <React.Fragment key={el?.user?.email}>
               <ListItemButton>
                 <ListItemAvatar>
                   <UserAvatar
-                    name={getUserFullName(follower.user)}
-                    pictureUrl={getUserProfileImageUrl(follower.user)}
-                    handleClick={() => goToProfile(follower.user.email)}
+                    name={getUserFullName(el?.user)}
+                    pictureUrl={getUserProfileImageUrl(el?.user)}
+                    handleClick={() => goToProfile(el?.user?.email)}
                   />
                 </ListItemAvatar>
                 <ListItemText
                   primary={
                     <>
                       <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
-                        {getUserFullName(follower.user)}
+                        {getUserFullName(el?.user)}
                       </Typography>
                     </>
                   }

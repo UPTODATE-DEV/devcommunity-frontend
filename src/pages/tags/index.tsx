@@ -20,21 +20,12 @@ const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   loading: () => <CallToActionSkeleton />,
 });
 
-const Home: NextPage<{ session: Session }> = ({ session }) => {
+const Home: NextPage<{ session: Session; tags: Tag[] }> = ({ session, tags }) => {
   const setSession = useStore((state) => state.setSession);
   const setTags = useStore((state) => state.setTags);
   const { showTagsFilters } = useStore((state) => state);
 
   React.useEffect(() => {
-    const getTags = async () => {
-      const tags = await getRequest({ endpoint: "/tags" });
-      if (!tags.error) {
-        setTags(tags.data);
-      }
-    };
-
-    getTags();
-
     setSession(session);
   }, []);
 
@@ -52,7 +43,7 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
         <Paper variant="outlined" sx={{ p: 2, position: "sticky", top: 70, zIndex: 999 }}>
           {showTagsFilters ? <Filters /> : <Search />}
         </Paper>
-        <Tags />
+        <Tags userId={session?.user?.id} tags={tags} />
       </MainContainer>
     </>
   );
@@ -61,9 +52,12 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
 export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
   const { req } = context;
 
+  const tags = await getRequest({ endpoint: "/tags" });
+
   return {
     props: {
       session: req?.session?.user || null,
+      tags: tags.data,
     },
   };
 });

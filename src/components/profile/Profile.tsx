@@ -247,7 +247,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
 
               <Stack spacing={2} alignItems="flex-end" flexShrink={1} sx={{ position: "absolute", right: 1, top: 0 }}>
                 <Stack direction="row" spacing={1}>
-                  {currentUser !== undefined && user?.role === "AUTHOR" && user?.id !== session?.id && (
+                  {session?.id && currentUser !== undefined && user?.role === "AUTHOR" && user?.id !== session?.id && (
                     <Button
                       disableElevation
                       sx={{ borderRadius: 50, px: 2, fontSize: { xs: 8, md: 12 } }}

@@ -11,12 +11,15 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useTheme from "@mui/system/useTheme";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import Bookmark from "../common/Bookmark";
 import Share from "../common/Share";
 import QuestionReactions from "./QuestionReactions";
+
+const SurveyContent = dynamic(import("@/components/questions/SurveyContent"), { ssr: false });
 
 const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   const theme = useTheme();
@@ -62,6 +65,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
       <Stack sx={{ cursor: "pointer" }} onClick={handleGoToPost}>
         <PostContent content={postContent} />
       </Stack>
+      {data?.survey.length > 0 && <SurveyContent survey={data.survey[0]} />}
       <PostTags tags={data?.tags} />
       <Stack
         direction="row"

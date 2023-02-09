@@ -6,6 +6,7 @@ import React from "react";
 import QuestionContent from "./QuestionContent";
 
 const Suggestions = dynamic(import("@/components/common/Suggestions"), { ssr: false });
+const SurveyContent = dynamic(import("@/components/questions/SurveyContent"), { ssr: false });
 const CommentsList = dynamic(import("@/components/comments/CommentsList"), { ssr: false });
 const AddComment = dynamic(import("@/components/comments/AddComment"), { ssr: false, loading: () => null });
 

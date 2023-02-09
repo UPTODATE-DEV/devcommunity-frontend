@@ -31,7 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             "#909296",
             "#5C5F66",
             "#373A40",
-            "#17212b",
+            "rgba(255, 255, 255, 0.12)",
             "#192734",
             "#17212b",
             "#192734",

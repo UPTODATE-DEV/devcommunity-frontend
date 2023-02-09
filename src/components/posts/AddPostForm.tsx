@@ -233,7 +233,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
           ["image", "video", "strike"],
         ]}
       />
-      <Stack spacing={2} direction="row" alignItems="center">
+      <Stack spacing={2} direction="row" flexWrap="wrap" justifyContent="center" alignItems="center">
         <Stack sx={{ position: "relative" }}>
           <ButtonGroup
             variant="contained"
@@ -306,7 +306,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
           variant="outlined"
           disabled={loading}
           sx={{ px: 4, borderRadius: 50 }}
-          onClick={() => push({ pathname: "/posts" }, undefined, { shallow: true })}
+          onClick={() => push({ pathname: "/articles" }, undefined, { shallow: true })}
         >
           {locale === "en" ? "Cancel" : "Annuler"}
         </Button>

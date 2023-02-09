@@ -54,6 +54,7 @@ interface Post {
   series: Series[];
   bookmarks: Bookmarks[];
   _count: { comments: number };
+  survey: Survey[];
 }
 
 interface Series {
@@ -192,6 +193,47 @@ interface Notification {
 interface Notifications {
   date: string;
   notifications: Notification[];
+}
+
+interface Survey {
+  id: string;
+  createdAt: string;
+  question: SurveyQuestion;
+  options: Option[];
+  duration: number;
+}
+
+interface SurveyOption {
+  id: string;
+  content: string;
+  votes: Vote[];
+}
+
+interface SurveyQuestion {
+  content: string;
+}
+
+interface Vote {
+  id: string;
+  user: User;
+}
+
+interface Badges {
+  firstPost: Badge;
+  editor: Badge;
+  superEditor: Badge;
+  followers: Badge;
+  firstComments: Badge;
+  firstReactions: Badge;
+  reactions: Badge;
+  views: Badge;
+}
+
+interface Badge {
+  name: string;
+  description: string;
+  icon: string;
+  completed: string;
 }
 
 type DateRangePickerProps = {

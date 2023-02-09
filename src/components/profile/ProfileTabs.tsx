@@ -6,6 +6,7 @@ import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import DraftsIcon from "@mui/icons-material/Drafts";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import QuestionAnswer from "@mui/icons-material/QuestionAnswerSharp";
 import TagIcon from "@mui/icons-material/Tag";
@@ -23,6 +24,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-toastify";
@@ -48,6 +50,7 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
   const [posts, setPosts] = React.useState<Post[] | []>([]);
   const [followedTags, setFollowedTags] = React.useState<Tags[] | []>([]);
   const { locale } = useRouter();
+  const [badges, setBadges] = React.useState<Badge[] | []>([]);
   const { openAddSeries, setToggleAddSeries, setCurrentSeries } = useStoreNoPersist((state) => state);
 
   const isMobile = useMediaQuery("(min-width:760px)");
@@ -88,6 +91,12 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
       label: "Drafts",
       show: showProfileUser ? false : true,
       icon: <DraftsIcon fontSize="small" />,
+    },
+    {
+      id: "badges",
+      label: locale === "en" ? "Badges" : "Badges",
+      show: true,
+      icon: <EmojiEventsIcon fontSize="small" />,
     },
   ];
 
@@ -139,12 +148,19 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
   const fetchData = async () => {
     const getPosts = getRequest({ endpoint: `/posts/author/${showProfileUser?.id || sessionUser?.id}` });
     const getFollowedTags = getRequest({ endpoint: `/tags/followed/${sessionUser?.id}` });
+    const getUserBadges = getRequest({ endpoint: `/users/${sessionUser?.id}/badges` });
     const getSeries = getRequest({ endpoint: `/posts/series?userId=${showProfileUser?.id || sessionUser?.id}` });
-    const [posts, followedTags, series] = await Promise.all([getPosts, getFollowedTags, getSeries]);
+    const [posts, followedTags, series, userBadges] = await Promise.all([
+      getPosts,
+      getFollowedTags,
+      getSeries,
+      getUserBadges,
+    ]);
 
     setPosts(posts.data);
     setFollowedTags(followedTags.data);
     setSeries(series.data);
+    setBadges(userBadges.data);
   };
 
   React.useEffect(() => {
@@ -161,7 +177,7 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
     }
   }, [user?.role]);
 
-  if (!user || !profileTab) return null;
+  if (!profileTab) return null;
 
   return (
     <TabContext value={profileTab}>
@@ -278,6 +294,41 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
               </Paper>
             </TabPanel>
           )}
+          <TabPanel sx={{ p: 0 }} value={"badges"}>
+            <Paper variant="outlined" sx={{ p: 2, minHeight: "200px" }}>
+              <Grid container gap={2}>
+                {badges.map((el, i) => (
+                  <Grid key={el.name}>
+                    <Tooltip
+                      arrow
+                      title={
+                        <React.Fragment>
+                          <Typography fontWeight={700} textAlign="center" color="inherit">
+                            {el.name}
+                          </Typography>
+                          <Typography color="inherit" textAlign="center">
+                            {el.description}
+                          </Typography>
+                        </React.Fragment>
+                      }
+                    >
+                      <Paper sx={{ p: 2, borderRadius: 50, position: "relative" }} variant="outlined">
+                        <Stack sx={{ width: 60, height: 60, position: "relative" }}>
+                          <Image
+                            src={`/images/badges/${el.icon}.png`}
+                            style={{ filter: el.completed ? "none" : "grayscale(100%)" }}
+                            alt={el.name}
+                            layout="fill"
+                            objectFit="contain"
+                          />
+                        </Stack>
+                      </Paper>
+                    </Tooltip>
+                  </Grid>
+                ))}
+              </Grid>
+            </Paper>
+          </TabPanel>
         </>
       )}
     </TabContext>

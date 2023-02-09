@@ -8,6 +8,8 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import dynamic from "next/dynamic";
 import React from "react";
+import useStoreNoPersist from "../../hooks/useStoreNoPersist";
+import Empty from "../common/Empty";
 import { HomeFeedSkeleton } from "../middle/Skeleton";
 import Tag from "./Tag";
 
@@ -16,13 +18,14 @@ const FilterByTagsResult = dynamic(import("./FilterByTagsResult"), {
   loading: () => <HomeFeedSkeleton />,
 });
 
-const TagsList = () => {
-  const userId = useStore((state) => state.session?.user?.id);
-  const { setTagsFilters, tagsFilters, tags, showTagsFilters } = useStore((state) => state);
+const TagsList = ({ userId, tags }: { userId?: string; tags: Tag[] }) => {
+  const { setTagsFilters, tagsFilters, showTagsFilters } = useStore((state) => state);
   const isIncluded = (el: Tag) => tagsFilters.some((selected) => selected.id === el.id);
   const [followedTags, setFollowedTags] = React.useState<Tags[] | []>([]);
+  const { setOpenLoginModal } = useStoreNoPersist();
 
   const handleTagClick = async (tag: string) => {
+    if (!userId) return setOpenLoginModal(true);
     await patchRequest({ endpoint: `/tags/follow/${tag}/${userId}` });
     if (followedTags.some((el) => el.tag.name === tag)) {
       setFollowedTags(followedTags.filter((el) => el.tag.name !== tag));
@@ -36,17 +39,18 @@ const TagsList = () => {
       const responses = await getRequest({ endpoint: `/tags/followed/${userId}` });
       setFollowedTags(responses.data);
     };
-    getFollowedTags();
-  }, []);
+    if (userId) getFollowedTags();
+  }, [userId]);
 
   return (
     <>
       {showTagsFilters ? (
         <FilterByTagsResult />
       ) : (
-        <Paper variant="outlined" sx={{ py: 4, px: 2, minHeight: "80vh" }}>
+        <Paper variant="outlined" sx={{ py: 4, px: 2, minHeight: "55vh" }}>
+          {tags?.length === 0 && <Empty />}
           <Grid container spacing={1}>
-            {tags.map((el, i) => (
+            {tags?.map((el, i) => (
               <Grid item xs="auto" key={i}>
                 <Stack direction="row" alignItems="center">
                   <div onClick={() => setTagsFilters(el)}>

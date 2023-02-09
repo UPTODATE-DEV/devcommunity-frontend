@@ -9,9 +9,11 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
   const { token } = await req.body;
 
   try {
-    const response = await postRequest({ endpoint: "/auth/google/login/" + token });
+    const response = await postRequest({ endpoint: "/auth/google/login", data: { token } });
 
     const { jwt, user } = response.data as Session;
+
+    console.log("data", response.data);
 
     req.session.user = {
       jwt,

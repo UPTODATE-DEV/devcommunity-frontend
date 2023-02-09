@@ -16,7 +16,7 @@ const Suggestions: React.FC<{ data: Post; type: "ARTICLE" | "QUESTION" }> = ({ d
 
   React.useEffect(() => {
     async function getSuggestions() {
-      const res = await postRequest({ endpoint: "/posts/suggestions", data: { tags, type } });
+      const res = await postRequest({ endpoint: "/posts/suggestions", data: { tags, type, postId: data.id } });
       if (res.error) {
         console.log(res.error);
       }

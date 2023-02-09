@@ -19,7 +19,7 @@ const Logo = () => {
       }}
       onClick={handleGoHome}
     >
-      <Image src="/logo.png" layout="fill" objectFit="contain" />
+      <Image src="/logo.png" layout="fill" objectFit="contain" priority />
     </Stack>
   );
 };

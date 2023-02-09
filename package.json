@@ -44,7 +44,9 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "18.2.0",
+    "react-easy-infinite-scroll-hook": "^2.1.2",
     "react-icons": "^4.7.1",
+    "react-infinite-scroller": "^1.2.6",
     "react-toastify": "^9.0.8",
     "sharp": "^0.31.0",
     "socket.io-client": "^4.5.4",
@@ -54,6 +56,7 @@
   "devDependencies": {
     "@types/js-cookie": "^3.0.2",
     "@types/node": "18.7.18",
+    "@types/qs": "^6.9.7",
     "@types/react": "18.0.20",
     "@types/react-dom": "18.0.6",
     "eslint": "8.23.1",

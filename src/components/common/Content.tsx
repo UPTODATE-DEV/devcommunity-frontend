@@ -7,7 +7,7 @@ const Content = ({ content, fontSize = 14 }: { content: string; fontSize?: numbe
 
   const wrapCode = (html: any) => {
     const removeStyles = (html: string) => html.replace(/style="[^"]*"/g, "");
-    return removeStyles(html)
+    return removeStyles(html);
   };
 
   const highlightPreElements = useCallback<any>(() => {
@@ -31,7 +31,7 @@ const Content = ({ content, fontSize = 14 }: { content: string; fontSize?: numbe
       variant="body2"
       fontSize={fontSize}
       dangerouslySetInnerHTML={{
-        __html: wrapCode(content),
+        __html: content,
       }}
     />
   );

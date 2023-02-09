@@ -11,6 +11,7 @@ import Stack from "@mui/material/Stack";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import { toast } from "react-toastify";
+import useStoreNoPersist from "../../hooks/useStoreNoPersist";
 
 const AddComment: React.FC<{ data: Post | PostComment }> = ({ data }) => {
   const session = useStore((state) => state.session?.user);
@@ -20,6 +21,7 @@ const AddComment: React.FC<{ data: Post | PostComment }> = ({ data }) => {
   const [comment, setComment] = React.useState<string | undefined>();
   const [open, setOpen] = React.useState(false);
   const { push, locale, pathname } = useRouter();
+  const { setOpenLoginModal } = useStoreNoPersist();
   const socket = useSocket();
 
   const handleCleanComment = () => {
@@ -31,7 +33,7 @@ const AddComment: React.FC<{ data: Post | PostComment }> = ({ data }) => {
     if (session?.id) {
       setShowCommentForm(true);
     } else {
-      setOpen(true);
+      setOpenLoginModal(true);
     }
   }, []);
 

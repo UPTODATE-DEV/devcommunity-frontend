@@ -5,6 +5,7 @@ import { getUserFullName, getUserProfileImageUrl } from "@/lib/posts";
 import type { SpotlightAction } from "@mantine/spotlight";
 import { openSpotlight, SpotlightProvider } from "@mantine/spotlight";
 import MenuIcon from "@mui/icons-material/Menu";
+import IconSearch from "@mui/icons-material/Search";
 import AppBar from "@mui/material/AppBar";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
@@ -13,7 +14,7 @@ import Stack from "@mui/material/Stack";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { IconSearch } from "@tabler/icons";
+
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -105,7 +106,7 @@ const Menu: React.FC = () => {
             <Stack sx={{ height: 1 }} justifyContent="center">
               <SpotlightProvider
                 actions={actions}
-                searchIcon={<IconSearch size={18} />}
+                searchIcon={<IconSearch fontSize="large" />}
                 searchPlaceholder="Search..."
                 shortcut={["mod + P", "mod + K", "/"]}
                 limit={7}

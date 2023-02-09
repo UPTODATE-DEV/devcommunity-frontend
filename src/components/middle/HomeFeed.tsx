@@ -65,7 +65,7 @@ const HomeFeed = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
+      if (window.innerHeight + document.documentElement.scrollTop > document.documentElement.offsetHeight - 400) {
         if (!endOfPage) {
           setCurrentPage(currentPage + 1);
         }

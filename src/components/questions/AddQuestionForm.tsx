@@ -2,20 +2,29 @@ import RichTextEditor from "@/components/common/RichTextEditor";
 import { FILES_BASE_URL } from "@/config/url";
 import useStore from "@/hooks/useStore";
 import { getRequest, patchRequest, postRequest } from "@/lib/api";
+import AddIcon from "@mui/icons-material/Add";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import PollIcon from "@mui/icons-material/Poll";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { IconButton, Typography } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import Chip from "@mui/material/Chip";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import FormControl from "@mui/material/FormControl";
+import Grow from "@mui/material/Grow";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
+import Popper from "@mui/material/Popper";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-toastify";
-
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Input from "../common/Input";
 
 const AddQuestionForm = ({ data }: { data?: Post }) => {
   const [loading, setLoading] = React.useState(false);
@@ -28,6 +37,12 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
     tags: data?.tags?.map((el) => el.tag.name) || [],
     locale: data?.locale || "FR",
   });
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef<HTMLDivElement>(null);
+  const [survey, setSurvey] = React.useState(false);
+  const [question, setQuestion] = React.useState("");
+  const [options, setOptions] = React.useState<string[]>(["", ""]);
+  const [duration, setDuration] = React.useState("7");
 
   const { push, locale, replace } = useRouter();
 
@@ -45,6 +60,58 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
     setPost({ ...post, [event.target.name]: event.target.value });
   };
 
+  const handleClose = (event: Event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const handleRemoveOption = (index: number) => {
+    const newOptions = [...options];
+    newOptions.splice(index, 1);
+    setOptions(newOptions);
+  };
+
+  const handleOptionChange = (index: number, e: { target: { value: string; name: string } }) => {
+    if (e.target.value.length > 30) {
+      return;
+    }
+    const newOptions = [...options];
+    newOptions[index] = e?.target?.value;
+    setOptions(newOptions);
+  };
+
+  const handleQuestionChange = (e: { target: { value: string; name: string } }) => {
+    if (e.target.value.length > 140) {
+      return;
+    }
+    setQuestion(e.target.value);
+  };
+
+  const handleDurationChange = (e: { target: { value: string; name: string } }) => {
+    if (+e.target.value.length < 1) {
+      setDuration("1");
+    }
+    setDuration(e.target.value);
+  };
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleAddOption = () => {
+    if (options.length > 3) {
+      return;
+    }
+    setOptions([...options, ""]);
+  };
+
+  const toggleSurvey = () => {
+    setSurvey((state) => !state);
+  };
+
   const handleLocaleChange = (event: SelectChangeEvent) => {
     setPost({ ...post, locale: event.target.value });
   };
@@ -59,7 +126,16 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
         })
       : await postRequest({
           endpoint: "/posts",
-          data: { ...post, author: user?.id, type: "QUESTION", draft: true },
+          data: {
+            ...post,
+            author: user?.id,
+            type: "QUESTION",
+            draft: true,
+            survey,
+            surveyQuestion: question,
+            duration: +duration,
+            surveyOptions: options,
+          },
         });
     if (response.error) {
       setLoading(false);
@@ -82,7 +158,16 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
         })
       : await postRequest({
           endpoint: "/posts",
-          data: { ...post, author: user?.id, type: "QUESTION", draft: false },
+          data: {
+            ...post,
+            author: user?.id,
+            type: "QUESTION",
+            draft: false,
+            survey,
+            surveyQuestion: question,
+            duration: +duration,
+            surveyOptions: options,
+          },
         });
     if (response.error) {
       setLoading(false);
@@ -111,7 +196,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
   }, []);
 
   return (
-    <Paper variant="outlined" component={Stack} spacing={2} sx={{ py: 1, p: 2 }}>
+    <Paper variant="outlined" component={Stack} spacing={3} sx={{ py: 1, p: 2 }}>
       <TextField
         name="title"
         variant="filled"
@@ -170,28 +255,167 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
           ["image", "video", "strike"],
         ]}
       />
-      <Stack spacing={2} rowGap={2} direction="row" flexWrap="wrap" justifyContent="center" alignItems="center">
-        <Button
-          disableElevation
-          color="primary"
-          variant="contained"
-          disabled={!post.title || !post.content || !post.tags?.length || loading}
-          sx={{ px: 4, borderRadius: 50 }}
-          onClick={onPublish}
-        >
-          {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Publish" : "Publier"}
-        </Button>
 
-        <Button
-          disableElevation
-          color="secondary"
-          variant="contained"
-          disabled={!post.title || !post.content || !post.tags?.length || loading}
-          sx={{ px: 4, borderRadius: 50 }}
-          onClick={onSubmit}
+      {survey && (
+        <Paper
+          component={Stack}
+          variant="outlined"
+          spacing={2}
+          sx={{ px: 2, py: 3, borderRadius: 2, borderColor: "divider" }}
         >
-          {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Save" : "Enregistrer"}
-        </Button>
+          <Stack sx={{ position: "relative" }}>
+            <Input
+              type="textarea"
+              name="question"
+              value={question}
+              placeholder={locale === "en" ? "Ajouter une question" : "Add question"}
+              handleChange={handleQuestionChange}
+              label={locale === "en" ? "Your question" : "Votre question"}
+            />
+            <Typography variant="caption" sx={{ position: "absolute", right: 5, bottom: -25, zIndex: 4 }}>
+              {question.length}/140
+            </Typography>
+          </Stack>
+          <Stack sx={{ py: 3 }} spacing={4}>
+            {options.map((option, index) => (
+              <Stack key={index} sx={{ position: "relative" }}>
+                {index > 1 && (
+                  <IconButton
+                    sx={{ position: "absolute", right: 0, top: -2, zIndex: 2 }}
+                    onClick={() => handleRemoveOption(index)}
+                  >
+                    <RemoveCircleOutlineIcon fontSize="small" />
+                  </IconButton>
+                )}
+                <Typography variant="caption" sx={{ position: "absolute", right: 5, bottom: -25, zIndex: 4 }}>
+                  {option.length}/30
+                </Typography>
+                <Input
+                  name="question"
+                  label={`Option ${index + 1}`}
+                  value={options[index]}
+                  handleChange={(e: any) => handleOptionChange(index, e)}
+                  placeholder={locale === "en" ? "Add option" : "Ajouter une option"}
+                />
+              </Stack>
+            ))}
+          </Stack>
+
+          <Button
+            disabled={options.length > 3}
+            onClick={handleAddOption}
+            startIcon={<AddIcon />}
+            variant="outlined"
+            sx={{ width: 1 }}
+          >
+            Add Option
+          </Button>
+
+          <Input
+            name="duration"
+            label={locale === "en" ? "Duration" : "Durée"}
+            value={duration}
+            handleChange={handleDurationChange}
+            placeholder={locale === "en" ? "Poll duration in days" : "Durée du sondage en jours"}
+          />
+        </Paper>
+      )}
+
+      <Stack spacing={2} rowGap={2} direction="row" flexWrap="wrap" justifyContent="center" alignItems="center">
+        <Stack sx={{ position: "relative" }}>
+          <ButtonGroup
+            variant="contained"
+            ref={anchorRef}
+            disableElevation
+            aria-label="split button"
+            sx={{ borderRadius: 50 }}
+            disabled={
+              !post.title ||
+              !post.content ||
+              !post.tags?.length ||
+              loading ||
+              (survey && !question) ||
+              (survey && options.length < 2) ||
+              (survey && +duration < 1)
+            }
+          >
+            <Button sx={{ px: 4, borderRadius: 50 }} onClick={onPublish}>
+              {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Publish" : "Publier"}
+            </Button>
+            <Button
+              size="small"
+              aria-controls={open ? "split-button-menu" : undefined}
+              aria-expanded={open ? "true" : undefined}
+              aria-label="select merge strategy"
+              aria-haspopup="menu"
+              sx={{ px: 2, borderRadius: 50 }}
+              onClick={handleToggle}
+            >
+              <ArrowDropDownIcon />
+            </Button>
+          </ButtonGroup>
+
+          {/* @ts-ignore */}
+          <Popper
+            sx={{
+              zIndex: 1,
+            }}
+            open={open}
+            anchorEl={anchorRef.current}
+            role={undefined}
+            transition
+            disablePortal
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                style={{
+                  transformOrigin: placement === "bottom" ? "left top" : "left bottom",
+                }}
+              >
+                <div>
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <Button
+                      sx={{ px: 4, borderRadius: 50, my: 0.5 }}
+                      variant="contained"
+                      color="secondary"
+                      disableElevation
+                      onClick={onSubmit}
+                    >
+                      {loading
+                        ? locale === "en"
+                          ? "Loading..."
+                          : "Chargement"
+                        : locale === "en"
+                        ? "Draft"
+                        : "Brouillon"}
+                    </Button>
+                  </ClickAwayListener>
+                </div>
+              </Grow>
+            )}
+          </Popper>
+        </Stack>
+
+        {!data?.id && (
+          <Button
+            disableElevation
+            color={survey ? "primary" : "inherit"}
+            variant={survey ? "contained" : "outlined"}
+            disabled={loading}
+            startIcon={<PollIcon />}
+            sx={{ px: 4, borderRadius: 50 }}
+            onClick={toggleSurvey}
+          >
+            {survey
+              ? locale === "en"
+                ? "Remove the poll"
+                : "Retirer un sondage"
+              : locale === "en"
+              ? "Add a poll"
+              : "Ajouter un sondage"}
+          </Button>
+        )}
 
         <Button
           disableElevation

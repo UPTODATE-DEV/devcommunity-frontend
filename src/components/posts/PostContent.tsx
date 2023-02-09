@@ -13,7 +13,7 @@ import React, { useCallback } from "react";
 
 const Content = dynamic(import("@/components/common/Content"), { ssr: false });
 const PostReaction = dynamic(import("@/components/posts/PostReaction"), { ssr: false });
-const SeriesList = dynamic(import("@/components/posts/SeriesList"), { ssr: false });
+const SeriesList = dynamic(import("@/components/posts/SeriesList"), { ssr: false }); 
 
 const PostContent: React.FC<{ data: Post }> = ({ data }) => {
   const { author } = data;

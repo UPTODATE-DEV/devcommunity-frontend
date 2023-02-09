@@ -6,7 +6,7 @@ const withPWA = require("next-pwa")({
   dest: "public",
   register: true,
   skipWaiting: true,
-  disable: false,
+  disable: process.env.NODE_ENV === "development",
   mode: "production",
 });
 
@@ -14,9 +14,9 @@ const nextConfig = {
   reactStrictMode: true,
   productionBrowserSourceMaps: true,
   scrollRestoration: true,
-  swcMinify: false,
+  swcMinify: process.env.NODE_ENV === "development",
   compiler: {
-    removeConsole: true,
+    removeConsole: process.env.NODE_ENV === "production",
   },
   images: {
     formats: ["image/avif", "image/webp"],

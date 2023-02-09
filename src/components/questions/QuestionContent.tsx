@@ -15,6 +15,7 @@ import QuestionReactions from "./QuestionReactions";
 
 const Content = dynamic(import("@/components/common/Content"), { ssr: false });
 const SurveyContent = dynamic(import("@/components/questions/SurveyContent"), { ssr: false });
+const SeriesList = dynamic(import("@/components/posts/SeriesList"), { ssr: false });
 
 const PostContent: React.FC<{ data: Post }> = ({ data }) => {
   const user = useStore((state) => state.session?.user);
@@ -37,7 +38,8 @@ const PostContent: React.FC<{ data: Post }> = ({ data }) => {
         {data?.title}
       </Typography>
       <Content content={data?.content} fontSize={17} />
-      {data?.survey.length > 0 && <SurveyContent survey={data.survey[0]} />}
+      {data?.survey?.length > 0 && <SurveyContent survey={data?.survey[0]} />}
+      {data?.series?.length >= 1 && <SeriesList series={data?.series as any} />}
       <PostTags tags={data?.tags} />
       {!data?.draft && (
         <>

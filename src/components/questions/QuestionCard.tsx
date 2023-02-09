@@ -65,7 +65,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
       <Stack sx={{ cursor: "pointer" }} onClick={handleGoToPost}>
         <PostContent content={postContent} />
       </Stack>
-      {data?.survey.length > 0 && <SurveyContent survey={data.survey[0]} />}
+      {data?.survey?.length > 0 && <SurveyContent survey={data?.survey[0]} />}
       <PostTags tags={data?.tags} />
       <Stack
         direction="row"

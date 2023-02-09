@@ -1,4 +1,5 @@
 import axios from "axios";
+import {} from '@/config/url'
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL as string;
 

@@ -12,6 +12,7 @@ interface Session {
 
 interface User {
   id: string;
+  userId: string;
   createdAt: Date;
   updatedAt: Date;
   avatar: File;
@@ -26,6 +27,12 @@ interface User {
   role: Role;
   posts: Post[];
   comments: PostComment[];
+  authorRequest: {
+    status: "PENDING" | "ACCEPTED" | "REJECTED";
+    user: User;
+  }[];
+  followers: any[];
+  followings: any[];
 }
 
 interface Post {
@@ -33,8 +40,10 @@ interface Post {
   createdAt: Date;
   updatedAt: Date;
   title: string;
+  draft: boolean;
   content: string;
   publishedOn: Date;
+  locale: "FR" | "EN";
   author: User;
   tags: Tags[];
   slug: string;
@@ -42,14 +51,36 @@ interface Post {
   article: Article;
   question: Question;
   comments: PostComment[];
+  series: Series[];
   bookmarks: Bookmarks[];
+  _count: { comments: number };
+  survey: Survey[];
 }
 
+interface Series {
+  id: string;
+  module: number;
+  post: Post;
+}
 interface PostComment {
   id: string;
+  createdAt: Date;
+  updatedAt: Date;
   content: string;
   author: User;
+  parentComment?: PostComment;
   post: Post;
+  depth: number;
+  reactions: CommentReaction[];
+  childrenComments: PostComment[];
+  _count: { comments: number; childrenComments: number };
+}
+
+interface CommentReaction {
+  id: string;
+  question: string;
+  user: User;
+  type: QuestionReactionType;
 }
 
 interface Profile {
@@ -77,7 +108,7 @@ interface Phone {
 interface Tag {
   id: string;
   name: string;
-  _count: number;
+  _count: { posts: number };
 }
 
 interface Tags {
@@ -163,3 +194,68 @@ interface Notifications {
   date: string;
   notifications: Notification[];
 }
+
+interface Survey {
+  id: string;
+  createdAt: string;
+  question: SurveyQuestion;
+  options: Option[];
+  duration: number;
+}
+
+interface SurveyOption {
+  id: string;
+  content: string;
+  votes: Vote[];
+}
+
+interface SurveyQuestion {
+  content: string;
+}
+
+interface Vote {
+  id: string;
+  user: User;
+}
+
+interface Badges {
+  firstPost: Badge;
+  editor: Badge;
+  superEditor: Badge;
+  followers: Badge;
+  firstComments: Badge;
+  firstReactions: Badge;
+  reactions: Badge;
+  views: Badge;
+}
+
+interface Badge {
+  name: string;
+  description: string;
+  icon: string;
+  completed: string;
+}
+
+type DateRangePickerProps = {
+  startDate: Date | null;
+  endDate: Date | null;
+  onChangeStartDate: (newValue: Date | null) => void;
+  onChangeEndDate: (newValue: Date | null) => void;
+  //
+  open: boolean;
+  onOpen?: VoidFunction;
+  onClose: VoidFunction;
+  onReset?: VoidFunction;
+  //
+  isSelected?: boolean;
+  isError?: boolean;
+  //
+  label?: string;
+  shortLabel?: string;
+  //
+  title?: string;
+  variant?: "calendar" | "input";
+  //
+  setStartDate?: React.Dispatch<React.SetStateAction<Date | null>>;
+  setEndDate?: React.Dispatch<React.SetStateAction<Date | null>>;
+};

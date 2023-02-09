@@ -1,39 +1,29 @@
+import SuggestionViewMore from "@/components/common/SuggestionViewMore";
 import useStore from "@/hooks/useStore";
-import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
-import hljs from "highlight.js";
 import dynamic from "next/dynamic";
 import React from "react";
 import QuestionContent from "./QuestionContent";
 
-const QuestionComment = dynamic(import("@/components/questions/QuestionComment"), { ssr: false, loading: () => null });
-const QuestionReactions = dynamic(import("@/components/questions/QuestionReactions"), {
-  ssr: false,
-  loading: () => null,
-});
+const Suggestions = dynamic(import("@/components/common/Suggestions"), { ssr: false });
+const SurveyContent = dynamic(import("@/components/questions/SurveyContent"), { ssr: false });
+const CommentsList = dynamic(import("@/components/comments/CommentsList"), { ssr: false });
+const AddComment = dynamic(import("@/components/comments/AddComment"), { ssr: false, loading: () => null });
 
-const Question: React.FC<{ data: Post }> = ({ data }) => {
+const Question: React.FC<{ data: Post; comments: PostComment[] }> = ({ data, comments }) => {
   const { setCurrentPost } = useStore((state) => state);
 
   React.useEffect(() => {
     setCurrentPost(data);
   }, []);
 
-  React.useEffect(() => {
-    document.querySelectorAll("pre").forEach((el) => {
-      hljs.highlightElement(el);
-    });
-  }, []);
-
   return (
-    <Stack spacing={4}>
+    <Stack spacing={2}>
       <QuestionContent data={data} />
-      <Divider />
-      <QuestionReactions />
-      <Divider />
       <div id="comments"></div>
-      <QuestionComment data={data} />
-      <Divider />
+      <CommentsList addComment={<AddComment data={data} />} />
+      <Suggestions data={data} type="QUESTION" />
+      <SuggestionViewMore tags={data?.tags} />
     </Stack>
   );
 };

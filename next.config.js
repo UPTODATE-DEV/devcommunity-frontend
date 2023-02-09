@@ -7,15 +7,21 @@ const withPWA = require("next-pwa")({
   register: true,
   skipWaiting: true,
   disable: process.env.NODE_ENV === "development",
+  mode: "production",
 });
 
 const nextConfig = {
   reactStrictMode: true,
   productionBrowserSourceMaps: true,
-  swcMinify: true,
+  scrollRestoration: true,
+  swcMinify: process.env.NODE_ENV === "development",
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
   images: {
-    domains: ["localhost", "api-community.updevtest.com"],
     formats: ["image/avif", "image/webp"],
+    domains: ["localhost", "api-community.updevtest.com", "api.updevcommunity.com", "api-com.updevtest.com"],
+    minimumCacheTTL: 60,
   },
   i18n: {
     locales: ["en", "fr"],

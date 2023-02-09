@@ -1,91 +1,116 @@
-import ClassIcon from "@mui/icons-material/Class";
+import useStore from "@/hooks/useStore";
+import useUser from "@/hooks/useUser";
+import { deleteRequest, getRequest, patchRequest } from "@/lib/api";
+import { shortenNumber } from "@/lib/shorterNumber";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import DraftsIcon from "@mui/icons-material/Drafts";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
+import QuestionAnswer from "@mui/icons-material/QuestionAnswerSharp";
+import TagIcon from "@mui/icons-material/Tag";
+import WebStoriesIcon from "@mui/icons-material/WebStories";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import { Grid, Stack, Typography, IconButton } from "@mui/material";
+import Chip from "@mui/material/Chip";
+import Fab from "@mui/material/Fab";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
 import Tab from "@mui/material/Tab";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import React from "react";
-import { Avatar, Button } from "@mui/material";
-import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
-import SettingsSharpIcon from "@mui/icons-material/SettingsSharp";
-import QuestionAnswer from "@mui/icons-material/QuestionAnswerSharp";
-import TagSharpIcon from "@mui/icons-material/TagSharp";
-import HomeSharpIcon from "@mui/icons-material/HomeSharp";
-import ManageAccounts from "@mui/icons-material/ManageAccountsSharp";
-import Divider from "@mui/material/Divider";
-import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
-import useStore from "@/hooks/useStore";
-import { deleteRequest, getRequest } from "@/lib/api";
-import CommentIcon from "@mui/icons-material/Comment";
+import { toast } from "react-toastify";
+import useStoreNoPersist from "../../hooks/useStoreNoPersist";
+import DraftCard from "./DraftCard";
 import PostCard from "./PostCard";
 import QuestionCard from "./QuestionCard";
-import PostComment from "../posts/PostComment";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { toast } from "react-toastify";
-import Fab from "@mui/material/Fab";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import { FILES_BASE_URL } from "config/url";
-import useUser from "@/hooks/useUser";
-import { useRouter } from "next/router";
-import dynamic from "next/dynamic";
+import SeriesListCard from "./SeriesListCard";
 
 const Empty = dynamic(import("@/components/common/Empty"), {
   ssr: false,
   loading: () => null,
 });
 
-const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
-  const [tab, setTab] = React.useState("0");
-  const [posts, setPosts] = React.useState<Post[] | []>([]);
-  const sessionUser = useStore((state) => state.session?.user);
-  const { push, locale } = useRouter();
-  const [comments, setComments] = React.useState<PostComment[] | []>([]);
+const CreateSeries = dynamic(import("./CreateSeries"), { ssr: false });
 
-  const useUserData = useUser(sessionUser?.username);
-  const user = currentUser || useUserData;
+const Dashboard = dynamic(import("./Dashboard"), { ssr: false });
+
+const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
+  const sessionUser = useStore((state) => state.session?.user);
+  const user = useUser(sessionUser?.id);
+  const { profileTab, setProfileTab, setSeries, series } = useStore((state) => state);
+  const [posts, setPosts] = React.useState<Post[] | []>([]);
+  const [followedTags, setFollowedTags] = React.useState<Tags[] | []>([]);
+  const { locale } = useRouter();
+  const [badges, setBadges] = React.useState<Badge[] | []>([]);
+  const { openAddSeries, setToggleAddSeries, setCurrentSeries } = useStoreNoPersist((state) => state);
+
+  const isMobile = useMediaQuery("(min-width:760px)");
 
   const tabs = [
     {
-      id: 0,
-      label: "Posts",
-      show: true,
-      icon: <QuestionAnswer />,
+      id: "dashboard",
+      label: "Dashboard",
+      show: showProfileUser === undefined && user?.role === "AUTHOR",
+      icon: <DashboardIcon fontSize="small" />,
     },
     {
-      id: 1,
+      id: "articles",
       label: "Articles",
       show: true,
-      icon: <HistoryEduIcon />,
+      icon: <HistoryEduIcon fontSize="small" />,
     },
     {
-      id: 2,
-      label: locale === "en" ? "Comments" : "commentaires",
-      show: currentUser ? false : true,
-      icon: <CommentIcon />,
+      id: "posts",
+      label: "Posts",
+      show: true,
+      icon: <QuestionAnswer fontSize="small" />,
+    },
+    {
+      id: "series",
+      label: locale === "en" ? "Series" : "Séries",
+      show: true,
+      icon: <WebStoriesIcon fontSize="small" />,
+    },
+    {
+      id: "tags",
+      label: "Tags",
+      show: showProfileUser ? false : true,
+      icon: <TagIcon fontSize="small" />,
+    },
+    {
+      id: "drafts",
+      label: "Drafts",
+      show: showProfileUser ? false : true,
+      icon: <DraftsIcon fontSize="small" />,
+    },
+    {
+      id: "badges",
+      label: locale === "en" ? "Badges" : "Badges",
+      show: true,
+      icon: <EmojiEventsIcon fontSize="small" />,
     },
   ];
 
-  const questions = posts.filter((el) => el.type === "QUESTION");
-  const articles = posts.filter((el) => el.type === "ARTICLE");
+  const questions = posts.filter((el) => !el.draft && el.type === "QUESTION");
+  const articles = posts.filter((el) => !el.draft && el.type === "ARTICLE");
+  const drafts = posts.filter((el) => el.draft);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
-    setTab(newValue);
+    setProfileTab(newValue);
   };
 
-  const handleViewPost = (data: Post) => {
-    push(`${data?.type === "ARTICLE" ? "/articles" : "/posts"}/${data?.slug}`);
-  };
-
-  const handleDeleteComment = async (id: string) => {
-    const response = await deleteRequest({ endpoint: `/comments/${id}` });
-    if (response.error) {
-      toast.error(response.error?.message);
-    }
-    if (response.data) {
-      setComments((state) => state.filter((el) => el.id !== id));
-    }
+  const handleTagClick = async (tag: string) => {
+    await patchRequest({ endpoint: `/tags/follow/${tag}/${sessionUser?.id}` });
+    setFollowedTags((state) => state.filter((el) => el.tag.name !== tag));
   };
 
   const handleDeletePost = async (id: string) => {
@@ -98,136 +123,213 @@ const ProfileTabs = ({ currentUser }: { currentUser?: User }) => {
     }
   };
 
-  const fetchData = async () => {
-    const getPosts = getRequest({ endpoint: `/posts/author/${currentUser?.id || sessionUser?.id}` });
-    const getComments = getRequest({ endpoint: `/comments/author/${currentUser?.id || sessionUser?.id}` });
+  const handleDeleteSeries = async (id: string) => {
+    const response = await deleteRequest({ endpoint: `/posts/series/${id}` });
+    if (response.error) {
+      toast.error(response.error?.message);
+    }
+    setSeries(series.filter((el) => el.id !== id));
+  };
 
-    const [posts, comments] = await Promise.all([getPosts, getComments]);
+  function handleShowCreateSeries() {
+    if (openAddSeries) {
+      setCurrentSeries(null);
+    }
+    setToggleAddSeries();
+  }
+
+  const handleCreateSeries = async () => {};
+
+  const handleEditSeries = (seriesId: string) => {
+    setToggleAddSeries();
+    setCurrentSeries(seriesId);
+  };
+
+  const fetchData = async () => {
+    const getPosts = getRequest({ endpoint: `/posts/author/${showProfileUser?.id || sessionUser?.id}` });
+    const getFollowedTags = getRequest({ endpoint: `/tags/followed/${sessionUser?.id}` });
+    const getUserBadges = getRequest({ endpoint: `/users/${sessionUser?.id}/badges` });
+    const getSeries = getRequest({ endpoint: `/posts/series?userId=${showProfileUser?.id || sessionUser?.id}` });
+    const [posts, followedTags, series, userBadges] = await Promise.all([
+      getPosts,
+      getFollowedTags,
+      getSeries,
+      getUserBadges,
+    ]);
 
     setPosts(posts.data);
-    setComments(comments.data);
+    setFollowedTags(followedTags.data);
+    setSeries(series.data);
+    setBadges(userBadges.data);
   };
 
   React.useEffect(() => {
     fetchData();
   }, []);
 
+  React.useEffect(() => {
+    if (!profileTab) {
+      if (showProfileUser === undefined && user?.role === "AUTHOR") {
+        setProfileTab("dashboard");
+      } else {
+        setProfileTab("articles");
+      }
+    }
+  }, [user?.role]);
+
+  if (!profileTab) return null;
+
   return (
-    <TabContext value={tab}>
+    <TabContext value={profileTab}>
       <TabList
         onChange={handleTabChange}
-        variant={useMediaQuery("(min-width:600px)") ? "fullWidth" : "scrollable"}
-        aria-label="lab API tabs example"
-        sx={{ borderBottom: 1, borderColor: "divider", bgcolor: "action.hover" }}
+        scrollButtons
+        allowScrollButtonsMobile
+        variant={isMobile ? "fullWidth" : "scrollable"}
+        aria-label="Show reactions"
+        sx={{ border: 1, borderColor: "divider", bgcolor: "background.paper" }}
       >
-        {tabs.map(
-          (item, i) =>
-            item.show && (
-              <Tab
-                icon={item.icon}
-                key={item.id}
-                iconPosition="start"
-                sx={{ minHeight: 50 }}
-                label={<Typography>{item.label}</Typography>}
-                value={i.toString()}
-              />
-            )
-        )}
+        {tabs
+          .filter((el) => el.show)
+          .map((item, i) => (
+            <Tab
+              icon={item.icon}
+              key={item.id}
+              iconPosition="start"
+              sx={{ minHeight: 50 }}
+              label={<Typography textTransform="capitalize">{item.label}</Typography>}
+              value={item.id}
+            />
+          ))}
       </TabList>
-      <TabPanel sx={{ p: 0 }} value={"0"}>
-        <Stack spacing={5}>
+      <TabPanel sx={{ p: 0 }} value={"posts"}>
+        <Stack spacing={2}>
           {questions.length === 0 && <Empty />}
           {questions?.map((item, index) => (
             <React.Fragment key={item.id}>
               <QuestionCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
-              {posts.length !== index && <Divider />}
             </React.Fragment>
           ))}
         </Stack>
-        {/* <Stack sx={{ display: "flex", width: 1, my: 6 }} alignItems="center">
-          <CircularProgress />
-        </Stack> */}
       </TabPanel>
-      <TabPanel sx={{ p: 0 }} value={"1"}>
-        <Stack spacing={5}>
+      <TabPanel sx={{ p: 0 }} value={"articles"}>
+        <Stack spacing={2}>
           {articles.length === 0 && <Empty />}
           {articles?.map((item, index) => (
             <React.Fragment key={item.id}>
               <PostCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
-              {posts.length !== index && <Divider />}
             </React.Fragment>
           ))}
         </Stack>
       </TabPanel>
-      {!currentUser && (
-        <TabPanel sx={{ p: 0 }} value={"2"}>
-          <Stack spacing={1}>
-            {comments.length === 0 && <Empty />}
-            {comments.map((el, index) => (
-              <React.Fragment key={el.id}>
-                <Stack direction="row" spacing={2}>
-                  <IconButton onClick={() => push(`/profile/@${user?.email.split("@")[0]}`)}>
-                    <Avatar
-                      sx={{ bgcolor: "primary.main", color: "white" }}
-                      alt={`${user?.firstName} ${user?.lastName}`}
-                      src={`${FILES_BASE_URL}${user?.profile?.avatar?.url}`}
-                    >
-                      {user?.firstName?.charAt(0)}
-                    </Avatar>
-                  </IconButton>
-                  <Stack sx={{ position: "relative", width: 1 }}>
-                    <Typography
-                      color="text.primary"
-                      onClick={() => push(`/profile/@${user?.email.split("@")[0]}`)}
-                      sx={{
-                        "&:hover": {
-                          color: "primary.main",
-                        },
-                        cursor: "pointer",
-                      }}
-                      fontWeight={700}
-                    >
-                      {user?.firstName} {user?.lastName}
-                    </Typography>
-
-                    <Typography
-                      variant="body1"
-                      color="text.secondary"
-                      className="content"
-                      dangerouslySetInnerHTML={{
-                        __html: el.content,
-                      }}
-                    />
-                    <Stack direction="row" flexWrap="wrap" spacing={1} alignItems="center" sx={{ mt: 1 }}>
-                      <Button
-                        size="small"
-                        variant="outlined"
-                        color="primary"
-                        sx={{ px: 2 }}
-                        onClick={() => handleViewPost(el.post)}
-                        startIcon={<RemoveRedEyeIcon />}
-                      >
-                        {locale === "en" ? "View post" : "Voir le post"}
-                      </Button>
-
-                      <Button
-                        size="small"
-                        variant="outlined"
-                        color="error"
-                        sx={{ px: 2 }}
-                        onClick={() => handleDeleteComment(el.id)}
-                        startIcon={<DeleteIcon />}
-                      >
-                        {locale === "en" ? "Delete" : "Supprimer"}
-                      </Button>
-                    </Stack>
-                  </Stack>
-                </Stack>
-                <Divider />
+      <TabPanel sx={{ p: 0 }} value={"series"}>
+        <Stack spacing={2} sx={{ position: "relative" }}>
+          {!openAddSeries && series.length === 0 && <Empty />}
+          {openAddSeries && <CreateSeries />}
+          {!openAddSeries &&
+            series?.map((item, index) => (
+              <React.Fragment key={item.id}>
+                <SeriesListCard
+                  handleEditSeries={() => handleEditSeries(item.id)}
+                  handleDeleteSeries={() => handleDeleteSeries(item.id)}
+                  data={item.posts[0]?.post}
+                />
               </React.Fragment>
             ))}
-          </Stack>
-        </TabPanel>
+
+          {!showProfileUser && sessionUser?.id && (
+            <Fab
+              color={openAddSeries ? "error" : "primary"}
+              onClick={handleShowCreateSeries}
+              aria-label="add"
+              sx={{ position: "sticky", bottom: 20, alignSelf: "flex-end" }}
+            >
+              {openAddSeries ? <CloseIcon /> : <AddIcon />}
+            </Fab>
+          )}
+        </Stack>
+      </TabPanel>
+      {!showProfileUser && (
+        <>
+          <TabPanel sx={{ p: 0 }} value={"drafts"}>
+            <Stack spacing={2}>
+              {drafts.length === 0 && <Empty />}
+              {drafts?.map((item, index) => (
+                <React.Fragment key={item.id}>
+                  <DraftCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
+                </React.Fragment>
+              ))}
+            </Stack>
+          </TabPanel>
+          <TabPanel sx={{ p: 0 }} value={"tags"}>
+            {followedTags.length === 0 ? (
+              <Empty />
+            ) : (
+              <Paper variant="outlined" sx={{ py: 4, px: 2, minHeight: "300px" }}>
+                <Grid container spacing={1}>
+                  {followedTags.map((el, i) => (
+                    <Grid item xs="auto" key={el.tag.name}>
+                      <Tooltip
+                        arrow
+                        title={locale === "en" ? "Click to unfollow this tag" : "Cliquer pour ne plus suivre ce tag"}
+                      >
+                        <Chip
+                          size="small"
+                          onClick={() => handleTagClick(el.tag.name)}
+                          icon={<TagIcon fontSize="small" />}
+                          sx={{ px: 2 }}
+                          label={`${el.tag.name} (${shortenNumber(el.tag._count.posts)})`}
+                        />
+                      </Tooltip>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Paper>
+            )}
+          </TabPanel>
+          {showProfileUser === undefined && user?.role === "AUTHOR" && (
+            <TabPanel sx={{ p: 0 }} value={"dashboard"}>
+              <Paper variant="outlined" sx={{ p: 2, minHeight: "200px" }}>
+                <Dashboard />
+              </Paper>
+            </TabPanel>
+          )}
+          <TabPanel sx={{ p: 0 }} value={"badges"}>
+            <Paper variant="outlined" sx={{ p: 2, minHeight: "200px" }}>
+              <Grid container gap={2}>
+                {badges.map((el, i) => (
+                  <Grid key={el.name}>
+                    <Tooltip
+                      arrow
+                      title={
+                        <React.Fragment>
+                          <Typography fontWeight={700} textAlign="center" color="inherit">
+                            {el.name}
+                          </Typography>
+                          <Typography color="inherit" textAlign="center">
+                            {el.description}
+                          </Typography>
+                        </React.Fragment>
+                      }
+                    >
+                      <Paper sx={{ p: 2, borderRadius: 50, position: "relative" }} variant="outlined">
+                        <Stack sx={{ width: 60, height: 60, position: "relative" }}>
+                          <Image
+                            src={`/images/badges/${el.icon}.png`}
+                            style={{ filter: el.completed ? "none" : "grayscale(100%)" }}
+                            alt={el.name}
+                            layout="fill"
+                            objectFit="contain"
+                          />
+                        </Stack>
+                      </Paper>
+                    </Tooltip>
+                  </Grid>
+                ))}
+              </Grid>
+            </Paper>
+          </TabPanel>
+        </>
       )}
     </TabContext>
   );

@@ -1,141 +1,99 @@
+import { Disapprove, Endorse } from "@/components/common/Reactions";
+import ShowReactions from "@/components/questions/ShowQuestionReactions";
+import useSocket from "@/hooks/useSocket";
 import useStore from "@/hooks/useStore";
+import useStoreNoPersist from "@/hooks/useStoreNoPersist";
 import { patchRequest } from "@/lib/api";
-import BookmarkAddSharpIcon from "@mui/icons-material/BookmarkAddSharp";
-import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
-import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
-import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
+import { shortenNumber } from "@/lib/shorterNumber";
+import CircularProgress from "@mui/material/CircularProgress";
+import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import dayjs from "dayjs";
-import "dayjs/locale/fr";
-import relativeTime from "dayjs/plugin/relativeTime";
-import React from "react";
-import { toast } from "react-toastify";
-dayjs.extend(relativeTime);
-import { CallToActionSkeleton } from "@/components/middle/Skeleton";
-import dynamic from "next/dynamic";
-import { Dialog } from "@mui/material";
 import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 
-const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
-  ssr: false,
-  loading: () => <CallToActionSkeleton />,
-});
-
-const QuestionReactions = () => {
-  const { currentPost: data, setCurrentPost } = useStore((state) => state);
+const QuestionReactions = ({ post }: { post: Post }) => {
+  const [openReaction, setOpenReaction] = React.useState(false);
+  const userId = useStore((state) => state.session?.user?.id);
   const user = useStore((state) => state.session?.user);
+  const { setOpenLoginModal } = useStoreNoPersist();
   const [userReaction, setUserReaction] = React.useState<QuestionReactionType | undefined>();
-  const [open, setOpen] = React.useState(false);
   const { locale } = useRouter();
+  const socket = useSocket();
+  const [loading, setLoading] = React.useState(true);
+  const [reactions, setReactions] = React.useState<QuestionsReaction[]>([]);
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseReaction = () => {
+    setOpenReaction(false);
   };
 
-  const onReact = async (type: string) => {
-    if (user?.id) {
-      const post = await patchRequest({ endpoint: `/posts/${data?.id}/reactions/${type}/${user?.id}/question` });
-      if (post.error) {
-        toast.error(post.error);
-        return;
+  const onReact = async (type: QuestionReactionType) => {
+    if (userId && user) {
+      setLoading(true);
+      const response = await patchRequest({ endpoint: `/posts/${post?.id}/reactions/${type}/${userId}/question` });
+      if (response?.data) {
+        socket.emit("notification", { notificationFromUser: userId, id: Date.now().toString(), post, type });
+        setReactions(response.data?.question?.reactions);
+        setUserReaction((state) => (state === type ? undefined : type));
+        setLoading(false);
       }
-      return setCurrentPost(post.data);
+      return;
     }
-    setOpen(true);
+    setOpenLoginModal(true);
   };
 
-  // on add to bookmarks
-  const onAddToBookmarks = async () => {
-    if (user?.id) {
-      const post = await patchRequest({ endpoint: `/posts/${data?.id}/bookmarks/${user?.id}` });
-
-      if (post.error) {
-        toast.error(post.error);
-        return;
-      }
-      return setCurrentPost(post.data);
+  useEffect(() => {
+    setLoading(true);
+    setReactions(post.question?.reactions);
+    const reaction = post.question?.reactions?.find((reaction: QuestionsReaction) => {
+      return reaction?.user?.id === userId;
+    });
+    if (reaction) {
+      setUserReaction(reaction.type);
     }
-    setOpen(true);
-  };
+    setLoading(false);
+  }, []);
 
-  React.useEffect(() => {
-    if (user) {
-      const reaction = data?.question?.reactions?.find((reaction) => {
-        return reaction?.user?.id === user?.id;
-      });
-      if (reaction) {
-        setUserReaction(reaction.type);
-      } else {
-        setUserReaction(undefined);
-      }
-    }
-  }, [data, user]);
+  const SeeAllReaction = ({ type }: { type: QuestionReactionType }) => (
+    <Tooltip title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"} placement="bottom" arrow>
+      <IconButton onClick={() => setOpenReaction(true)}>
+        <Typography variant="caption" color="text.primary" fontWeight={700}>
+          {shortenNumber(reactions?.filter((el) => el.type === type).length || 0)}
+        </Typography>
+      </IconButton>
+    </Tooltip>
+  );
 
   return (
     <>
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={openReaction}
+        maxWidth="md"
+        onClose={handleCloseReaction}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <CallToAction />
+        <ShowReactions reactions={reactions} />
       </Dialog>
-      <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between" sx={{ mt: 1 }}>
-        <Stack direction="row" spacing={2}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, px: 1, borderRadius: 52 }}
-          >
-            <Tooltip title={locale === "en" ? "Endorse" : "Approuver"} placement="bottom" arrow>
-              <IconButton onClick={() => onReact("LIKE")}>
-                <ThumbUpSharpIcon color={userReaction === "LIKE" ? "info" : "inherit"} fontSize="small" />
-              </IconButton>
-            </Tooltip>
+      {loading ? (
+        <CircularProgress size={16} />
+      ) : (
+        <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between" sx={{ mt: 1 }}>
+          <Stack direction="row" spacing={2}>
+            <Stack direction="row" alignItems="center">
+              <Endorse handleClick={onReact} liked={userReaction === "LIKE"} />
+              <SeeAllReaction type="LIKE" />
+            </Stack>
 
-            <Typography sx={{ px: 2 }} variant="caption" color="text.primary" fontWeight={700}>
-              {data?.question?.reactions?.filter((el) => el.type === "LIKE").length}
-            </Typography>
-          </Stack>
-
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, px: 1, borderRadius: 52 }}
-          >
-            <Tooltip title={locale === "en" ? "Disapprove" : "Désapprouver"} placement="bottom" arrow>
-              <IconButton onClick={() => onReact("DISLIKE")}>
-                <ThumbDownOffAltIcon color={userReaction === "DISLIKE" ? "error" : "inherit"} fontSize="small" />
-              </IconButton>
-            </Tooltip>
-
-            <Typography sx={{ px: 2 }} variant="caption" color="text.primary" fontWeight={700}>
-              {data?.question?.reactions?.filter((el) => el.type === "DISLIKE").length}
-            </Typography>
+            <Stack direction="row" alignItems="center">
+              <Disapprove handleClick={onReact} disliked={userReaction === "DISLIKE"} />
+              <SeeAllReaction type="DISLIKE" />
+            </Stack>
           </Stack>
         </Stack>
-        <Stack direction="row" spacing={2}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
-          >
-            <Tooltip title={locale === "en" ? "Add to bookmarks" : "Ajouter aux favoris"} placement="bottom" arrow>
-              <IconButton onClick={onAddToBookmarks}>
-                {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
-                  <BookmarkRemoveIcon color="secondary" fontSize="small" />
-                ) : (
-                  <BookmarkAddSharpIcon fontSize="small" />
-                )}
-              </IconButton>
-            </Tooltip>
-          </Stack>
-        </Stack>
-      </Stack>
+      )}
     </>
   );
 };

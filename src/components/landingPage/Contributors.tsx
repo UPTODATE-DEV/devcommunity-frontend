@@ -57,23 +57,28 @@ const Contributors = () => {
       <Typography sx={{ width: { xs: 1, md: 0.6 } }} color="text.secondary" textAlign="center" gutterBottom>
         {description}
       </Typography>
-      <Stack justifyContent="center" alignItems="center" spacing={2} direction="row" sx={{ py: 4 }}>
+      <Grid container spacing={2} justifyContent="center" alignItems="center" sx={{ py: 3 }}>
         {contributors.map((contributor) => (
-          <a
-            title={contributor.name}
-            key={contributor.github}
-            href={contributor.github}
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            <IconButton>
-              <Avatar sx={{ width: 80, height: 80, bgcolor: "primary.main", color: "white" }} src={contributor.picture}>
-                L
-              </Avatar>
-            </IconButton>
-          </a>
+          <Grid item xs="auto" key={contributor.name}>
+            <a
+              title={contributor.name}
+              key={contributor.github}
+              href={contributor.github}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <IconButton>
+                <Avatar
+                  sx={{ width: 80, height: 80, bgcolor: "primary.main", color: "white" }}
+                  src={contributor.picture}
+                >
+                  L
+                </Avatar>
+              </IconButton>
+            </a>
+          </Grid>
         ))}
-      </Stack>
+      </Grid>
     </Stack>
   );
 };

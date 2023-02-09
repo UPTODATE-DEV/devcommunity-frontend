@@ -4,16 +4,17 @@ import { patchRequest, postRequest } from "@/lib/api";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import SaveIcon from "@mui/icons-material/SaveOutlined";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-toastify";
+import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 
 const ProfileEditForm = ({ user }: { user?: User }) => {
   const { editProfile, setEditProfile } = useStoreNoPersist((state) => state);
@@ -30,6 +31,7 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
     twitter: user?.profile?.twitter,
     gitHub: user?.profile?.gitHub,
     bio: user?.profile?.bio,
+    username: user?.username,
   });
 
   const { reload, locale } = useRouter();
@@ -65,14 +67,9 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
     reload();
   };
 
-  React.useEffect(() => {
-    return () => setEditProfile(false);
-  }, []);
-
   return (
-    <Stack spacing={2} sx={{ py: 2 }}>
-      <Divider />
-      <Typography color="text.primary">
+    <Paper variant="outlined" component={Stack} spacing={2} sx={{ p: 2 }}>
+      <Typography color="text.primary" fontWeight={700}>
         {locale === "en" ? "Personal informations" : "Informations personnelles"}
       </Typography>
       <Divider />
@@ -118,6 +115,15 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
       </Stack>
 
       <Input
+        icon={<AlternateEmailIcon />}
+        value={state.username}
+        label={locale === "en" ? "User name" : "Nom d'utilisateur"}
+        placeholder={locale === "en" ? "Enter your user name" : "Entrez votre nom d'utilisateur"}
+        handleChange={handleChange}
+        name="username"
+      />
+
+      <Input
         value={state.phone}
         label={locale === "en" ? "Phone" : "Téléphone"}
         placeholder={locale === "en" ? "Enter your phone number" : "Entrez votre numéro de téléphone"}
@@ -144,9 +150,9 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
         type="textarea"
         rows={4}
       />
-      <Divider />
-      <Typography color="text.primary">{locale === "en" ? "More infos" : "Plus d'infos"}</Typography>
-      <Divider />
+      <Typography fontWeight={700} color="text.primary">
+        {locale === "en" ? "More infos" : "Plus d'infos"}
+      </Typography>
       <Input
         icon={<GitHubIcon />}
         placeholder="https://github.com/username"
@@ -169,14 +175,26 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
         value={state.linkedIn}
       />
       <Stack direction="row" spacing={2} sx={{ py: 2 }} justifyContent="flex-end">
-        <Button color="secondary" sx={{ px: 4 }} variant="outlined" onClick={() => setEditProfile(false)}>
+        <Button
+          color="secondary"
+          sx={{ px: 4, borderRadius: 50 }}
+          variant="outlined"
+          onClick={() => setEditProfile(false)}
+        >
           {locale === "en" ? "Cancel" : "Annuler"}
         </Button>
-        <Button color="primary" sx={{ px: 4 }} disabled={loading} startIcon={<SaveIcon />} variant="contained">
+        <Button
+          onClick={onSave}
+          color="primary"
+          disableElevation
+          sx={{ px: 4, borderRadius: 50 }}
+          disabled={loading}
+          variant="contained"
+        >
           {locale === "en" ? "Update" : "Mettre à jour"}
         </Button>
       </Stack>
-    </Stack>
+    </Paper>
   );
 };
 

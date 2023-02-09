@@ -16,49 +16,50 @@ const faq = [
       id: "1",
       question: "Is Updev Community an Open Source Project?",
       answer:
-        "Yes, Updev Community is an open source project. You can contribute to the project by submitting a pull request on Github.",
+        "Updev Community is actually an open source/participative project being built by the fellowship of developers. Learn how you can contribute",
     },
     {
       id: "2",
       question: "Can I sign up to Updev Community without being a developer?",
       answer:
-        "Yes, you can sign up to Updev Community without being a developer. You can follow content and topics of choice by using tags as all posts and articles are assigned to one or more hashtags.",
+        "Yes, as long as you are interested in technology and want to see what the community has to share. Updev Community is made up of members of all levels, from the simple technology enthusiast to the most experienced developer.",
     },
     {
       id: "3",
-      question: "Can I sign up to Updev Community without being a developer?",
+      question: "What is the difference between an and a post?",
       answer:
-        "Vous pouvez configurer un compte en cliquant sur le bouton d'inscription dans le coin supérieur droit de la page.",
+        "Use articles to share relatively long writings. Add a title, a cover image, some hashtags and go ahead sharing about anything tech or related. You can easily format your text, add images and even insert pieces of code as inline or block elements. As for posts, they are commonly short. Use posts to ask questions, share quick tips, spontaneous discoveries.",
     },
     {
       id: "4",
-      question: "Can I sign up to Updev Community without being a developer?",
-      answer: "Yes, you can sign up to Updev Community without being a developer.",
+      question: "What are tags for and why should I add them in my posts/articles?",
+      answer:
+        "Tags (sometimes hashtags) are used to classify the content published in Updev Community and filter the content presented to the reader according to the topics, areas and trends in which they are interested.",
     },
   ],
   [
     {
       id: "1",
-      question: "Updev Community est-il un Projet Open Source?",
-      answer:
-        "Oui, Updev Community est un projet open source. Vous pouvez contribuer au projet en soumettant une demande de tirage sur Github.",
+      question: "Updev Community est-il un projet Open Source? Comment contribuer à son développement?",
+      answer: "Updev community est un projet développé par toute la communauté",
     },
     {
       id: "2",
-      question: "Puis-je m'inscrire à Updev Community sans être développeur?",
+      question: "Puis-je intégrer Updev Community sans être un développeur?",
       answer:
-        "Oui, vous pouvez vous inscrire à Updev Community sans être développeur. Vous pouvez suivre le contenu et les sujets de votre choix en utilisant des balises car tous les messages et articles sont attribués à une ou plusieurs balises.",
+        "Oui, du moment que vous vous intéressez à la technologie et voulez découvrir ce que la communauté a à partager. Updev Community regroupe est composé des membres de tous les niveaux, du simple enthousiaste à la technologie au développeur le plus expérimenté.",
     },
     {
       id: "3",
-      question: "Puis-je m'inscrire à Updev Community sans être développeur?",
+      question: "Quelle est la différence entre un post et un article?",
       answer:
-        "Vous pouvez configurer un compte en cliquant sur le bouton d'inscription dans le coin supérieur droit de la page.",
+        "Utilisez des articles pour partager des idées relativement longues. Ajoutez un titre, une image de couverture, des hashtags et développez votre idée. Vous pouvez facilement formater votre texte, ajouter des images et même insérer des portions de code en tant qu'éléments ‘inline’ ou ‘block’. Quant aux posts, ils sont généralement courts. Utilisez les posts pour poser des questions, partager des astuces, des découvertes spontanées, etc.",
     },
     {
       id: "4",
-      question: "Puis-je m'inscrire à Updev Community sans être développeur?",
-      answer: "Oui, vous pouvez vous inscrire à Updev Community sans être développeur.",
+      question: "A quoi servent les tags pourquoi devrais-je en ajouter dans mes publications?",
+      answer:
+        "Les tags (parfois hashtags) servent à catégoriser le contenu publié dans Updev Community et filtrer les publications présentées au lecteur selon les sujets, les domaines et les tendances qui l’intéressent.",
     },
   ],
 ];

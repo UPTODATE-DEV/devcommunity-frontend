@@ -1,18 +1,20 @@
 import RichTextEditor from "@/components/common/RichTextEditor";
 import { CallToActionSkeleton } from "@/components/middle/Skeleton";
+import { FILES_BASE_URL } from "@/config/url";
+import useSocket from "@/hooks/useSocket";
 import useStore from "@/hooks/useStore";
 import useUser from "@/hooks/useUser";
 import { deleteRequest, getRequest, postRequest } from "@/lib/api";
 import CommentIcon from "@mui/icons-material/Comment";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Avatar, Button, Divider } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
+import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { FILES_BASE_URL } from "config/url";
-import hljs from "highlight.js";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
@@ -25,12 +27,13 @@ const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
 
 const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
   const session = useStore((state) => state.session?.user);
-  const user = useUser(session?.username);
+  const user = useUser(session?.id);
   const [showCommentForm, setShowCommentForm] = React.useState(false);
   const [comments, setComments] = React.useState<PostComment[] | []>([]);
   const [comment, setComment] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const { push, locale } = useRouter();
+  const socket = useSocket();
 
   const handleClose = () => {
     setOpen(false);
@@ -69,16 +72,16 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
       toast.error(response.error?.message);
     }
     if (response.data) {
+      socket.emit("notification", {
+        notificationFromUser: user,
+        id: Date.now().toString(),
+        post: data,
+        type: "COMMENT",
+      });
       setComments((state) => [...state, response.data]);
       handleCleanComment();
     }
   };
-
-  React.useEffect(() => {
-    document.querySelectorAll("pre, code").forEach((el: any) => {
-      hljs.highlightElement(el);
-    });
-  }, [comments.length]);
 
   React.useEffect(() => {
     async function getComment() {
@@ -103,7 +106,7 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
       </Dialog>
       <Stack spacing={2} sx={{ py: 1 }}>
         <Typography variant="h6" color="text.primary">
-          {locale === "en" ? "Comments" : "Commentaires" } ({comments.length})
+          {locale === "en" ? "Comments" : "Commentaires"} ({comments.length})
         </Typography>
         {comments?.map((el) => (
           <React.Fragment key={el.id}>
@@ -182,7 +185,7 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
                 alt={`${user?.firstName} ${user?.lastName}`}
                 src={FILES_BASE_URL + user?.profile?.avatar?.url}
               >
-                {user?.firstName.charAt(0)}
+                {user?.firstName?.charAt(0)}
               </Avatar>
             </Grid>
             <Grid item xs={12} md={10.8}>
@@ -201,7 +204,7 @@ const QuestionComment: React.FC<{ data: Post }> = ({ data }) => {
                 }}
               >
                 <Typography variant="caption" color="text.secondary">
-                {locale === "en" ? "Leave a comment" : "Laisser un commentaire"}
+                  {locale === "en" ? "Leave a comment" : "Laisser un commentaire"}
                 </Typography>
                 <IconButton>
                   <CommentIcon fontSize="small" />

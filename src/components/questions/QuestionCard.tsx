@@ -1,275 +1,98 @@
-import useStore from "@/hooks/useStore";
-import { patchRequest } from "@/lib/api";
-import BookmarkAddSharpIcon from "@mui/icons-material/BookmarkAddSharp";
-import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
-import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
-import TagIcon from "@mui/icons-material/Tag";
-import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
-import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
-import { Chip } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
-import Dialog from "@mui/material/Dialog";
-import Grid from "@mui/material/Grid";
+import PostContent from "@/components/common/Content";
+import PostCardHeader from "@/components/common/PostCardHeader";
+import PostTags from "@/components/common/PostTags";
+import { useGoToPost, useGoToUserProfile } from "@/hooks/posts";
+import { getContent, parseDate } from "@/lib/posts";
+import { shortenNumber } from "@/lib/shorterNumber";
+import CommentIcon from "@mui/icons-material/Comment";
 import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import dayjs from "dayjs";
-import "dayjs/locale/fr";
-import relativeTime from "dayjs/plugin/relativeTime";
-import hljs from "highlight.js";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import useTheme from "@mui/system/useTheme";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
-dayjs.extend(relativeTime);
+import React, { useCallback } from "react";
+import Bookmark from "../common/Bookmark";
+import Share from "../common/Share";
+import QuestionReactions from "./QuestionReactions";
 
-import { CallToActionSkeleton } from "@/components/middle/Skeleton";
-import { FILES_BASE_URL } from "config/url";
-import ShowQuestionReactions from "./ShowQuestionReactions";
-const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
-  ssr: false,
-  loading: () => <CallToActionSkeleton />,
-});
+const SurveyContent = dynamic(import("@/components/questions/SurveyContent"), { ssr: false });
 
 const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
-  const user = useStore((state) => state.session?.user);
-  const { push, locale } = useRouter();
-  const { setPosts, posts } = useStore((state) => state);
-  const [userReaction, setUserReaction] = React.useState<QuestionReactionType | undefined>();
-  const [openLogin, setOpenLogin] = React.useState(false);
-  const [openReaction, setOpenReaction] = React.useState(false);
+  const theme = useTheme();
+  const { author } = data;
+  const cardRef = React.useRef<HTMLDivElement>(null);
+  const { locale } = useRouter();
+  const goToProfile = useGoToUserProfile();
+  const goToPost = useGoToPost();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const postContent = getContent(data?.content, isMobile ? 180 : 220, locale);
 
-  locale === "fr" ? dayjs.locale("fr") : dayjs.locale("en");
+  const handleGoToProfile = useCallback(() => {
+    goToProfile(author?.email);
+  }, [author?.email]);
 
-  const handleCloseLogin = () => {
-    setOpenLogin(false);
-  };
-
-  const handleCloseReaction = () => {
-    setOpenReaction(false);
-  };
-
-  const handleViewQuestion = () => {
-    push(`/posts/${data.slug}`);
-  };
-
-  const onReact = async (type: QuestionReactionType) => {
-    if (user?.id) {
-      const post = await patchRequest({ endpoint: `/posts/${data?.id}/reactions/${type}/${user?.id}/question` });
-      // update posts
-      const updatedPosts = posts.map((el) => {
-        if (el.id === post.data?.id) {
-          return post.data;
-        }
-        return el;
-      });
-
-      return setPosts(updatedPosts as Post[]);
-    }
-    setOpenLogin(true);
-  };
-
-  // on add to bookmarks
-  const onAddToBookmarks = async () => {
-    if (user?.id) {
-      const post = await patchRequest({ endpoint: `/posts/${data?.id}/bookmarks/${user?.id}` });
-      // update posts
-      const updatedPosts = posts.map((el) => {
-        if (el.id === post.data?.id) {
-          return post.data;
-        }
-        return el;
-      });
-
-      return setPosts(updatedPosts as Post[]);
-    }
-    setOpenLogin(true);
-  };
-
-  React.useEffect(() => {
-    document.querySelectorAll("pre").forEach((el) => {
-      hljs.highlightElement(el);
-    });
-  }, []);
-
-  React.useEffect(() => {
-    if (user) {
-      const reaction = data?.question?.reactions?.find((reaction) => {
-        return reaction?.user?.id === user?.id;
-      });
-      if (reaction) {
-        setUserReaction(reaction.type);
-      } else {
-        setUserReaction(undefined);
-      }
-    }
-  }, [data?.question?.reactions, user]);
+  const handleGoToPost = useCallback(() => {
+    goToPost(data);
+  }, [data]);
 
   return (
-    <>
-      <Dialog
-        open={openLogin}
-        onClose={handleCloseLogin}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+    <Paper variant="outlined" sx={{ p: 2 }}>
+      <PostCardHeader
+        handleClickGoToProfile={handleGoToProfile}
+        date={parseDate({ date: data?.publishedOn, type: "relative" })}
+        author={author}
+      />
+      <Typography
+        fontWeight={700}
+        color="text.primary"
+        variant="h6"
+        onClick={handleGoToPost}
+        sx={{
+          "&:hover": {
+            color: "primary.main",
+          },
+          cursor: "pointer",
+          mb: "-8px",
+          mt: 1,
+        }}
       >
-        <CallToAction />
-      </Dialog>
-
-      <Dialog
-        open={openReaction}
-        onClose={handleCloseReaction}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+        {data?.title}
+      </Typography>
+      <Stack sx={{ cursor: "pointer" }} onClick={handleGoToPost}>
+        <PostContent content={postContent} />
+      </Stack>
+      {data?.survey.length > 0 && <SurveyContent survey={data.survey[0]} />}
+      <PostTags tags={data?.tags} />
+      <Stack
+        direction="row"
+        flexWrap="wrap"
+        spacing={1}
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ mt: 1 }}
       >
-        <ShowQuestionReactions reactions={data?.question?.reactions} />
-      </Dialog>
-      <Grid container>
-        <Grid item xs={2} sm={1} md={2} lg={1.2}>
-          <IconButton onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}>
-            <Avatar
-              sx={{ bgcolor: "primary.main", color: "white" }}
-              alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
-              src={FILES_BASE_URL + data?.author?.profile?.avatar?.url}
-            >
-              {data?.author?.firstName.charAt(0)}
-            </Avatar>
-          </IconButton>
-        </Grid>
-        <Grid item xs={10} sm={11} md={10} lg={10.8}>
-          <Stack direction="row" spacing={1}>
-            <Typography
-              onClick={() => push(`/profile/@${data?.author?.email.split("@")[0]}`)}
-              sx={{
-                "&:hover": {
-                  color: "primary.main",
-                },
-                cursor: "pointer",
-              }}
-              variant="caption"
-              color="text.primary"
-              gutterBottom
-              fontWeight={700}
-            >
-              {data?.author?.firstName} {data?.author?.lastName}
-            </Typography>
-            <Typography variant="caption" color="text.secondary" gutterBottom fontWeight={700}>
-              -
-            </Typography>
-            <Typography variant="caption" gutterBottom color="text.secondary">
-              {dayjs(data?.createdAt).fromNow()}
+        <QuestionReactions post={data} />
+        <Stack direction="row" spacing={2}>
+          <Stack direction="row" alignItems="center">
+            <Link href={`/posts/${data?.slug}/#comments`} passHref>
+              <IconButton>
+                <CommentIcon fontSize="small" />
+              </IconButton>
+            </Link>
+            <Typography variant="caption" color="text.secondary" fontWeight={700}>
+              {shortenNumber(data?._count?.comments || 0)}
             </Typography>
           </Stack>
-          <Typography
-            gutterBottom
-            fontWeight={700}
-            color="text.primary"
-            onClick={handleViewQuestion}
-            sx={{
-              "&:hover": {
-                color: "primary.main",
-              },
-              cursor: "pointer",
-            }}
-          >
-            {data?.title}
-          </Typography>
 
-          <Typography
-            color="text.secondary"
-            component="div"
-            className="content"
-            gutterBottom
-            dangerouslySetInnerHTML={{
-              __html: `${data?.content.substring(0, 120)}...`,
-            }}
-          />
-
-          <Grid container spacing={1} sx={{ pb: 1 }} direction="row">
-            {data?.tags?.map((el) => (
-              <Grid item xs="auto" key={el.tag.id}>
-                <Chip size="small" icon={<TagIcon fontSize="small" />} label={el.tag.name} />
-              </Grid>
-            ))}
-          </Grid>
-
-          <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between" sx={{ mt: 1 }}>
-            <Stack direction="row" spacing={2}>
-              <Stack
-                direction="row"
-                alignItems="center"
-                sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, px: 1, borderRadius: 52 }}
-              >
-                <Tooltip title={locale === "en" ? "Endorse" : "Approuver"} placement="bottom" arrow>
-                  <IconButton onClick={() => onReact("LIKE")}>
-                    <ThumbUpSharpIcon color={userReaction === "LIKE" ? "info" : "inherit"} fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-
-                <Tooltip
-                  title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"}
-                  placement="bottom"
-                  arrow
-                >
-                  <IconButton onClick={() => setOpenReaction(true)}>
-                    <Typography variant="caption" color="text.primary" fontWeight={700}>
-                      {data?.question?.reactions?.filter((el) => el.type === "LIKE").length}
-                    </Typography>
-                  </IconButton>
-                </Tooltip>
-
-                <Tooltip title={locale === "en" ? "Disapprove" : "Désapprouver"} placement="bottom" arrow>
-                  <IconButton onClick={() => onReact("DISLIKE")}>
-                    <ThumbDownOffAltIcon color={userReaction === "DISLIKE" ? "error" : "inherit"} fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-
-                <Tooltip
-                  title={locale === "en" ? "See all reactions" : "Voir toutes les réactions"}
-                  placement="bottom"
-                  arrow
-                >
-                  <IconButton onClick={() => setOpenReaction(true)}>
-                    <Typography variant="caption" color="text.primary" fontWeight={700}>
-                      {data?.question?.reactions?.filter((el) => el.type === "DISLIKE").length}
-                    </Typography>
-                  </IconButton>
-                </Tooltip>
-              </Stack>
-            </Stack>
-            <Stack direction="row" spacing={2}>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Link href={`/posts/${data?.slug}/#comments`} passHref>
-                  <IconButton>
-                    <QuestionAnswerIcon fontSize="small" />
-                  </IconButton>
-                </Link>
-                <Typography variant="caption" color="text.secondary" fontWeight={700}>
-                  {data?.comments?.length || 0}
-                </Typography>
-              </Stack>
-
-              <Stack
-                direction="row"
-                alignItems="center"
-                sx={{ border: (theme) => `1px solid ${theme.palette.divider}`, borderRadius: 52 }}
-              >
-                <Tooltip title={locale === "en" ? "Add to bookmarks" : "Ajouter aux favoris"} placement="bottom" arrow>
-                  <IconButton onClick={onAddToBookmarks}>
-                    {data?.bookmarks?.find((el) => el.userId === user?.id) ? (
-                      <BookmarkRemoveIcon color="secondary" fontSize="small" />
-                    ) : (
-                      <BookmarkAddSharpIcon fontSize="small" />
-                    )}
-                  </IconButton>
-                </Tooltip>
-              </Stack>
-            </Stack>
-          </Stack>
-        </Grid>
-      </Grid>
-    </>
+          <Bookmark post={data} />
+          <Share data={data} />
+        </Stack>
+      </Stack>
+    </Paper>
   );
 };
 

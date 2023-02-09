@@ -1,11 +1,10 @@
+import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
+import QuestionAnswer from "@mui/icons-material/QuestionAnswerSharp";
 import Dialog from "@mui/material/Dialog";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import IconButton from "@mui/material/IconButton";
-import ManageAccounts from "@mui/icons-material/ManageAccountsSharp";
-import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
-import QuestionAnswer from "@mui/icons-material/QuestionAnswerSharp";
-import { alpha, Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import { alpha } from "@mui/system";
 import { useRouter } from "next/router";
 
 const ModalCreation = ({ open, handleClose }: { open: boolean; handleClose: () => void }) => {

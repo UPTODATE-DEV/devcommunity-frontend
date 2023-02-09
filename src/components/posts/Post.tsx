@@ -1,38 +1,30 @@
-import React from "react";
-import Stack from "@mui/material/Stack";
-import PostHeader from "@/components/posts/PostHeader";
+import SuggestionViewMore from "@/components/common/SuggestionViewMore";
 import PostContent from "@/components/posts/PostContent";
-import Divider from "@mui/material/Divider";
-import dynamic from "next/dynamic";
-import hljs from "highlight.js";
+import PostHeader from "@/components/posts/PostHeader";
 import useStore from "@/hooks/useStore";
+import Stack from "@mui/material/Stack";
+import dynamic from "next/dynamic";
+import React from "react";
 
-const PostComment = dynamic(import("@/components/posts/PostComment"), { ssr: false, loading: () => null });
-const PostReactions = dynamic(import("@/components/posts/PostReactions"), { ssr: false, loading: () => null });
+const CommentsList = dynamic(import("@/components/comments/CommentsList"), { ssr: false });
+const Suggestions = dynamic(import("@/components/common/Suggestions"), { ssr: false });
+const AddComment = dynamic(import("@/components/comments/AddComment"), { ssr: false });
 
-const Post: React.FC<{ data: Post }> = ({ data }) => {
+const Post: React.FC<{ data: Post; comments: PostComment[] }> = ({ data, comments }) => {
   const { setCurrentPost } = useStore((state) => state);
 
   React.useEffect(() => {
     setCurrentPost(data);
   }, []);
 
-  React.useEffect(() => {
-    document.querySelectorAll("pre").forEach((el) => {
-      hljs.highlightElement(el);
-    });
-  }, []);
-
   return (
-    <Stack spacing={4}>
+    <Stack spacing={2}>
       <PostHeader data={data} />
       <PostContent data={data} />
-      <Divider />
-      <PostReactions />
-      <Divider />
       <div id="comments"></div>
-      <PostComment data={data} />
-      <Divider />
+      <CommentsList addComment={<AddComment data={data} />} />
+      <Suggestions data={data} type="ARTICLE" />
+      <SuggestionViewMore tags={data?.tags} />
     </Stack>
   );
 };

@@ -1,11 +1,11 @@
 import Menu from "@/components/menu/Menu";
-import { CallToActionSkeleton, HomeFeedSkeleton } from "@/components/middle/Skeleton";
+import { CallToActionSkeleton } from "@/components/middle/Skeleton";
 import { TagsSkeleton } from "@/components/tags/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
-import Divider from "@mui/material/Divider";
+import Paper from "@mui/material/Paper";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
@@ -20,21 +20,12 @@ const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   loading: () => <CallToActionSkeleton />,
 });
 
-const Home: NextPage<{ session: Session }> = ({ session }) => {
+const Home: NextPage<{ session: Session; tags: Tag[] }> = ({ session, tags }) => {
   const setSession = useStore((state) => state.setSession);
   const setTags = useStore((state) => state.setTags);
   const { showTagsFilters } = useStore((state) => state);
 
   React.useEffect(() => {
-    const getTags = async () => {
-      const tags = await getRequest({ endpoint: "/tags" });
-      if (!tags.error) {
-        setTags(tags.data);
-      }
-    };
-
-    getTags();
-
     setSession(session);
   }, []);
 
@@ -49,9 +40,10 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
       <Menu />
       <MainContainer>
         {!session?.user && <CallToAction />}
-        {showTagsFilters ? <Filters /> : <Search />}
-        <Divider />
-        <Tags />
+        <Paper variant="outlined" sx={{ p: 2, position: "sticky", top: 70, zIndex: 999 }}>
+          {showTagsFilters ? <Filters /> : <Search />}
+        </Paper>
+        <Tags userId={session?.user?.id} tags={tags} />
       </MainContainer>
     </>
   );
@@ -60,9 +52,12 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
 export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
   const { req } = context;
 
+  const tags = await getRequest({ endpoint: "/tags" });
+
   return {
     props: {
       session: req?.session?.user || null,
+      tags: tags.data,
     },
   };
 });

@@ -1,38 +1,47 @@
-import React from "react";
+import UserAvatar from "@/components/common/UserAvatar";
+import { useGoToUserProfile } from "@/hooks";
+import { getUserFullName, getUserProfileImageUrl } from "@/lib";
 import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
 import LightbulbSharpIcon from "@mui/icons-material/LightbulbSharp";
 import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import { Avatar, Divider, Stack } from "@mui/material";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import Divider from "@mui/material/Divider";
+import List from "@mui/material/List";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import Stack from "@mui/material/Stack";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemText from "@mui/material/ListItemText";
-import { FILES_BASE_URL } from "config/url";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/router";
+import React from "react";
 
 const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
   const [tab, setTab] = React.useState<ArticleReactionType>("LIKE");
+  const { locale } = useRouter();
 
-  const tabs: { id: ArticleReactionType; icon: any }[] = [
+  const tabs: { id: ArticleReactionType; icon: any; label: string }[] = [
     {
       id: "LIKE",
       icon: <ThumbUpSharpIcon color="primary" />,
+      label: "Likes",
     },
     {
       id: "LOVE",
       icon: <FavoriteSharpIcon color="error" />,
+      label: "Loves",
     },
     {
       id: "USEFUL",
       icon: <LightbulbSharpIcon color="warning" />,
+      label: locale === "fr" ? "Insightful" : "Intéressant",
     },
   ];
+
+  const goToProfile = useGoToUserProfile();
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: ArticleReactionType) => {
     setTab(newValue);
@@ -43,7 +52,7 @@ const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
       <TabList
         onChange={handleTabChange}
         variant={useMediaQuery("(min-width:600px)") ? "fullWidth" : "scrollable"}
-        aria-label="lab API tabs example"
+        aria-label="Show reactions"
         sx={{ borderBottom: 1, borderColor: "divider", bgcolor: "action.hover" }}
       >
         {tabs.map((item, i) => (
@@ -51,50 +60,59 @@ const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
             icon={item.icon}
             key={item.id}
             iconPosition="start"
-            sx={{ minHeight: 50 }}
-            label={<Typography>{reactions.filter((reaction) => reaction.type === item.id).length}</Typography>}
+            sx={{ width: { xs: "auto", md: 700 } }}
+            label={
+              <Typography textTransform="capitalize">{`${
+                reactions?.filter((reaction) => reaction.type === item.id).length
+              } ${item.label}`}</Typography>
+            }
             value={item.id}
           />
         ))}
       </TabList>
 
       {tabs.map((tab) => (
-        <TabPanel key={tab.id} sx={{ p: 0 }} value={tab.id}>
-          <List>
-            {reactions
-              .filter((reaction) => reaction.type === tab.id)
-              .map((el, i) => (
-                <React.Fragment key={i}>
-                  <ListItemButton>
-                    <ListItemAvatar>
-                      <Avatar
-                        sx={{ bgcolor: "primary.main", color: "white" }}
-                        src={FILES_BASE_URL + el?.user?.profile?.avatar?.url}
-                        alt={`${el.user.firstName} ${el.user.lastName}`}
-                      >
-                        {el.user.firstName.charAt(0)}
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={
-                        <React.Fragment>
-                          <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
-                            {`${el.user.firstName} ${el.user.lastName}`}
-                          </Typography>
-                        </React.Fragment>
-                      }
-                      primaryTypographyProps={{
-                        fontWeight: 700,
-                        color: "text.primary",
-                      }}
-                    />
-                  </ListItemButton>
-                  {i !== reactions.filter((reaction) => reaction.type === tab.id).length - 1 && (
-                    <Divider variant="inset" component="li" />
-                  )}
-                </React.Fragment>
-              ))}
-          </List>
+        <TabPanel key={tab.id} sx={{ p: 0, height: 400 }} value={tab.id}>
+          <Stack sx={{ height: 1, overflow: "auto" }}>
+            <List>
+              {reactions
+                ?.filter((reaction) => reaction.type === tab.id)
+                .map((el, i) => (
+                  <React.Fragment key={i}>
+                    <ListItemButton>
+                      <ListItemAvatar>
+                        <UserAvatar
+                          name={getUserFullName(el.user)}
+                          pictureUrl={getUserProfileImageUrl(el.user)}
+                          handleClick={() => goToProfile(el.user.email)}
+                        />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <React.Fragment>
+                            <Typography
+                              sx={{ display: "inline" }}
+                              component="span"
+                              variant="body2"
+                              color="text.primary"
+                            >
+                              {getUserFullName(el.user)}
+                            </Typography>
+                          </React.Fragment>
+                        }
+                        primaryTypographyProps={{
+                          fontWeight: 700,
+                          color: "text.primary",
+                        }}
+                      />
+                    </ListItemButton>
+                    {i !== reactions?.filter((reaction) => reaction.type === tab.id).length - 1 && (
+                      <Divider variant="inset" component="li" />
+                    )}
+                  </React.Fragment>
+                ))}
+            </List>
+          </Stack>
         </TabPanel>
       ))}
     </TabContext>

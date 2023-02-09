@@ -1,5 +1,5 @@
-import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import dynamic from "next/dynamic";
@@ -19,7 +19,7 @@ const data = [
       "Add an account to get access to all the features and engage with the content being shared by the community",
   },
   {
-    title: "Bienvenue dans la communauté Updev",
+    title: "Bienvenue sur Updev Community",
     description:
       "Ajoutez un compte pour accéder à toutes les fonctionnalités et interagir avec le contenu partagé par la communauté",
   },
@@ -29,13 +29,13 @@ const CallToAction = () => {
   const { locale } = useRouter();
   const { title, description } = data[locale === "fr" ? 1 : 0];
   return (
-    <Box
+    <Paper
+      variant="outlined"
       id="call-to-action"
       sx={{
         py: 4,
-        bgcolor: "primary.main",
         position: "relative",
-        borderRadius: 2,
+        borderRadius: 1,
         overflow: "hidden",
         "&::after": {
           display: "block",
@@ -51,7 +51,7 @@ const CallToAction = () => {
         },
       }}
     >
-      <Image src="/signup.jpg" alt="" layout="fill" objectFit="cover" />
+      <Image src="/signup.jpg" alt="" layout="fill" objectFit="cover" priority />
 
       <Container sx={{ position: "relative", zIndex: 1 }}>
         <Stack spacing={2} sx={{ minHeight: 200 }} justifyContent="center">
@@ -64,7 +64,7 @@ const CallToAction = () => {
           </Stack>
         </Stack>
       </Container>
-    </Box>
+    </Paper>
   );
 };
 

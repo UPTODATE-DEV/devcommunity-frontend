@@ -1,22 +1,26 @@
 import SEO from "@/components/common/SEO";
 import Menu from "@/components/menu/Menu";
+import Question from "@/components/questions/Question";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
 import type { GetServerSideProps, NextPage } from "next";
 import React from "react";
-import Question from "@/components/questions/Question";
-import hljs from "highlight.js";
 
-const Home: NextPage<{ session: Session; post: Post }> = ({ session, post }) => {
+const Home: NextPage<{ session: Session; post: Post; comments: PostComment[] }> = ({ session, post, comments }) => {
   const setSession = useStore((state) => state.setSession);
+  const { setCurrentPost, setComments, setCurrentComment } = useStore((state) => state);
 
   React.useEffect(() => {
-    document.querySelectorAll("pre").forEach((el) => {
-      hljs.highlightElement(el);
-    });
-  }, []);
+    setCurrentPost(post);
+    setComments(comments);
+    setCurrentComment(null);
+
+    return () => {
+      setComments([]);
+    };
+  }, [post.id]);
 
   React.useEffect(() => {
     setSession(session);
@@ -31,24 +35,33 @@ const Home: NextPage<{ session: Session; post: Post }> = ({ session, post }) => 
         modifiedTime={post?.updatedAt?.toString()}
         publishedTime={post?.createdAt?.toString()}
         tags={post?.tags?.map((el) => el.tag.name)}
-        url={`${process.env.NEXT_PUBLIC_URL}/posts/${post?.slug}`}
+        url={``}
       />
       <Menu />
       <MainContainer>
-        <Question data={post} />
+        <Question data={post} comments={comments} />
       </MainContainer>
     </>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
-  const { req } = context;
-  const post = await getRequest({ endpoint: `/posts/${context.params?.slug}` });
+  const { req, params } = context;
+
+  const [postData, commentsData] = await Promise.all([
+    getRequest({ endpoint: `/posts/${params?.slug}` }),
+    getRequest({ endpoint: `/comments/${params?.slug}/post-comments` }),
+  ]);
+
+  if (postData.data?.type !== "QUESTION" || postData.data.draft) {
+    return { notFound: true };
+  }
 
   return {
     props: {
       session: req?.session?.user || null,
-      post: post.data,
+      post: postData.data,
+      comments: commentsData.data,
     },
   };
 });

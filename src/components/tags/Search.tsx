@@ -1,15 +1,15 @@
-import React from "react";
-import InputBase from "@mui/material/InputBase";
-import { getRequest, postRequest } from "@/lib/api";
 import useStore from "@/hooks/useStore";
-import Button from "@mui/material/Button";
+import { getRequest } from "@/lib/api";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import Button from "@mui/material/Button";
+import InputBase from "@mui/material/InputBase";
 import Stack from "@mui/material/Stack";
 import { useRouter } from "next/router";
+import React from "react";
 
 const Search = () => {
   const [name, setName] = React.useState("");
-  const { setTags, setPosts, tagsFilters, setShowTagsFilters } = useStore((state) => state);
+  const { setTags, tagsFilters, setShowTagsFilters } = useStore((state) => state);
   const { locale } = useRouter();
 
   React.useEffect(() => {
@@ -22,17 +22,6 @@ const Search = () => {
 
     getTags();
   }, [name]);
-
-  React.useEffect(() => {
-    const getPosts = async () => {
-      const posts = await postRequest({ endpoint: "/posts/tags", data: tagsFilters.map((el) => el.name) });
-      if (!posts.error) {
-        setPosts(posts.data);
-      }
-    };
-
-    getPosts();
-  }, [tagsFilters.length]);
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="space-between">

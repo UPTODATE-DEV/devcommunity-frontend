@@ -1,14 +1,27 @@
-import React, { PropsWithChildren } from "react";
-import Menu from "@/components/menu/Menu";
-import Stack from "@mui/material/Stack";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import Divider from "@mui/material/Divider";
+import useStoreNoPersist from "@/hooks/useStoreNoPersist";
 import Box from "@mui/material/Box";
-import CallToAction from "@/components/middle/CallToAction";
+import Container from "@mui/material/Container";
+import Dialog from "@mui/material/Dialog";
+import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import dayjs from "dayjs";
+import "dayjs/locale/fr";
 import dynamic from "next/dynamic";
-import { LeftBarSkeleton, RightBarSkeleton } from "@/components/sideBars/Skeleton";
+import { useRouter } from "next/router";
+import React, { PropsWithChildren } from "react";
+
+const CallToActionSkeleton = dynamic(
+  () => import("@/components/middle/Skeleton").then((mod) => mod.CallToActionSkeleton),
+  { ssr: false }
+);
+const RightBarSkeleton = dynamic(() => import("@/components/sideBars/Skeleton").then((mod) => mod.RightBarSkeleton), {
+  ssr: false,
+});
+const LeftBarSkeleton = dynamic(() => import("@/components/sideBars/Skeleton").then((mod) => mod.LeftBarSkeleton), {
+  ssr: false,
+});
 
 const RightSideBar = dynamic(import("@/components/sideBars/RightSideBar"), {
   ssr: false,
@@ -19,50 +32,83 @@ const LeftSideBar = dynamic(import("@/components/sideBars/LeftSideBar"), {
   loading: () => <LeftBarSkeleton />,
 });
 
+const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
+  ssr: false,
+  loading: () => <CallToActionSkeleton />,
+});
+
 const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
+  const { locale } = useRouter();
+  const { setOpenLoginModal, openLoginModal } = useStoreNoPersist();
+
+  locale === "en" ? dayjs.locale("en") : dayjs.locale("fr");
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const handleClose = () => {
+    setOpenLoginModal(false);
+  };
+
   return (
-    <Box sx={{ bgcolor: "background.paper", minHeight: "100vh" }}>
-      <Container sx={{ mx: "auto" }}>
-        <Grid container>
+    <Box sx={{ bgcolor: "background.default", minHeight: "100vh" }}>
+      <Dialog
+        open={openLoginModal}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <CallToAction />
+      </Dialog>
+      <Container maxWidth="xl">
+        <Grid container spacing={2}>
+          {!isMobile && (
+            <Grid
+              item
+              xs
+              md={3}
+              lg={2}
+              className="hide-scrollbar"
+              sx={{
+                position: "sticky",
+                top: 76,
+                height: 1,
+                overflow: "auto",
+                display: { xs: "none", md: "flex" },
+              }}
+            >
+              <LeftSideBar />
+            </Grid>
+          )}
           <Grid
             item
-            md={2}
-            className="hide-scrollbar"
-            sx={{
-              position: "sticky",
-              top: 0,
-              height: "100vh",
-              overflow: "auto",
-              display: { xs: "none", md: "flex" },
-              borderRight: (theme) => `1px solid ${theme.palette.divider}`,
-            }}
+            xs={12}
+            md={9}
+            lg={7}
+            sx={{ position: "relative", minHeight: "100vh", my: { xs: 2, md: 3.3, lg: 1.9 } }}
           >
-            <Paper elevation={0} sx={{ position: "relative", top: 70 }}>
-              <LeftSideBar />
-            </Paper>
-          </Grid>
-          <Grid item md={6} sx={{ width: 1 }}>
-            <Stack sx={{ mt: 10, px: { xs: 0, md: 2 } }} spacing={2}>
+            <Stack sx={{ position: "relative" }} spacing={2}>
               {children}
             </Stack>
           </Grid>
-          <Grid
-            item
-            md={4}
-            className="hide-scrollbar"
-            sx={{
-              position: "sticky",
-              top: 0,
-              height: "100vh",
-              overflow: "auto",
-              width: 1,
-              display: { xs: "none", md: "flex" },
-            }}
-          >
-            <Paper variant="outlined" sx={{ position: "relative", top: 80 }}>
+          {!isMobile && (
+            <Grid
+              item
+              xs
+              lg={3}
+              className="hide-scrollbar"
+              sx={{
+                position: "sticky",
+                top: 76,
+                height: "100vh",
+                overflow: "auto",
+                width: 1,
+                display: { xs: "none", lg: "flex" },
+              }}
+            >
               <RightSideBar />
-            </Paper>
-          </Grid>
+            </Grid>
+          )}
         </Grid>
       </Container>
     </Box>

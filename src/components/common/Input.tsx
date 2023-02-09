@@ -1,11 +1,11 @@
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import IconButton from "@mui/material/IconButton";
 import InputBase from "@mui/material/InputBase";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { IconButton } from "@mui/material";
 
 interface Props {
   icon?: any;
@@ -61,7 +61,7 @@ const Input: React.FC<Props> = ({
             name={name}
             type={showPassword ? "text" : type}
             inputProps={{
-              min: 0,
+              min: 1,
             }}
             {...(isPassword && {
               endAdornment: (

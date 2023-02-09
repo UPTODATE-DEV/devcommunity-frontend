@@ -34,3 +34,24 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# PWA
+**/public/sw.js
+**/public/sw.js.map
+**/public/workbox-*.js
+**/public/workbox-*.js.map
+**/public/worker-*.js
+**/public/worker-*.js.map
+
+# Sitemap file
+sitemap.xml
+sitemap-0.xml
+
+
+# Robots.txt
+robots.txt
+
+#yarn
+yarn.lock
+package-lock.json
+*.sh

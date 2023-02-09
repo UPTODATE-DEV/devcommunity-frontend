@@ -1,14 +1,13 @@
 import SEO from "@/components/common/SEO";
 import Menu from "@/components/menu/Menu";
-import Post from "@/components/posts/Post";
+import { PostsFormSkeleton } from "@/components/posts/Skeleton";
 import useStore from "@/hooks/useStore";
 import MainContainer from "@/layouts/MainContainer";
 import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
 import type { GetServerSideProps, NextPage } from "next";
-import React from "react";
-import { PostsFormSkeleton } from "@/components/posts/Skeleton";
 import dynamic from "next/dynamic";
+import React from "react";
 
 const AddPostForm = dynamic(() => import("@/components/posts/AddPostForm"), {
   ssr: false,

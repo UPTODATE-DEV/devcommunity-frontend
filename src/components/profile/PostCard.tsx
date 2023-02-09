@@ -1,124 +1,181 @@
+import Bookmark from "@/components/common/Bookmark";
+import Content from "@/components/common/Content";
+import PostCardHeader from "@/components/common/PostCardHeader";
+import PostTags from "@/components/common/PostTags";
+import Share from "@/components/common/Share";
+import PostImage from "@/components/posts/PostImage";
+import PostReaction from "@/components/posts/PostReaction";
+import { useGoToPost, useGoToUserProfile } from "@/hooks/posts";
+import { parseDate } from "@/lib";
+import { getArticleImageUrl, getContent } from "@/lib/posts";
+import CommentIcon from "@mui/icons-material/Comment";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Button } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
+import EditIcon from "@mui/icons-material/EditOutlined";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { FILES_BASE_URL } from "config/url";
-import dayjs from "dayjs";
-import "dayjs/locale/fr";
-import relativeTime from "dayjs/plugin/relativeTime";
-import hljs from "highlight.js";
-import Image from "next/image";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import useTheme from "@mui/system/useTheme";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import EditIcon from "@mui/icons-material/EditOutlined";
-import React from "react";
-dayjs.extend(relativeTime);
+import React, { useCallback } from "react";
+
+import { shortenNumber } from "@/lib/shorterNumber";
 
 const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }> = ({ data, handleDeletePost }) => {
   const { push, asPath, locale } = useRouter();
   const username = asPath.split("/profile/")[1];
+  const goToPost = useGoToPost();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const handleViewPost = () => {
-    push(`/articles/${data?.slug}`);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
+
+  const postContent = getContent(data?.content, isMobile ? 180 : 220, locale);
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  React.useEffect(() => {
-    document.querySelectorAll("pre").forEach((el) => {
-      hljs.highlightElement(el);
-    });
-  }, []);
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const goToProfile = useGoToUserProfile();
+  const handleGoToProfile = useCallback(() => {
+    goToProfile(data?.author?.email);
+  }, [data?.author?.email]);
+
+  const handleGoToPost = useCallback(() => {
+    goToPost(data);
+  }, [data]);
 
   return (
-    <>
-      <Grid container>
-        <Grid item xs={2} md={1.2}>
-          <Avatar
-            sx={{ bgcolor: "primary.main", color: "white" }}
-            alt={`${data?.author?.firstName} ${data?.author?.lastName}`}
-            src={FILES_BASE_URL + data?.author?.profile?.avatar?.url}
-          >
-            {data?.author?.firstName.charAt(0)}
-          </Avatar>
-        </Grid>
-        <Grid item xs={10} md={10.8}>
-          <Stack direction="row" spacing={1}>
-            <Typography variant="caption" color="text.primary" gutterBottom fontWeight={700}>
-              {data?.author?.firstName} {data?.author?.lastName}
-            </Typography>
-            <Typography variant="caption" color="text.secondary" gutterBottom fontWeight={700}>
-              -
-            </Typography>
-            <Typography variant="caption" gutterBottom color="text.secondary">
-              {dayjs(data?.publishedOn).fromNow()}
-            </Typography>
-          </Stack>
+    <Paper variant="outlined" sx={{ p: 2, position: "relative" }}>
+      {!username && (
+        <IconButton
+          aria-label="more"
+          id="long-button"
+          aria-controls={openMenu ? "long-menu" : undefined}
+          aria-expanded={openMenu ? "true" : undefined}
+          aria-haspopup="true"
+          onClick={handleOpenMenu}
+          sx={{ position: "absolute", right: 1, top: 4 }}
+        >
+          <MoreVertIcon />
+        </IconButton>
+      )}
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={openMenu}
+        onClose={handleCloseMenu}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <MenuItem onClick={() => push({ pathname: `/articles/${data?.slug}/edit` }, undefined, { shallow: true })}>
+          <ListItemIcon>
+            <EditIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{locale === "fr" ? "Modifier" : "Edit"}</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={() => handleDeletePost(data?.id)}>
+          <ListItemIcon>
+            <DeleteIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{locale === "fr" ? "Supprimer" : "Delete"}</ListItemText>
+        </MenuItem>
+      </Menu>
+      <Grid container spacing={{ xs: 0, sm: 2, lg: 4 }}>
+        <Grid item xs={12} sm={8}>
+          <PostCardHeader
+            handleClickGoToProfile={handleGoToProfile}
+            date={parseDate({ date: data?.publishedOn, type: "relative" })}
+            author={data?.author}
+          />
           <Typography
-            gutterBottom
             fontWeight={700}
             color="text.primary"
-            onClick={handleViewPost}
+            variant="h6"
+            onClick={handleGoToPost}
             sx={{
               "&:hover": {
                 color: "primary.main",
               },
               cursor: "pointer",
+              mb: "-8px",
+              mt: 1,
             }}
           >
-            {data?.title.substring(0, 120)}
+            {data?.title}
           </Typography>
-          <Typography
-            color="text.secondary"
-            component="div"
-            className="content"
-            gutterBottom
-            dangerouslySetInnerHTML={{
-              __html: `${data?.content.substring(0, 120)}...`,
-            }}
-          />
-          {data?.article.image && (
-            <Stack
-              sx={{
-                width: 1,
-                height: { xs: 180, md: 240 },
-                position: "relative",
-                borderRadius: 2,
-                cursor: "pointer",
-                overflow: "hidden",
-                my: 2,
-              }}
-              onClick={handleViewPost}
-            >
-              <Image src={FILES_BASE_URL + data?.article?.image?.url} alt="Post" layout="fill" objectFit="cover" />
-            </Stack>
+          <Stack sx={{ cursor: "pointer" }} onClick={handleGoToPost}>
+            <Content content={postContent} />
+          </Stack>
+          {isMobile && (
+            <PostImage
+              handleClick={handleGoToPost}
+              title={data?.title}
+              articleUrl={getArticleImageUrl(data?.article)}
+            />
           )}
-          {!username && (
-            <Stack direction="row" flexWrap="wrap" spacing={1} alignItems="center" sx={{ mt: 1 }}>
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
-                sx={{ px: 2 }}
-                onClick={() => push(`/articles/${data?.slug}/edit`)}
-                startIcon={<EditIcon />}
-              >
-                {locale === "fr" ? "Modifier" : "Edit"}
-              </Button>
-              <Button
-                size="small"
-                variant="outlined"
-                color="error"
-                sx={{ px: 2 }}
-                onClick={() => handleDeletePost(data?.id)}
-                startIcon={<DeleteIcon />}
-              >
-                {locale === "fr" ? "Supprimer" : "Delete"}
-              </Button>
-            </Stack>
-          )}
+          <PostTags tags={data?.tags} />
         </Grid>
+        {!isMobile && (
+          <Grid item xs={0} sm={4}>
+            <Stack justifyContent="center" alignItems="center" sx={{ height: 1 }}>
+              <PostImage
+                handleClick={handleGoToPost}
+                title={data?.title}
+                articleUrl={getArticleImageUrl(data?.article)}
+              />
+            </Stack>
+          </Grid>
+        )}
       </Grid>
-    </>
+      <Stack
+        direction="row"
+        flexWrap="wrap"
+        spacing={1}
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ mt: 1 }}
+      >
+        <PostReaction post={data} />
+        <Stack direction="row" spacing={2}>
+          <Stack direction="row" alignItems="center">
+            <Link href={`/articles/${data?.slug}/#comments`} passHref>
+              <IconButton>
+                <CommentIcon fontSize="small" />
+              </IconButton>
+            </Link>
+            <Typography variant="caption" color="text.secondary" fontWeight={700}>
+              {shortenNumber(data?._count?.comments || 0)}
+            </Typography>
+          </Stack>
+
+          <Bookmark post={data} />
+          <Share data={data} />
+        </Stack>
+      </Stack>
+    </Paper>
   );
 };
 

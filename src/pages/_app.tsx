@@ -1,17 +1,17 @@
+import ToastNotification from "@/components/common/Toast";
+import SEO from "@/utils/next-seo.config";
 import { theme } from "@/utils/theme";
+import { MantineProvider } from "@mantine/core";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import "highlight.js/styles/tokyo-night-dark.css";
 import withDarkMode, { useDarkMode } from "next-dark-mode";
+import { DefaultSeo } from "next-seo";
 import type { AppProps } from "next/app";
 import NextNprogress from "nextjs-progressbar";
 import "../styles/globals.css";
-import "highlight.js/styles/tokyo-night-dark.css";
-import { MantineProvider } from "@mantine/core";
-import ToastNotification from "@/components/common/Toast";
-import { DefaultSeo } from "next-seo";
-import React from "react";
-import SEO from "@/utils/next-seo.config";
-
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { darkModeActive } = useDarkMode();
@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       withNormalizeCSS
       theme={{
         colorScheme: mode,
-        fontFamily: "Roboto",
+        fontFamily: "Inter",
         colors: {
           dark: [
             "#C1C2C5",
@@ -31,11 +31,11 @@ function MyApp({ Component, pageProps }: AppProps) {
             "#909296",
             "#5C5F66",
             "#373A40",
-            "#2C2E33",
-            "#000f21",
-            "#000d21",
-            "#141517",
-            "#101113",
+            "rgba(255, 255, 255, 0.12)",
+            "#192734",
+            "#17212b",
+            "#192734",
+            "#192734",
           ],
         },
       }}
@@ -53,7 +53,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
         <DefaultSeo {...SEO} />
         <ToastNotification />
-        <Component {...pageProps} />
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <Component {...pageProps} />
+        </LocalizationProvider>
       </ThemeProvider>
     </MantineProvider>
   );

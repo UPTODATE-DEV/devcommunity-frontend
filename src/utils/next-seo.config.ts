@@ -20,8 +20,8 @@ const config: DefaultSeoProps = {
     siteName: "Updev Community",
   },
   twitter: {
-    handle: "@handle",
-    site: "@site",
+    handle: "@DevelopersUp",
+    site: "Updev Community",
     cardType: "summary_large_image",
   },
 };

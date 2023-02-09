@@ -10,7 +10,7 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import * as React from "react";
 
-const Profile = dynamic(() => import("@/components/profile/Profile"), {
+const Profile = dynamic(import("@/components/profile/Profile"), {
   ssr: false,
   loading: () => <ProfileSkeleton />,
 });

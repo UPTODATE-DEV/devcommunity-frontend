@@ -34,13 +34,15 @@ const FirstLoginChooseTags = ({
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        {locale === "en" ? `Welcome ${user.firstName}` : `Bienvenu ${user.firstName}`}
+        {locale === "en"
+          ? `Great to have you with us ${user.firstName}`
+          : `Heureux de vous compter parmi nous ${user.firstName}`}
       </DialogTitle>
       <DialogContent dividers>
         <DialogContentText id="alert-dialog-description" gutterBottom>
           {locale === "en"
-            ? "Continually provide access to proactive resources after magnetic leadership skills. Quickly transition."
-            : "Continually provide access to proactive resources after magnetic leadership skills. Quickly transition."}
+            ? "Select your favorite tags and centers of interest to customize your feed"
+            : "Sélectionnez vos tags favoris et centres d'intérêt pour personnaliser votre contenu"}
         </DialogContentText>
         {isLoading && (
           <Stack sx={{ display: "flex", width: 1, my: 6 }} alignItems="center">
@@ -51,7 +53,7 @@ const FirstLoginChooseTags = ({
       </DialogContent>
       <DialogActions sx={{ p: 2 }}>
         <Button sx={{ px: 4 }} disableElevation variant="contained" onClick={handleClose} autoFocus>
-          {locale === "en" ? "Continue" : "Continuer"}
+          {locale === "en" ? "Get started" : "Commencer"}
         </Button>
       </DialogActions>
     </Dialog>

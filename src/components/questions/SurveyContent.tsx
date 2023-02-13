@@ -10,6 +10,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { shortenNumber } from "../../lib/shorterNumber";
 dayjs.extend(relativeTime);
 dayjs.extend(isSameOrBefore);
 
@@ -64,7 +65,7 @@ const Results = ({ options }: { options: SurveyOption[] }) => {
             )}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {totalVotes > 0 ? (option.votes.length / totalVotes) * 100 : 0}%
+            {totalVotes > 0 ? ((option.votes.length / totalVotes) * 100).toFixed(2) : 0}%
           </Typography>
           <Paper
             variant="outlined"
@@ -154,7 +155,7 @@ const SurveyContent = ({ survey }: { survey: Survey }) => {
       </Stack>
       <Stack direction="row" spacing={1}>
         <Typography variant="caption" component="h2" gutterBottom>
-          {surveyOptions.reduce((acc, option) => acc + option.votes.length, 0)} votes
+          {shortenNumber(surveyOptions.reduce((acc, option) => acc + option.votes.length, 0))} votes
         </Typography>
         <Typography variant="caption" component="h2" gutterBottom>
           -

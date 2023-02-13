@@ -35,11 +35,11 @@ const FilterByTagsResult = () => {
   const [endOfPage, setEndOfPage] = React.useState(false);
   const [perPage, setPerPage] = React.useState(10);
   const [type, setType] = React.useState<"QUESTION" | "ARTICLE" | undefined>();
-  const { setTags, setPosts, tagsFilters, setMultiTagsFilters } = useStore((state) => state);
+  const { tagsFilters } = useStore((state) => state);
 
   const params = qs.stringify({
     perPage,
-    tags: tagsFilters.map((el) => el.name),
+    tags: [...tagsFilters, { name: "Hello" }].map((el) => el.name).toString(),
   });
 
   const handleClose = () => setOpen(false);
@@ -56,7 +56,7 @@ const FilterByTagsResult = () => {
       setEndOfPage(true);
       return null;
     }
-    return `/posts/by/tags/?page=${pageIndex + 1}&${params}`;
+    return `/posts/by/tags?page=${pageIndex + 1}&${params}`;
   };
 
   const { data, size, setSize, isLoading, error, isValidating } = useSWRInfinite<Post[], any>(getKey, fetcher);

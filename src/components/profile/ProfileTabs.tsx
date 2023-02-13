@@ -249,6 +249,41 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
           )}
         </Stack>
       </TabPanel>
+      <TabPanel sx={{ p: 0 }} value={"badges"}>
+        <Paper variant="outlined" sx={{ p: 2, minHeight: "200px" }}>
+          <Grid container gap={2}>
+            {badges.map((el, i) => (
+              <Grid key={el.name}>
+                <Tooltip
+                  arrow
+                  title={
+                    <React.Fragment>
+                      <Typography fontWeight={700} textAlign="center" color="inherit">
+                        {el.name}
+                      </Typography>
+                      <Typography color="inherit" textAlign="center">
+                        {el.description}
+                      </Typography>
+                    </React.Fragment>
+                  }
+                >
+                  <Paper sx={{ p: 2, borderRadius: 50, position: "relative" }} variant="outlined">
+                    <Stack sx={{ width: 60, height: 60, position: "relative" }}>
+                      <Image
+                        src={`/images/badges/${el.icon}.png`}
+                        style={{ filter: el.completed ? "none" : "grayscale(100%)" }}
+                        alt={el.name}
+                        layout="fill"
+                        objectFit="contain"
+                      />
+                    </Stack>
+                  </Paper>
+                </Tooltip>
+              </Grid>
+            ))}
+          </Grid>
+        </Paper>
+      </TabPanel>
       {!showProfileUser && (
         <>
           <TabPanel sx={{ p: 0 }} value={"drafts"}>
@@ -294,41 +329,6 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
               </Paper>
             </TabPanel>
           )}
-          <TabPanel sx={{ p: 0 }} value={"badges"}>
-            <Paper variant="outlined" sx={{ p: 2, minHeight: "200px" }}>
-              <Grid container gap={2}>
-                {badges.map((el, i) => (
-                  <Grid key={el.name}>
-                    <Tooltip
-                      arrow
-                      title={
-                        <React.Fragment>
-                          <Typography fontWeight={700} textAlign="center" color="inherit">
-                            {el.name}
-                          </Typography>
-                          <Typography color="inherit" textAlign="center">
-                            {el.description}
-                          </Typography>
-                        </React.Fragment>
-                      }
-                    >
-                      <Paper sx={{ p: 2, borderRadius: 50, position: "relative" }} variant="outlined">
-                        <Stack sx={{ width: 60, height: 60, position: "relative" }}>
-                          <Image
-                            src={`/images/badges/${el.icon}.png`}
-                            style={{ filter: el.completed ? "none" : "grayscale(100%)" }}
-                            alt={el.name}
-                            layout="fill"
-                            objectFit="contain"
-                          />
-                        </Stack>
-                      </Paper>
-                    </Tooltip>
-                  </Grid>
-                ))}
-              </Grid>
-            </Paper>
-          </TabPanel>
         </>
       )}
     </TabContext>

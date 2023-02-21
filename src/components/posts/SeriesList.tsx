@@ -1,7 +1,7 @@
 import { useGoToPost } from "@/hooks";
 import { Divider, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import { useCallback } from "react";
+import { Fragment, useCallback } from "react";
 import useStore from "../../hooks/useStore";
 
 interface SeriesListProps {
@@ -35,7 +35,7 @@ const SeriesList = ({ series }: { series: SeriesListProps[] }) => {
 
       <Stack sx={{ pl: 1, borderLeft: "4px solid", borderLeftColor: "divider" }}>
         {series.map((el, i) => (
-          <>
+          <Fragment key={i}>
             {el.series.posts.map((el) => {
               return (
                 <Typography
@@ -50,7 +50,7 @@ const SeriesList = ({ series }: { series: SeriesListProps[] }) => {
               );
             })}
             {series.length > 1 && i !== series.length - 1 && <Divider sx={{ my: 3 }} />}
-          </>
+          </Fragment>
         ))}
       </Stack>
     </Stack>

@@ -33,6 +33,7 @@ import Typography from "@mui/material/Typography";
 import { googleLogout } from "@react-oauth/google";
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-toastify";
@@ -143,7 +144,8 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   };
 
   async function getFollowings() {
-    const response = await getRequest({ endpoint: `/users/${user?.id}/followings` });
+    console.log("🚀 ~ file: Profile.tsx:149 ~ getFollowings ~ currentUser?.id:", currentUser?.id);
+    const response = await getRequest({ endpoint: `/users/${currentUser?.id || session?.id}/followings` });
     if (response.data) {
       return response.data;
     }
@@ -156,7 +158,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   }
 
   async function getFollowers() {
-    const response = await getRequest({ endpoint: `/users/${user?.id}/followers` });
+    const response = await getRequest({ endpoint: `/users/${currentUser?.id || session?.id}/followers` });
     if (response.data) {
       return response.data;
     }
@@ -170,12 +172,13 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
       setFollow(followers?.some((follower: any) => follower?.userId === session?.id));
     }
 
+    getFollowingsAndFollowers();
+
     if (useUserData) {
       setStatus(useUserData?.authorRequest[0]?.status);
-      getFollowingsAndFollowers();
       setLoading(false);
     }
-  }, [useUserData]);
+  }, [user?.id]);
 
   return (
     <>
@@ -192,18 +195,24 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                 {user?.firstName && user?.lastName && (
                   <Stack>
                     {user?.profile?.avatar ? (
-                      <Avatar
+                      <Stack
                         sx={{
-                          width: { xs: 40, md: 60 },
-                          height: { xs: 40, md: 60 },
                           bgcolor: "primary.main",
                           color: "white",
+                          width: { xs: 40, md: 60 },
+                          height: { xs: 40, md: 60 },
+                          position: "relative",
+                          borderRadius: "50%",
+                          overflow: "hidden",
                         }}
-                        alt={`${user?.firstName} ${user?.lastName}`}
-                        src={`${FILES_BASE_URL}${user?.profile?.avatar?.url}`}
                       >
-                        {`${user?.firstName[0]} ${user?.lastName[0]}`}
-                      </Avatar>
+                        <Image
+                          alt={`${user?.firstName} ${user?.lastName}`}
+                          src={`${FILES_BASE_URL}${user?.profile?.avatar?.url}`}
+                          layout="fill"
+                          objectFit="cover"
+                        />
+                      </Stack>
                     ) : (
                       <Avatar
                         sx={{

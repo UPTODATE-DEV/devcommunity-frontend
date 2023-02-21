@@ -95,6 +95,10 @@ const SurveyContent = ({ survey }: { survey: Survey }) => {
   const [isExpired, setIsExpired] = useState(false);
   const { locale } = useRouter();
 
+  const lastDayOfSurvey = dayjs(survey.createdAt).add(survey.duration, "days");
+  const isLastDayOfSurvey = lastDayOfSurvey.isSameOrBefore(dayjs());
+  const timeLeftText = isLastDayOfSurvey ? dayjs().to(lastDayOfSurvey) : dayjs().to(lastDayOfSurvey, true);
+
   const handleVote = () => {
     setVote(true);
   };
@@ -161,10 +165,7 @@ const SurveyContent = ({ survey }: { survey: Survey }) => {
           -
         </Typography>
         <Typography variant="caption" component="h2" gutterBottom>
-          {locale === "fr" ? "Expire" : "Expires"}{" "}
-          {dayjs(survey.createdAt)
-            .locale(locale || "en")
-            .to(dayjs(survey.createdAt).add(survey.duration, "days"))}
+          {locale === "fr" ? "Expire" : "Expires"} {timeLeftText}
         </Typography>
       </Stack>
     </Paper>

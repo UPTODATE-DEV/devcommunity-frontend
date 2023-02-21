@@ -5,10 +5,22 @@ import { useCallback, useLayoutEffect, useRef } from "react";
 const Content = ({ content, fontSize = 14 }: { content: string; fontSize?: number }) => {
   const preElements = useRef([]);
 
-  const wrapCode = (html: any) => {
-    const removeStyles = (html: string) => html.replace(/style="[^"]*"/g, "");
-    return removeStyles(html);
-  };
+  function addCrossOriginAttributeToImages(htmlString: string): string {
+    // Création d'un élément temporaire pour stocker le code HTML
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = htmlString;
+
+    // Récupération de toutes les balises img dans l'élément temporaire
+    const imgs = tempDiv.getElementsByTagName("img");
+
+    // Parcours de toutes les balises img et ajout de l'attribut crossorigin="anonymous"
+    for (let i = 0; i < imgs.length; i++) {
+      imgs[i].setAttribute("crossorigin", "anonymous");
+    }
+
+    // Retour du code HTML mis à jour
+    return tempDiv.innerHTML;
+  }
 
   const highlightPreElements = useCallback<any>(() => {
     // @ts-ignore
@@ -31,7 +43,7 @@ const Content = ({ content, fontSize = 14 }: { content: string; fontSize?: numbe
       variant="body2"
       fontSize={fontSize}
       dangerouslySetInnerHTML={{
-        __html: content,
+        __html: addCrossOriginAttributeToImages(content),
       }}
     />
   );

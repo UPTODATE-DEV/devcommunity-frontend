@@ -147,8 +147,8 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
 
   const fetchData = async () => {
     const getPosts = getRequest({ endpoint: `/posts/author/${showProfileUser?.id || sessionUser?.id}` });
-    const getFollowedTags = getRequest({ endpoint: `/tags/followed/${sessionUser?.id}` });
-    const getUserBadges = getRequest({ endpoint: `/users/${sessionUser?.id}/badges` });
+    const getFollowedTags = getRequest({ endpoint: `/tags/followed/${sessionUser?.id}` })
+    const getUserBadges = getRequest({ endpoint: `/users/${showProfileUser?.id || sessionUser?.id}/badges` });
     const getSeries = getRequest({ endpoint: `/posts/series?userId=${showProfileUser?.id || sessionUser?.id}` });
     const [posts, followedTags, series, userBadges] = await Promise.all([
       getPosts,
@@ -252,7 +252,7 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
       <TabPanel sx={{ p: 0 }} value={"badges"}>
         <Paper variant="outlined" sx={{ p: 2, minHeight: "200px" }}>
           <Grid container gap={2}>
-            {badges.map((el, i) => (
+            {badges?.map((el, i) => (
               <Grid key={el.name}>
                 <Tooltip
                   arrow

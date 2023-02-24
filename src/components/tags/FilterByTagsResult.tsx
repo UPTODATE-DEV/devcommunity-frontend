@@ -39,7 +39,7 @@ const FilterByTagsResult = () => {
 
   const params = qs.stringify({
     perPage,
-    tags: [...tagsFilters, { name: "Hello" }].map((el) => el.name).toString(),
+    tags: [...tagsFilters].map((el) => el.name).toString(),
   });
 
   const handleClose = () => setOpen(false);

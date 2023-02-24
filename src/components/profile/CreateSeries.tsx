@@ -64,12 +64,13 @@ const CreateSeries = () => {
   const handleSave = async () => {
     if (currentSeries) {
       const response = await patchRequest({
-        endpoint: `/posts/series/${currentSeries}`,
+        endpoint: `/posts/${currentSeries}/series`,
         data: {
           posts: checked.map((el, i) => ({ module: i + 1, post: el.post.id })),
+          user: session?.user?.id,
         },
       });
-      setSeries(response.data)
+      setSeries(response.data);
     } else {
       const response = await postRequest({
         endpoint: "/posts/series",
@@ -78,7 +79,7 @@ const CreateSeries = () => {
           user: session.user?.id,
         },
       });
-      setSeries(response.data)
+      setSeries(response.data);
     }
     setChecked([]);
     setCurrentSeries(null);

@@ -147,7 +147,7 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
 
   const fetchData = async () => {
     const getPosts = getRequest({ endpoint: `/posts/author/${showProfileUser?.id || sessionUser?.id}` });
-    const getFollowedTags = getRequest({ endpoint: `/tags/followed/${sessionUser?.id}` })
+    const getFollowedTags = getRequest({ endpoint: `/tags/followed/${sessionUser?.id}` });
     const getUserBadges = getRequest({ endpoint: `/users/${showProfileUser?.id || sessionUser?.id}/badges` });
     const getSeries = getRequest({ endpoint: `/posts/series?userId=${showProfileUser?.id || sessionUser?.id}` });
     const [posts, followedTags, series, userBadges] = await Promise.all([
@@ -224,10 +224,10 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
       </TabPanel>
       <TabPanel sx={{ p: 0 }} value={"series"}>
         <Stack spacing={2} sx={{ position: "relative" }}>
-          {!openAddSeries && series.length === 0 && <Empty />}
+          {!openAddSeries && series?.length === 0 && <Empty />}
           {openAddSeries && <CreateSeries />}
           {!openAddSeries &&
-            series?.map((item, index) => (
+            series.map((item, index) => (
               <React.Fragment key={item.id}>
                 <SeriesListCard
                   handleEditSeries={() => handleEditSeries(item.id)}

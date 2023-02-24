@@ -33,11 +33,6 @@ const LeftSideBar = () => {
     { path: "/posts", icon: <FcSms fontSize={28} />, label: "Posts" },
     { path: "/tags", icon: <ImageLogo url="/icons/tags.png" alt="Tag Icon" size={28} />, label: "Tags" },
     { path: "/top-posts", icon: <FcPositiveDynamic fontSize={28} />, label: "Top posts" },
-    {
-      path: "/home",
-      icon: <FcAbout fontSize={28} />,
-      label: locale === "fr" ? "A propos" : "About",
-    },
   ];
 
   const blockchain = [
@@ -60,8 +55,15 @@ const LeftSideBar = () => {
 
   const params = [
     { path: "/bookmarks", icon: <FcBookmark fontSize={28} />, label: locale === "fr" ? "Favoris" : "Bookmarks" },
-    // { path: "/settings", icon: <SettingsSharpIcon />, label: "Settings" },
     { path: "/profile", icon: <FcSettings fontSize={28} />, label: locale === "en" ? "My account" : "Mon compte" },
+  ];
+
+  const others = [
+    {
+      path: "/home",
+      icon: <FcAbout fontSize={28} />,
+      label: locale === "fr" ? "A propos" : "About",
+    },
   ];
 
   return (
@@ -139,6 +141,27 @@ const LeftSideBar = () => {
           </List>
         </React.Fragment>
       )}
+
+      <React.Fragment>
+        <Divider />
+        <List>
+          {others.map(({ path, icon, label }) => (
+            <ListItemButton key={path} selected={matches(path)} onClick={() => push(path)}>
+              <ListItemIcon sx={{ mr: -1, color: matches(path) ? "primary.main" : "text.primary" }}>
+                {icon}
+              </ListItemIcon>
+              <ListItemText
+                primary={label}
+                primaryTypographyProps={{
+                  color: matches(path) ? "primary.main" : "text.primary",
+                  fontWeight: matches(path) ? 700 : 400,
+                }}
+              />
+            </ListItemButton>
+          ))}
+        </List>
+      </React.Fragment>
+
       <Button sx={{ display: { xs: "block", md: "none" }, ml: 1 }} variant="outlined" onClick={toggleLang}>
         {locale === "en" ? "French" : "Anglais"}
       </Button>

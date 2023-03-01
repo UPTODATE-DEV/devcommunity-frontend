@@ -51,8 +51,8 @@ const PostCard: React.FC<{ data: Post; handleDeletePost: (id: string) => void }>
 
   const goToProfile = useGoToUserProfile();
   const handleGoToProfile = useCallback(() => {
-    goToProfile(data?.author?.email);
-  }, [data?.author?.email]);
+    goToProfile(data?.author);
+  }, [data?.author?.username]);
 
   const handleGoToPost = useCallback(() => {
     goToPost(data);

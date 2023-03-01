@@ -25,8 +25,8 @@ const ListItems = ({
 
   const goToProfile = useGoToUserProfile();
 
-  const handleGoToProfile = useCallback((email: string) => {
-    goToProfile(email);
+  const handleGoToProfile = useCallback((user: User) => {
+    goToProfile(user);
   }, []);
 
   return (
@@ -36,7 +36,7 @@ const ListItems = ({
           <UserAvatar
             name={getUserFullName(item.author)}
             pictureUrl={getUserProfileImageUrl(item.author)}
-            handleClick={() => handleGoToProfile(item.author.email)}
+            handleClick={() => handleGoToProfile(item.author)}
           />
         </ListItemAvatar>
         <ListItemText

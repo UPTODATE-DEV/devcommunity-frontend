@@ -22,8 +22,8 @@ const AddPost: React.FC<Props> = ({ label, icon, handleClick }) => {
   const goToProfile = useGoToUserProfile();
 
   const handleGoToProfile = useCallback(() => {
-    goToProfile(user?.email);
-  }, [user?.email]);
+    goToProfile(user);
+  }, [user?.username]);
 
   return (
     <Paper

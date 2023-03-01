@@ -6,6 +6,7 @@ import Share from "@/components/common/Share";
 import PostReaction from "@/components/posts/PostReaction";
 import { useGoToPost, useGoToUserProfile } from "@/hooks/posts";
 import { getArticleImageUrl, getContent, parseDate } from "@/lib/posts";
+import { shortenNumber } from "@/lib/shorterNumber";
 import CommentIcon from "@mui/icons-material/Comment";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
@@ -18,11 +19,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import PostImage from "./PostImage";
-import { shortenNumber } from "@/lib/shorterNumber";
 
 const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   const { author } = data;
-  const cardRef = React.useRef<HTMLDivElement>(null);
   const goToPost = useGoToPost();
   const theme = useTheme();
   const { locale } = useRouter();
@@ -32,8 +31,8 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
 
   const goToProfile = useGoToUserProfile();
   const handleGoToProfile = useCallback(() => {
-    goToProfile(author?.email);
-  }, [author?.email]);
+    goToProfile(author);
+  }, [author?.username]);
 
   const handleGoToPost = useCallback(() => {
     goToPost(data);

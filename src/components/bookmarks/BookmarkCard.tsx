@@ -45,8 +45,8 @@ const BookmarkCard: React.FC<{ data: Post }> = ({ data }) => {
   };
 
   const handleGoToProfile = useCallback(() => {
-    goToProfile(author?.email);
-  }, [author?.email]);
+    goToProfile(author);
+  }, [author?.username]);
 
   const handleGoToPost = useCallback(() => {
     goToPost(data);

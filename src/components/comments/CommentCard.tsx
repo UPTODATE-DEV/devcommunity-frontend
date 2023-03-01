@@ -38,8 +38,8 @@ const CommentCard: React.FC<{ data: PostComment }> = ({ data }) => {
   };
 
   const handleGoToProfile = useCallback(() => {
-    goToProfile(author?.email);
-  }, [author?.email]);
+    goToProfile(author);
+  }, [author?.username]);
 
   const handleGoToComment = () => {
     push(`/${currentPost?.type !== "ARTICLE" ? "posts" : "articles"}/${currentPost?.slug}/${data.id}`);

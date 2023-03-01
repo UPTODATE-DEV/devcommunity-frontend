@@ -48,8 +48,8 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
   };
 
   const handleGoToProfile = useCallback(() => {
-    goToProfile(author?.email);
-  }, [author?.email]);
+    goToProfile(author);
+  }, [author?.username]);
 
   const handleGoToPost = useCallback(() => {
     goToPost(data);

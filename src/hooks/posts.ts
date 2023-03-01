@@ -4,14 +4,15 @@ import { useCallback } from "react";
 export const useGoToUserProfile = () => {
   const router = useRouter();
 
-  const getUserProfilePath = useCallback((email?: string) => {
-    if (email) return `/profile/@${email.split("@")[0]}`;
+  const getUserProfilePath = useCallback((username?: string) => {
+    if (username) return `/profile/@${username}`;
     return "/profile";
   }, []);
 
   const navigate = useCallback(
-    (email?: string) => {
-      const userProfilePath = getUserProfilePath(email);
+    (user?: User) => {
+      console.log("🚀 ~ file: posts.ts:22 ~ useGoToUserProfile ~ user:", user)
+      const userProfilePath = getUserProfilePath(user?.username);
       router.push(userProfilePath);
     },
     [getUserProfilePath, router]

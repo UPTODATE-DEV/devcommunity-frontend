@@ -32,8 +32,8 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   const postContent = getContent(data?.content, isMobile ? 180 : 220, locale);
 
   const handleGoToProfile = useCallback(() => {
-    goToProfile(author?.email);
-  }, [author?.email]);
+    goToProfile(author);
+  }, [author?.username]);
 
   const handleGoToPost = useCallback(() => {
     goToPost(data);

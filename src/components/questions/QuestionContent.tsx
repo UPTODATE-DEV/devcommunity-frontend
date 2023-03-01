@@ -24,8 +24,8 @@ const PostContent: React.FC<{ data: Post }> = ({ data }) => {
   const goToProfile = useGoToUserProfile();
 
   const handleGoToProfile = useCallback(() => {
-    goToProfile(author?.email);
-  }, [author?.email]);
+    goToProfile(author);
+  }, [author?.username]);
 
   return (
     <Paper variant="outlined" spacing={2} sx={{ p: 2 }} component={Stack}>

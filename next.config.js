@@ -18,7 +18,7 @@ const nextConfig = {
   },
   swcMinify: false,
   compiler: {
-    removeConsole: true,
+    removeConsole: false,
   },
   images: {
     formats: ["image/avif", "image/webp"],

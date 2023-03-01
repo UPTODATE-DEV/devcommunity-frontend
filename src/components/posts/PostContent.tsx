@@ -13,15 +13,15 @@ import React, { useCallback } from "react";
 
 const Content = dynamic(import("@/components/common/Content"), { ssr: false });
 const PostReaction = dynamic(import("@/components/posts/PostReaction"), { ssr: false });
-const SeriesList = dynamic(import("@/components/posts/SeriesList"), { ssr: false }); 
+const SeriesList = dynamic(import("@/components/posts/SeriesList"), { ssr: false });
 
 const PostContent: React.FC<{ data: Post }> = ({ data }) => {
   const { author } = data;
   const goToProfile = useGoToUserProfile();
 
   const handleGoToProfile = useCallback(() => {
-    goToProfile(author?.email);
-  }, [author?.email]);
+    goToProfile(author);
+  }, [author?.username]);
 
   return (
     <Paper variant="outlined" spacing={2} sx={{ p: 2 }} component={Stack}>

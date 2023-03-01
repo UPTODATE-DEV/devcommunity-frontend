@@ -15,8 +15,8 @@ const CommentContent: React.FC<{ data: PostComment }> = ({ data }) => {
   const goToProfile = useGoToUserProfile();
 
   const handleGoToProfile = useCallback(() => {
-    goToProfile(author?.email);
-  }, [author?.email]);
+    goToProfile(author);
+  }, [author?.username]);
 
   return (
     <Paper variant="outlined" spacing={2} sx={{ p: 2 }} component={Stack} id="content">

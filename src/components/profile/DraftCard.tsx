@@ -42,8 +42,8 @@ const DraftCard: React.FC<{ data: Post; handleDeletePost: () => void }> = ({ dat
   };
 
   const handleGoToProfile = useCallback(() => {
-    goToProfile(author?.email);
-  }, [author?.email]);
+    goToProfile(author);
+  }, [author?.username]);
 
   const handleGoToPost = useCallback(() => {
     goToPost(data);

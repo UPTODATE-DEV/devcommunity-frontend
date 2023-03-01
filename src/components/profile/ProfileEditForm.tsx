@@ -2,6 +2,7 @@ import Input from "@/components/common/Input";
 import useStoreNoPersist from "@/hooks/useStoreNoPersist";
 import { patchRequest, postRequest } from "@/lib/api";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import TwitterIcon from "@mui/icons-material/Twitter";
@@ -14,7 +15,6 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-toastify";
-import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 
 const ProfileEditForm = ({ user }: { user?: User }) => {
   const { editProfile, setEditProfile } = useStoreNoPersist((state) => state);
@@ -37,7 +37,14 @@ const ProfileEditForm = ({ user }: { user?: User }) => {
   const { reload, locale } = useRouter();
 
   const handleChange = (event: { target: { value: string; name: string } }) => {
-    const value = event.target.name === "bio" ? event.target.value.substring(0, 210) : event.target.value;
+    let value = "";
+    if (event.target.name === "bio") {
+      value = event.target.value.substring(0, 210);
+    } else if (event.target.name === "username") {
+      value = event.target.value.replace(/\s/g, "");
+    } else {
+      value = event.target.value;
+    }
     setState({ ...state, [event.target.name]: value });
   };
 

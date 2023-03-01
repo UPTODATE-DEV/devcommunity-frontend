@@ -84,7 +84,7 @@ const ShowPostReactions = ({ reactions }: { reactions: ArticleReaction[] }) => {
                         <UserAvatar
                           name={getUserFullName(el.user)}
                           pictureUrl={getUserProfileImageUrl(el.user)}
-                          handleClick={() => goToProfile(el.user.email)}
+                          handleClick={() => goToProfile(el.user)}
                         />
                       </ListItemAvatar>
                       <ListItemText

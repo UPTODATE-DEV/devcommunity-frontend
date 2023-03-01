@@ -78,7 +78,7 @@ const ShowQuestionReactions = ({ reactions }: { reactions?: QuestionsReaction[] 
                         <UserAvatar
                           name={getUserFullName(el.user)}
                           pictureUrl={getUserProfileImageUrl(el.user)}
-                          handleClick={() => goToProfile(el.user.email)}
+                          handleClick={() => goToProfile(el.user)}
                         />
                       </ListItemAvatar>
                       <ListItemText

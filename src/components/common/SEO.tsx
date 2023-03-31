@@ -1,5 +1,5 @@
+import { ArticleJsonLd, NextSeo } from "next-seo";
 import React from "react";
-import { NextSeo, ArticleJsonLd } from "next-seo";
 
 interface PostSEO {
   title: string;
@@ -29,7 +29,7 @@ const PostSEO: React.FC<PostSEO> = ({
 }) => {
   function removeTags(str: string): string {
     if (str === null || str === "") return "";
-    else str = str.toString(); // Regular expression to identify HTML tags in // the input string. Replacing the identified // HTML tag with a null string.
+    else str = str.toString();
     return str.replace(/(<([^>]+)>)/gi, "");
   }
 
@@ -47,14 +47,16 @@ const PostSEO: React.FC<PostSEO> = ({
             authors: [`${authors.firstName} ${authors.lastName}`],
             tags,
           },
-          images: [
-            {
-              url: !image.url.startsWith("http") ? `${process.env.NEXT_PUBLIC_FILES_BASE_URL}${image.url}` : image.url,
-              width: image.width,
-              height: image.height,
-              alt: image.name,
-            },
-          ],
+          images: image.url
+            ? [
+                {
+                  url: process.env.NEXT_PUBLIC_FILES_BASE_URL + image.url,
+                  width: image.width,
+                  height: image.height,
+                  alt: image.name,
+                },
+              ]
+            : undefined,
         }}
       />
       <ArticleJsonLd
@@ -66,6 +68,8 @@ const PostSEO: React.FC<PostSEO> = ({
         dateModified={modifiedTime}
         authorName={`${authors.firstName} ${authors.lastName}`}
         description={description}
+        isAccessibleForFree={true}
+        publisherName="Updev Community"
       />
     </>
   );

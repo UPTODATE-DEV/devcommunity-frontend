@@ -2,6 +2,7 @@ import SuggestionViewMore from "@/components/common/SuggestionViewMore";
 import PostContent from "@/components/posts/PostContent";
 import PostHeader from "@/components/posts/PostHeader";
 import useStore from "@/hooks/useStore";
+import { Typography, alpha } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import dynamic from "next/dynamic";
 import React from "react";
@@ -18,7 +19,7 @@ const Post: React.FC<{ data: Post; comments: PostComment[] }> = ({ data, comment
   }, []);
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} sx={{ positon: "relative" }}>
       <PostHeader data={data} />
       <PostContent data={data} />
       <div id="comments"></div>

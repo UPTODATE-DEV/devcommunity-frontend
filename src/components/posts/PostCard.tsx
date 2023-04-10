@@ -8,6 +8,8 @@ import { useGoToPost, useGoToUserProfile } from "@/hooks/posts";
 import { getArticleImageUrl, getContent, parseDate } from "@/lib/posts";
 import { shortenNumber } from "@/lib/shorterNumber";
 import CommentIcon from "@mui/icons-material/Comment";
+import EyeIcon from "@mui/icons-material/RemoveRedEye";
+import { alpha } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
@@ -39,7 +41,23 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
   }, [data]);
 
   return (
-    <Paper variant="outlined" sx={{ p: 2 }}>
+    <Paper variant="outlined" sx={{ p: 2, position: "relative" }}>
+      <Stack
+        sx={{
+          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
+          px: 2,
+          py: 0.5,
+          borderRadius: 2,
+          width: "fit-content",
+          position: "absolute",
+          top: 12,
+          right: 12,
+        }}
+      >
+        <Typography variant="caption" textAlign="end" color="text.secondary">
+          {data?.locale === "EN" ? "English" : "French"}
+        </Typography>
+      </Stack>
       <Grid container spacing={{ xs: 0, sm: 2, lg: 4 }}>
         <Grid item xs={12} sm={8}>
           <PostCardHeader
@@ -97,6 +115,13 @@ const PostCard: React.FC<{ data: Post }> = ({ data }) => {
       >
         <PostReaction post={data} />
         <Stack direction="row" spacing={2}>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <EyeIcon fontSize="small" />
+            <Typography variant="caption" color="text.secondary" fontWeight={700}>
+              {shortenNumber(data?._count?.views || 0)}
+            </Typography>
+          </Stack>
+
           <Stack direction="row" alignItems="center">
             <Link href={`/articles/${data?.slug}/#comments`} passHref>
               <IconButton>

@@ -18,7 +18,6 @@ import Popper from "@mui/material/Popper";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import { useDarkMode } from "next-dark-mode";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import useUser from "../../hooks/useUser";
@@ -125,27 +124,7 @@ const Icons = () => {
         onClick={handleToggle}
         color="inherit"
         sx={{ display: { xs: "none", md: "flex" }, px: 2, borderRadius: 50 }}
-        startIcon={
-          locale === "fr" ? (
-            <Stack
-              sx={{
-                boxShadow: "0 0 5px 0 rgba(0,0,0,0.3)",
-                borderRadius: 30,
-              }}
-            >
-              <Image src="/icons/fr.png" width={20} height={20} alt="Logo fr" />
-            </Stack>
-          ) : (
-            <Stack
-              sx={{
-                boxShadow: "0 0 5px 0 rgba(0,0,0,0.3)",
-                borderRadius: 30,
-              }}
-            >
-              <Image src="/icons/en.png" width={20} height={20} alt="Logo en" />
-            </Stack>
-          )
-        }
+        startIcon={locale === "fr" ? "FR" : "EN"}
       >
         <ArrowDown color="primary" />
       </Button>
@@ -180,7 +159,7 @@ const Icons = () => {
                       switchLanguages("en");
                     }}
                   >
-                    En
+                    English
                   </MenuItem>
                   <MenuItem
                     selected={locale === "fr"}
@@ -189,7 +168,7 @@ const Icons = () => {
                       switchLanguages("fr");
                     }}
                   >
-                    Fr
+                    Français
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>

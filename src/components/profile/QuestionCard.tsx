@@ -56,7 +56,7 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
   }, [data]);
 
   return (
-    <Paper variant="outlined" sx={{ p: 2, position: "relative" }}>
+    <Paper variant="outlined" onClick={handleGoToPost} sx={{ p: 2, position: "relative" }}>
       {!username && (
         <IconButton
           aria-label="more"
@@ -70,7 +70,7 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
           <MoreVertIcon />
         </IconButton>
       )}
-      <Menu
+    <Menu
         id="basic-menu"
         anchorEl={anchorEl}
         open={openMenu}
@@ -105,7 +105,7 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
         date={parseDate({ date: data?.publishedOn, type: "relative" })}
         author={author}
       />
-      <Typography
+      {/* <Typography
         fontWeight={700}
         color="text.primary"
         variant="h6"
@@ -120,7 +120,7 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
         }}
       >
         {data?.title}
-      </Typography>
+      </Typography> */}
       <Stack sx={{ cursor: "pointer" }} onClick={handleGoToPost}>
         <PostContent content={postContent} />
       </Stack>

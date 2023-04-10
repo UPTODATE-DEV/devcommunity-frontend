@@ -7,6 +7,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const newsSitemaps = posts.data?.map((item: Post) => ({
     loc: `${process.env.NEXT_PUBLIC_URL}/${item.slug}`,
     lastmod: item.updatedAt,
+    news: {
+      title: item.title,
+      publicationName: "Updev Community",
+      publicationLanguage: item.locale,
+      date: new Date(item.createdAt),
+    },
   }));
 
   const fields = [...newsSitemaps];

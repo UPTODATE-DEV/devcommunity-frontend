@@ -43,11 +43,13 @@ const SeriesListCard: React.FC<{
   return (
     <Paper
       variant="outlined"
+      onClick={username ? handleGoToPost : undefined}
       sx={{
         pl: 2,
         pr: 3.5,
         py: 1.5,
         position: "relative",
+        cursor: username ? "pointer" : "default",
         "&:hover": {
           borderColor: "primary.main",
           "&::after": {

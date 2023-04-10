@@ -5,6 +5,7 @@ import { useGoToPost, useGoToUserProfile } from "@/hooks/posts";
 import { getContent, parseDate } from "@/lib/posts";
 import { shortenNumber } from "@/lib/shorterNumber";
 import CommentIcon from "@mui/icons-material/Comment";
+import { alpha } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
@@ -40,13 +41,29 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   }, [data]);
 
   return (
-    <Paper variant="outlined" sx={{ p: 2 }}>
+    <Paper variant="outlined" sx={{ p: 2, position: "relative" }}>
+      <Stack
+        sx={{
+          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
+          px: 2,
+          py: 0.5,
+          borderRadius: 2,
+          width: "fit-content",
+          position: "absolute",
+          top: 12,
+          right: 12,
+        }}
+      >
+        <Typography variant="caption" textAlign="end" color="text.secondary">
+          {data?.locale === "EN" ? "English" : "French"}
+        </Typography>
+      </Stack>
       <PostCardHeader
         handleClickGoToProfile={handleGoToProfile}
         date={parseDate({ date: data?.publishedOn, type: "relative" })}
         author={author}
       />
-      <Typography
+      {/* <Typography
         fontWeight={700}
         color="text.primary"
         variant="h6"
@@ -61,7 +78,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
         }}
       >
         {data?.title}
-      </Typography>
+      </Typography> */}
       <Stack sx={{ cursor: "pointer" }} onClick={handleGoToPost}>
         <PostContent content={postContent} />
       </Stack>

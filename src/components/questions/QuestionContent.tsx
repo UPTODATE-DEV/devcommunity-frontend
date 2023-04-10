@@ -34,9 +34,9 @@ const PostContent: React.FC<{ data: Post }> = ({ data }) => {
         date={parseDate({ date: data?.createdAt, type: "relative" })}
         author={author}
       />
-      <Typography variant="h4" color="text.primary" sx={{ mb: "-8px" }} fontWeight={700} gutterBottom>
+      {/* <Typography variant="h4" color="text.primary" sx={{ mb: "-8px" }} fontWeight={700} gutterBottom>
         {data?.title}
-      </Typography>
+      </Typography> */}
       <Content content={data?.content} fontSize={17} />
       {data?.survey?.length > 0 && <SurveyContent survey={data?.survey[0]} />}
       {data?.series?.length >= 1 && <SeriesList series={data?.series as any} />}

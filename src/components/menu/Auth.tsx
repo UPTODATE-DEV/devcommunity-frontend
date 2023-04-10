@@ -71,6 +71,7 @@ const Auth = () => {
               theme="filled_blue"
               shape="circle"
               locale="en"
+              auto_select
               onSuccess={(credentialResponse) => {
                 onLogin(credentialResponse.credential);
               }}

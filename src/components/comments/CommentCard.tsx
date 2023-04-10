@@ -22,16 +22,22 @@ import CommentReactions from "./CommentReactions";
 const CommentCard: React.FC<{ data: PostComment }> = ({ data }) => {
   const user = useStore((state) => state.session?.user);
   const { currentPost } = useStore((state) => state);
-  const { push, locale } = useRouter();
+  const { push, locale, query } = useRouter();
   const [, setUserReaction] = React.useState<QuestionReactionType | undefined>();
   const [openReaction, setOpenReaction] = React.useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const postContent = getContent(data?.content, isMobile ? 180 : 220, locale);
   const { comments, setComments } = useStore((state) => state);
+  let postContent = data.content;
 
   const { author } = data;
   const goToProfile = useGoToUserProfile();
+
+  if (data.depth < 1 && data.id === query?.commentId) {
+    postContent = data.content;
+  } else {
+    postContent = getContent(data?.content, isMobile ? 180 : 220, locale);
+  }
 
   const handleCloseReaction = () => {
     setOpenReaction(false);

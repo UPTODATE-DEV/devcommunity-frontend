@@ -95,9 +95,11 @@ const Menu: React.FC = () => {
         <Grid container alignItems="center" spacing={{ xs: 0, md: 2 }}>
           <Grid item xs={2} md={3} lg={2} justifyContent="center" alignItems="center" sx={{ height: 65 }}>
             {isMobile ? (
-              <IconButton sx={{ width: 1, height: 1 }} onClick={toggleDrawer()}>
-                <MenuIcon />
-              </IconButton>
+              <Stack justifyContent="center" alignItems="center" sx={{ width: 1, height: 1 }}>
+                <IconButton onClick={toggleDrawer()}>
+                  <MenuIcon />
+                </IconButton>
+              </Stack>
             ) : (
               <Logo />
             )}

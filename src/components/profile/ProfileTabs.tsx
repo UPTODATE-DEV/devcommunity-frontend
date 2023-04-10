@@ -1,7 +1,6 @@
 import useStore from "@/hooks/useStore";
 import useUser from "@/hooks/useUser";
 import { deleteRequest, getRequest, patchRequest } from "@/lib/api";
-import { shortenNumber } from "@/lib/shorterNumber";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -14,17 +13,13 @@ import WebStoriesIcon from "@mui/icons-material/WebStories";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import Chip from "@mui/material/Chip";
 import Fab from "@mui/material/Fab";
-import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Tab from "@mui/material/Tab";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-toastify";
@@ -33,6 +28,16 @@ import DraftCard from "./DraftCard";
 import PostCard from "./PostCard";
 import QuestionCard from "./QuestionCard";
 import SeriesListCard from "./SeriesListCard";
+
+const Badges = dynamic(import("./profileTabs/Badges"), {
+  ssr: false,
+  loading: () => null,
+});
+
+const FollowedTags = dynamic(import("./profileTabs/FollowedTags"), {
+  ssr: false,
+  loading: () => null,
+});
 
 const Empty = dynamic(import("@/components/common/Empty"), {
   ssr: false,
@@ -138,8 +143,6 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
     setToggleAddSeries();
   }
 
-  const handleCreateSeries = async () => {};
-
   const handleEditSeries = (seriesId: string) => {
     setToggleAddSeries();
     setCurrentSeries(seriesId);
@@ -147,20 +150,11 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
 
   const fetchData = async () => {
     const getPosts = getRequest({ endpoint: `/posts/author/${showProfileUser?.id || sessionUser?.id}` });
-    const getFollowedTags = getRequest({ endpoint: `/tags/followed/${sessionUser?.id}` });
-    const getUserBadges = getRequest({ endpoint: `/users/${showProfileUser?.id || sessionUser?.id}/badges` });
     const getSeries = getRequest({ endpoint: `/posts/series?userId=${showProfileUser?.id || sessionUser?.id}` });
-    const [posts, followedTags, series, userBadges] = await Promise.all([
-      getPosts,
-      getFollowedTags,
-      getSeries,
-      getUserBadges,
-    ]);
+    const [posts, series] = await Promise.all([getPosts, getSeries]);
 
     setPosts(posts.data);
-    setFollowedTags(followedTags.data);
     setSeries(series.data);
-    setBadges(userBadges.data);
   };
 
   React.useEffect(() => {
@@ -249,41 +243,8 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
           )}
         </Stack>
       </TabPanel>
-      <TabPanel sx={{ p: 0 }} value={"badges"}>
-        <Paper variant="outlined" sx={{ p: 2, minHeight: "200px" }}>
-          <Grid container gap={2}>
-            {badges?.map((el, i) => (
-              <Grid key={el.name}>
-                <Tooltip
-                  arrow
-                  title={
-                    <React.Fragment>
-                      <Typography fontWeight={700} textAlign="center" color="inherit">
-                        {el.name}
-                      </Typography>
-                      <Typography color="inherit" textAlign="center">
-                        {el.description}
-                      </Typography>
-                    </React.Fragment>
-                  }
-                >
-                  <Paper sx={{ p: 2, borderRadius: 50, position: "relative" }} variant="outlined">
-                    <Stack sx={{ width: 60, height: 60, position: "relative" }}>
-                      <Image
-                        src={`/images/badges/${el.icon}.png`}
-                        style={{ filter: el.completed ? "none" : "grayscale(100%)" }}
-                        alt={el.name}
-                        layout="fill"
-                        objectFit="contain"
-                      />
-                    </Stack>
-                  </Paper>
-                </Tooltip>
-              </Grid>
-            ))}
-          </Grid>
-        </Paper>
-      </TabPanel>
+      <Badges userId={showProfileUser?.id || sessionUser?.id} />
+      <FollowedTags userId={showProfileUser?.id || sessionUser?.id} />
       {!showProfileUser && (
         <>
           <TabPanel sx={{ p: 0 }} value={"drafts"}>
@@ -295,32 +256,6 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
                 </React.Fragment>
               ))}
             </Stack>
-          </TabPanel>
-          <TabPanel sx={{ p: 0 }} value={"tags"}>
-            {followedTags.length === 0 ? (
-              <Empty />
-            ) : (
-              <Paper variant="outlined" sx={{ py: 4, px: 2, minHeight: "300px" }}>
-                <Grid container spacing={1}>
-                  {followedTags.map((el, i) => (
-                    <Grid item xs="auto" key={el.tag.name}>
-                      <Tooltip
-                        arrow
-                        title={locale === "en" ? "Click to unfollow this tag" : "Cliquer pour ne plus suivre ce tag"}
-                      >
-                        <Chip
-                          size="small"
-                          onClick={() => handleTagClick(el.tag.name)}
-                          icon={<TagIcon fontSize="small" />}
-                          sx={{ px: 2 }}
-                          label={`${el.tag.name} (${shortenNumber(el.tag._count.posts)})`}
-                        />
-                      </Tooltip>
-                    </Grid>
-                  ))}
-                </Grid>
-              </Paper>
-            )}
           </TabPanel>
           {showProfileUser === undefined && user?.role === "AUTHOR" && (
             <TabPanel sx={{ p: 0 }} value={"dashboard"}>

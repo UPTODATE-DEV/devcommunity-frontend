@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
 import qs from "qs";
 import React from "react";
+import CreatorProfile from "./CreatorProfile";
 import ListItems from "./ListItems";
 import { ListItemsSkeleton } from "./Skeleton";
 
@@ -17,7 +18,7 @@ const RightSideBar = () => {
   const [topArticles, setTopArticles] = React.useState<Post[] | null>(null);
 
   const today = new Date();
-  const sevenDaysAgoDate = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const sevenDaysAgoDate = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
   const query = (type: "ARTICLE" | "QUESTION") =>
     qs.stringify({ limit: 3, startDate: sevenDaysAgoDate.toISOString(), endDate: today.toISOString(), type });
 
@@ -46,6 +47,7 @@ const RightSideBar = () => {
 
   return (
     <Stack spacing={2} sx={{ width: 1, pb: 5 }}>
+      <CreatorProfile />
       <Paper variant="outlined" sx={{ position: "relative", width: 1 }}>
         <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
           {locale === "en" ? "Trending articles" : "Articles tendances"}

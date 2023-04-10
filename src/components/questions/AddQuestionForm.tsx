@@ -31,8 +31,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
   const user = useStore((state) => state.session?.user);
   const [tags, setTags] = React.useState<Tag[]>([{ id: "0", name: "default", _count: { posts: 0 } }]);
   const [preview, setPreview] = React.useState("");
-  const [post, setPost] = React.useState<{ title?: string; locale: string; content?: string; tags: string[] | null }>({
-    title: data?.title || "",
+  const [post, setPost] = React.useState<{ locale: string; content?: string; tags: string[] | null }>({
     content: data?.content || "",
     tags: data?.tags?.map((el) => el.tag.name) || [],
     locale: data?.locale || "FR",
@@ -143,7 +142,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
     }
     if (response.data) {
       setLoading(false);
-      toast.success(data?.title ? "Post updated" : "Post saved");
+      toast.success(data?.id ? "Post updated" : "Post saved");
       replace(`/posts/${response.data?.slug}/preview`);
     }
   };
@@ -175,7 +174,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
     }
     if (response.data) {
       setLoading(false);
-      toast.success(data?.title ? "Post updated" : "Post created");
+      toast.success(data?.id ? "Post updated" : "Post created");
       replace(`/posts/${response.data?.slug}`);
     }
   };
@@ -197,14 +196,19 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
 
   return (
     <Paper variant="outlined" component={Stack} spacing={3} sx={{ py: 1, p: 2 }}>
-      <TextField
-        name="title"
-        variant="filled"
-        value={post?.title}
-        placeholder={locale === "en" ? "Title" : "Titre"}
-        onChange={handleChange}
-        sx={{ "&.MuiTextField-root > .MuiFilledInput-root": { px: 2, pb: 1 } }}
+      <RichTextEditor
+        value={post.content}
+        onChange={(value) => setPost((state) => ({ ...state, content: value }))}
+        stickyOffset={70}
+        onImageUpload={handleImageUpload}
+        id="rte"
+        controls={[
+          ["h2", "h3", "bold", "italic", "underline", "link", "code"],
+          ["unorderedList", "orderedList", "sup", "sub"],
+          ["codeBlock", "blockquote", "link"],
+        ]}
       />
+
       <Autocomplete
         multiple
         id="tags-filled"
@@ -241,20 +245,6 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
           <MenuItem value="EN">{locale === "fr" ? "Anglais" : "English"}</MenuItem>
         </Select>
       </FormControl>
-
-      <RichTextEditor
-        value={post.content}
-        onChange={(value) => setPost((state) => ({ ...state, content: value }))}
-        stickyOffset={70}
-        onImageUpload={handleImageUpload}
-        id="rte"
-        controls={[
-          ["h2", "h3", "bold", "italic", "underline", "link", "code"],
-          ["unorderedList", "orderedList", "sup", "sub"],
-          ["codeBlock", "blockquote", "link"],
-          ["image", "video", "strike"],
-        ]}
-      />
 
       {survey && (
         <Paper
@@ -330,7 +320,6 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
             aria-label="split button"
             sx={{ borderRadius: 50 }}
             disabled={
-              !post.title ||
               !post.content ||
               !post.tags?.length ||
               loading ||

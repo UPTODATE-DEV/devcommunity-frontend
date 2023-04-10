@@ -5,6 +5,7 @@ import useUser from "@/hooks/useUser";
 import { getUserFullName } from "@/lib";
 import { getRequest, patchRequest, postLocalRequest } from "@/lib/api";
 import AddIcon from "@mui/icons-material/Add";
+import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 import EditIcon from "@mui/icons-material/EditOutlined";
@@ -68,6 +69,7 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   const openMenu = Boolean(anchorEl);
   const [viewFollowingsFollowersDialog, setViewFollowingsFollowersDialog] = React.useState(false);
   const [viewType, setViewType] = React.useState<"followers" | "followings">("followers");
+  const days = dayjs(new Date()).diff(user?.createdAt, "days");
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -118,8 +120,6 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   };
 
   const handleRequestCreator = async () => {
-    const days = dayjs(new Date()).diff(user?.createdAt, "days");
-
     if (user && user?.posts?.length >= 10 && days >= 14) {
       const response = await patchRequest({ endpoint: `/users/${session?.id}/request-author` });
       if (response.data) {
@@ -144,7 +144,6 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
   };
 
   async function getFollowings() {
-    console.log("🚀 ~ file: Profile.tsx:149 ~ getFollowings ~ currentUser?.id:", currentUser?.id);
     const response = await getRequest({ endpoint: `/users/${currentUser?.id || session?.id}/followings` });
     if (response.data) {
       return response.data;
@@ -174,11 +173,11 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
 
     getFollowingsAndFollowers();
 
-    if (useUserData) {
+    if (useUserData?.id) {
       setStatus(useUserData?.authorRequest[0]?.status);
       setLoading(false);
     }
-  }, [user?.id]);
+  }, [user?.id, useUserData?.id]);
 
   return (
     <>
@@ -432,20 +431,34 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                   ? "Your account is not yet eligible to become a creator"
                   : "Votre compte n'est pas encore éligible à devenir créateur"}
               </DialogTitle>
-              <DialogContent sx={{ alignItems: "center", textAlign: "center" }}>
-                <DialogContentText sx={{ fontWeight: 700 }} id="alert-dialog-description">
+              <DialogContent sx={{ alignItems: "center" }}>
+                <Typography fontWeight={700} color="text.primary">
                   {locale === "en" ? "To be eligible" : "Pour être éligible"}
-                </DialogContentText>
-                <DialogContentText id="alert-dialog-description">
-                  {locale === "en"
-                    ? "You must have joined Updev Community for at least 14 days"
-                    : "Vous devez avoir rejoint Updev Community au moins depuis 14 jours"}
-                </DialogContentText>
-                <DialogContentText id="alert-dialog-description">
-                  {locale === "en"
-                    ? "You must have published at least 10 articles or posts"
-                    : "Vous devez avoir publié au moins 10 articles ou posts"}
-                </DialogContentText>
+                </Typography>
+                <Stack direction="row" spacing={1} sx={{ py: 1 }} alignContent="center">
+                  {days >= 14 ? (
+                    <CheckCircleIcon fontSize="small" sx={{ color: "success.main" }} />
+                  ) : (
+                    <CancelIcon fontSize="small" sx={{ color: "error.main" }} />
+                  )}
+                  <Typography color="text.secondary">
+                    {locale === "en"
+                      ? "You must have joined Updev Community for at least 14 days"
+                      : "Vous devez avoir rejoint Updev Community au moins depuis 14 jours"}
+                  </Typography>
+                </Stack>
+                <Stack direction="row" spacing={1} alignContent="center">
+                  {user && user?.posts?.length >= 10 ? (
+                    <CheckCircleIcon fontSize="small" sx={{ color: "success.main" }} />
+                  ) : (
+                    <CancelIcon fontSize="small" sx={{ color: "error.main" }} />
+                  )}
+                  <Typography color="text.secondary">
+                    {locale === "en"
+                      ? "You must have published at least 10 articles or posts"
+                      : "Vous devez avoir publié au moins 10 articles ou posts"}
+                  </Typography>
+                </Stack>
               </DialogContent>
             </Dialog>
 

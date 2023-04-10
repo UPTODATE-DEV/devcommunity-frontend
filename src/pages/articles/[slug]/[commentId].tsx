@@ -6,6 +6,7 @@ import { getRequest } from "@/lib/api";
 import { withSessionSsr } from "@/lib/withSession";
 import type { GetServerSideProps, NextPage } from "next";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import React from "react";
 
 const Comment = dynamic(import("@/components/comments/Comment"), { ssr: false, loading: () => null });
@@ -13,6 +14,7 @@ const Comment = dynamic(import("@/components/comments/Comment"), { ssr: false, l
 const Home: NextPage<{ session: Session; comment: PostComment; post: Post }> = ({ session, comment, post }) => {
   const setSession = useStore((state) => state.setSession);
   const { setCurrentPost, setComments, setCurrentComment } = useStore((state) => state);
+  const { query } = useRouter();
 
   React.useEffect(() => {
     setCurrentPost(post);
@@ -24,7 +26,7 @@ const Home: NextPage<{ session: Session; comment: PostComment; post: Post }> = (
       setCurrentComment(null);
       setComments([]);
     };
-  }, []);
+  }, [query?.commentId]);
 
   return (
     <>

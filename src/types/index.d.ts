@@ -53,7 +53,7 @@ interface Post {
   comments: PostComment[];
   series: Series[];
   bookmarks: Bookmarks[];
-  _count: { comments: number };
+  _count: { comments: number; views: number };
   survey: Survey[];
 }
 

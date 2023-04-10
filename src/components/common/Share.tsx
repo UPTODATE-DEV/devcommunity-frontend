@@ -3,6 +3,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import ShareIcon from "@mui/icons-material/ShareOutlined";
+import TwitterIcon from "@mui/icons-material/Twitter";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Box, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -11,7 +12,6 @@ import Popover from "@mui/material/Popover";
 import Tooltip from "@mui/material/Tooltip";
 import { useRouter } from "next/router";
 import React from "react";
-import TwitterIcon from '@mui/icons-material/Twitter';
 
 const Share = ({ data }: { data: Post | null }) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
@@ -30,6 +30,12 @@ const Share = ({ data }: { data: Post | null }) => {
 
   const onShare = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const getTextToShare = () => {
+    return data?.type === "ARTICLE"
+      ? `${data?.title} ${NEXT_PUBLIC_URL}/articles/${data?.slug}`
+      : `${NEXT_PUBLIC_URL}/posts/${data?.slug}`;
   };
 
   return (
@@ -76,11 +82,7 @@ const Share = ({ data }: { data: Post | null }) => {
                 color="secondary"
                 startIcon={<TwitterIcon />}
                 onClick={() => {
-                  window.open(
-                    `https://twitter.com/intent/tweet?text=${NEXT_PUBLIC_URL}/${
-                      data?.type === "ARTICLE" ? "articles" : "posts"
-                    }/${data?.slug}`
-                  );
+                  window.open(`https://twitter.com/intent/tweet?text=${getTextToShare()}`);
                 }}
               >
                 Twitter
@@ -94,11 +96,7 @@ const Share = ({ data }: { data: Post | null }) => {
                 color="secondary"
                 startIcon={<FacebookIcon />}
                 onClick={() => {
-                  window.open(
-                    `https://www.facebook.com/sharer/sharer.php?u=${NEXT_PUBLIC_URL}/${
-                      data?.type === "ARTICLE" ? "articles" : "posts"
-                    }/${data?.slug}`
-                  );
+                  window.open(`https://www.facebook.com/sharer/sharer.php?u=${getTextToShare()}`);
                 }}
               >
                 Facebook
@@ -112,11 +110,7 @@ const Share = ({ data }: { data: Post | null }) => {
                 color="secondary"
                 startIcon={<LinkedInIcon />}
                 onClick={() => {
-                  window.open(
-                    `https://www.linkedin.com/shareArticle?mini=true&url=${NEXT_PUBLIC_URL}/${
-                      data?.type === "ARTICLE" ? "articles" : "posts"
-                    }/${data?.slug}`
-                  );
+                  window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${getTextToShare()}`);
                 }}
               >
                 LinkedIn
@@ -132,16 +126,10 @@ const Share = ({ data }: { data: Post | null }) => {
 
             <Stack component={Paper} alignItems="center" variant="outlined" direction="row" sx={{ width: 1, px: 1 }}>
               <Typography variant="body2" noWrap>
-                {`${NEXT_PUBLIC_URL}/${data?.type === "ARTICLE" ? "articles" : "posts"}/${data?.slug}`}
+                {`${getTextToShare()}`}
               </Typography>
               <Tooltip title={locale === "en" ? "Copier" : "Copy"} placement="bottom" arrow>
-                <IconButton
-                  onClick={() =>
-                    navigator.clipboard.writeText(
-                      `${NEXT_PUBLIC_URL}/${data?.type === "ARTICLE" ? "articles" : "posts"}/${data?.slug}`
-                    )
-                  }
-                >
+                <IconButton onClick={() => navigator.clipboard.writeText(`${getTextToShare()}`)}>
                   <ContentCopyIcon />
                 </IconButton>
               </Tooltip>

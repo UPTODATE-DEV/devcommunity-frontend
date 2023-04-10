@@ -33,7 +33,7 @@ const UserFollowers = ({
     >
       <DialogContent sx={{ alignItems: "center", textAlign: "center" }}>
         <List sx={{ p: 0, minWidth: { xs: 1, md: 450 } }}>
-          {data.length < 1 && <Empty />}
+          {data?.length < 1 && <Empty />}
           {data.map((el, i) => (
             <React.Fragment key={el?.user?.email}>
               <ListItemButton>

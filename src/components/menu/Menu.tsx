@@ -2,7 +2,6 @@ import useStore from "@/hooks/useStore";
 import useUser from "@/hooks/useUser";
 import { getRequest } from "@/lib/api";
 import { getUserFullName, getUserProfileImageUrl } from "@/lib/posts";
-import type { SpotlightAction } from "@mantine/spotlight";
 import MenuIcon from "@mui/icons-material/Menu";
 import AppBar from "@mui/material/AppBar";
 import Container from "@mui/material/Container";
@@ -47,12 +46,6 @@ const Menu: React.FC = () => {
   const [posts, setPosts] = useState<Post[] | []>([]);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-
-  const actions: SpotlightAction[] =
-    posts?.map((_, index) => ({
-      title: _.title,
-      onTrigger: () => push(`/${_.type === "ARTICLE" ? "articles" : "posts"}/${_.slug}`),
-    })) || [];
 
   const toggleDrawer = () => (event: React.KeyboardEvent | React.MouseEvent) => {
     if (

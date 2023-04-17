@@ -166,7 +166,7 @@ const LeftSideBar = () => {
           {locale === "en" ? "French" : "Anglais"}
         </Button>
         <Typography variant="caption" sx={{ color: "text.secondary", px: 3 }}>
-          v{"1.34.5"} - First Release
+          v{"1.0.0"} - First Release
         </Typography>
       </React.Fragment>
     </Paper>

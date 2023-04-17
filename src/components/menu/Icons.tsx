@@ -6,8 +6,8 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import ArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import { Typography } from "@mui/material";
 import Badge, { BadgeProps } from "@mui/material/Badge";
-import Button from "@mui/material/Button";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Grow from "@mui/material/Grow";
 import IconButton from "@mui/material/IconButton";
@@ -41,7 +41,7 @@ const Icons = () => {
   const { push, locale } = useRouter();
   const socket = useSocket();
   const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef<HTMLButtonElement>(null);
+  const anchorRef = React.useRef<any>(null);
 
   const toggleMode = () => {
     darkModeActive ? switchToLightMode() : switchToDarkMode();
@@ -117,17 +117,36 @@ const Icons = () => {
         {fullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
       </IconButton> */}
 
-      <Button
+      <Stack
         ref={anchorRef}
-        aria-controls={open ? "composition-menu" : undefined}
-        aria-expanded={open ? "true" : undefined}
         onClick={handleToggle}
         color="inherit"
-        sx={{ display: { xs: "none", md: "flex" }, px: 2, borderRadius: 50 }}
-        startIcon={locale === "fr" ? "FR" : "EN"}
+        direction="row"
+        sx={{
+          px: 2,
+          py: 1,
+          display: {
+            xs: "none",
+            md: "flex",
+          },
+          borderRadius: 50,
+          cursor: "pointer",
+          "&:hover": {
+            backgroundColor: "action.hover",
+          },
+        }}
       >
+        {locale === "fr" ? (
+          <Typography color="text.secondary" fontWeight={700}>
+            FR
+          </Typography>
+        ) : (
+          <Typography color="text.secondary" fontWeight={700}>
+            EN
+          </Typography>
+        )}
         <ArrowDown color="primary" />
-      </Button>
+      </Stack>
       {/* @ts-ignore */}
       <Popper
         open={open}
@@ -159,7 +178,7 @@ const Icons = () => {
                       switchLanguages("en");
                     }}
                   >
-                    English
+                    <Typography>English</Typography>
                   </MenuItem>
                   <MenuItem
                     selected={locale === "fr"}
@@ -168,7 +187,7 @@ const Icons = () => {
                       switchLanguages("fr");
                     }}
                   >
-                    Français
+                    <Typography>Français</Typography>
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>

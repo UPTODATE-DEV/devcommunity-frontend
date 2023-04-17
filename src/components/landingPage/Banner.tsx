@@ -1,11 +1,11 @@
-import React from "react";
 import Box from "@mui/material/Box";
-import Image from "next/image";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import Image from "next/image";
 import { useRouter } from "next/router";
+import BGAnimation from "./BGAnimation";
 
 const data = [
   {
@@ -32,8 +32,9 @@ const Banner = () => {
   const { title, description, buttons } = data[locale === "en" ? 0 : 1];
 
   return (
-    <Box sx={{ minHeight: "100vh", position: "relative" }}>
-      <Container sx={{ py: 10 }}>
+    <Box sx={{ minHeight: "100vh", position: "relative", overflow: "hidden" }}>
+      <BGAnimation />
+      <Container sx={{ py: 10, position: "relative" }}>
         <Stack justifyContent="center" alignItems="center" spacing={4} sx={{ py: 4 }}>
           <Typography
             textAlign="center"
@@ -57,7 +58,12 @@ const Banner = () => {
             >
               {buttons.un}
             </Button>
-            <Button onClick={() => push("/home/#HowItsWorks")} sx={{ borderRadius: 50, px: 4, py: 1 }}>
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={() => push("/home/#HowItsWorks")}
+              sx={{ borderRadius: 50, px: 4, py: 1 }}
+            >
               {buttons.deux}
             </Button>
           </Stack>

@@ -1,5 +1,6 @@
 import { useI18n } from "@/hooks/useI18n";
 import useStore from "@/hooks/useStore";
+import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
@@ -160,11 +161,14 @@ const LeftSideBar = () => {
             </ListItemButton>
           ))}
         </List>
+        <Divider />
+        <Button sx={{ display: { xs: "block", md: "none" }, ml: 1 }} variant="outlined" onClick={toggleLang}>
+          {locale === "en" ? "French" : "Anglais"}
+        </Button>
+        <Typography variant="caption" sx={{ color: "text.secondary", px: 3 }}>
+          v{"1.34.5"} - First Release
+        </Typography>
       </React.Fragment>
-
-      <Button sx={{ display: { xs: "block", md: "none" }, ml: 1 }} variant="outlined" onClick={toggleLang}>
-        {locale === "en" ? "French" : "Anglais"}
-      </Button>
     </Paper>
   );
 };

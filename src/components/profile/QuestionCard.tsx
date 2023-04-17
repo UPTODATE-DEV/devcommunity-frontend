@@ -56,7 +56,7 @@ const QuestionCard: React.FC<{ data: Post; handleDeletePost: (id: string) => voi
   }, [data]);
 
   return (
-    <Paper variant="outlined" onClick={handleGoToPost} sx={{ p: 2, position: "relative" }}>
+    <Paper variant="outlined" sx={{ p: 2, position: "relative" }}>
       {!username && (
         <IconButton
           aria-label="more"

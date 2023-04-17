@@ -26,7 +26,7 @@ const Search = () => {
   return (
     <Stack direction="row" alignItems="center" justifyContent="space-between">
       <InputBase
-        sx={{ mt: 2, width: 1 }}
+        sx={{ mt: 2, width: 1, }}
         value={name}
         placeholder={locale === "en" ? "Search tags..." : "Rechercher des tags..."}
         onChange={(e) => setName(e.target.value)}

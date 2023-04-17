@@ -4,6 +4,7 @@ import useStore from "@/hooks/useStore";
 import { getRequest, patchRequest, postRequest } from "@/lib/api";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import EventIcon from "@mui/icons-material/Event";
 import PollIcon from "@mui/icons-material/Poll";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { IconButton, Typography } from "@mui/material";
@@ -31,10 +32,11 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
   const user = useStore((state) => state.session?.user);
   const [tags, setTags] = React.useState<Tag[]>([{ id: "0", name: "default", _count: { posts: 0 } }]);
   const [preview, setPreview] = React.useState("");
-  const [post, setPost] = React.useState<{ locale: string; content?: string; tags: string[] | null }>({
+  const [post, setPost] = React.useState<{ title: string; locale: string; content?: string; tags: string[] | null }>({
     content: data?.content || "",
     tags: data?.tags?.map((el) => el.tag.name) || [],
     locale: data?.locale || "FR",
+    title: data?.title || "",
   });
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
@@ -42,6 +44,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
   const [question, setQuestion] = React.useState("");
   const [options, setOptions] = React.useState<string[]>(["", ""]);
   const [duration, setDuration] = React.useState("7");
+  const [event, setEvent] = React.useState(false);
 
   const { push, locale, replace } = useRouter();
 
@@ -111,6 +114,10 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
     setSurvey((state) => !state);
   };
 
+  const toggleEvent = () => {
+    setEvent((state) => !state);
+  };
+
   const handleLocaleChange = (event: SelectChangeEvent) => {
     setPost({ ...post, locale: event.target.value });
   };
@@ -121,7 +128,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
     const response = data?.id
       ? await patchRequest({
           endpoint: `/posts/${data?.id}`,
-          data: { ...post, author: user?.id, type: "QUESTION", draft: true },
+          data: { ...post, author: user?.id, type: "QUESTION", draft: true, title: post.title || "Untitled" },
         })
       : await postRequest({
           endpoint: "/posts",
@@ -134,6 +141,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
             surveyQuestion: question,
             duration: +duration,
             surveyOptions: options,
+            title: post.title || "Untitled",
           },
         });
     if (response.error) {
@@ -196,6 +204,17 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
 
   return (
     <Paper variant="outlined" component={Stack} spacing={3} sx={{ py: 1, p: 2 }}>
+      {event && (
+        <TextField
+          name="title"
+          variant="filled"
+          value={post?.title}
+          placeholder={locale === "en" ? "Title" : "Titre"}
+          onChange={handleChange}
+          sx={{ "&.MuiTextField-root > .MuiFilledInput-root": { px: 2, pb: 1 } }}
+        />
+      )}
+
       <RichTextEditor
         value={post.content}
         onChange={(value) => setPost((state) => ({ ...state, content: value }))}
@@ -386,7 +405,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
           </Popper>
         </Stack>
 
-        {!data?.id && (
+        {!data?.id && !event && (
           <Button
             disableElevation
             color={survey ? "primary" : "inherit"}
@@ -403,6 +422,26 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
               : locale === "en"
               ? "Add a poll"
               : "Ajouter un sondage"}
+          </Button>
+        )}
+
+        {!data?.id && !survey && (
+          <Button
+            disableElevation
+            color={event ? "primary" : "inherit"}
+            variant={event ? "contained" : "outlined"}
+            disabled={loading}
+            startIcon={<EventIcon />}
+            sx={{ px: 4, borderRadius: 50 }}
+            onClick={toggleEvent}
+          >
+            {event
+              ? locale === "en"
+                ? "Remove the event"
+                : "Retirer un événement"
+              : locale === "en"
+              ? "Add an event"
+              : "Ajouter un événement"}
           </Button>
         )}
 

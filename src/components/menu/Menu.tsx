@@ -3,22 +3,20 @@ import useUser from "@/hooks/useUser";
 import { getRequest } from "@/lib/api";
 import { getUserFullName, getUserProfileImageUrl } from "@/lib/posts";
 import type { SpotlightAction } from "@mantine/spotlight";
-import { openSpotlight, SpotlightProvider } from "@mantine/spotlight";
 import MenuIcon from "@mui/icons-material/Menu";
-import IconSearch from "@mui/icons-material/Search";
 import AppBar from "@mui/material/AppBar";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import { useTheme } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Mobile from "./Mobile";
+import Search from "./search/Search";
 import { IconsSkeletons, LogoSkeleton, ProfileSkeleton } from "./Skeleton";
 
 const Auth = dynamic(() => import("./Auth"), {
@@ -105,38 +103,7 @@ const Menu: React.FC = () => {
             )}
           </Grid>
           <Grid item xs={7} md={9} lg={7} justifyContent="center" alignItems="center" sx={{ height: 1 }}>
-            <Stack sx={{ height: 1 }} justifyContent="center">
-              <SpotlightProvider
-                actions={actions}
-                searchIcon={<IconSearch fontSize="large" />}
-                searchPlaceholder="Search..."
-                shortcut={["mod + P", "mod + K", "/"]}
-                limit={7}
-                nothingFoundMessage="Nothing found..."
-              >
-                <Stack
-                  alignItems="center"
-                  direction="row"
-                  justifyContent="space-between"
-                  onClick={() => openSpotlight()}
-                  sx={{
-                    borderRadius: 10,
-                    bgcolor: "action.hover",
-                    minWidth: 1,
-                    height: 40,
-                    px: 4,
-                    cursor: "pointer",
-                  }}
-                >
-                  <Typography variant="caption" color="text.secondary">
-                    {locale === "en" ? "Search..." : "Rechercher..."}
-                  </Typography>
-                  <Typography sx={{ display: { xs: "none", md: "inline" } }} variant="caption" color="text.secondary">
-                    Cmd + K
-                  </Typography>
-                </Stack>
-              </SpotlightProvider>
-            </Stack>
+            <Search />
           </Grid>
           <Grid item xs={3} md={0} lg={3} alignItems="center" sx={{ height: 1, display: { md: "none", lg: "flex" } }}>
             <Stack

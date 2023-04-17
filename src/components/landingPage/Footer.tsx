@@ -5,11 +5,9 @@ import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import dynamic from "next/dynamic";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
-import { CallToActionSkeleton } from "../middle/Skeleton";
 
 const data = [
   {
@@ -29,9 +27,11 @@ const data = [
   },
 ];
 
-const Footer = () => {
-  const { locale } = useRouter();
+const Footer = ({ menu }: { menu: any }) => {
+  console.log("🚀 ~ file: Footer.tsx:31 ~ Footer ~ menu:", menu)
+  const { locale, route } = useRouter();
   const { title, description, button, about } = data[locale === "en" ? 0 : 1];
+  const matches = (path: string): boolean => `/${route.split("/")[1]}` === path;
 
   const navigations = [
     { name: locale === "en" ? "Home" : "Accueil", path: "/" },
@@ -39,10 +39,8 @@ const Footer = () => {
     { name: "Posts", path: "/posts" },
   ];
 
-  const ressources = [{ name: "Updev", path: "http://updev.africa" }];
-
   return (
-    <Box sx={{ bgcolor: "action.hover" }}>
+    <Box sx={{ bgcolor: "background.paper", borderTop: (theme) => `2px solid ${theme.palette.action.hover}` }}>
       <Container sx={{ py: 4 }}>
         <Stack spacing={4}>
           <Stack spacing={4} direction={{ xs: "column", md: "row" }} justifyContent="space-between">
@@ -78,7 +76,7 @@ const Footer = () => {
               <Grid item xs={12} sm={6} lg={4}>
                 <Stack spacing={2}>
                   <Stack sx={{ width: 180, height: 90, position: "relative" }}>
-                    <Image src="/logo.svg" layout="fill" objectFit="contain" />
+                    <Image src="/logo.png" layout="fill" objectFit="contain" />
                   </Stack>
                   <Typography color="text.secondary">{about}</Typography>
                 </Stack>
@@ -100,11 +98,11 @@ const Footer = () => {
                         py: 0.5,
                       }}
                     >
-                      <a href={el?.path} target="_blank" rel="noreferrer noopener">
+                      <Link href={el?.path}>
                         <Typography component="a" gutterBottom>
                           {el.name}
                         </Typography>
-                      </a>
+                      </Link>
                     </Stack>
                   ))}
                 </Stack>
@@ -114,23 +112,23 @@ const Footer = () => {
                   <Typography variant="h6" color="text.primary" fontSize={14} component="span" sx={{ py: 2 }}>
                     {locale == "fr" ? "RESSOURCES" : "RESOURCES"}
                   </Typography>
-                  {ressources.map((el) => (
+                  {menu?.map((el: any) => (
                     <Stack
                       direction="row"
                       key={el?.path}
                       alignItems="center"
                       spacing={1}
                       sx={{
-                        color: "text.secondary",
+                        color: matches(el?.path) ? "primary.main" : "text.secondary",
                         "&:hover": { color: "primary.main" },
                         py: 0.5,
                       }}
                     >
-                      <a href={el?.path} target="_blank" rel="noreferrer noopener">
+                      <Link href={el?.path} passHref>
                         <Typography component="a" gutterBottom>
-                          {el.name}
+                          {el.label}
                         </Typography>
-                      </a>
+                      </Link>
                     </Stack>
                   ))}
                 </Stack>

@@ -40,6 +40,11 @@ const Results = ({ options }: { options: SurveyOption[] }) => {
   const totalVotes = options.reduce((acc, option) => acc + option.votes.length, 0) || 0;
   const userVote = options.find((option) => option.votes.find((vote) => vote.user.id === session?.user?.id));
 
+  function formatNumber(number: Number) {
+    const formattedNumber = parseFloat(number.toString()).toFixed(2);
+    return formattedNumber.replace(/\.00$/, "").replace(/(\.\d)0$/, "$1");
+  }
+
   return (
     <Stack spacing={1}>
       {options.map((option) => (
@@ -65,7 +70,7 @@ const Results = ({ options }: { options: SurveyOption[] }) => {
             )}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {totalVotes > 0 ? ((option.votes.length / totalVotes) * 100).toFixed(2) : 0}%
+            {totalVotes > 0 ? formatNumber((option.votes.length / totalVotes) * 100) : 0}%
           </Typography>
           <Paper
             variant="outlined"

@@ -15,6 +15,7 @@ const ArticlesPostsResults = () => {
       )}
       {Array.from(new Array(count)).map((_, i) => (
         <Typography
+          key={i}
           variant="body2"
           sx={{
             color: "text.secondary",

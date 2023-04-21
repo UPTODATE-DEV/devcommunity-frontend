@@ -32,14 +32,14 @@ const Transition = React.forwardRef(function Transition(
 
 export default function Search() {
   const [open, setOpen] = React.useState(false);
-  const { push, locale } = useRouter();
+  const { locale } = useRouter();
   const [tab, setTab] = React.useState("Posts");
   const [search, setSearch] = React.useState("");
   const { loading } = useStoreNoPersist((state) => state);
 
   const isMobile = useMediaQuery("(min-width:760px)");
 
-  const debouncedSearch = useDebounce(search, 500);
+  let debouncedSearch = useDebounce(search, 500);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
@@ -52,6 +52,14 @@ export default function Search() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  React.useEffect(() => {
+    window.addEventListener("keypress", (event) => {
+      if (event.key === "Enter") {
+        debouncedSearch = search
+      }
+    } )
+  }, [])
 
   return (
     <div>

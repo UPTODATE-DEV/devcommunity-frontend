@@ -1,7 +1,7 @@
 import { Avatar, Stack, Typography } from "@mui/material";
 import * as React from "react";
 import useStoreNoPersist from "../../../hooks/useStoreNoPersist";
-import { getRequest } from "../../../lib";
+import { getRequest, getUserProfileImageUrl } from "../../../lib";
 import ResultsTitle from "./ResultsTitle";
 
 const UsersResults = ({ query }: { query: string }) => {
@@ -35,7 +35,7 @@ const UsersResults = ({ query }: { query: string }) => {
       )}
       {users.map((user, i) => (
         <Stack direction="row" spacing={1} key={i} sx={{ cursor: "pointer" }}>
-          <Avatar alt="User 1" src="/default.png" />
+          <Avatar alt={user?.firstName} src={getUserProfileImageUrl(user)} />
           <Stack>
             <Typography sx={{ color: "text.primary" }}>
               {user?.firstName} {user?.lastName}

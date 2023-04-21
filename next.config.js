@@ -22,7 +22,7 @@ const nextConfig = {
   },
   images: {
     formats: ["image/avif", "image/webp"],
-    domains: ["localhost", "api.updevcommunity.com", "admin.updevcommunity.com"],
+    domains: ["localhost", "api.updevcommunity.com", "admin.updevcommunity.com", "api-test.updevcommunity.com"],
     minimumCacheTTL: 60,
   },
   i18n: {

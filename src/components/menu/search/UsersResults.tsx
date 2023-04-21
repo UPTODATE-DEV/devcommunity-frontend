@@ -1,14 +1,16 @@
 import { Avatar, Stack, Typography } from "@mui/material";
 import * as React from "react";
+import { useGoToUserProfile } from "../../../hooks";
 import useStoreNoPersist from "../../../hooks/useStoreNoPersist";
 import { getRequest, getUserProfileImageUrl } from "../../../lib";
 import ResultsTitle from "./ResultsTitle";
 
 const UsersResults = ({ query }: { query: string }) => {
   const [users, setUsers] = React.useState<User[]>([]);
-  console.log("🚀 ~ file: UsersResults.tsx:9 ~ UsersResults ~ users:", users[0]);
   const { setLoading } = useStoreNoPersist((state) => state);
   const count = users.length;
+
+  const goToProfile = useGoToUserProfile();
 
   React.useEffect(() => {
     const getUsers = async () => {
@@ -35,7 +37,7 @@ const UsersResults = ({ query }: { query: string }) => {
         </Typography>
       )}
       {users.map((user, i) => (
-        <Stack direction="row" spacing={1} key={i} sx={{ cursor: "pointer" }}>
+        <Stack direction="row" spacing={1} onClick={() => goToProfile(user)} key={i} sx={{ cursor: "pointer" }}>
           {getUserProfileImageUrl(user) ? (
             <Avatar alt={user?.firstName} src={getUserProfileImageUrl(user)} />
           ) : (

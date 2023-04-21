@@ -77,7 +77,7 @@ const LeftSideBar = () => {
   useEffect(() => {
     const getMenu = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_ADMIN_URL}/api/home?populate=deep&locale=${locale}`, {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_ADMIN_URL}/home?populate=deep&locale=${locale}`, {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",

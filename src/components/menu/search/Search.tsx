@@ -56,10 +56,10 @@ export default function Search() {
   React.useEffect(() => {
     window.addEventListener("keypress", (event) => {
       if (event.key === "Enter") {
-        debouncedSearch = search
+        debouncedSearch = search;
       }
-    } )
-  }, [])
+    });
+  }, []);
 
   return (
     <div>
@@ -105,34 +105,31 @@ export default function Search() {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle
-          sx={{
-            px: 0,
-            py: 0,
-            borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
-          }}
-        >
-          <InputBase
-            sx={{ width: 1, height: 1, p: 2, mt: 1 }}
-            value={search}
-            startAdornment={<SearchIcon sx={{ color: "text.secondary", mr: 1, my: 0.5 }} />}
-            endAdornment={
-              search && (
-                <CloseIcon
-                  fontSize="small"
-                  onClick={() => setSearch("")}
-                  sx={{ color: "error", ml: 1, my: 0.5, cursor: "pointer" }}
-                />
-              )
-            }
-            placeholder="Search…"
-            type="search"
-            onChange={(e: any) => setSearch(e?.target?.value)}
-          />
-        </DialogTitle>
-        {loading && <LinearProgress />}
-        <DialogContent sx={{ position: "relative", p: 0, minHeight: 300 }}>
-          <TabContext value={tab}>
+        <TabContext value={tab}>
+          <DialogTitle
+            sx={{
+              px: 0,
+              py: 0,
+              borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+            }}
+          >
+            <InputBase
+              sx={{ width: 1, height: 1, p: 2, mt: 1 }}
+              value={search}
+              startAdornment={<SearchIcon sx={{ color: "text.secondary", mr: 1, my: 0.5 }} />}
+              endAdornment={
+                search && (
+                  <CloseIcon
+                    fontSize="small"
+                    onClick={() => setSearch("")}
+                    sx={{ color: "error", ml: 1, my: 0.5, cursor: "pointer" }}
+                  />
+                )
+              }
+              placeholder="Search…"
+              type="search"
+              onChange={(e: any) => setSearch(e?.target?.value)}
+            />
             <TabList
               onChange={handleTabChange}
               scrollButtons
@@ -152,19 +149,23 @@ export default function Search() {
                 />
               ))}
             </TabList>
-            <TabPanel sx={{ py: 1, px: 2 }} value={"Posts"}>
-              <ArticlesPostsResults query={debouncedSearch} />
-            </TabPanel>
+          </DialogTitle>
+        {loading && <LinearProgress />}
+        <DialogContent sx={{ position: "relative", p: 0, minHeight: 300 }}>
+          <TabPanel sx={{ py: 1, px: 2 }} value={"Posts"}>
+            <ArticlesPostsResults query={debouncedSearch} />
+          </TabPanel>
 
-            <TabPanel sx={{ py: 1, px: 2 }} value={"Users"}>
-              <UsersResults query={debouncedSearch} />
-            </TabPanel>
+          <TabPanel sx={{ py: 1, px: 2 }} value={"Users"}>
+            <UsersResults query={debouncedSearch} />
+          </TabPanel>
 
-            <TabPanel sx={{ py: 1, px: 2 }} value={"Tags"}>
-              <TagsResults query={debouncedSearch} />
-            </TabPanel>
-          </TabContext>
+          <TabPanel sx={{ py: 1, px: 2 }} value={"Tags"}>
+            <TagsResults query={debouncedSearch} />
+          </TabPanel>
         </DialogContent>
+        
+        </TabContext>
         <DialogActions sx={{ borderTop: "1px solid rgba(0, 0, 0, 0.12)" }}>
           <Button onClick={handleClose}>Close</Button>
         </DialogActions>

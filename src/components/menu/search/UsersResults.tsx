@@ -6,6 +6,7 @@ import ResultsTitle from "./ResultsTitle";
 
 const UsersResults = ({ query }: { query: string }) => {
   const [users, setUsers] = React.useState<User[]>([]);
+  console.log("🚀 ~ file: UsersResults.tsx:9 ~ UsersResults ~ users:", users[0]);
   const { setLoading } = useStoreNoPersist((state) => state);
   const count = users.length;
 
@@ -35,7 +36,18 @@ const UsersResults = ({ query }: { query: string }) => {
       )}
       {users.map((user, i) => (
         <Stack direction="row" spacing={1} key={i} sx={{ cursor: "pointer" }}>
-          <Avatar alt={user?.firstName} src={getUserProfileImageUrl(user)} />
+          {getUserProfileImageUrl(user) ? (
+            <Avatar alt={user?.firstName} src={getUserProfileImageUrl(user)} />
+          ) : (
+            <Avatar
+              sx={{ bgcolor: "primary.main", color: "white", fontSize: 14, fontWeight: 700 }}
+              alt={user?.firstName}
+            >
+              {user.firstName.charAt(0)}
+              {user.lastName.charAt(0)}
+            </Avatar>
+          )}
+
           <Stack>
             <Typography sx={{ color: "text.primary" }}>
               {user?.firstName} {user?.lastName}

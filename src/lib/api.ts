@@ -12,8 +12,6 @@ export const fetchData = async (endpoint: string, token?: string) => {
       },
     });
 
-    console.log("user", user.data);
-
     const res = await axios.get(`${endpoint}`, {
       headers: {
         Accept: "application/json",
@@ -101,7 +99,6 @@ export const postLocalRequest = async ({ endpoint, token, data }: AxiosRequest) 
 };
 
 export const deleteData = async ({ endpoint, token }: AxiosRequest) => {
-  console.log(token);
   try {
     const res = await axios.delete(`${baseUrl + endpoint}`, {
       headers: {
@@ -117,7 +114,6 @@ export const deleteData = async ({ endpoint, token }: AxiosRequest) => {
 };
 
 export const putData = async ({ endpoint, token, data }: AxiosRequest) => {
-  console.log(token);
   try {
     const res = await axios.put(`${baseUrl + endpoint}`, data, {
       headers: {

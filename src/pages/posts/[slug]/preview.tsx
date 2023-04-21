@@ -48,7 +48,7 @@ export const getServerSideProps: GetServerSideProps = withSessionSsr(async (cont
 
   const [postData] = await Promise.all([getRequest({ endpoint: `/posts/${params?.slug}` })]);
 
-  if (postData.data?.type !== "QUESTION" || !postData.data.draft) {
+  if ((postData.data?.type !== "QUESTION" && postData.data?.type !== "EVENT") || !postData.data.draft) {
     return { notFound: true };
   }
 

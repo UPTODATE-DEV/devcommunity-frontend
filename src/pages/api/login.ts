@@ -13,8 +13,6 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
 
     const { jwt, user } = response.data as Session;
 
-    console.log("data", response.data);
-
     req.session.user = {
       jwt,
       user,

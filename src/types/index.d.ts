@@ -47,7 +47,7 @@ interface Post {
   author: User;
   tags: Tags[];
   slug: string;
-  type: "QUESTION" | "ARTICLE";
+  type: "QUESTION" | "ARTICLE" | "EVENT";
   article: Article;
   question: Question;
   comments: PostComment[];
@@ -55,6 +55,13 @@ interface Post {
   bookmarks: Bookmarks[];
   _count: { comments: number; views: number };
   survey: Survey[];
+  event: Event
+}
+
+interface Event {
+  location: string;
+  date: string;
+  link: string;
 }
 
 interface Series {

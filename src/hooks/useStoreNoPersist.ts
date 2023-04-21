@@ -5,7 +5,9 @@ interface Store {
   openLoginModal: boolean;
   setOpenLoginModal: (openLoginModal: boolean) => void;
   authLoading: boolean;
-  setAuthLoading: (loading: boolean) => void;
+  setAuthLoading: (authLoading: boolean) => void;
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
   editProfile: boolean;
   setEditProfile: (state: boolean) => void;
   openAddSeries: boolean;
@@ -21,7 +23,9 @@ const useStoreNoPersist = create<Store>()(
       set((state) => ({ openAddSeries: !state.openAddSeries }));
     },
     authLoading: false,
-    setAuthLoading: (loading) => set({ authLoading: loading }),
+    setAuthLoading: (authLoading) => set({ authLoading }),
+    loading: false,
+    setLoading: (loading) => set({ loading }),
     openLoginModal: false,
     setOpenLoginModal: (openLoginModal) => set({ openLoginModal }),
     editProfile: false,

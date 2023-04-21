@@ -23,8 +23,6 @@ const CreatorProfile = () => {
   const [user, setUser] = React.useState<User | null>(null);
   const [followed, setFollowed] = React.useState(false);
 
-  console.log("🚀 ~ file: CreatorProfile.tsx:28 ~ CreatorProfile ~ user:", user);
-
   const handleToggleFollow = async () => {
     if (user && user.id) {
       setLoading(true);

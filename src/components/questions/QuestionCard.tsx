@@ -18,9 +18,10 @@ import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import Bookmark from "../common/Bookmark";
 import Share from "../common/Share";
-import QuestionReactions from "./QuestionReactions";
 
+const QuestionReactions = dynamic(import("./QuestionReactions"), { ssr: false });
 const SurveyContent = dynamic(import("@/components/questions/SurveyContent"), { ssr: false });
+const EventContent = dynamic(import("./EventContent"), { ssr: false });
 
 const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   const theme = useTheme();
@@ -41,47 +42,52 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   }, [data]);
 
   return (
-    <Paper variant="outlined" sx={{ p: 2, position: "relative" }}>
-      <Stack
-        sx={{
-          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
-          px: 2,
-          py: 0.5,
-          borderRadius: 2,
-          width: "fit-content",
-          position: "absolute",
-          top: 12,
-          right: 12,
-        }}
-      >
-        <Typography variant="caption" textAlign="end" color="text.secondary">
-          {data?.locale === "EN" ? "English" : "French"}
-        </Typography>
-      </Stack>
+    <Paper variant="outlined" component={Stack}  spacing={2} sx={{ p: 2, position: "relative" }}>
+      {data.type !== "EVENT" && (
+        <Stack
+          sx={{
+            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
+            px: 2,
+            py: 0.5,
+            borderRadius: 2,
+            width: "fit-content",
+            position: "absolute",
+            top: 12,
+            right: 12,
+          }}
+        >
+          <Typography variant="caption" textAlign="end" color="text.secondary">
+            {data?.locale === "EN" ? "English" : "French"}
+          </Typography>
+        </Stack>
+      )}
       <PostCardHeader
         handleClickGoToProfile={handleGoToProfile}
         date={parseDate({ date: data?.publishedOn, type: "relative" })}
         author={author}
       />
-      {/* <Typography
-        fontWeight={700}
-        color="text.primary"
-        variant="h6"
-        onClick={handleGoToPost}
-        sx={{
-          "&:hover": {
-            color: "primary.main",
-          },
-          cursor: "pointer",
-          mb: "-8px",
-          mt: 1,
-        }}
-      >
-        {data?.title}
-      </Typography> */}
+      {data.type === "EVENT" && (
+        <Typography
+          fontWeight={700}
+          color="text.primary"
+          variant="h6"
+          onClick={handleGoToPost}
+          sx={{
+            "&:hover": {
+              color: "primary.main",
+            },
+            cursor: "pointer",
+            mb: "-8px",
+            mt: 1,
+          }}
+        >
+          {data?.title}
+        </Typography>
+      )}
       <Stack sx={{ cursor: "pointer" }} onClick={handleGoToPost}>
         <PostContent content={postContent} />
       </Stack>
+      {data.type === "EVENT" && <EventContent data={data?.event} />}
       {data?.survey?.length > 0 && <SurveyContent survey={data?.survey[0]} />}
       <PostTags tags={data?.tags} />
       <Stack

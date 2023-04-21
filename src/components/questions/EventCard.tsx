@@ -10,7 +10,6 @@ import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import useTheme from "@mui/system/useTheme";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -41,7 +40,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
   }, [data]);
 
   return (
-    <Paper variant="outlined" sx={{ p: 2, position: "relative" }}>
+    <Paper variant="outlined" sx={{ p: 2, position: "relative"}}>
       <Stack
         sx={{
           bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
@@ -63,7 +62,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
         date={parseDate({ date: data?.publishedOn, type: "relative" })}
         author={author}
       />
-      {/* <Typography
+      <Typography
         fontWeight={700}
         color="text.primary"
         variant="h6"
@@ -78,7 +77,7 @@ const QuestionCard: React.FC<{ data: Post }> = ({ data }) => {
         }}
       >
         {data?.title}
-      </Typography> */}
+      </Typography>
       <Stack sx={{ cursor: "pointer" }} onClick={handleGoToPost}>
         <PostContent content={postContent} />
       </Stack>

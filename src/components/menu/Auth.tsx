@@ -37,7 +37,6 @@ const Auth = () => {
 
     if (!res.data) {
       toast.error("Error logging in");
-      console.log(res);
       setAuthLoading(false);
     }
 

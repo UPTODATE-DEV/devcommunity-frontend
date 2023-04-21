@@ -28,7 +28,6 @@ const data = [
 ];
 
 const Footer = ({ menu }: { menu: any }) => {
-  console.log("🚀 ~ file: Footer.tsx:31 ~ Footer ~ menu:", menu)
   const { locale, route } = useRouter();
   const { title, description, button, about } = data[locale === "en" ? 0 : 1];
   const matches = (path: string): boolean => `/${route.split("/")[1]}` === path;

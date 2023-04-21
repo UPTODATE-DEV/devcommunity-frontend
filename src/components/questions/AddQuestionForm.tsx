@@ -9,12 +9,14 @@ import PollIcon from "@mui/icons-material/Poll";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { IconButton, Typography } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Chip from "@mui/material/Chip";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import FormControl from "@mui/material/FormControl";
 import Grow from "@mui/material/Grow";
+import InputBase from "@mui/material/InputBase";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
@@ -22,6 +24,8 @@ import Popper from "@mui/material/Popper";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-toastify";
@@ -45,6 +49,9 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
   const [options, setOptions] = React.useState<string[]>(["", ""]);
   const [duration, setDuration] = React.useState("7");
   const [event, setEvent] = React.useState(false);
+  const [eventDate, setEventDate] = React.useState<Dayjs | null>(dayjs(new Date()));
+  const [eventLocation, setEventLocation] = React.useState("");
+  const [eventLink, setEventLink] = React.useState("");
 
   const { push, locale, replace } = useRouter();
 
@@ -122,26 +129,50 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
     setPost({ ...post, locale: event.target.value });
   };
 
+  const disableButton = (): boolean => {
+    if (!post.tags?.length || loading) return true;
+
+    if (event) {
+      return !post.title || !eventLocation || !eventLink || !eventDate;
+    }
+    if (survey) {
+      return !question || options.length < 2 || +duration < 1;
+    }
+    return !post.content;
+  };
+
   const onSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
     const response = data?.id
       ? await patchRequest({
           endpoint: `/posts/${data?.id}`,
-          data: { ...post, author: user?.id, type: "QUESTION", draft: true, title: post.title || "Untitled" },
+          data: {
+            ...post,
+            author: user?.id,
+            type: event ? "EVENT" : "QUESTION",
+            draft: true,
+            title: post.title || "Untitled",
+            date: eventDate,
+            location: eventLocation,
+            link: eventLink,
+          },
         })
       : await postRequest({
           endpoint: "/posts",
           data: {
             ...post,
             author: user?.id,
-            type: "QUESTION",
+            type: event ? "EVENT" : "QUESTION",
             draft: true,
             survey,
             surveyQuestion: question,
             duration: +duration,
             surveyOptions: options,
             title: post.title || "Untitled",
+            eventDate,
+            eventLocation,
+            eventLink,
           },
         });
     if (response.error) {
@@ -161,19 +192,32 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
     const response = data?.id
       ? await patchRequest({
           endpoint: `/posts/${data?.id}`,
-          data: { ...post, author: user?.id, type: "QUESTION", draft: false },
+          data: {
+            ...post,
+            author: user?.id,
+            type: event ? "EVENT" : "QUESTION",
+            draft: false,
+            title: post.title || "Untitled",
+            date: data?.event?.date,
+            location: data?.event?.location,
+            link: data?.event.link,
+          },
         })
       : await postRequest({
           endpoint: "/posts",
           data: {
             ...post,
             author: user?.id,
-            type: "QUESTION",
+            type: event ? "EVENT" : "QUESTION",
             draft: false,
             survey,
             surveyQuestion: question,
             duration: +duration,
             surveyOptions: options,
+            title: post.title || "Untitled",
+            eventDate,
+            eventLocation,
+            eventLink,
           },
         });
     if (response.error) {
@@ -188,6 +232,9 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
   };
 
   React.useEffect(() => {
+    if (data?.event) {
+      setEvent(true);
+    }
     const getTags = async () => {
       const tags = await getRequest({ endpoint: "/tags" });
       if (!tags.error) {
@@ -205,28 +252,83 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
   return (
     <Paper variant="outlined" component={Stack} spacing={3} sx={{ py: 1, p: 2 }}>
       {event && (
-        <TextField
-          name="title"
-          variant="filled"
-          value={post?.title}
-          placeholder={locale === "en" ? "Title" : "Titre"}
-          onChange={handleChange}
-          sx={{ "&.MuiTextField-root > .MuiFilledInput-root": { px: 2, pb: 1 } }}
-        />
+        <>
+          <Input
+            name="title"
+            label={locale === "en" ? "Title" : "Titre"}
+            value={post?.title}
+            placeholder={locale === "en" ? "Title" : "Titre"}
+            handleChange={handleChange}
+          />
+          <Input
+            type="textarea"
+            name="content"
+            value={post?.content}
+            placeholder={locale === "fr" ? "Ajouter une description" : "Add a description"}
+            handleChange={(e: any) => setPost((state) => ({ ...state, content: e?.target?.value }))}
+            label={locale === "en" ? "Description" : "Description"}
+          />
+          <Stack direction="row" spacing={2}>
+            <Input
+              name="eventLocation"
+              label={locale === "en" ? "Location" : "Lieu"}
+              value={eventLocation}
+              handleChange={(e: any) => setEventLocation(e?.target?.value)}
+              placeholder={locale === "en" ? "Event location" : "Lieu de l'événement"}
+            />
+            <Input
+              name="eventLink"
+              label={locale === "en" ? "Link" : "Lien"}
+              value={eventLink}
+              handleChange={(e: any) => setEventLink(e?.target?.value)}
+              placeholder={locale === "en" ? "Event link" : "Lien de l'événement"}
+            />
+          </Stack>
+          <DatePicker
+            value={eventDate}
+            minDate={dayjs(new Date())}
+            desktopModeMediaQuery="(min-width: 768px)"
+            onChange={(newValue) => {
+              setEventDate(newValue);
+            }}
+            renderInput={({ inputRef, inputProps, InputProps }) => (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: 1,
+                  border: 1,
+                  py: 1,
+                  px: 2,
+                  borderRadius: 1,
+                  borderColor: "action.disabled",
+                  "&:hover": {
+                    borderColor: "action.active",
+                  },
+                }}
+              >
+                <InputBase placeholder="Date" ref={inputRef} {...(inputProps as any)} sx={{ width: 1 }} />
+                {InputProps?.endAdornment}
+              </Box>
+            )}
+          />
+        </>
       )}
 
-      <RichTextEditor
-        value={post.content}
-        onChange={(value) => setPost((state) => ({ ...state, content: value }))}
-        stickyOffset={70}
-        onImageUpload={handleImageUpload}
-        id="rte"
-        controls={[
-          ["h2", "h3", "bold", "italic", "underline", "link", "code"],
-          ["unorderedList", "orderedList", "sup", "sub"],
-          ["codeBlock", "blockquote", "link"],
-        ]}
-      />
+      {!event && (
+        <RichTextEditor
+          value={post.content}
+          onChange={(value) => setPost((state) => ({ ...state, content: value }))}
+          stickyOffset={70}
+          onImageUpload={handleImageUpload}
+          id="rte"
+          controls={[
+            ["h2", "h3", "bold", "italic", "underline", "link", "code"],
+            ["unorderedList", "orderedList", "sup", "sub"],
+            ["codeBlock", "blockquote", "link"],
+          ]}
+        />
+      )}
 
       <Autocomplete
         multiple
@@ -252,18 +354,20 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
         )}
       />
 
-      <FormControl variant="filled">
-        <InputLabel id="demo-simple-select-filled-label">{locale === "fr" ? "Langue" : "Language"}</InputLabel>
-        <Select
-          labelId="demo-simple-select-filled-label"
-          id="demo-simple-select-filled"
-          value={post.locale}
-          onChange={handleLocaleChange}
-        >
-          <MenuItem value="FR">{locale === "fr" ? "Français" : "French"}</MenuItem>
-          <MenuItem value="EN">{locale === "fr" ? "Anglais" : "English"}</MenuItem>
-        </Select>
-      </FormControl>
+      {!event && (
+        <FormControl variant="filled">
+          <InputLabel id="demo-simple-select-filled-label">{locale === "fr" ? "Langue" : "Language"}</InputLabel>
+          <Select
+            labelId="demo-simple-select-filled-label"
+            id="demo-simple-select-filled"
+            value={post.locale}
+            onChange={handleLocaleChange}
+          >
+            <MenuItem value="FR">{locale === "fr" ? "Français" : "French"}</MenuItem>
+            <MenuItem value="EN">{locale === "fr" ? "Anglais" : "English"}</MenuItem>
+          </Select>
+        </FormControl>
+      )}
 
       {survey && (
         <Paper
@@ -277,7 +381,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
               type="textarea"
               name="question"
               value={question}
-              placeholder={locale === "en" ? "Ajouter une question" : "Add question"}
+              placeholder={locale === "fr" ? "Ajouter une question" : "Add question"}
               handleChange={handleQuestionChange}
               label={locale === "en" ? "Your question" : "Votre question"}
             />
@@ -338,14 +442,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
             disableElevation
             aria-label="split button"
             sx={{ borderRadius: 50 }}
-            disabled={
-              !post.content ||
-              !post.tags?.length ||
-              loading ||
-              (survey && !question) ||
-              (survey && options.length < 2) ||
-              (survey && +duration < 1)
-            }
+            disabled={disableButton()}
           >
             <Button sx={{ px: 4, borderRadius: 50 }} onClick={onPublish}>
               {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Publish" : "Publier"}

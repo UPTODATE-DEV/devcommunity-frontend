@@ -6,13 +6,33 @@ import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
 import { useRouter } from "next/router";
 import * as React from "react";
+import useStoreNoPersist from "../../../hooks/useStoreNoPersist";
+import { getRequest } from "../../../lib";
 import ResultsTitle from "./ResultsTitle";
 
-const TagsResults = () => {
-  const [count, setCount] = React.useState(10);
-  const { setTagsFilters, tagsFilters, setShowTagsFilters } = useStore((state) => state);
-  const [followedTags, setFollowedTags] = React.useState<Tags[] | []>([]);
+const TagsResults = ({ query }: { query: string }) => {
+  const [tags, setTags] = React.useState<Tag[]>([]);
+  const { setLoading } = useStoreNoPersist((state) => state);
+  const { setTagsFilters, setShowTagsFilters } = useStore((state) => state);
   const { push } = useRouter();
+
+  const count = tags.length;
+
+  React.useEffect(() => {
+    const getTags = async () => {
+      setLoading(true);
+      const tags = await getRequest({ endpoint: `/tags?name=${query}` });
+      if (!tags.error) {
+        setTags(tags.data);
+        setLoading(false);
+      }
+      setLoading(false);
+    };
+
+    if (query) {
+      getTags();
+    }
+  }, [query]);
 
   const handleTagClick = async (tag: string) => {
     setTagsFilters({ name: tag, id: "temp", _count: { posts: 0 } });
@@ -29,15 +49,13 @@ const TagsResults = () => {
         </Typography>
       )}
       <Grid container spacing={1}>
-        {Array.from(new Array(count)).map((el, i) => (
-          <Grid item xs="auto" key={el?.tag?.name}>
+        {tags.map((el, i) => (
+          <Grid item xs="auto" key={el?.name}>
             <Chip
               size="small"
-              onClick={() => handleTagClick(el?.tag?.name)}
+              onClick={() => handleTagClick(el?.name)}
               icon={<TagIcon fontSize="small" />}
-              // sx={{ px: 2 }}
-              label={`${"Web Design"} (${shortenNumber(34)})`}
-              // label={`${el?.tag?.name} (${shortenNumber(el?.tag?._count?.posts)})`}
+              label={`${el?.name} (${shortenNumber(el?._count?.posts)})`}
             />
           </Grid>
         ))}

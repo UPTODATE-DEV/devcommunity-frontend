@@ -16,10 +16,11 @@ const RightSideBar = () => {
   const { push, locale } = useRouter();
   const [topPosts, setTopPosts] = React.useState<Post[] | null>(null);
   const [topArticles, setTopArticles] = React.useState<Post[] | null>(null);
+  const [topEvents, setTopEvents] = React.useState<Post[] | null>(null);
 
   const today = new Date();
   const sevenDaysAgoDate = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
-  const query = (type: "ARTICLE" | "QUESTION") =>
+  const query = (type: "ARTICLE" | "QUESTION" | "EVENT") =>
     qs.stringify({ limit: 3, startDate: sevenDaysAgoDate.toISOString(), endDate: today.toISOString(), type });
 
   const handleView = (path: string, type: "posts" | "articles") => {
@@ -28,9 +29,10 @@ const RightSideBar = () => {
 
   React.useEffect(() => {
     const getPosts = async () => {
-      const [postData, articlesData] = await Promise.all([
+      const [postData, articlesData, eventData] = await Promise.all([
         getRequest({ endpoint: "/posts/get/top?" + query("QUESTION") }),
         getRequest({ endpoint: "/posts/get/top?" + query("ARTICLE") }),
+        getRequest({ endpoint: "/posts/get/top?" + query("EVENT") }),
       ]);
 
       if (!postData.error) {
@@ -39,6 +41,10 @@ const RightSideBar = () => {
 
       if (!articlesData.error) {
         setTopArticles(articlesData.data);
+      }
+
+      if (!eventData.error) {
+        setTopEvents(eventData.data);
       }
     };
 
@@ -49,6 +55,24 @@ const RightSideBar = () => {
     <Stack spacing={2} sx={{ width: 1, pb: 5 }}>
       <CreatorProfile />
       <Paper variant="outlined" sx={{ position: "relative", width: 1 }}>
+        <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
+          {locale === "en" ? "Trending event" : "Événement tendances"}
+        </Typography>
+        <Divider />
+        <List sx={{ width: "100%", bgcolor: "background.paper" }}>
+          {!topEvents && <ListItemsSkeleton />}
+          {topEvents && topEvents.length === 0 && <Empty />}
+          {topEvents &&
+            topEvents.map((item, i) => (
+              <ListItems
+                key={item.id}
+                item={item}
+                handleViewPost={(path) => handleView(path, "posts")}
+                divider={i !== topEvents.length - 1}
+              />
+            ))}
+        </List>
+        <Divider />
         <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
           {locale === "en" ? "Trending articles" : "Articles tendances"}
         </Typography>

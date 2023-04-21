@@ -11,7 +11,6 @@ export const useGoToUserProfile = () => {
 
   const navigate = useCallback(
     (user?: User) => {
-      console.log("🚀 ~ file: posts.ts:22 ~ useGoToUserProfile ~ user:", user)
       const userProfilePath = getUserProfilePath(user?.username);
       router.push(userProfilePath);
     },

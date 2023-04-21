@@ -70,8 +70,7 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
               lg={2}
               className="hide-scrollbar"
               sx={{
-                position: "sticky",
-                top: 76,
+                mt: 2,
                 height: 1,
                 overflow: "auto",
                 display: { xs: "none", md: "flex" },
@@ -100,7 +99,7 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
               sx={{
                 position: "sticky",
                 top: 76,
-                height: "100vh",
+                height: "90vh",
                 overflow: "auto",
                 width: 1,
                 display: { xs: "none", lg: "flex" },

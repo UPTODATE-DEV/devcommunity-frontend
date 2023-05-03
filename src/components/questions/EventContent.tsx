@@ -14,7 +14,7 @@ dayjs.extend(isSameOrBefore);
 
 const EventContent: React.FC<{ data: Event }> = ({ data }) => {
   const { locale } = useRouter();
-  const isExpired = dayjs(new Date(data.date)).isSameOrBefore(dayjs());
+  const isExpired = dayjs(new Date(data?.date)).isSameOrBefore(dayjs());
 
   const buttonLabel = () => {
     if (isExpired) {

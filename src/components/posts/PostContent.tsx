@@ -50,8 +50,8 @@ const PostContent: React.FC<{ data: Post }> = ({ data }) => {
       <Typography variant="h4" color="text.primary" sx={{ mb: "-8px" }} fontWeight={700} gutterBottom>
         {data?.title}
       </Typography>
-      <Content content={data?.content} fontSize={17} />
       {data?.series.length >= 1 && <SeriesList series={data?.series as any} />}
+      <Content content={data?.content} fontSize={17} />
       <PostTags tags={data?.tags} />
       {!data?.draft && (
         <>

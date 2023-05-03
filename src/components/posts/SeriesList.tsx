@@ -1,4 +1,5 @@
 import { useGoToPost } from "@/hooks";
+import ListIcon from "@mui/icons-material/List";
 import { Divider, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { Fragment, useCallback } from "react";
@@ -28,19 +29,27 @@ const SeriesList = ({ series }: { series: SeriesListProps[] }) => {
   }, []);
 
   return (
-    <Stack>
-      <Typography variant="h6" fontWeight={700} sx={{ mb: 1 }}>
-        {locale === "fr" ? "Cet article fait partie d'une série" : "This post is part of a series"}
-      </Typography>
+    <Stack sx={{ bgcolor: "action.hover", p: 2, borderRadius: 1 }}>
+      <Stack direction="row" spacing={1} alignItems="center">
+        <ListIcon fontSize="large" />
+        <Typography variant="h6" fontWeight={700}>
+          {locale === "fr" ? "TABLE OF CONTENTS" : "TABLE OF CONTENTS"}
+        </Typography>
+      </Stack>
 
-      <Stack sx={{ pl: 1, borderLeft: "4px solid", borderLeftColor: "divider" }}>
+      <Stack sx={{ pl: 6 }}>
         {series.map((el, i) => (
           <Fragment key={i}>
             {el.series.posts.map((el) => {
               return (
                 <Typography
                   color={query?.slug === el.post.slug ? "primary.main" : "text.secondary"}
-                  sx={{ "&:hover": { color: "primary.main" }, cursor: "pointer", textDecoration: "underline" }}
+                  sx={{
+                    "&:hover": { color: "primary.main" },
+                    cursor: "pointer",
+                    my: 0.4,
+                    textDecoration: query?.slug === el.post.slug ? "underline" : "none",
+                  }}
                   fontWeight={700}
                   key={el.id}
                   onClick={() => handleGoToPost(el.post)}

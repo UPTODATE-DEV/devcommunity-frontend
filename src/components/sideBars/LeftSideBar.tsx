@@ -27,8 +27,6 @@ const LeftSideBar = () => {
   const matches = (path: string): boolean => `/${route.split("/")[1]}` === path;
   const [menu, setMenu] = useState<any[]>([]);
 
-  console.log("🚀 ~ file: LeftSideBar.tsx:28 ~ LeftSideBar ~ menu:", menu);
-
   const switchLanguages = useI18n<"fr" | "en">();
 
   const toggleLang = () => {

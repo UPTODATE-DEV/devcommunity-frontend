@@ -11,7 +11,7 @@ import React, { useEffect } from "react";
 import useSWRInfinite from "swr/infinite";
 import { QuestionsListSkeleton } from "./Skeleton";
 
-const QuestionCard = dynamic(import('@/components/questions/QuestionCard'), {ssr: false, loading: () => null})
+const QuestionCard = dynamic(import("@/components/questions/QuestionCard"), { ssr: false, loading: () => null });
 const Empty = dynamic(import("@/components/common/Empty"), {
   ssr: false,
   loading: () => <QuestionsListSkeleton />,

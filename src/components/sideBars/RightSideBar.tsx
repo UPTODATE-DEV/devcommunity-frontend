@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import qs from "qs";
 import React from "react";
 import CreatorProfile from "./CreatorProfile";
+import ListEvents from "./ListEvents";
 import ListItems from "./ListItems";
 import { ListItemsSkeleton } from "./Skeleton";
 
@@ -29,15 +30,15 @@ const RightSideBar = () => {
 
   React.useEffect(() => {
     const getPosts = async () => {
-      const [postData, articlesData, eventData] = await Promise.all([
-        getRequest({ endpoint: "/posts/get/top?" + query("QUESTION") }),
+      const [articlesData, eventData] = await Promise.all([
+        // getRequest({ endpoint: "/posts/get/top?" + query("QUESTION") }),
         getRequest({ endpoint: "/posts/get/top?" + query("ARTICLE") }),
         getRequest({ endpoint: "/posts/get/top?" + query("EVENT") }),
       ]);
 
-      if (!postData.error) {
-        setTopPosts(postData.data);
-      }
+      // if (!postData.error) {
+      //   setTopPosts(postData.data);
+      // }
 
       if (!articlesData.error) {
         setTopArticles(articlesData.data);
@@ -56,7 +57,7 @@ const RightSideBar = () => {
       <CreatorProfile />
       <Paper variant="outlined" sx={{ position: "relative", width: 1 }}>
         <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
-          {locale === "en" ? "Trending event" : "Événement tendances"}
+          {locale === "en" ? "Trending events" : "Événements tendances"}
         </Typography>
         <Divider />
         <List sx={{ width: "100%", bgcolor: "background.paper" }}>
@@ -64,7 +65,7 @@ const RightSideBar = () => {
           {topEvents && topEvents.length === 0 && <Empty />}
           {topEvents &&
             topEvents.map((item, i) => (
-              <ListItems
+              <ListEvents
                 key={item.id}
                 item={item}
                 handleViewPost={(path) => handleView(path, "posts")}
@@ -91,7 +92,7 @@ const RightSideBar = () => {
               />
             ))}
         </List>
-        <Divider />
+        {/* <Divider />
         <Typography variant="h6" sx={{ fontWeight: "bold", p: 2 }}>
           {locale === "en" ? "Trending post" : "Post tendances"}
         </Typography>
@@ -108,7 +109,7 @@ const RightSideBar = () => {
                 divider={i !== topPosts.length - 1}
               />
             ))}
-        </List>
+        </List> */}
       </Paper>
     </Stack>
   );

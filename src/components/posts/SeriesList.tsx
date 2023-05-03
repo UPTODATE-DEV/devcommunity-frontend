@@ -33,7 +33,7 @@ const SeriesList = ({ series }: { series: SeriesListProps[] }) => {
       <Stack direction="row" spacing={1} alignItems="center">
         <ListIcon fontSize="large" />
         <Typography variant="h6" fontWeight={700}>
-          {locale === "fr" ? "TABLE OF CONTENTS" : "TABLE OF CONTENTS"}
+          {locale === "fr" ? "TABLE DES MATIÈRES" : "TABLE OF CONTENTS"}
         </Typography>
       </Stack>
 

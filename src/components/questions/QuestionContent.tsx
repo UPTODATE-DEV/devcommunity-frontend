@@ -40,10 +40,10 @@ const QuestionContent: React.FC<{ data: Post }> = ({ data }) => {
           {data?.title}
         </Typography>
       )}
+      {data?.series?.length >= 1 && <SeriesList series={data?.series as any} />}
       <Content content={data?.content} fontSize={17} />
       {data?.survey?.length > 0 && <SurveyContent survey={data?.survey[0]} />}
       {data.type === "EVENT" && <EventContent data={data?.event} />}
-      {data?.series?.length >= 1 && <SeriesList series={data?.series as any} />}
       <PostTags tags={data?.tags} />
       {!data?.draft && (
         <>

@@ -47,8 +47,8 @@ const MainTabs: React.FC<Props> = () => {
       }}
       component={Stack}
     >
-      {tabs.map(({ path, icon, label }) => (
-        <Tab icon={icon} label={label} path={path} />
+      {tabs.map(({ path, icon, label }, i) => (
+        <Tab icon={icon} label={label} path={path} key={i} />
       ))}
     </Paper>
   );

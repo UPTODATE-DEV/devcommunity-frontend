@@ -43,7 +43,7 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
 
       <Menu />
       <MainContainer>
-        {session?.user ? (
+        {/* {session?.user ? (
           <AddPost
             label={locale === "en" ? "Start an article..." : "Commencer un article..."}
             handleClick={handleGoToAddPage}
@@ -51,7 +51,7 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
           />
         ) : (
           <CallToAction />
-        )}
+        )} */}
         <PostList />
       </MainContainer>
     </>

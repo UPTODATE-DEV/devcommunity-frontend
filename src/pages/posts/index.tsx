@@ -44,7 +44,7 @@ const Home: NextPage<{ session: Session; locale: string }> = ({ session }) => {
 
       <Menu />
       <MainContainer>
-        {session?.user ? (
+        {/* {session?.user ? (
           <AddPost
             label={
               locale === "en"
@@ -56,7 +56,7 @@ const Home: NextPage<{ session: Session; locale: string }> = ({ session }) => {
           />
         ) : (
           <CallToAction />
-        )}
+        )} */}
         <QuestionsList />
       </MainContainer>
     </>

@@ -1,7 +1,7 @@
 import { useI18n } from "@/hooks/useI18n";
 import useStore from "@/hooks/useStore";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
-import { Typography } from "@mui/material";
+import { Typography, useMediaQuery } from "@mui/material";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
@@ -26,6 +26,7 @@ const LeftSideBar = () => {
   const { route, push, locale } = useRouter();
   const matches = (path: string): boolean => `/${route.split("/")[1]}` === path;
   const [menu, setMenu] = useState<any[]>([]);
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const switchLanguages = useI18n<"fr" | "en">();
 
@@ -91,40 +92,42 @@ const LeftSideBar = () => {
 
   return (
     <Stack spacing={4} direction="column" sx={{ width: 1 }}>
-      <Paper variant="outlined" sx={{ position: "relative", width: 1, height: { xs: "100vh", md: "auto" } }}>
-        <List sx={{ width: 1 }}>
-          {main.map(({ path, icon, label }) => (
-            <ListItemButton
-              key={path}
-              onClick={() => push(path)}
-              sx={{
-                position: "relative",
-                "&:after": {
-                  position: "absolute",
-                  content: "''",
-                  width: 5,
-                  height: 1,
-                  bottom: 0,
-                  left: 0,
-                  borderRadius: 9,
-                  backgroundColor: matches(path) ? "primary.main" : "transparent",
-                  transition: "all 0.3s ease-in-out",
-                },
-              }}
-            >
-              <ListItemIcon sx={{ mr: -1, color: matches(path) ? "primary.main" : "text.primary" }}>
-                {icon}
-              </ListItemIcon>
-              <ListItemText
-                primary={label}
-                primaryTypographyProps={{
-                  color: matches(path) ? "primary.main" : "text.primary",
-                  fontWeight: matches(path) ? 700 : 400,
+      <Paper variant="outlined" sx={{ position: "relative", width: 1 }}>
+        {isMobile && (
+          <List sx={{ width: 1 }}>
+            {main.map(({ path, icon, label }) => (
+              <ListItemButton
+                key={path}
+                onClick={() => push(path)}
+                sx={{
+                  position: "relative",
+                  "&:after": {
+                    position: "absolute",
+                    content: "''",
+                    width: 5,
+                    height: 1,
+                    bottom: 0,
+                    left: 0,
+                    borderRadius: 9,
+                    backgroundColor: matches(path) ? "primary.main" : "transparent",
+                    transition: "all 0.3s ease-in-out",
+                  },
                 }}
-              />
-            </ListItemButton>
-          ))}
-        </List>
+              >
+                <ListItemIcon sx={{ mr: -1, color: matches(path) ? "primary.main" : "text.primary" }}>
+                  {icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={label}
+                  primaryTypographyProps={{
+                    color: matches(path) ? "primary.main" : "text.primary",
+                    fontWeight: matches(path) ? 700 : 400,
+                  }}
+                />
+              </ListItemButton>
+            ))}
+          </List>
+        )}
 
         <React.Fragment>
           <Divider />
@@ -187,13 +190,18 @@ const LeftSideBar = () => {
             ))}
           </List>
           <Divider />
-          <Button sx={{ display: { xs: "block", md: "none" }, ml: 1 }} variant="outlined" onClick={toggleLang}>
-            {locale === "en" ? "French" : "Anglais"}
-          </Button>
         </React.Fragment>
+
+        <Button
+          sx={{ display: { xs: "block", md: "none" }, position: "absolute", top: 12, right: 8 }}
+          variant="outlined"
+          onClick={toggleLang}
+        >
+          {locale === "en" ? "French" : "Anglais"}
+        </Button>
       </Paper>
 
-      <Stack spacing={4}>
+      <Stack spacing={2} sx={{ px: 2 }}>
         {menu?.map((el: any) => (
           <Stack
             direction="row"
@@ -215,7 +223,8 @@ const LeftSideBar = () => {
         ))}
       </Stack>
       <Divider />
-      <Typography variant="body2" sx={{ color: "text.secondary" }}>
+
+      <Typography variant="body2" sx={{ color: "text.secondary", pb: 2, px: 2 }}>
         v{"1.0.0"} - First Release
       </Typography>
     </Stack>

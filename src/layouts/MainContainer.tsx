@@ -11,6 +11,7 @@ import "dayjs/locale/fr";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { PropsWithChildren } from "react";
+import MainTabs from "../components/common/MainTabs";
 
 const CallToActionSkeleton = dynamic(
   () => import("@/components/middle/Skeleton").then((mod) => mod.CallToActionSkeleton),
@@ -70,7 +71,8 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
               lg={2}
               className="hide-scrollbar"
               sx={{
-                mt: 2,
+                position: "sticky",
+                top: 76,
                 height: 1,
                 overflow: "auto",
                 display: { xs: "none", md: "flex" },
@@ -87,6 +89,7 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
             sx={{ position: "relative", minHeight: "100vh", my: { xs: 2, md: 3.3, lg: 1.9 } }}
           >
             <Stack sx={{ position: "relative" }} spacing={2}>
+              {!isMobile && <MainTabs />}
               {children}
             </Stack>
           </Grid>
@@ -99,7 +102,7 @@ const MainContainer: React.FC<PropsWithChildren> = ({ children }) => {
               sx={{
                 position: "sticky",
                 top: 76,
-                height: "90vh",
+                height: "100vh",
                 overflow: "auto",
                 width: 1,
                 display: { xs: "none", lg: "flex" },

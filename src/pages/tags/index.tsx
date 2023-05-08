@@ -40,7 +40,7 @@ const Home: NextPage<{ session: Session; tags: Tag[] }> = ({ session, tags }) =>
       <Menu />
       <MainContainer>
         {!session?.user && <CallToAction />}
-        <Paper variant="outlined" sx={{ p: 2, position: "sticky", top: 70, zIndex: 999 }}>
+        <Paper variant="outlined" sx={{ p: 2, position: "sticky", top: { xs: 70, md: 155 }, zIndex: 999 }}>
           {showTagsFilters ? <Filters /> : <Search />}
         </Paper>
         <Tags userId={session?.user?.id} tags={tags} />

@@ -28,6 +28,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
   const getImage = data?.article?.image.id;
   const getPreview = data?.article?.image.url;
   const [loading, setLoading] = React.useState(false);
+  const [processed, setProcessed] = React.useState(false);
   const user = useStore((state) => state.session?.user);
   const [tags, setTags] = React.useState<Tag[]>([
     { id: "0", name: "default", _count: { posts: 0 } },
@@ -111,6 +112,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
   const onSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
+    setProcessed(true);
     const response = data?.id
       ? await patchRequest({
           endpoint: `/posts/${data?.id}`,
@@ -146,6 +148,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
   const onPublish = async (e: any) => {
     e.preventDefault();
     setLoading(true);
+    setProcessed(true);
     const response = data?.id
       ? await patchRequest({
           endpoint: `/posts/${data?.id}`,
@@ -193,36 +196,6 @@ const AddPostForm = ({ data }: { data?: Post }) => {
     };
   }, []);
 
-  // React.useEffect(() => {
-  //   const confirmationMessage = "Changes you made may not be saved.";
-  //   const beforeUnloadHandler = (e: BeforeUnloadEvent) => {
-  //     (e || window.event).returnValue = confirmationMessage;
-  //     return confirmationMessage; // Gecko + Webkit, Safari, Chrome etc.
-  //   };
-  //   const beforeRouteHandler = (url: string) => {
-  //     if (pathname !== url && !confirm(confirmationMessage)) {
-  //       // to inform NProgress or something ...
-  //       events.emit("routeChangeError", "You have unsaved changes", url, {
-  //         shallow: false,
-  //       });
-
-  //       // tslint:disable-next-line: no-string-throw
-  //       throw `Route change to "${url}" was aborted (this error can be safely ignored). See https://github.com/zeit/next.js/issues/2476.`;
-  //     }
-  //   };
-  //   if (post.content !== "") {
-  //     window.addEventListener("beforeunload", beforeUnloadHandler);
-  //     events.on("routeChangeStart", beforeRouteHandler);
-  //   } else {
-  //     window.removeEventListener("beforeunload", beforeUnloadHandler);
-  //     events.off("routeChangeStart", beforeRouteHandler);
-  //   }
-  //   return () => {
-  //     window.removeEventListener("beforeunload", beforeUnloadHandler);
-  //     events.off("routeChangeStart", beforeRouteHandler);
-  //   };
-  // }, [post]);
-
   React.useEffect(() => {
     const preventMessage =
       locale === "en"
@@ -231,13 +204,13 @@ const AddPostForm = ({ data }: { data?: Post }) => {
 
     // For reloading.
     window.onbeforeunload = () => {
-      if (post.content !== "") {
+      if (!data?.id && !processed && post.content !== "") {
         return preventMessage;
       }
     };
 
     // For changing in-app route.
-    if (post.content !== "") {
+    if (!data?.id && !processed && post.content !== "") {
       const handleRouteChange = (url: string) => {
         const ok = confirm(preventMessage);
         if (!ok) {
@@ -253,7 +226,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
         events.off("routeChangeStart", handleRouteChange);
       };
     }
-  }, [post]);
+  }, [processed, post]);
 
   return (
     <Paper

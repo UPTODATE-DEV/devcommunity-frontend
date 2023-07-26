@@ -10,10 +10,13 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import React from "react";
 
-const FilterByTagsResult = dynamic(import("@/components/tags/FilterByTagsResult"), {
-  ssr: false,
-  loading: () => <HomeFeedSkeleton />,
-});
+const FilterByTagsResult = dynamic(
+  import("@/components/tags/FilterByTagsResult"),
+  {
+    ssr: false,
+    loading: () => <HomeFeedSkeleton />,
+  }
+);
 
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
@@ -21,7 +24,13 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
 
   React.useEffect(() => {
     setSession(session);
-    setMultiTagsFilters([{ _count: { posts: 0 }, id: "ckuq7q7xw0000jx9x9q7q7xwz", name: "cardano" }]);
+    setMultiTagsFilters([
+      {
+        _count: { posts: 0 },
+        id: "ckuq7q7xw0000jx9x9q7q7xwz",
+        name: "cardano",
+      },
+    ]);
     return () => setMultiTagsFilters([]);
   }, []);
 
@@ -29,8 +38,8 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
     <>
       <Head>
         <title>Blockchain | Updev community</title>
-        <meta name="description" content="Updev community" />
-        <link rel="icon" href="/favicon.ico" />
+        <meta name='description' content='Updev community' />
+        <link rel='icon' href='/favicon.ico' />
       </Head>
 
       <Menu />
@@ -42,14 +51,16 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
-  const { req } = context;
+export const getServerSideProps: GetServerSideProps = withSessionSsr(
+  async (context) => {
+    const { req } = context;
 
-  return {
-    props: {
-      session: req?.session?.user || null,
-    },
-  };
-});
+    return {
+      props: {
+        session: req?.session?.user || null,
+      },
+    };
+  }
+);
 
 export default Home;

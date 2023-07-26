@@ -15,7 +15,10 @@ const Profile = dynamic(import("@/components/profile/Profile"), {
   loading: () => <ProfileSkeleton />,
 });
 
-const Home: NextPage<{ session: Session; user: User }> = ({ session, user }) => {
+const Home: NextPage<{ session: Session; user: User }> = ({
+  session,
+  user,
+}) => {
   const setSession = useStore((state) => state.setSession);
   const setPosts = useStore((state) => state.setPosts);
 
@@ -36,8 +39,8 @@ const Home: NextPage<{ session: Session; user: User }> = ({ session, user }) => 
     <>
       <Head>
         <title>Updev community</title>
-        <meta name="description" content="Updev community" />
-        <link rel="icon" href="/favicon.ico" />
+        <meta name='description' content='Updev community' />
+        <link rel='icon' href='/favicon.ico' />
       </Head>
       <Menu />
       <MainContainer>
@@ -47,23 +50,25 @@ const Home: NextPage<{ session: Session; user: User }> = ({ session, user }) => 
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
-  const { req, params } = context;
+export const getServerSideProps: GetServerSideProps = withSessionSsr(
+  async (context) => {
+    const { req, params } = context;
 
-  const username = params?.username?.slice(1, params.username.length);
+    const username = params?.username?.slice(1, params.username.length);
 
-  const user = await getRequest({ endpoint: `/users/${username}` });
+    const user = await getRequest({ endpoint: `/users/${username}` });
 
-  if (!user.data) {
-    return { notFound: true };
+    if (!user.data) {
+      return { notFound: true };
+    }
+
+    return {
+      props: {
+        session: req?.session?.user || null,
+        user: user.data,
+      },
+    };
   }
-
-  return {
-    props: {
-      session: req?.session?.user || null,
-      user: user.data,
-    },
-  };
-});
+);
 
 export default Home;

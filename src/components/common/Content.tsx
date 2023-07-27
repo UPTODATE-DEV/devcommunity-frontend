@@ -2,7 +2,13 @@ import Typography from "@mui/material/Typography";
 import hljs from "highlight.js";
 import { useCallback, useLayoutEffect, useRef } from "react";
 
-const Content = ({ content, fontSize = 14 }: { content: string; fontSize?: number }) => {
+const Content = ({
+  content,
+  fontSize = 14,
+}: {
+  content: string;
+  fontSize?: number;
+}) => {
   const preElements = useRef([]);
 
   // function addCrossOriginAttributeToImages(htmlString: string): string {
@@ -30,10 +36,10 @@ const Content = ({ content, fontSize = 14 }: { content: string; fontSize?: numbe
 
   return (
     <Typography
-      color="text.secondary"
-      component="div"
-      className="content"
-      variant="body2"
+      color='text.secondary'
+      component='div'
+      className='content'
+      variant='body2'
       fontSize={fontSize}
       dangerouslySetInnerHTML={{
         __html: content,

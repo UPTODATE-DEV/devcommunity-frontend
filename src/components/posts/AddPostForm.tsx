@@ -28,11 +28,21 @@ const AddPostForm = ({ data }: { data?: Post }) => {
   const getImage = data?.article?.image.id;
   const getPreview = data?.article?.image.url;
   const [loading, setLoading] = React.useState(false);
+  const [processed, setProcessed] = React.useState(false);
   const user = useStore((state) => state.session?.user);
-  const [tags, setTags] = React.useState<Tag[]>([{ id: "0", name: "default", _count: { posts: 0 } }]);
+  const [tags, setTags] = React.useState<Tag[]>([
+    { id: "0", name: "default", _count: { posts: 0 } },
+  ]);
   const [image, setImage] = React.useState(getImage || "");
-  const [preview, setPreview] = React.useState<string>(getPreview ? FILES_BASE_URL + getPreview : "");
-  const [post, setPost] = React.useState<{ title?: string; locale: string; content?: string; tags: string[] | null }>({
+  const [preview, setPreview] = React.useState<string>(
+    getPreview ? FILES_BASE_URL + getPreview : ""
+  );
+  const [post, setPost] = React.useState<{
+    title?: string;
+    locale: string;
+    content?: string;
+    tags: string[] | null;
+  }>({
     title: data?.title || "",
     content: data?.content || "",
     tags: data?.tags?.map((el) => el.tag.name) || [],
@@ -41,14 +51,17 @@ const AddPostForm = ({ data }: { data?: Post }) => {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
 
-  const { push, locale, replace } = useRouter();
+  const { push, locale, replace, events } = useRouter();
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
 
   const handleClose = (event: Event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+    if (
+      anchorRef.current &&
+      anchorRef.current.contains(event.target as HTMLElement)
+    ) {
       return;
     }
 
@@ -60,7 +73,10 @@ const AddPostForm = ({ data }: { data?: Post }) => {
 
     const formData = new FormData();
     formData.append("file", e.target.files[0], e.target.files[0].name);
-    const response = await postRequest({ endpoint: "/files/upload", data: formData });
+    const response = await postRequest({
+      endpoint: "/files/upload",
+      data: formData,
+    });
     if (response.error) {
       toast.error(response.error?.message);
     }
@@ -69,15 +85,21 @@ const AddPostForm = ({ data }: { data?: Post }) => {
     }
   };
 
-  const handleImageUpload = React.useCallback(async (file: File): Promise<string> => {
-    const formData = new FormData();
-    formData.append("file", file, file.name);
-    const response = await postRequest({ endpoint: "/files/upload", data: formData });
-    if (response.error) {
-      toast.error(response.error?.message);
-    }
-    return FILES_BASE_URL + response.data?.url;
-  }, []);
+  const handleImageUpload = React.useCallback(
+    async (file: File): Promise<string> => {
+      const formData = new FormData();
+      formData.append("file", file, file.name);
+      const response = await postRequest({
+        endpoint: "/files/upload",
+        data: formData,
+      });
+      if (response.error) {
+        toast.error(response.error?.message);
+      }
+      return FILES_BASE_URL + response.data?.url;
+    },
+    []
+  );
 
   const handleLocaleChange = (event: SelectChangeEvent) => {
     setPost({ ...post, locale: event.target.value });
@@ -90,14 +112,27 @@ const AddPostForm = ({ data }: { data?: Post }) => {
   const onSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
+    setProcessed(true);
     const response = data?.id
       ? await patchRequest({
           endpoint: `/posts/${data?.id}`,
-          data: { ...post, image, author: user?.id, type: "ARTICLE", draft: true },
+          data: {
+            ...post,
+            image,
+            author: user?.id,
+            type: "ARTICLE",
+            draft: true,
+          },
         })
       : await postRequest({
           endpoint: "/posts",
-          data: { ...post, image, author: user?.id, type: "ARTICLE", draft: true },
+          data: {
+            ...post,
+            image,
+            author: user?.id,
+            type: "ARTICLE",
+            draft: true,
+          },
         });
     if (response.error) {
       setLoading(false);
@@ -113,14 +148,27 @@ const AddPostForm = ({ data }: { data?: Post }) => {
   const onPublish = async (e: any) => {
     e.preventDefault();
     setLoading(true);
+    setProcessed(true);
     const response = data?.id
       ? await patchRequest({
           endpoint: `/posts/${data?.id}`,
-          data: { ...post, image, author: user?.id, type: "ARTICLE", draft: false },
+          data: {
+            ...post,
+            image,
+            author: user?.id,
+            type: "ARTICLE",
+            draft: false,
+          },
         })
       : await postRequest({
           endpoint: "/posts",
-          data: { ...post, image, author: user?.id, type: "ARTICLE", draft: false },
+          data: {
+            ...post,
+            image,
+            author: user?.id,
+            type: "ARTICLE",
+            draft: false,
+          },
         });
     if (response.error) {
       setLoading(false);
@@ -148,12 +196,49 @@ const AddPostForm = ({ data }: { data?: Post }) => {
     };
   }, []);
 
+  React.useEffect(() => {
+    const preventMessage =
+      locale === "en"
+        ? "You have unsaved changes. Do you really want to leave"
+        : "Vous avez des changements non enregistrés. Voulez-vous vraiment quitter ?";
+
+    // For reloading.
+    window.onbeforeunload = () => {
+      if (!data?.id && !processed && post.content !== "") {
+        return preventMessage;
+      }
+    };
+
+    // For changing in-app route.
+    if (!data?.id && !processed && post.content !== "") {
+      const handleRouteChange = (url: string) => {
+        const ok = confirm(preventMessage);
+        if (!ok) {
+          events.emit("routeChangeError", "You have unsaved changes", url, {
+            shallow: false,
+          });
+          throw `Route change to "${url}" was aborted (this error can be safely ignored). See https://github.com/zeit/next.js/issues/2476.`;
+        }
+      };
+
+      events.on("routeChangeStart", handleRouteChange);
+      return () => {
+        events.off("routeChangeStart", handleRouteChange);
+      };
+    }
+  }, [processed, post]);
+
   return (
-    <Paper variant="outlined" component={Stack} spacing={2} sx={{ px: 2, pt: 2, pb: 6 }}>
+    <Paper
+      variant='outlined'
+      component={Stack}
+      spacing={2}
+      sx={{ px: 2, pt: 2, pb: 6 }}
+    >
       <Stack
-        justifyContent="center"
-        alignItems="center"
-        component="label"
+        justifyContent='center'
+        alignItems='center'
+        component='label'
         sx={{
           width: 1,
           paddingTop: image ? "52.34%" : "34%",
@@ -165,13 +250,30 @@ const AddPostForm = ({ data }: { data?: Post }) => {
           borderTopRightRadius: 6,
         }}
       >
-        <input hidden accept="image/*" onChange={handleImageChange} type="file" />
+        <input
+          hidden
+          accept='image/*'
+          onChange={handleImageChange}
+          type='file'
+        />
         {preview ? (
-          <Image src={preview} alt="Updev cmmunity" layout="fill" objectFit="cover" />
+          <Image
+            src={preview}
+            alt='Updev cmmunity'
+            layout='fill'
+            objectFit='cover'
+          />
         ) : (
-          <Stack justifyContent="center" alignItems="center" sx={{ position: "absolute", top: 50 }}>
-            <AddPhotoAlternateIcon color="primary" sx={{ fontSize: 140, opacity: 0.1 }} />
-            <Typography color="primary" textAlign="center">
+          <Stack
+            justifyContent='center'
+            alignItems='center'
+            sx={{ position: "absolute", top: 50 }}
+          >
+            <AddPhotoAlternateIcon
+              color='primary'
+              sx={{ fontSize: 140, opacity: 0.1 }}
+            />
+            <Typography color='primary' textAlign='center'>
               1024x536
             </Typography>
           </Stack>
@@ -179,7 +281,7 @@ const AddPostForm = ({ data }: { data?: Post }) => {
       </Stack>
       <Autocomplete
         multiple
-        id="tags-filled"
+        id='tags-filled'
         options={tags.map((el) => el.name)}
         freeSolo
         defaultValue={post.tags as any}
@@ -188,44 +290,60 @@ const AddPostForm = ({ data }: { data?: Post }) => {
         }}
         renderTags={(value: readonly string[], getTagProps) =>
           value.map((option: string, index: number) => (
-            <Chip variant="outlined" label={option} {...getTagProps({ index })} key={index} />
+            <Chip
+              variant='outlined'
+              label={option}
+              {...getTagProps({ index })}
+              key={index}
+            />
           ))
         }
         renderInput={(params) => (
           <TextField
-            sx={{ "&.MuiTextField-root > .MuiFilledInput-root": { px: 2, py: 1.5 } }}
+            sx={{
+              "&.MuiTextField-root > .MuiFilledInput-root": { px: 2, py: 1.5 },
+            }}
             {...params}
-            variant="filled"
-            placeholder="Tags"
+            variant='filled'
+            placeholder='Tags'
           />
         )}
       />
       <TextField
-        name="title"
-        variant="filled"
+        name='title'
+        variant='filled'
         value={post.title}
         placeholder={locale === "en" ? "Title" : "Titre"}
         onChange={handleChange}
-        sx={{ "&.MuiTextField-root > .MuiFilledInput-root": { px: 2, pb: 1 }, width: 1 }}
+        sx={{
+          "&.MuiTextField-root > .MuiFilledInput-root": { px: 2, pb: 1 },
+          width: 1,
+        }}
       />
-      <FormControl variant="filled">
-        <InputLabel id="demo-simple-select-filled-label">{locale === "fr" ? "Langue" : "Language"}</InputLabel>
+      <FormControl variant='filled'>
+        <InputLabel id='demo-simple-select-filled-label'>
+          {locale === "fr" ? "Langue" : "Language"}
+        </InputLabel>
         <Select
-          labelId="demo-simple-select-filled-label"
-          id="demo-simple-select-filled"
+          labelId='demo-simple-select-filled-label'
+          id='demo-simple-select-filled'
           value={post.locale}
           onChange={handleLocaleChange}
         >
-          <MenuItem value="FR">{locale === "fr" ? "Français" : "French"}</MenuItem>
-          <MenuItem value="EN">{locale === "fr" ? "Anglais" : "English"}</MenuItem>
+          <MenuItem value='FR'>
+            {locale === "fr" ? "Français" : "French"}
+          </MenuItem>
+          <MenuItem value='EN'>
+            {locale === "fr" ? "Anglais" : "English"}
+          </MenuItem>
         </Select>
       </FormControl>
       <RichTextEditor
         value={post.content}
         onChange={(value) => setPost((state) => ({ ...state, content: value }))}
-        stickyOffset={70}
+        stickyOffset={160}
         onImageUpload={handleImageUpload}
-        id="rte"
+        id='rte'
         controls={[
           ["h2", "h3", "bold", "italic", "underline", "link", "code"],
           ["unorderedList", "orderedList", "sup", "sub"],
@@ -233,25 +351,39 @@ const AddPostForm = ({ data }: { data?: Post }) => {
           ["image", "video", "strike"],
         ]}
       />
-      <Stack spacing={2} direction="row" flexWrap="wrap" justifyContent="center" alignItems="center">
+      <Stack
+        spacing={2}
+        direction='row'
+        flexWrap='wrap'
+        justifyContent='center'
+        alignItems='center'
+      >
         <Stack sx={{ position: "relative" }}>
           <ButtonGroup
-            variant="contained"
+            variant='contained'
             ref={anchorRef}
             disableElevation
-            aria-label="split button"
+            aria-label='split button'
             sx={{ borderRadius: 50 }}
-            disabled={!post.title || !post.content || !post.tags?.length || loading}
+            disabled={
+              !post.title || !post.content || !post.tags?.length || loading
+            }
           >
             <Button sx={{ px: 4, borderRadius: 50 }} onClick={onPublish}>
-              {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Publish" : "Publier"}
+              {loading
+                ? locale === "en"
+                  ? "Loading..."
+                  : "Chargement"
+                : locale === "en"
+                ? "Publish"
+                : "Publier"}
             </Button>
             <Button
-              size="small"
+              size='small'
               aria-controls={open ? "split-button-menu" : undefined}
               aria-expanded={open ? "true" : undefined}
-              aria-label="select merge strategy"
-              aria-haspopup="menu"
+              aria-label='select merge strategy'
+              aria-haspopup='menu'
               sx={{ px: 2, borderRadius: 50 }}
               onClick={handleToggle}
             >
@@ -273,15 +405,16 @@ const AddPostForm = ({ data }: { data?: Post }) => {
               <Grow
                 {...TransitionProps}
                 style={{
-                  transformOrigin: placement === "bottom" ? "left top" : "left bottom",
+                  transformOrigin:
+                    placement === "bottom" ? "left top" : "left bottom",
                 }}
               >
                 <div>
                   <ClickAwayListener onClickAway={handleClose}>
                     <Button
                       sx={{ px: 4, borderRadius: 50, my: 0.5 }}
-                      variant="contained"
-                      color="secondary"
+                      variant='contained'
+                      color='secondary'
                       disableElevation
                       onClick={onSubmit}
                     >
@@ -302,11 +435,13 @@ const AddPostForm = ({ data }: { data?: Post }) => {
 
         <Button
           disableElevation
-          color="inherit"
-          variant="outlined"
+          color='inherit'
+          variant='outlined'
           disabled={loading}
           sx={{ px: 4, borderRadius: 50 }}
-          onClick={() => push({ pathname: "/articles" }, undefined, { shallow: true })}
+          onClick={() =>
+            push({ pathname: "/articles" }, undefined, { shallow: true })
+          }
         >
           {locale === "en" ? "Cancel" : "Annuler"}
         </Button>

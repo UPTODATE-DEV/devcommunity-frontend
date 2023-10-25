@@ -10,7 +10,10 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import React from "react";
 
-const TopPosts = dynamic(import("@/components/topPosts/TopPosts"), { ssr: false, loading: () => <TopSkeleton /> });
+const TopPosts = dynamic(import("@/components/topPosts/TopPosts"), {
+  ssr: false,
+  loading: () => <TopSkeleton />,
+});
 
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
@@ -23,8 +26,8 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
     <>
       <Head>
         <title>Top Posts | Updev community</title>
-        <meta name="description" content="Updev community" />
-        <link rel="icon" href="/favicon.ico" />
+        <meta name='description' content='Updev community' />
+        <link rel='icon' href='/favicon.ico' />
       </Head>
 
       <Menu />
@@ -36,14 +39,16 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
-  const { req } = context;
+export const getServerSideProps: GetServerSideProps = withSessionSsr(
+  async (context) => {
+    const { req } = context;
 
-  return {
-    props: {
-      session: req?.session?.user || null,
-    },
-  };
-});
+    return {
+      props: {
+        session: req?.session?.user || null,
+      },
+    };
+  }
+);
 
 export default Home;

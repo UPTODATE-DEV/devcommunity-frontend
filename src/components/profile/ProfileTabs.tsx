@@ -28,7 +28,10 @@ import DraftCard from "./DraftCard";
 import PostCard from "./PostCard";
 import QuestionCard from "./QuestionCard";
 import SeriesListCard from "./SeriesListCard";
+import Sweetalert2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
+const Swal = withReactContent(Sweetalert2);
 const Badges = dynamic(import("./profileTabs/Badges"), {
   ssr: false,
   loading: () => null,
@@ -51,12 +54,17 @@ const Dashboard = dynamic(import("./Dashboard"), { ssr: false });
 const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
   const sessionUser = useStore((state) => state.session?.user);
   const user = useUser(sessionUser?.id);
-  const { profileTab, setProfileTab, setSeries, series } = useStore((state) => state);
+  const [alert, setAlert] = React.useState(null);
+
+  const { profileTab, setProfileTab, setSeries, series } = useStore(
+    (state) => state
+  );
   const [posts, setPosts] = React.useState<Post[] | []>([]);
   const [followedTags, setFollowedTags] = React.useState<Tags[] | []>([]);
   const { locale } = useRouter();
   const [badges, setBadges] = React.useState<Badge[] | []>([]);
-  const { openAddSeries, setToggleAddSeries, setCurrentSeries } = useStoreNoPersist((state) => state);
+  const { openAddSeries, setToggleAddSeries, setCurrentSeries } =
+    useStoreNoPersist((state) => state);
 
   const isMobile = useMediaQuery("(min-width:760px)");
 
@@ -65,43 +73,43 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
       id: "dashboard",
       label: "Dashboard",
       show: showProfileUser === undefined && user?.role === "AUTHOR",
-      icon: <DashboardIcon fontSize="small" />,
+      icon: <DashboardIcon fontSize='small' />,
     },
     {
       id: "articles",
       label: "Articles",
       show: true,
-      icon: <HistoryEduIcon fontSize="small" />,
+      icon: <HistoryEduIcon fontSize='small' />,
     },
     {
       id: "posts",
       label: "Posts",
       show: true,
-      icon: <QuestionAnswer fontSize="small" />,
+      icon: <QuestionAnswer fontSize='small' />,
     },
     {
       id: "series",
       label: locale === "en" ? "Series" : "Séries",
       show: true,
-      icon: <WebStoriesIcon fontSize="small" />,
+      icon: <WebStoriesIcon fontSize='small' />,
     },
     {
       id: "tags",
       label: "Tags",
       show: showProfileUser ? false : true,
-      icon: <TagIcon fontSize="small" />,
+      icon: <TagIcon fontSize='small' />,
     },
     {
       id: "drafts",
       label: "Drafts",
       show: showProfileUser ? false : true,
-      icon: <DraftsIcon fontSize="small" />,
+      icon: <DraftsIcon fontSize='small' />,
     },
     {
       id: "badges",
       label: locale === "en" ? "Badges" : "Badges",
       show: true,
-      icon: <EmojiEventsIcon fontSize="small" />,
+      icon: <EmojiEventsIcon fontSize='small' />,
     },
   ];
 
@@ -119,13 +127,27 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
   };
 
   const handleDeletePost = async (id: string) => {
-    const response = await deleteRequest({ endpoint: `/posts/${id}` });
-    if (response.error) {
-      toast.error(response.error?.message);
-    }
-    if (response.data) {
-      setPosts(posts.filter((el) => el.id !== response.data?.id) as Post[]);
-    }
+    Swal.fire({
+      title: "Are you sure ?",
+      text: "Are you sure you want to delete this post ?",
+      icon: "question",
+      reverseButtons: true,
+      showCancelButton: true,
+      confirmButtonText: "Yes!",
+      cancelButtonText: "No!",
+    }).then(async ({ isConfirmed }) => {
+      if (isConfirmed) {
+        Swal.showLoading();
+        const response = await deleteRequest({ endpoint: `/posts/${id}` });
+        if (response.error) {
+          toast.error(response.error?.message);
+        }
+        if (response.data) {
+          setPosts(posts.filter((el) => el.id !== response.data?.id) as Post[]);
+        }
+        Swal.hideLoading();
+      }
+    });
   };
 
   const handleDeleteSeries = async (id: string) => {
@@ -149,8 +171,14 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
   };
 
   const fetchData = async () => {
-    const getPosts = getRequest({ endpoint: `/posts/author/${showProfileUser?.id || sessionUser?.id}` });
-    const getSeries = getRequest({ endpoint: `/posts/series?userId=${showProfileUser?.id || sessionUser?.id}` });
+    const getPosts = getRequest({
+      endpoint: `/posts/author/${showProfileUser?.id || sessionUser?.id}`,
+    });
+    const getSeries = getRequest({
+      endpoint: `/posts/series?userId=${
+        showProfileUser?.id || sessionUser?.id
+      }`,
+    });
     const [posts, series] = await Promise.all([getPosts, getSeries]);
 
     setPosts(posts.data);
@@ -180,7 +208,7 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
         scrollButtons
         allowScrollButtonsMobile
         variant={isMobile ? "fullWidth" : "scrollable"}
-        aria-label="Show reactions"
+        aria-label='Show reactions'
         sx={{ border: 1, borderColor: "divider", bgcolor: "background.paper" }}
       >
         {tabs
@@ -189,9 +217,11 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
             <Tab
               icon={item.icon}
               key={item.id}
-              iconPosition="start"
+              iconPosition='start'
               sx={{ minHeight: 50 }}
-              label={<Typography textTransform="capitalize">{item.label}</Typography>}
+              label={
+                <Typography textTransform='capitalize'>{item.label}</Typography>
+              }
               value={item.id}
             />
           ))}
@@ -201,7 +231,10 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
           {questions.length === 0 && <Empty />}
           {questions?.map((item, index) => (
             <React.Fragment key={item.id}>
-              <QuestionCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
+              <QuestionCard
+                handleDeletePost={() => handleDeletePost(item.id)}
+                data={item}
+              />
             </React.Fragment>
           ))}
         </Stack>
@@ -211,7 +244,10 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
           {articles.length === 0 && <Empty />}
           {articles?.map((item, index) => (
             <React.Fragment key={item.id}>
-              <PostCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
+              <PostCard
+                handleDeletePost={() => handleDeletePost(item.id)}
+                data={item}
+              />
             </React.Fragment>
           ))}
         </Stack>
@@ -235,7 +271,7 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
             <Fab
               color={openAddSeries ? "error" : "primary"}
               onClick={handleShowCreateSeries}
-              aria-label="add"
+              aria-label='add'
               sx={{ position: "sticky", bottom: 20, alignSelf: "flex-end" }}
             >
               {openAddSeries ? <CloseIcon /> : <AddIcon />}
@@ -252,14 +288,17 @@ const ProfileTabs = ({ showProfileUser }: { showProfileUser?: User }) => {
               {drafts.length === 0 && <Empty />}
               {drafts?.map((item, index) => (
                 <React.Fragment key={item.id}>
-                  <DraftCard handleDeletePost={() => handleDeletePost(item.id)} data={item} />
+                  <DraftCard
+                    handleDeletePost={() => handleDeletePost(item.id)}
+                    data={item}
+                  />
                 </React.Fragment>
               ))}
             </Stack>
           </TabPanel>
           {showProfileUser === undefined && user?.role === "AUTHOR" && (
             <TabPanel sx={{ p: 0 }} value={"dashboard"}>
-              <Paper variant="outlined" sx={{ p: 2, minHeight: "200px" }}>
+              <Paper variant='outlined' sx={{ p: 2, minHeight: "200px" }}>
                 <Dashboard />
               </Paper>
             </TabPanel>

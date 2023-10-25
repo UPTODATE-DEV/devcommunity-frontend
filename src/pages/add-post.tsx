@@ -8,7 +8,6 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import * as React from "react";
 
-
 const Home: NextPage<{ session: Session }> = ({ session }) => {
   const setSession = useStore((state) => state.setSession);
 
@@ -20,8 +19,8 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
     <>
       <Head>
         <title>Add post | Updev community</title>
-        <meta name="description" content="Updev community" />
-        <link rel="icon" href="/favicon.ico" />
+        <meta name='description' content='Updev community' />
+        <link rel='icon' href='/favicon.ico' />
       </Head>
       <Menu />
       <MainContainer>
@@ -31,23 +30,25 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
-  const { req } = context;
+export const getServerSideProps: GetServerSideProps = withSessionSsr(
+  async (context) => {
+    const { req } = context;
 
-  if (!req.session?.user?.isLoggedIn) {
+    if (!req.session?.user?.isLoggedIn) {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+      };
+    }
+
     return {
-      redirect: {
-        destination: "/",
-        permanent: false,
+      props: {
+        session: req.session?.user,
       },
     };
   }
-
-  return {
-    props: {
-      session: req.session?.user,
-    },
-  };
-});
+);
 
 export default Home;

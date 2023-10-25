@@ -11,15 +11,20 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
     <>
       <Head>
         <title>404 | Updev community</title>
-        <meta name="description" content="Updev community" />
-        <link rel="icon" href="/favicon.ico" />
+        <meta name='description' content='Updev community' />
+        <link rel='icon' href='/favicon.ico' />
       </Head>
       <Menu />
       <MainContainer>
-        <Typography sx={{ mt: 10 }} color="text.primary" variant="h6" textAlign="center">
+        <Typography
+          sx={{ mt: 10 }}
+          color='text.primary'
+          variant='h6'
+          textAlign='center'
+        >
           404
         </Typography>
-        <Typography color="text.secondary" textAlign="center">
+        <Typography color='text.secondary' textAlign='center'>
           Page Not Found
         </Typography>
       </MainContainer>

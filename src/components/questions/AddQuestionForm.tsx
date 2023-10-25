@@ -34,9 +34,16 @@ import Input from "../common/Input";
 const AddQuestionForm = ({ data }: { data?: Post }) => {
   const [loading, setLoading] = React.useState(false);
   const user = useStore((state) => state.session?.user);
-  const [tags, setTags] = React.useState<Tag[]>([{ id: "0", name: "default", _count: { posts: 0 } }]);
+  const [tags, setTags] = React.useState<Tag[]>([
+    { id: "0", name: "default", _count: { posts: 0 } },
+  ]);
   const [preview, setPreview] = React.useState("");
-  const [post, setPost] = React.useState<{ title: string; locale: string; content?: string; tags: string[] | null }>({
+  const [post, setPost] = React.useState<{
+    title: string;
+    locale: string;
+    content?: string;
+    tags: string[] | null;
+  }>({
     content: data?.content || "",
     tags: data?.tags?.map((el) => el.tag.name) || [],
     locale: data?.locale || "FR",
@@ -49,28 +56,41 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
   const [options, setOptions] = React.useState<string[]>(["", ""]);
   const [duration, setDuration] = React.useState("7");
   const [event, setEvent] = React.useState(false);
-  const [eventDate, setEventDate] = React.useState<Dayjs | null>(dayjs(new Date()));
-  const [eventLocation, setEventLocation] = React.useState("");
-  const [eventLink, setEventLink] = React.useState("");
+  const [eventDate, setEventDate] = React.useState<Dayjs | null>(
+    dayjs(new Date())
+  );
+  const [eventLocation, setEventLocation] = React.useState(
+    data?.event?.location || ""
+  );
+  const [eventLink, setEventLink] = React.useState(data?.event?.link || "");
 
   const { push, locale, replace } = useRouter();
 
-  const handleImageUpload = React.useCallback(async (file: File): Promise<string> => {
-    const formData = new FormData();
-    formData.append("file", file, file.name);
-    const response = await postRequest({ endpoint: "/files/upload", data: formData });
-    if (response.error) {
-      toast.error(response.error?.message);
-    }
-    return FILES_BASE_URL + response.data?.url;
-  }, []);
+  const handleImageUpload = React.useCallback(
+    async (file: File): Promise<string> => {
+      const formData = new FormData();
+      formData.append("file", file, file.name);
+      const response = await postRequest({
+        endpoint: "/files/upload",
+        data: formData,
+      });
+      if (response.error) {
+        toast.error(response.error?.message);
+      }
+      return FILES_BASE_URL + response.data?.url;
+    },
+    []
+  );
 
   const handleChange = (event: { target: { value: string; name: string } }) => {
     setPost({ ...post, [event.target.name]: event.target.value });
   };
 
   const handleClose = (event: Event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+    if (
+      anchorRef.current &&
+      anchorRef.current.contains(event.target as HTMLElement)
+    ) {
       return;
     }
 
@@ -83,7 +103,10 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
     setOptions(newOptions);
   };
 
-  const handleOptionChange = (index: number, e: { target: { value: string; name: string } }) => {
+  const handleOptionChange = (
+    index: number,
+    e: { target: { value: string; name: string } }
+  ) => {
     if (e.target.value.length > 30) {
       return;
     }
@@ -92,14 +115,18 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
     setOptions(newOptions);
   };
 
-  const handleQuestionChange = (e: { target: { value: string; name: string } }) => {
+  const handleQuestionChange = (e: {
+    target: { value: string; name: string };
+  }) => {
     if (e.target.value.length > 140) {
       return;
     }
     setQuestion(e.target.value);
   };
 
-  const handleDurationChange = (e: { target: { value: string; name: string } }) => {
+  const handleDurationChange = (e: {
+    target: { value: string; name: string };
+  }) => {
     if (+e.target.value.length < 1) {
       setDuration("1");
     }
@@ -250,44 +277,57 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
   }, []);
 
   return (
-    <Paper variant="outlined" component={Stack} spacing={3} sx={{ py: 1, p: 2 }}>
+    <Paper
+      variant='outlined'
+      component={Stack}
+      spacing={3}
+      sx={{ py: 1, p: 2 }}
+    >
       {event && (
         <>
           <Input
-            name="title"
+            name='title'
             label={locale === "en" ? "Title" : "Titre"}
             value={post?.title}
             placeholder={locale === "en" ? "Title" : "Titre"}
             handleChange={handleChange}
           />
           <Input
-            type="textarea"
-            name="content"
+            type='textarea'
+            name='content'
             value={post?.content}
-            placeholder={locale === "fr" ? "Ajouter une description" : "Add a description"}
-            handleChange={(e: any) => setPost((state) => ({ ...state, content: e?.target?.value }))}
+            placeholder={
+              locale === "fr" ? "Ajouter une description" : "Add a description"
+            }
+            handleChange={(e: any) =>
+              setPost((state) => ({ ...state, content: e?.target?.value }))
+            }
             label={locale === "en" ? "Description" : "Description"}
           />
-          <Stack direction="row" spacing={2}>
+          <Stack direction='row' spacing={2}>
             <Input
-              name="eventLocation"
+              name='eventLocation'
               label={locale === "en" ? "Location" : "Lieu"}
               value={eventLocation}
               handleChange={(e: any) => setEventLocation(e?.target?.value)}
-              placeholder={locale === "en" ? "Event location" : "Lieu de l'événement"}
+              placeholder={
+                locale === "en" ? "Event location" : "Lieu de l'événement"
+              }
             />
             <Input
-              name="eventLink"
+              name='eventLink'
               label={locale === "en" ? "Link" : "Lien"}
               value={eventLink}
               handleChange={(e: any) => setEventLink(e?.target?.value)}
-              placeholder={locale === "en" ? "Event link" : "Lien de l'événement"}
+              placeholder={
+                locale === "en" ? "Event link" : "Lien de l'événement"
+              }
             />
           </Stack>
           <DatePicker
             value={eventDate}
             minDate={dayjs(new Date())}
-            desktopModeMediaQuery="(min-width: 768px)"
+            desktopModeMediaQuery='(min-width: 768px)'
             onChange={(newValue) => {
               setEventDate(newValue);
             }}
@@ -307,7 +347,12 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
                   },
                 }}
               >
-                <InputBase placeholder="Date" ref={inputRef} {...(inputProps as any)} sx={{ width: 1 }} />
+                <InputBase
+                  placeholder='Date'
+                  ref={inputRef}
+                  {...(inputProps as any)}
+                  sx={{ width: 1 }}
+                />
                 {InputProps?.endAdornment}
               </Box>
             )}
@@ -318,10 +363,12 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
       {!event && (
         <RichTextEditor
           value={post.content}
-          onChange={(value) => setPost((state) => ({ ...state, content: value }))}
+          onChange={(value) =>
+            setPost((state) => ({ ...state, content: value }))
+          }
           stickyOffset={70}
           onImageUpload={handleImageUpload}
-          id="rte"
+          id='rte'
           controls={[
             ["h2", "h3", "bold", "italic", "underline", "link", "code"],
             ["unorderedList", "orderedList", "sup", "sub"],
@@ -332,7 +379,7 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
 
       <Autocomplete
         multiple
-        id="tags-filled"
+        id='tags-filled'
         options={tags.map((el) => el.name)}
         freeSolo
         defaultValue={post?.tags as any}
@@ -341,30 +388,43 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
         }}
         renderTags={(value: readonly string[], getTagProps) =>
           value.map((option: string, index: number) => (
-            <Chip variant="outlined" label={option} {...getTagProps({ index })} key={index} />
+            <Chip
+              variant='outlined'
+              label={option}
+              {...getTagProps({ index })}
+              key={index}
+            />
           ))
         }
         renderInput={(params) => (
           <TextField
-            sx={{ "&.MuiTextField-root > .MuiFilledInput-root": { px: 2, py: 1.5 } }}
+            sx={{
+              "&.MuiTextField-root > .MuiFilledInput-root": { px: 2, py: 1.5 },
+            }}
             {...params}
-            variant="filled"
-            placeholder="Tags"
+            variant='filled'
+            placeholder='Tags'
           />
         )}
       />
 
       {!event && (
-        <FormControl variant="filled">
-          <InputLabel id="demo-simple-select-filled-label">{locale === "fr" ? "Langue" : "Language"}</InputLabel>
+        <FormControl variant='filled'>
+          <InputLabel id='demo-simple-select-filled-label'>
+            {locale === "fr" ? "Langue" : "Language"}
+          </InputLabel>
           <Select
-            labelId="demo-simple-select-filled-label"
-            id="demo-simple-select-filled"
+            labelId='demo-simple-select-filled-label'
+            id='demo-simple-select-filled'
             value={post.locale}
             onChange={handleLocaleChange}
           >
-            <MenuItem value="FR">{locale === "fr" ? "Français" : "French"}</MenuItem>
-            <MenuItem value="EN">{locale === "fr" ? "Anglais" : "English"}</MenuItem>
+            <MenuItem value='FR'>
+              {locale === "fr" ? "Français" : "French"}
+            </MenuItem>
+            <MenuItem value='EN'>
+              {locale === "fr" ? "Anglais" : "English"}
+            </MenuItem>
           </Select>
         </FormControl>
       )}
@@ -372,20 +432,25 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
       {survey && (
         <Paper
           component={Stack}
-          variant="outlined"
+          variant='outlined'
           spacing={2}
           sx={{ px: 2, py: 3, borderRadius: 2, borderColor: "divider" }}
         >
           <Stack sx={{ position: "relative" }}>
             <Input
-              type="textarea"
-              name="question"
+              type='textarea'
+              name='question'
               value={question}
-              placeholder={locale === "fr" ? "Ajouter une question" : "Add question"}
+              placeholder={
+                locale === "fr" ? "Ajouter une question" : "Add question"
+              }
               handleChange={handleQuestionChange}
               label={locale === "en" ? "Your question" : "Votre question"}
             />
-            <Typography variant="caption" sx={{ position: "absolute", right: 5, bottom: -25, zIndex: 4 }}>
+            <Typography
+              variant='caption'
+              sx={{ position: "absolute", right: 5, bottom: -25, zIndex: 4 }}
+            >
               {question.length}/140
             </Typography>
           </Stack>
@@ -397,18 +462,28 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
                     sx={{ position: "absolute", right: 0, top: -2, zIndex: 2 }}
                     onClick={() => handleRemoveOption(index)}
                   >
-                    <RemoveCircleOutlineIcon fontSize="small" />
+                    <RemoveCircleOutlineIcon fontSize='small' />
                   </IconButton>
                 )}
-                <Typography variant="caption" sx={{ position: "absolute", right: 5, bottom: -25, zIndex: 4 }}>
+                <Typography
+                  variant='caption'
+                  sx={{
+                    position: "absolute",
+                    right: 5,
+                    bottom: -25,
+                    zIndex: 4,
+                  }}
+                >
                   {option.length}/30
                 </Typography>
                 <Input
-                  name="question"
+                  name='question'
                   label={`Option ${index + 1}`}
                   value={options[index]}
                   handleChange={(e: any) => handleOptionChange(index, e)}
-                  placeholder={locale === "en" ? "Add option" : "Ajouter une option"}
+                  placeholder={
+                    locale === "en" ? "Add option" : "Ajouter une option"
+                  }
                 />
               </Stack>
             ))}
@@ -418,41 +493,58 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
             disabled={options.length > 3}
             onClick={handleAddOption}
             startIcon={<AddIcon />}
-            variant="outlined"
+            variant='outlined'
             sx={{ width: 1 }}
           >
             Add Option
           </Button>
 
           <Input
-            name="duration"
+            name='duration'
             label={locale === "en" ? "Duration" : "Durée"}
             value={duration}
             handleChange={handleDurationChange}
-            placeholder={locale === "en" ? "Poll duration in days" : "Durée du sondage en jours"}
+            placeholder={
+              locale === "en"
+                ? "Poll duration in days"
+                : "Durée du sondage en jours"
+            }
           />
         </Paper>
       )}
 
-      <Stack spacing={2} rowGap={2} direction="row" flexWrap="wrap" justifyContent="center" alignItems="center">
+      <Stack
+        spacing={2}
+        rowGap={2}
+        direction='row'
+        flexWrap='wrap'
+        justifyContent='center'
+        alignItems='center'
+      >
         <Stack sx={{ position: "relative" }}>
           <ButtonGroup
-            variant="contained"
+            variant='contained'
             ref={anchorRef}
             disableElevation
-            aria-label="split button"
+            aria-label='split button'
             sx={{ borderRadius: 50 }}
             disabled={disableButton()}
           >
             <Button sx={{ px: 4, borderRadius: 50 }} onClick={onPublish}>
-              {loading ? (locale === "en" ? "Loading..." : "Chargement") : locale === "en" ? "Publish" : "Publier"}
+              {loading
+                ? locale === "en"
+                  ? "Loading..."
+                  : "Chargement"
+                : locale === "en"
+                ? "Publish"
+                : "Publier"}
             </Button>
             <Button
-              size="small"
+              size='small'
               aria-controls={open ? "split-button-menu" : undefined}
               aria-expanded={open ? "true" : undefined}
-              aria-label="select merge strategy"
-              aria-haspopup="menu"
+              aria-label='select merge strategy'
+              aria-haspopup='menu'
               sx={{ px: 2, borderRadius: 50 }}
               onClick={handleToggle}
             >
@@ -475,15 +567,16 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
               <Grow
                 {...TransitionProps}
                 style={{
-                  transformOrigin: placement === "bottom" ? "left top" : "left bottom",
+                  transformOrigin:
+                    placement === "bottom" ? "left top" : "left bottom",
                 }}
               >
                 <div>
                   <ClickAwayListener onClickAway={handleClose}>
                     <Button
                       sx={{ px: 4, borderRadius: 50, my: 0.5 }}
-                      variant="contained"
-                      color="secondary"
+                      variant='contained'
+                      color='secondary'
                       disableElevation
                       onClick={onSubmit}
                     >
@@ -544,11 +637,13 @@ const AddQuestionForm = ({ data }: { data?: Post }) => {
 
         <Button
           disableElevation
-          color="inherit"
-          variant="outlined"
+          color='inherit'
+          variant='outlined'
           disabled={loading}
           sx={{ px: 4, borderRadius: 50 }}
-          onClick={() => push({ pathname: "/posts" }, undefined, { shallow: true })}
+          onClick={() =>
+            push({ pathname: "/posts" }, undefined, { shallow: true })
+          }
         >
           {locale === "en" ? "Cancel" : "Annuler"}
         </Button>

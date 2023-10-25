@@ -12,15 +12,27 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import React from "react";
 
-const Tags = dynamic(import("@/components/tags/TagsList"), { ssr: false, loading: () => <TagsSkeleton /> });
-const Filters = dynamic(import("@/components/tags/Filters"), { ssr: false, loading: () => null });
-const Search = dynamic(import("@/components/tags/Search"), { ssr: false, loading: () => null });
+const Tags = dynamic(import("@/components/tags/TagsList"), {
+  ssr: false,
+  loading: () => <TagsSkeleton />,
+});
+const Filters = dynamic(import("@/components/tags/Filters"), {
+  ssr: false,
+  loading: () => null,
+});
+const Search = dynamic(import("@/components/tags/Search"), {
+  ssr: false,
+  loading: () => null,
+});
 const CallToAction = dynamic(import("@/components/middle/CallToAction"), {
   ssr: false,
   loading: () => <CallToActionSkeleton />,
 });
 
-const Home: NextPage<{ session: Session; tags: Tag[] }> = ({ session, tags }) => {
+const Home: NextPage<{ session: Session; tags: Tag[] }> = ({
+  session,
+  tags,
+}) => {
   const setSession = useStore((state) => state.setSession);
   const setTags = useStore((state) => state.setTags);
   const { showTagsFilters } = useStore((state) => state);
@@ -33,14 +45,22 @@ const Home: NextPage<{ session: Session; tags: Tag[] }> = ({ session, tags }) =>
     <>
       <Head>
         <title>Tags | Updev community</title>
-        <meta name="description" content="Updev community" />
-        <link rel="icon" href="/favicon.ico" />
+        <meta name='description' content='Updev community' />
+        <link rel='icon' href='/favicon.ico' />
       </Head>
 
       <Menu />
       <MainContainer>
         {!session?.user && <CallToAction />}
-        <Paper variant="outlined" sx={{ p: 2, position: "sticky", top: { xs: 70, md: 155 }, zIndex: 999 }}>
+        <Paper
+          variant='outlined'
+          sx={{
+            p: 2,
+            position: "sticky",
+            top: { xs: 70, md: 155 },
+            zIndex: 999,
+          }}
+        >
           {showTagsFilters ? <Filters /> : <Search />}
         </Paper>
         <Tags userId={session?.user?.id} tags={tags} />
@@ -49,17 +69,19 @@ const Home: NextPage<{ session: Session; tags: Tag[] }> = ({ session, tags }) =>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withSessionSsr(async (context) => {
-  const { req } = context;
+export const getServerSideProps: GetServerSideProps = withSessionSsr(
+  async (context) => {
+    const { req } = context;
 
-  const tags = await getRequest({ endpoint: "/tags" });
+    const tags = await getRequest({ endpoint: "/tags" });
 
-  return {
-    props: {
-      session: req?.session?.user || null,
-      tags: tags.data,
-    },
-  };
-});
+    return {
+      props: {
+        session: req?.session?.user || null,
+        tags: tags.data,
+      },
+    };
+  }
+);
 
 export default Home;

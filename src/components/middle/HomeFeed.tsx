@@ -61,23 +61,55 @@ const HomeFeed = () => {
     return `/users/${session?.id}/feed?page=${pageIndex + 1}&${params}`;
   };
 
+  // const { data, size, setSize, isLoading, isValidating, mutate } = useSWRInfinite<Post[], any>(getKey, fetcher);
+
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (window.innerHeight + document.documentElement.scrollTop > document.documentElement.offsetHeight - 400) {
+  //       if (!endOfPage) {
+  //         setCurrentPage(currentPage + 1);
+  //       }
+  //     }
+  //   };
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, [currentPage]);
+
+  // useEffect(() => {
+  //   setSize(size + 1);
+  // }, [currentPage]);
+
+  /**
+   * @maurice 
+   */
   const { data, size, setSize, isLoading, isValidating, mutate } = useSWRInfinite<Post[], any>(getKey, fetcher);
 
   useEffect(() => {
     const handleScroll = () => {
       if (window.innerHeight + document.documentElement.scrollTop > document.documentElement.offsetHeight - 400) {
-        if (!endOfPage) {
+        if (!isValidating && !endOfPage) {
           setCurrentPage(currentPage + 1);
         }
       }
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [currentPage]);
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isValidating, endOfPage]);
 
   useEffect(() => {
-    setSize(size + 1);
+    if (!isValidating && !endOfPage) {
+      setSize(size + 1).then((newSize: any) => {
+        if (newSize === size) {
+          setEndOfPage(true);
+        }
+      });
+    }
   }, [currentPage]);
+
+  /**
+   * @end_fn
+   */
 
   return (
     <Stack spacing={2}>
@@ -85,7 +117,7 @@ const HomeFeed = () => {
       {isLoading && <HomeFeedSkeleton />}
       <ModalCreation open={open} handleClose={handleClose} />
 
-      {data?.map((posts, index) => {
+      {data?.map((posts: Post[], index: number) => {
         return posts.map((item, i) => (
           <React.Fragment key={item.id}>
             {item.type === "ARTICLE" ? <PostCard data={item} /> : <QuestionCard data={item} />}

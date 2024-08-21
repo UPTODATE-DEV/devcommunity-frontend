@@ -4,9 +4,9 @@
   "display": "standalone",
 "scope": "/",
   "start_url": "/",
-  "name": "Updev Community",
+  "name": "Dev Community",
   "short_name": "Updev",
-  "description": "Updev Community est un forum d'\u00e9change et de partage des connaissances entre informaticiens, aussi bien d\u00e9butants qu'experts dans le but d'am\u00e9liorer les comp\u00e9tences des d\u00e9veloppeurs",
+  "description": "Dev Community est un forum d'\u00e9change et de partage des connaissances entre informaticiens, aussi bien d\u00e9butants qu'experts dans le but d'am\u00e9liorer les comp\u00e9tences des d\u00e9veloppeurs",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",

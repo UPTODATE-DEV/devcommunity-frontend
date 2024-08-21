@@ -12,14 +12,14 @@ import Link from "next/link";
 
 const data = [
   {
-    title: "Contribute to developing Updev Community",
+    title: "Contribute to developing Dev Community",
     description:
-      "Missing a feature on Updev Community? You can help implement and bring it to life by yourself since Updev Community is an open source project.    ",
+      "Missing a feature on Dev Community? You can help implement and bring it to life by yourself since Dev Community is an open source project.    ",
   },
   {
-    title: "Contribuer au développement de Updev Community",
+    title: "Contribuer au développement de Dev Community",
     description:
-      "Vous manquez une fonctionnalité sur Updev Community? Vous pouvez aider à l'implémenter et à l’intégrer par vous-même.Updev Community est un projet open source",
+      "Vous manquez une fonctionnalité sur Dev Community? Vous pouvez aider à l'implémenter et à l’intégrer par vous-même. Dev Community est un projet open source",
   },
 ];
 
@@ -30,9 +30,19 @@ const contributors = [
     github: "https://github.com/UPTODATE-DEV",
   },
   {
+    name: "Dan Baruka",
+    picture: "https://github.com/danbaruka.png",
+    github: "https://github.com/danbaruka",
+  },
+  {
+    name: "Josephine Ndeze",
+    picture: "https://github.com/ndezejosephine.png",
+    github: "https://github.com/ndezejosephine",
+  },
+  {
     name: "Luccin Masirika",
-    picture: "https://github.com/luccin243.png",
-    github: "https://github.com/luccin243",
+    picture: "https://github.com/luccinmasirika.png",
+    github: "https://github.com/luccinmasirika",
   },
   {
     name: "Jack Mutobu",
@@ -43,6 +53,11 @@ const contributors = [
     name: "Yannick Senga",
     picture: "https://github.com/yannick243.png",
     github: "https://github.com/yannick243",
+  },
+  {
+    name: "Maurice Bagalwa",
+    picture: "https://github.com/MauriceBagalwa.png",
+    github: "https://github.com/MauriceBagalwa",
   },
 ];
 

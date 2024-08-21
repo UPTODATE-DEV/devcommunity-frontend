@@ -31,8 +31,8 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
   return (
     <>
       <Head>
-        <title>Blockchain | Updev community</title>
-        <meta name="description" content="Updev community" />
+        <title>Blockchain | Dev Community</title>
+        <meta name="description" content="Dev Community" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

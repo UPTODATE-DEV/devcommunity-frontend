@@ -27,8 +27,8 @@ const Home: NextPage<{ session: Session; data: any; menu: any }> = ({
   return (
     <>
       <Head>
-        <title>Updev community</title>
-        <meta name='description' content='Updev community' />
+        <title>Dev Community</title>
+        <meta name='description' content='Dev Community' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <Menu />

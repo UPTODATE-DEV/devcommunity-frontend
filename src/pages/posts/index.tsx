@@ -39,7 +39,7 @@ const Home: NextPage<{ session: Session; locale: string }> = ({ session }) => {
   return (
     <>
       <Head>
-        <title>Posts | Updev community</title>
+        <title>Posts | Dev Community</title>
       </Head>
 
       <Menu />

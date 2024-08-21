@@ -18,8 +18,8 @@ const Home: NextPage<{ session: Session }> = ({ session }) => {
   return (
     <>
       <Head>
-        <title>Add post | Updev community</title>
-        <meta name='description' content='Updev community' />
+        <title>Add post | Dev community</title>
+        <meta name='description' content='Dev community' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <Menu />

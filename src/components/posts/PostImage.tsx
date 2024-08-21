@@ -24,7 +24,7 @@ const PostImage = ({
       }}
       onClick={handleClick}
     >
-      {articleUrl && <Image src={articleUrl} alt={`${title} | Updev Community`} layout="fill" objectFit="cover" />}
+      {articleUrl && <Image src={articleUrl} alt={`${title} | Dev Community`} layout="fill" objectFit="cover" />}
     </Stack>
   );
 };

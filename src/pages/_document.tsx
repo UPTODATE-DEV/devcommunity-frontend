@@ -10,13 +10,13 @@ export default class _Document extends Document {
     return (
       <Html>
         <Head>
-          <meta name='application-name' content='Updev Community' />
+          <meta name='application-name' content='Dev Community' />
           <meta name='apple-mobile-web-app-capable' content='yes' />
           <meta
             name='apple-mobile-web-app-status-bar-style'
             content='default'
           />
-          <meta name='apple-mobile-web-app-title' content='Updev Community' />
+          <meta name='apple-mobile-web-app-title' content='Dev Community' />
           <meta name='format-detection' content='telephone=no' />
           <meta name='mobile-web-app-capable' content='yes' />
           <meta

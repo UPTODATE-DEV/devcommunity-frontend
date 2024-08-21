@@ -14,7 +14,7 @@ const data = [
     title: "Ready to join the community?",
     description:
       "If you notice a missing feature, an error, or an idea to add, do not hesitate to improve this community space",
-    button: "Contact us",
+    button: "Read More",
     about: "Room for developers to connect, learn, share skills and knowledge and grow as a community",
   },
   {
@@ -55,7 +55,7 @@ const Footer = ({ menu }: { menu: any }) => {
 
             <Stack
               component="a"
-              href="https://updev.africa/contact-us"
+              href="https://updevcommunity.com/en/how-to-contrubuite"
               target="_blank"
               direction={{ xs: "column", md: "row" }}
               spacing={2}
@@ -158,7 +158,7 @@ const Footer = ({ menu }: { menu: any }) => {
             </Grid>
           </Box>
           <Typography color="text.secondary" variant="caption" component="p" textAlign="center" sx={{ pt: 4 }}>
-            &copy; Updev Community {new Date().getFullYear()}. All rights reserved. Designed by{" "}
+            &copy; Dev Community {new Date().getFullYear()}. All rights reserved. Designed by{" "}
             <Typography
               color="secondary.main"
               variant="caption"

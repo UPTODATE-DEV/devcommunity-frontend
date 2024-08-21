@@ -60,7 +60,7 @@ const Value = () => {
             <Grid item xs={12} sm={6} md={4} key={i}>
               <Stack sx={{ mx: 1, py: 4 }} justifyContent="center" alignItems="center" spacing={4}>
                 <Stack sx={{ width: 90, height: 90, position: "relative" }}>
-                  <Image src={el.image} layout="fill" alt="Updev community" objectFit="contain" />
+                  <Image src={el.image} layout="fill" alt="Dev community" objectFit="contain" />
                 </Stack>
                 <Typography color="text.primary" variant="h6" textAlign="center">
                   {el.title}

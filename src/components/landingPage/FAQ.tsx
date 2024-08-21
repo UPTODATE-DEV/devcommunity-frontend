@@ -14,15 +14,15 @@ const faq = [
   [
     {
       id: "1",
-      question: "Is Updev Community an Open Source Project?",
+      question: "Is Dev Community an Open Source Project?",
       answer:
-        "Updev Community is actually an open source/participative project being built by the fellowship of developers. Learn how you can contribute",
+        "Dev Community is actually an open source/participative project being built by the fellowship of developers. Learn how you can contribute",
     },
     {
       id: "2",
-      question: "Can I sign up to Updev Community without being a developer?",
+      question: "Can I sign up to Dev Community without being a developer?",
       answer:
-        "Yes, as long as you are interested in technology and want to see what the community has to share. Updev Community is made up of members of all levels, from the simple technology enthusiast to the most experienced developer.",
+        "Yes, as long as you are interested in technology and want to see what the community has to share. Dev Community is made up of members of all levels, from the simple technology enthusiast to the most experienced developer.",
     },
     {
       id: "3",
@@ -34,20 +34,20 @@ const faq = [
       id: "4",
       question: "What are tags for and why should I add them in my posts/articles?",
       answer:
-        "Tags (sometimes hashtags) are used to classify the content published in Updev Community and filter the content presented to the reader according to the topics, areas and trends in which they are interested.",
+        "Tags (sometimes hashtags) are used to classify the content published in Dev Community and filter the content presented to the reader according to the topics, areas and trends in which they are interested.",
     },
   ],
   [
     {
       id: "1",
-      question: "Updev Community est-il un projet Open Source? Comment contribuer à son développement?",
-      answer: "Updev community est un projet développé par toute la communauté",
+      question: "Dev Community est-il un projet Open Source? Comment contribuer à son développement?",
+      answer: "Dev community est un projet développé par toute la communauté",
     },
     {
       id: "2",
-      question: "Puis-je intégrer Updev Community sans être un développeur?",
+      question: "Puis-je intégrer Dev Community sans être un développeur?",
       answer:
-        "Oui, du moment que vous vous intéressez à la technologie et voulez découvrir ce que la communauté a à partager. Updev Community regroupe est composé des membres de tous les niveaux, du simple enthousiaste à la technologie au développeur le plus expérimenté.",
+        "Oui, du moment que vous vous intéressez à la technologie et voulez découvrir ce que la communauté a à partager. Dev Community regroupe est composé des membres de tous les niveaux, du simple enthousiaste à la technologie au développeur le plus expérimenté.",
     },
     {
       id: "3",
@@ -59,7 +59,7 @@ const faq = [
       id: "4",
       question: "A quoi servent les tags pourquoi devrais-je en ajouter dans mes publications?",
       answer:
-        "Les tags (parfois hashtags) servent à catégoriser le contenu publié dans Updev Community et filtrer les publications présentées au lecteur selon les sujets, les domaines et les tendances qui l’intéressent.",
+        "Les tags (parfois hashtags) servent à catégoriser le contenu publié dans Dev Community et filtrer les publications présentées au lecteur selon les sujets, les domaines et les tendances qui l’intéressent.",
     },
   ],
 ];

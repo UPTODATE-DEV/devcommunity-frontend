@@ -9,7 +9,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     lastmod: item.updatedAt,
     news: {
       title: item.title,
-      publicationName: "Updev Community",
+      publicationName: "Dev Community",
       publicationLanguage: item.locale,
       date: new Date(item.createdAt),
     },

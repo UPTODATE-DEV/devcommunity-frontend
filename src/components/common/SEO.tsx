@@ -24,7 +24,7 @@ const PostSEO: React.FC<PostSEO> = ({
     url: `${process.env.NEXT_PUBLIC_URL}/images/og-image.jpg`,
     width: 850,
     height: 650,
-    name: "Updev Community",
+    name: "Dev Community",
   },
 }) => {
   function removeTags(str: string): string {
@@ -69,7 +69,7 @@ const PostSEO: React.FC<PostSEO> = ({
         authorName={`${authors.firstName} ${authors.lastName}`}
         description={description}
         isAccessibleForFree={true}
-        publisherName="Updev Community"
+        publisherName="Dev Community"
       />
     </>
   );

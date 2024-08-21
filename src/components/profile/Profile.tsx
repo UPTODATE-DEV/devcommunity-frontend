@@ -443,8 +443,8 @@ const Profile = ({ currentUser }: { currentUser?: User }) => {
                   )}
                   <Typography color="text.secondary">
                     {locale === "en"
-                      ? "You must have joined Updev Community for at least 14 days"
-                      : "Vous devez avoir rejoint Updev Community au moins depuis 14 jours"}
+                      ? "You must have joined Dev Community for at least 14 days"
+                      : "Vous devez avoir rejoint Dev Community au moins depuis 14 jours"}
                   </Typography>
                 </Stack>
                 <Stack direction="row" spacing={1} alignContent="center">

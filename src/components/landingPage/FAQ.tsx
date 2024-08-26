@@ -41,7 +41,7 @@ const faq = [
     {
       id: "1",
       question: "Dev Community est-il un projet Open Source? Comment contribuer à son développement?",
-      answer: "Dev community est un projet développé par toute la communauté",
+      answer: "Dev Community est un projet développé par toute la communauté",
     },
     {
       id: "2",

@@ -225,7 +225,7 @@ const LeftSideBar = () => {
       <Divider />
 
       <Typography variant="body2" sx={{ color: "text.secondary", pb: 2, px: 2 }}>
-        v{"1.0.0"} - First Release
+        v{"2.0.0"} - Beta Release
       </Typography>
     </Stack>
   );

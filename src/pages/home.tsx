@@ -27,8 +27,8 @@ const Home: NextPage<{ session: Session; data: any; menu: any }> = ({ session, m
   return (
     <>
       <Head>
-        <title>Dev community</title>
-        <meta name="description" content="Dev community" />
+        <title>Dev Community</title>
+        <meta name="description" content="Dev Community" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Box sx={{ bgcolor: "background.paper" }}>

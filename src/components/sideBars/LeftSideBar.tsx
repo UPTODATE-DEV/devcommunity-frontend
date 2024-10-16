@@ -15,11 +15,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { FcAbout, FcBookmark, FcHome, FcNook, FcPositiveDynamic, FcSettings, FcSms } from "react-icons/fc";
+import { FcAbout, FcBookmark, FcHome, FcNook, FcPositiveDynamic, FcSettings, FcSms, FcBusinessContact } from "react-icons/fc";
 
 const ImageLogo = ({ size, url, alt }: { size: number; url: string; alt: string }) => (
   <Image src={url} alt={alt} width={size} height={size} />
 );
+
+const goToDevProfile = () => {
+  window.open(process.env.NEXT_PUBLIC_DEV_PROFILE_URL, '_blank')
+};
 
 const LeftSideBar = () => {
   const user = useStore((state) => state.session?.user);
@@ -167,6 +171,18 @@ const LeftSideBar = () => {
                   />
                 </ListItemButton>
               ))}
+              <ListItemButton onClick={() => goToDevProfile()}>
+                  <ListItemIcon sx={{ mr: -1, color: "text.primary" }}>
+                  <FcBusinessContact fontSize={28} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Dev Profile"
+                    primaryTypographyProps={{
+                      color: "text.primary",
+                      fontWeight:  700,
+                    }}
+                  />
+                </ListItemButton>
             </List>
           </React.Fragment>
         )}

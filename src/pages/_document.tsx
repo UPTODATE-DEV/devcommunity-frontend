@@ -37,27 +37,12 @@ export default class _Document extends Document {
             href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'
             rel='stylesheet'
           />
-          <link
-            rel='icon'
-            type='image/png'
-            sizes='32x32'
-            href='/icons/favicon-32x32.png'
-          />
-          <link
-            rel='icon'
-            type='image/png'
-            sizes='16x16'
-            href='/icons/favicon-16x16.png'
-          />
+          <link rel="icon" type="image/png" href="/icons/favicon-48x48.png" sizes="48x48" />
+          <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
+          <link rel="shortcut icon" href="/favicon.ico" />
+          <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
           <link rel='manifest' href='/manifest.json' />
-          <link rel='apple-touch-icon' href='/icon/icon-192x192.png' />
-          <link
-            rel='mask-icon'
-            href='/icons/safari-pinned-tab.svg'
-            color='#5bbad5'
-          />
-          <link rel='shortcut icon' href='/favicon.ico' />
-          <link rel='icon' href='/favicon.ico' />
+          <link rel='apple-touch-icon' href='/icons/web-app-manifest-192x192.png' />
 
           <link
             rel='apple-touch-startup-image'

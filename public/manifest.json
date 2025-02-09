@@ -2,31 +2,23 @@
   "theme_color": "#0179bb",
   "background_color": "#0179bb",
   "display": "standalone",
-"scope": "/",
+  "scope": "/",
   "start_url": "/",
   "name": "Dev Community",
   "short_name": "Updev",
   "description": "Dev Community est un forum d'\u00e9change et de partage des connaissances entre informaticiens, aussi bien d\u00e9butants qu'experts dans le but d'am\u00e9liorer les comp\u00e9tences des d\u00e9veloppeurs",
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
+      "src": "/icons/web-app-manifest-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
-      "src": "/icons/icon-256x256.png",
-      "sizes": "256x256",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-512x512.png",
+      "src": "/icons/web-app-manifest-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

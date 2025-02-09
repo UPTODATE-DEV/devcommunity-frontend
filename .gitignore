@@ -55,3 +55,4 @@ robots.txt
 yarn.lock
 package-lock.json
 *.sh
+.env

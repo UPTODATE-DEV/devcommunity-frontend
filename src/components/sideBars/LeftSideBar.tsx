@@ -15,11 +15,30 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { FcAbout, FcBookmark, FcHome, FcNook, FcPositiveDynamic, FcSettings, FcSms } from "react-icons/fc";
+import {
+  FcAbout,
+  FcBookmark,
+  FcHome,
+  FcNook,
+  FcPositiveDynamic,
+  FcSettings,
+  FcSms,
+  FcBusinessContact,
+} from "react-icons/fc";
 
-const ImageLogo = ({ size, url, alt }: { size: number; url: string; alt: string }) => (
-  <Image src={url} alt={alt} width={size} height={size} />
-);
+const ImageLogo = ({
+  size,
+  url,
+  alt,
+}: {
+  size: number;
+  url: string;
+  alt: string;
+}) => <Image src={url} alt={alt} width={size} height={size} />;
+
+const goToDevProfile = () => {
+  window.open(process.env.NEXT_PUBLIC_DEV_PROFILE_URL, "_blank");
+};
 
 const LeftSideBar = () => {
   const user = useStore((state) => state.session?.user);
@@ -35,14 +54,33 @@ const LeftSideBar = () => {
   };
 
   const main = [
-    { path: "/", icon: <FcHome fontSize={28} />, label: locale === "fr" ? "Accueil" : "Home" },
+    {
+      path: "/",
+      icon: <FcHome fontSize={28} />,
+      label: locale === "fr" ? "Accueil" : "Home",
+    },
     { path: "/articles", icon: <FcNook fontSize={28} />, label: "Articles" },
     { path: "/posts", icon: <FcSms fontSize={28} />, label: "Posts" },
-    { path: "/tags", icon: <ImageLogo url="/icons/tags.png" alt="Tag Icon" size={28} />, label: "Tags" },
-    { path: "/top-posts", icon: <FcPositiveDynamic fontSize={28} />, label: "Top posts" },
+    {
+      path: "/tags",
+      icon: <ImageLogo url="/icons/tags.png" alt="Tag Icon" size={28} />,
+      label: "Tags",
+    },
+    {
+      path: "/top-posts",
+      icon: <FcPositiveDynamic fontSize={28} />,
+      label: "Top posts",
+    },
   ];
 
   const blockchain = [
+    {
+      path: "/polkadot",
+      icon: (
+        <ImageLogo url="/icons/polkadot.png" alt="polkadot Logo" size={25} />
+      ),
+      label: "Polkadot",
+    },
     {
       path: "/cardano",
       icon: <ImageLogo url="/icons/cardano.png" alt="Cardano Logo" size={28} />,
@@ -55,14 +93,28 @@ const LeftSideBar = () => {
     },
     {
       path: "/blockchain",
-      icon: <ImageLogo url="/icons/blockchain.png" alt="Blockchain Logo" size={28} />,
+      icon: (
+        <ImageLogo
+          url="/icons/blockchain.png"
+          alt="Blockchain Logo"
+          size={28}
+        />
+      ),
       label: "Blockchain",
     },
   ];
 
   const params = [
-    { path: "/bookmarks", icon: <FcBookmark fontSize={28} />, label: locale === "fr" ? "Favoris" : "Bookmarks" },
-    { path: "/profile", icon: <FcSettings fontSize={28} />, label: locale === "en" ? "My account" : "Mon compte" },
+    {
+      path: "/bookmarks",
+      icon: <FcBookmark fontSize={28} />,
+      label: locale === "fr" ? "Favoris" : "Bookmarks",
+    },
+    {
+      path: "/profile",
+      icon: <FcSettings fontSize={28} />,
+      label: locale === "en" ? "My account" : "Mon compte",
+    },
   ];
 
   const others = [
@@ -76,12 +128,15 @@ const LeftSideBar = () => {
   useEffect(() => {
     const getMenu = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_ADMIN_URL}/home?populate=deep&locale=${locale}`, {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        });
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_ADMIN_URL}/home?populate=deep&locale=${locale}`,
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
+        );
         setMenu(res?.data?.data?.footer);
       } catch (e: any) {
         return console.log(e);
@@ -109,12 +164,19 @@ const LeftSideBar = () => {
                     bottom: 0,
                     left: 0,
                     borderRadius: 9,
-                    backgroundColor: matches(path) ? "primary.main" : "transparent",
+                    backgroundColor: matches(path)
+                      ? "primary.main"
+                      : "transparent",
                     transition: "all 0.3s ease-in-out",
                   },
                 }}
               >
-                <ListItemIcon sx={{ mr: -1, color: matches(path) ? "primary.main" : "text.primary" }}>
+                <ListItemIcon
+                  sx={{
+                    mr: -1,
+                    color: matches(path) ? "primary.main" : "text.primary",
+                  }}
+                >
                   {icon}
                 </ListItemIcon>
                 <ListItemText
@@ -133,8 +195,17 @@ const LeftSideBar = () => {
           <Divider />
           <List>
             {blockchain.map(({ path, icon, label }) => (
-              <ListItemButton key={path} selected={matches(path)} onClick={() => push(path)}>
-                <ListItemIcon sx={{ mr: -1, color: matches(path) ? "primary.main" : "text.primary" }}>
+              <ListItemButton
+                key={path}
+                selected={matches(path)}
+                onClick={() => push(path)}
+              >
+                <ListItemIcon
+                  sx={{
+                    mr: -1,
+                    color: matches(path) ? "primary.main" : "text.primary",
+                  }}
+                >
                   {icon}
                 </ListItemIcon>
                 <ListItemText
@@ -154,8 +225,17 @@ const LeftSideBar = () => {
             <Divider />
             <List>
               {params.map(({ path, icon, label }) => (
-                <ListItemButton key={path} selected={matches(path)} onClick={() => push(path)}>
-                  <ListItemIcon sx={{ mr: -1, color: matches(path) ? "primary.main" : "text.primary" }}>
+                <ListItemButton
+                  key={path}
+                  selected={matches(path)}
+                  onClick={() => push(path)}
+                >
+                  <ListItemIcon
+                    sx={{
+                      mr: -1,
+                      color: matches(path) ? "primary.main" : "text.primary",
+                    }}
+                  >
                     {icon}
                   </ListItemIcon>
                   <ListItemText
@@ -167,6 +247,18 @@ const LeftSideBar = () => {
                   />
                 </ListItemButton>
               ))}
+              <ListItemButton onClick={() => goToDevProfile()}>
+                <ListItemIcon sx={{ mr: -1, color: "text.primary" }}>
+                  <FcBusinessContact fontSize={28} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Dev Profile"
+                  primaryTypographyProps={{
+                    color: "text.primary",
+                    fontWeight: 700,
+                  }}
+                />
+              </ListItemButton>
             </List>
           </React.Fragment>
         )}
@@ -175,8 +267,17 @@ const LeftSideBar = () => {
           <Divider />
           <List>
             {others.map(({ path, icon, label }) => (
-              <ListItemButton key={path} selected={matches(path)} onClick={() => push(path)}>
-                <ListItemIcon sx={{ mr: -1, color: matches(path) ? "primary.main" : "text.primary" }}>
+              <ListItemButton
+                key={path}
+                selected={matches(path)}
+                onClick={() => push(path)}
+              >
+                <ListItemIcon
+                  sx={{
+                    mr: -1,
+                    color: matches(path) ? "primary.main" : "text.primary",
+                  }}
+                >
                   {icon}
                 </ListItemIcon>
                 <ListItemText
@@ -193,7 +294,12 @@ const LeftSideBar = () => {
         </React.Fragment>
 
         <Button
-          sx={{ display: { xs: "block", md: "none" }, position: "absolute", top: 12, right: 8 }}
+          sx={{
+            display: { xs: "block", md: "none" },
+            position: "absolute",
+            top: 12,
+            right: 8,
+          }}
           variant="outlined"
           onClick={toggleLang}
         >
@@ -224,7 +330,10 @@ const LeftSideBar = () => {
       </Stack>
       <Divider />
 
-      <Typography variant="body2" sx={{ color: "text.secondary", pb: 2, px: 2 }}>
+      <Typography
+        variant="body2"
+        sx={{ color: "text.secondary", pb: 2, px: 2 }}
+      >
         v{"2.0.0"} - Beta Release
       </Typography>
     </Stack>
